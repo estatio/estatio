@@ -2,6 +2,7 @@ package org.estatio.module.lease.dom.amendments;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -43,6 +44,11 @@ public class LeaseAmendmentManager {
 
     public LeaseAmendmentManager(){}
 
+    public LeaseAmendmentManager(final  Property property){
+        this();
+        this.property = property;
+    }
+
     public LeaseAmendmentManager(final Property property, final LeaseAmendmentType leaseAmendmentType){
         this();
         this.property = property;
@@ -62,15 +68,29 @@ public class LeaseAmendmentManager {
     @Action(semantics = SemanticsOf.SAFE)
     public List<LeaseAmendmentImportLine> getLines(){
         List<LeaseAmendmentImportLine> result = new ArrayList<>();
-        for (Lease lease : activeLeasesOnAmendmentStartdateForProperty()){
-            final LeaseAmendment amendment = leaseAmendmentRepository.findUnique(lease, leaseAmendmentType);
-            if (amendment!=null) {
-                result.addAll(linesFromAmendment(amendment));
+        for (Lease lease : leaseRepository.findLeasesByProperty(property)){
+            if (this.leaseAmendmentType!=null) {
+                LeaseAmendment amendmentForLeaseAndType = leaseAmendmentRepository.findUnique(lease, leaseAmendmentType);
+                if (amendmentForLeaseAndType!=null) result.add(new LeaseAmendmentImportLine(amendmentForLeaseAndType));
             } else {
-                result.addAll(newLinesForLease(lease, leaseAmendmentType));
+                final List<LeaseAmendment> amendmentsForLeaseOfAllTypes = leaseAmendmentRepository.findByLease(lease);
+                final List<LeaseAmendmentImportLine> lines = amendmentsForLeaseOfAllTypes.stream()
+                        .map(a -> new LeaseAmendmentImportLine(a))
+                        .collect(Collectors.toList());
+                result.addAll(lines);
             }
         }
-        return result;
+        return result
+                .stream()
+                .sorted(Comparator.comparing(
+                        LeaseAmendmentImportLine::getLeaseReference)
+                        .thenComparing(LeaseAmendmentImportLine::getLeaseAmendmentType))
+                .collect(Collectors.toList());
+    }
+
+    @Action(semantics = SemanticsOf.SAFE)
+    public LeaseAmendmentManager filterByType(@Nullable final LeaseAmendmentType leaseAmendmentType){
+        return new LeaseAmendmentManager(property, leaseAmendmentType);
     }
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
@@ -81,10 +101,30 @@ public class LeaseAmendmentManager {
         return this;
     }
 
-    private List<LeaseAmendmentImportLine> linesFromAmendment(final LeaseAmendment amendment){
-        List<LeaseAmendmentImportLine> result = new ArrayList<>();
-        result.add(new LeaseAmendmentImportLine(amendment));
-        return result;
+    @Action(commandPersistence = CommandPersistence.NOT_PERSISTED)
+    public Blob downloadNewAmendmentProposalsForType(final LeaseAmendmentType leaseAmendmentType, @Nullable final String fileName){
+        List<LeaseAmendmentImportLine> newLines = new ArrayList<>();
+        for (Lease lease : activeLeasesOnAmendmentStartdateForProperty(leaseAmendmentType)){
+            final LeaseAmendment amendment = leaseAmendmentRepository.findUnique(lease, leaseAmendmentType);
+            if (amendment==null) newLines.addAll(newLinesForLease(lease, leaseAmendmentType));
+        }
+        String fileNameToUse;
+        if (fileName==null) {
+            fileNameToUse = "New amendments-" + property.getReference();
+            fileNameToUse = fileNameToUse + "-" + leaseAmendmentType.toString();
+            fileNameToUse = fileNameToUse + "-" +  clockService.now().toString() +".xlsx";
+        } else {
+            if (!fileName.endsWith(".xlsx") && !fileName.endsWith(".xls")) {
+                fileNameToUse = fileName.concat(".xlsx");
+            } else {
+                fileNameToUse = fileName;
+            }
+        }
+        return excelService.toExcel(newLines, LeaseAmendmentImportLine.class, "lines", fileNameToUse);
+    }
+
+    public LeaseAmendmentType default0DownloadNewAmendmentProposalsForType(){
+        return this.getLeaseAmendmentType();
     }
 
     List<LeaseAmendmentImportLine> newLinesForLease(final Lease lease, final LeaseAmendmentType leaseAmendmentType){
@@ -132,7 +172,13 @@ public class LeaseAmendmentManager {
     public Blob download(@Nullable final String fileName){
         String fileNameToUse;
         if (fileName==null) {
-            fileNameToUse = "Amendments-" + property.getReference() + "-" + getLeaseAmendmentType().toString() + "-" +  clockService.now().toString() +".xlsx";
+            fileNameToUse = "Amendments-" + property.getReference();
+            if (getLeaseAmendmentType()==null) {
+                fileNameToUse = fileNameToUse + "-all-types";
+            } else {
+                fileNameToUse = fileNameToUse + "-" + getLeaseAmendmentType().toString();
+            }
+            fileNameToUse = fileNameToUse + "-" +  clockService.now().toString() +".xlsx";
         } else {
             if (!fileName.endsWith(".xlsx") && !fileName.endsWith(".xls")) {
                 fileNameToUse = fileName.concat(".xlsx");
@@ -152,7 +198,7 @@ public class LeaseAmendmentManager {
     }
 
     @Programmatic
-    public List<Lease> activeLeasesOnAmendmentStartdateForProperty(){
+    public List<Lease> activeLeasesOnAmendmentStartdateForProperty(final LeaseAmendmentType leaseAmendmentType){
         return property==null ?
                 Collections.EMPTY_LIST :  leaseRepository.findByAssetAndActiveOnDate(property, leaseAmendmentType.getAmendmentStartDate());
     }
