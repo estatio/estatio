@@ -93,6 +93,24 @@ public class LeaseAmendmentManager {
         return new LeaseAmendmentManager(property, leaseAmendmentType);
     }
 
+    public LeaseAmendmentManager applyAll(){
+        for (LeaseAmendmentImportLine line : getLines()){
+            final Lease lease = leaseRepository.findLeaseByReference(line.getLeaseReference());
+            if (lease!=null) {
+                final LeaseAmendment amendment = leaseAmendmentRepository.findUnique(lease, getLeaseAmendmentType());
+                if (amendment!=null && amendment.getState()!=LeaseAmendmentState.APPLIED){
+                    amendment.apply(); // we do not wrap on purpose here; when type has allowsBulkApply==true we do not care for the state of the amendment
+                }
+            }
+        }
+        return new LeaseAmendmentManager(getProperty(), getLeaseAmendmentType());
+    }
+
+    public boolean hideApplyAll(){
+        if (getLeaseAmendmentType()!=null && getLeaseAmendmentType().getAllowsBulkApply()==true) return false;
+        return true;
+    }
+
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     public LeaseAmendmentManager importAmendments(final Blob excelsheet){
         final List<LeaseAmendmentImportLine> lines = excelService

@@ -39,7 +39,8 @@ public enum LeaseAmendmentType {
             new LocalDate(2020,12,31),
             "-A50",
             new LocalDate(2020,1,1),
-            new LocalDate(2020,12,31)),
+            new LocalDate(2020,12,31),
+            false),
     COVID_FRA_100_PERC(
             new LocalDate(2020,4,1),
             new BigDecimal("100.00"),
@@ -66,7 +67,8 @@ public enum LeaseAmendmentType {
             new LocalDate(2020,12,31),
             "-A100",
             new LocalDate(2020,1,1),
-            new LocalDate(2020,12,31)),
+            new LocalDate(2020,12,31),
+            false),
     COVID_FRA_FREQ_CHANGE(
             new LocalDate(2020,7,1),
             null,
@@ -89,7 +91,8 @@ public enum LeaseAmendmentType {
             new LocalDate(2020,12,31),
             "-AF",
             new LocalDate(2020,7,1),
-            new LocalDate(2020,12,31)),
+            new LocalDate(2020,12,31),
+            true),
     COVID_ITA_FREQ_CHANGE(
             new LocalDate(2020,7,1),
             null,
@@ -112,7 +115,8 @@ public enum LeaseAmendmentType {
             new LocalDate(2020,12,31),
             "-AF",
             new LocalDate(2020,7,1),
-            new LocalDate(2020,12,31)),
+            new LocalDate(2020,12,31),
+            true),
     DEMO_TYPE(
             new LocalDate(2020,1,1),
             new BigDecimal("50"),
@@ -128,7 +132,8 @@ public enum LeaseAmendmentType {
             new LocalDate(2020, 12, 31),
             "-DEM",
             new LocalDate(2020,1,1),
-            new LocalDate(2020,12,31))
+            new LocalDate(2020,12,31),
+            false)
     ;
 
     @Getter
@@ -170,6 +175,9 @@ public enum LeaseAmendmentType {
     @Getter
     private final LocalDate previewInvoicingEndDate;
 
+    @Getter
+    private Boolean allowsBulkApply;
+
     LeaseAmendmentType(
             final LocalDate amendmentStartDate,
             final BigDecimal discountPercentage,
@@ -183,7 +191,8 @@ public enum LeaseAmendmentType {
             final LocalDate frequencyChangeEndDate,
             final String ref_suffix,
             final LocalDate previewInvoicingStartDate,
-            final LocalDate previewInvoicingEndDate) {
+            final LocalDate previewInvoicingEndDate,
+            final boolean allowsBulkApply) {
         this.amendmentStartDate = amendmentStartDate;
         this.discountPercentage = discountPercentage;
         this.discountAppliesTo = discountAppliesTo;
@@ -197,6 +206,7 @@ public enum LeaseAmendmentType {
         this.ref_suffix = ref_suffix;
         this.previewInvoicingStartDate = previewInvoicingStartDate;
         this.previewInvoicingEndDate = previewInvoicingEndDate;
+        this.allowsBulkApply = allowsBulkApply;
     }
 
     public static class Tuple<X, Y> {
