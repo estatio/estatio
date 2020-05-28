@@ -32,6 +32,7 @@ import org.estatio.module.lease.dom.InvoicingFrequency;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseItem;
 import org.estatio.module.lease.dom.LeaseRepository;
+import org.estatio.module.lease.dom.LeaseStatus;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -69,7 +70,12 @@ public class LeaseAmendmentManager {
     @Action(semantics = SemanticsOf.SAFE)
     public List<LeaseAmendmentImportLine> getLines(){
         List<LeaseAmendmentImportLine> result = new ArrayList<>();
-        for (Lease lease : leaseRepository.findLeasesByProperty(property)){
+        final List<Lease> leasesByProperty = leaseRepository.findLeasesByProperty(property)
+                .stream()
+                .filter(l->l.getStatus()== LeaseStatus.ACTIVE || l.getStatus()==LeaseStatus.SUSPENDED_PARTIALLY)
+                .filter(l->getLeaseAmendmentType()!=null ? (l.getTenancyEndDate()==null || l.getTenancyEndDate().isAfter(getLeaseAmendmentType().getAmendmentStartDate())) : (l.getTenancyEndDate()==null || l.getTenancyEndDate().isAfter(clockService.now().withDayOfMonth(1))))
+                .collect(Collectors.toList());
+        for (Lease lease : leasesByProperty){
             if (this.leaseAmendmentType!=null) {
                 LeaseAmendment amendmentForLeaseAndType = leaseAmendmentRepository.findUnique(lease, leaseAmendmentType);
                 if (amendmentForLeaseAndType!=null) result.add(new LeaseAmendmentImportLine(amendmentForLeaseAndType));
@@ -238,6 +244,7 @@ public class LeaseAmendmentManager {
     @Inject
     ClockService clockService;
 
-    @Inject BackgroundService2 backgroundService2;
+    @Inject
+    BackgroundService2 backgroundService2;
 
 }
