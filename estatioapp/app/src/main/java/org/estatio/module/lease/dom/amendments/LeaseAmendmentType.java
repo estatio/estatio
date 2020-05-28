@@ -90,8 +90,8 @@ public enum LeaseAmendmentType {
             new LocalDate(2020,7,1),
             new LocalDate(2020,12,31),
             "-AF",
-            new LocalDate(2020,7,1),
-            new LocalDate(2020,12,31),
+            null,
+            null,
             true),
     COVID_ITA_FREQ_CHANGE(
             new LocalDate(2020,7,1),

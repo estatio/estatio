@@ -19,6 +19,7 @@ import org.apache.isis.applib.annotation.Nature;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Publishing;
 import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.services.background.BackgroundService2;
 import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.value.Blob;
 
@@ -100,7 +101,7 @@ public class LeaseAmendmentManager {
             if (lease!=null) {
                 final LeaseAmendment amendment = leaseAmendmentRepository.findUnique(lease, getLeaseAmendmentType());
                 if (amendment!=null && amendment.getState()!=LeaseAmendmentState.APPLIED){
-                    amendment.apply(); // we do not wrap on purpose here; when type has allowsBulkApply==true we do not care for the state of the amendment
+                    backgroundService2.execute(amendment).apply(); // we do not wrap on purpose here; when type has allowsBulkApply==true we do not care for the state of the amendment
                 }
             }
         }
@@ -236,5 +237,7 @@ public class LeaseAmendmentManager {
 
     @Inject
     ClockService clockService;
+
+    @Inject BackgroundService2 backgroundService2;
 
 }
