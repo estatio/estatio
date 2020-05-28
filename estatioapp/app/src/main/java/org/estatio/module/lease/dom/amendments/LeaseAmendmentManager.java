@@ -93,6 +93,7 @@ public class LeaseAmendmentManager {
         return new LeaseAmendmentManager(property, leaseAmendmentType);
     }
 
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     public LeaseAmendmentManager applyAll(){
         for (LeaseAmendmentImportLine line : getLines()){
             final Lease lease = leaseRepository.findLeaseByReference(line.getLeaseReference());

@@ -47,7 +47,7 @@ public class LeaseAmendmentService {
 
     public void apply(final LeaseAmendment leaseAmendment, final boolean preview) {
 
-        // Only implementation for the moment
+        // Extra guard for supported types
         if (!Arrays.asList(
                 LeaseAmendmentType.COVID_FRA_50_PERC,
                 LeaseAmendmentType.COVID_FRA_100_PERC,
@@ -60,7 +60,11 @@ public class LeaseAmendmentService {
             return;
         }
 
-        if (!preview && leaseAmendment.getLeasePreview()!=null) leaseAmendment.getLeasePreview().remove(String.format("Applying amendment %s", leaseAmendment.getReference()));
+        final String message = String.format("Applying amendment %s for lease %s", leaseAmendment.getReference(), preview ? leaseAmendment.getLeasePreview().getReference() : leaseAmendment.getLease().getReference());
+        LOG.info(message);
+        if (!preview && leaseAmendment.getLeasePreview()!=null) {
+            leaseAmendment.getLeasePreview().remove(message);
+        }
 
         final Lease lease = preview ? leaseAmendment.getLeasePreview() : leaseAmendment.getLease();
 
@@ -71,6 +75,8 @@ public class LeaseAmendmentService {
                 .findFirst().orElse(null);
         // NOTE: we apply discount first, before frequency change, because it copies the original invoice frequnecy ...
         if (leaseAmendmentItemForDiscount!=null){
+            final String message1 = String.format("Applying amendment item for discount for lease %s", preview ? leaseAmendment.getLeasePreview().getReference() : leaseAmendment.getLease().getReference());
+            LOG.info(message1);
             applyDiscount(lease, leaseAmendmentItemForDiscount);
         }
         final LeaseAmendmentItemForFrequencyChange leaseAmendmentItemForFrequencyChange = Lists
@@ -79,9 +85,13 @@ public class LeaseAmendmentService {
                 .map(LeaseAmendmentItemForFrequencyChange.class::cast)
                 .findFirst().orElse(null);
         if (leaseAmendmentItemForFrequencyChange!=null){
+            final String message2 = String.format("Applying amendment item for frequency change for lease %s", preview ? leaseAmendment.getLeasePreview().getReference() : leaseAmendment.getLease().getReference());
+            LOG.info(message2);
             applyFrequencyChange(lease, leaseAmendmentItemForFrequencyChange);
         }
         if (!preview) {
+            final String message3 = String.format("Amendment %s for lease %s applied", leaseAmendment.getReference(), leaseAmendment.getLease().getReference());
+            LOG.info(message3);
             leaseAmendment.setState(LeaseAmendmentState.APPLIED);
         }
         if (preview && leaseAmendment.getLeaseAmendmentType().getPreviewInvoicingStartDate()!=null && leaseAmendment.getLeaseAmendmentType().getPreviewInvoicingEndDate()!=null){
@@ -123,6 +133,10 @@ public class LeaseAmendmentService {
         newDiscountItem.setEndDate(endDateToUse);
         sourceItem.copyTerms(newDiscountItem.getStartDate(), newDiscountItem);
         newDiscountItem.negateAmountsAndApplyPercentageOnTerms(leaseAmendmentItemForDiscount.getDiscountPercentage());
+        if (lease.getStatus()!=LeaseStatus.PREVIEW) {
+            final String message = String.format("Item of type %s and charge %s for lease %s created with interval %s", newDiscountItem.getType(), newDiscountItem.getCharge().getReference(), lease.getReference(), newDiscountItem.getInterval().toString());
+            LOG.info(message);
+        }
     }
 
     void applyFrequencyChange(final Lease lease, final LeaseAmendmentItemForFrequencyChange leaseAmendmentItemForFrequencyChange){
@@ -236,6 +250,12 @@ public class LeaseAmendmentService {
 
         // NOTE: the order matters! We take endate of original
         originalItem.changeDates(originalItem.getStartDate(), startDateNewItem.minusDays(1));
+        if (lease.getStatus()!=LeaseStatus.PREVIEW) {
+            final String message = String.format("Item of type %s and invoicing frequency %s closed on date %s", originalItem.getType(), originalItem.getInvoicingFrequency(), lease.getReference(), originalItem.getEndDate());
+            LOG.info(message);
+            final String message1 = String.format("Item of type %s and invoicing frequency %s for lease %s created with interval %s", newItem.getType(), newItem.getInvoicingFrequency(), lease.getReference(), newItem.getInterval().toString());
+            LOG.info(message1);
+        }
 
         final LeaseTerm newTerm = newItem.newTerm(startDateNewItem, null);
         currentTerm.copyValuesTo(newTerm);
