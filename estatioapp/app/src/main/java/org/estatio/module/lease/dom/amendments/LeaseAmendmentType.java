@@ -114,9 +114,21 @@ public enum LeaseAmendmentType {
             new LocalDate(2020,7,1),
             new LocalDate(2020,12,31)),
     DEMO_TYPE(
-            new LocalDate(2020,1,1), null, null, null, null, "ITA_DISCOUNT", null, null, null, null, "-DEM",
-            null,
-            null)
+            new LocalDate(2020,1,1),
+            new BigDecimal("50"),
+            Arrays.asList(LeaseItemType.RENT, LeaseItemType.RENT_DISCOUNT, LeaseItemType.RENT_DISCOUNT_FIXED),
+            new LocalDate(2020,3,16),
+            new LocalDate(2020,5,10),
+            "GBR_DISCOUNT",
+            Arrays.asList(
+                    new Tuple<>(InvoicingFrequency.QUARTERLY_IN_ADVANCE, InvoicingFrequency.MONTHLY_IN_ARREARS)
+            ),
+            Arrays.asList(LeaseItemType.RENT, LeaseItemType.SERVICE_CHARGE),
+            new LocalDate(2020,7,1),
+            new LocalDate(2020, 12, 31),
+            "-DEM",
+            new LocalDate(2020,1,1),
+            new LocalDate(2020,12,31))
     ;
 
     @Getter
@@ -188,11 +200,11 @@ public enum LeaseAmendmentType {
     }
 
     public static class Tuple<X, Y> {
-        public final X x;
-        public final Y y;
-        public Tuple(X x, Y y) {
-            this.x = x;
-            this.y = y;
+        public final X oldFrequency;
+        public final Y newFrequency;
+        public Tuple(X oldFrequency, Y newFrequency) {
+            this.oldFrequency = oldFrequency;
+            this.newFrequency = newFrequency;
         }
     }
 }

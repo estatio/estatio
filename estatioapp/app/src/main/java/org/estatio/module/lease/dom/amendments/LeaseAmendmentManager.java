@@ -121,8 +121,8 @@ public class LeaseAmendmentManager {
             // TODO: now we pick the invoicing frequency from the first item encountered; .. this is cosmetics only and when we use the amendment proposal for import
             final LeaseAmendmentType.Tuple<InvoicingFrequency, InvoicingFrequency> tuple = leaseAmendmentService
                     .findInvoiceFrequencyTupleOnfirstFrequencyChangeCandidate(lease, leaseAmendmentType);
-            newLine.setInvoicingFrequencyOnLease(tuple.x);
-            newLine.setAmendedInvoicingFrequency(tuple.y);
+            newLine.setInvoicingFrequencyOnLease(tuple.oldFrequency);
+            newLine.setAmendedInvoicingFrequency(tuple.newFrequency);
         }
         result.add(newLine);
         return result;
@@ -146,7 +146,7 @@ public class LeaseAmendmentManager {
     private boolean hasChangingFrequency(final LeaseItem i, final LeaseAmendmentType leaseAmendmentType){
         final LeaseAmendmentType.Tuple<InvoicingFrequency, InvoicingFrequency> tuple = leaseAmendmentType.getFrequencyChanges()
                 .stream()
-                .filter(t -> t.x == i.getInvoicingFrequency())
+                .filter(t -> t.oldFrequency == i.getInvoicingFrequency())
                 .findFirst().orElse(null);
         return tuple != null;
     }

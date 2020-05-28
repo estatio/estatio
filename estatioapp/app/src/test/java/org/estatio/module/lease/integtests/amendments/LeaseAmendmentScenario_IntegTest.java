@@ -39,6 +39,7 @@ import org.estatio.module.lease.dom.amendments.LeaseAmendmentItemForFrequencyCha
 import org.estatio.module.lease.dom.amendments.LeaseAmendmentItemType;
 import org.estatio.module.lease.dom.amendments.LeaseAmendmentRepository;
 import org.estatio.module.lease.dom.amendments.LeaseAmendmentType;
+import org.estatio.module.lease.dom.amendments.Lease_invoiceCalculations;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForDeposit_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForDiscount_enum;
@@ -65,7 +66,7 @@ public class LeaseAmendmentScenario_IntegTest extends LeaseModuleIntegTestAbstra
     }
 
     @Test
-    public void xxx() throws Exception {
+    public void scenario_test() throws Exception {
 
         Lease oxf = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
 
@@ -123,8 +124,12 @@ public class LeaseAmendmentScenario_IntegTest extends LeaseModuleIntegTestAbstra
         final LeaseTermForIndexable first = (LeaseTermForIndexable) discountRentItem.getTerms().first();
         assertThat(first.getEffectiveValue()).isEqualTo(new BigDecimal("-10652.51"));
 
+        assertThat(discountAmendmentItem.getCalculatedDiscountAmount()).isEqualTo(new BigDecimal("-1638.85"));
+        assertThat(mixin(Lease_invoiceCalculations.class, leasePreview).$$()).hasSize(20);
+
     }
 
     @Inject
     LeaseAmendmentRepository leaseAmendmentRepository;
+
 }

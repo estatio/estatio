@@ -119,7 +119,7 @@ public class LeaseAmendmentService_Test {
             }
         };
         rentItem.setType(LeaseItemType.RENT);
-        rentItem.setInvoicingFrequency(LeaseAmendmentType.COVID_FRA_50_PERC.getFrequencyChanges().get(1).x);
+        rentItem.setInvoicingFrequency(LeaseAmendmentType.COVID_FRA_50_PERC.getFrequencyChanges().get(1).oldFrequency);
         Lease lease = new Lease(){
             @Override public SortedSet<LeaseItem> getItems() {
                 return new TreeSet<>(Arrays.asList(

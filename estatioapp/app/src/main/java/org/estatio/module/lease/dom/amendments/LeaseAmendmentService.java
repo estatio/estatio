@@ -268,7 +268,7 @@ public class LeaseAmendmentService {
     boolean hasChangingFrequency(final LeaseItem i, final LeaseAmendmentType leaseAmendmentType){
         final LeaseAmendmentType.Tuple<InvoicingFrequency, InvoicingFrequency> tuple = leaseAmendmentType.getFrequencyChanges()
                 .stream()
-                .filter(t -> t.x == i.getInvoicingFrequency())
+                .filter(t -> t.oldFrequency == i.getInvoicingFrequency())
                 .findFirst().orElse(null);
         return tuple != null;
     }
@@ -276,7 +276,7 @@ public class LeaseAmendmentService {
     LeaseAmendmentType.Tuple<InvoicingFrequency, InvoicingFrequency>  getTuple(final LeaseItem i, final LeaseAmendmentType leaseAmendmentType){
         return leaseAmendmentType.getFrequencyChanges()
                 .stream()
-                .filter(t -> t.x == i.getInvoicingFrequency())
+                .filter(t -> t.oldFrequency == i.getInvoicingFrequency())
                 .findFirst().orElse(null);
     }
 
