@@ -139,6 +139,11 @@ public class LeaseTermForIndexable extends LeaseTerm implements Indexable {
         return this;
     }
 
+    public boolean hideChangeParameters(){
+        if (getLeaseItem().getLease().getStatus()==LeaseStatus.PREVIEW) return true;
+        return false;
+    }
+
     public IndexationMethod default0ChangeParameters() {
         return getIndexationMethod();
     }
@@ -220,6 +225,11 @@ public class LeaseTermForIndexable extends LeaseTerm implements Indexable {
         setIndexedValue(null);
         doAlign();
         return this;
+    }
+
+    public boolean hideChangeValues(){
+        if (getLeaseItem().getLease().getStatus()==LeaseStatus.PREVIEW) return true;
+        return false;
     }
 
     public BigDecimal default0ChangeValues() {

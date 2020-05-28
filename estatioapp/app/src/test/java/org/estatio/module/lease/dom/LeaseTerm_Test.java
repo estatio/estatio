@@ -159,7 +159,10 @@ public class LeaseTerm_Test {
             final LeaseTermForTesting term = new LeaseTermForTesting();
             final LeaseItemType leaseItemType = LeaseItemType.RENT_DISCOUNT;
             final LeaseItem item = new LeaseItem();
+            final Lease lease = new Lease();
+            lease.setStatus(LeaseStatus.ACTIVE);
             item.setType(leaseItemType);
+            item.setLease(lease);
             term.setLeaseItem(item);
             //when, then
             then(leaseItemType.autoCreateTerms()).isFalse();

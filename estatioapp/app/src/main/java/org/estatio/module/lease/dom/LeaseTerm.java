@@ -261,6 +261,11 @@ public abstract class LeaseTerm
         return this;
     }
 
+    public boolean hideChangeDates(){
+        if (getLeaseItem().getLease().getStatus()==LeaseStatus.PREVIEW) return true;
+        return false;
+    }
+
     public String disableChangeDates() {
         if (getStatus().isApproved()){
             return "Cannot change dates when term is approved";
@@ -384,6 +389,11 @@ public abstract class LeaseTerm
         return this;
     }
 
+    public boolean hideRemove(){
+        if (getLeaseItem().getLease().getStatus()==LeaseStatus.PREVIEW) return true;
+        return false;
+    }
+
     @Programmatic
     public boolean doRemove() {
         boolean success = true;
@@ -477,6 +487,11 @@ public abstract class LeaseTerm
         return newTerm;
     }
 
+    public boolean hideSplit(){
+        if (getLeaseItem().getLease().getStatus()==LeaseStatus.PREVIEW) return true;
+        return false;
+    }
+
     public LocalDate default0Split(){
         return this.nextStartDate();
     }
@@ -506,6 +521,7 @@ public abstract class LeaseTerm
     }
 
     public boolean hideCreateNext() {
+        if (getLeaseItem().getLease().getStatus()==LeaseStatus.PREVIEW) return true;
         return !getLeaseItem().getType().autoCreateTerms();
     }
 
@@ -606,6 +622,11 @@ public abstract class LeaseTerm
         return this;
     }
 
+    public boolean hideApprove(){
+        if (getLeaseItem().getLease().getStatus()==LeaseStatus.PREVIEW) return true;
+        return false;
+    }
+
     public String disableApprove() {
         return getStatus().equals(LeaseTermStatus.APPROVED) ? "Already approved" : null;
     }
@@ -617,6 +638,7 @@ public abstract class LeaseTerm
     }
 
     public boolean hideChangeStatus() {
+        if (getLeaseItem().getLease().getStatus()==LeaseStatus.PREVIEW) return true;
         return !EstatioRole.ADMINISTRATOR.isApplicableFor(getUser());
     }
 

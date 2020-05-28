@@ -235,6 +235,7 @@ public class LeaseItem
     }
 
     public boolean hideSuspend() {
+        if (getLease().getStatus()==LeaseStatus.PREVIEW) return true;
         return getStatus().equals(LeaseItemStatus.SUSPENDED);
     }
 
@@ -245,6 +246,7 @@ public class LeaseItem
     }
 
     public boolean hideResume() {
+        if (getLease().getStatus()==LeaseStatus.PREVIEW) return true;
         return !getStatus().equals(LeaseItemStatus.SUSPENDED);
     }
 
@@ -264,6 +266,11 @@ public class LeaseItem
 
     public String disableRemove(){
         return isInvoicedUpon() ? "This item has been invoiced" : null;
+    }
+
+    public boolean hideRemove(){
+        if (getLease().getStatus()==LeaseStatus.PREVIEW) return true;
+        return false;
     }
 
     @Programmatic
@@ -372,6 +379,11 @@ public class LeaseItem
         return getChangeDates().changeDates(startDate, endDate);
     }
 
+    public boolean hideChangeDates(){
+        if (getLease().getStatus()==LeaseStatus.PREVIEW) return true;
+        return false;
+    }
+
     public String disableChangeDates() {
         return null;
     }
@@ -409,6 +421,11 @@ public class LeaseItem
         this.copyTerms(startDate, newItem);
         this.changeDates(getStartDate(), newItem.getInterval().endDateFromStartDate());
         return newItem;
+    }
+
+    public boolean hideCopy(){
+        if (getLease().getStatus()==LeaseStatus.PREVIEW) return true;
+        return false;
     }
 
     public LocalDate default0Copy() {
@@ -451,6 +468,11 @@ public class LeaseItem
             final LocalDate endDate) {
         this.changeDates(getStartDate(), endDate);
         return this;
+    }
+
+    public boolean hideTerminate(){
+        if (getLease().getStatus()==LeaseStatus.PREVIEW) return true;
+        return false;
     }
 
     public LocalDate default0Terminate() {
@@ -497,6 +519,11 @@ public class LeaseItem
         return this;
     }
 
+    public boolean hideChangeInvoicingFrequency(){
+        if (getLease().getStatus()==LeaseStatus.PREVIEW) return true;
+        return false;
+    }
+
     public InvoicingFrequency default0ChangeInvoicingFrequency() {
         return getInvoicingFrequency();
     }
@@ -521,6 +548,11 @@ public class LeaseItem
         return this;
     }
 
+    public boolean hideChangeCharge(){
+       if (getLease().getStatus()==LeaseStatus.PREVIEW) return true;
+       return false;
+    }
+
     public Charge default0ChangeCharge() {
         return getCharge();
     }
@@ -537,6 +569,11 @@ public class LeaseItem
             final String reason) {
         setPaymentMethod(paymentMethod);
         return this;
+    }
+
+    public boolean hideChangePaymentMethod(){
+        if (getLease().getStatus()==LeaseStatus.PREVIEW) return true;
+        return false;
     }
 
     public PaymentMethod default0ChangePaymentMethod(
@@ -562,6 +599,7 @@ public class LeaseItem
     }
 
     public boolean hideOverrideTax() {
+        if (getLease().getStatus()==LeaseStatus.PREVIEW) return true;
         return getTax() != null;
     }
 
@@ -574,6 +612,7 @@ public class LeaseItem
     }
 
     public boolean hideCancelOverrideTax() {
+        if (getLease().getStatus()==LeaseStatus.PREVIEW) return true;
         return getTax() == null;
     }
 
@@ -653,6 +692,11 @@ public class LeaseItem
             final LocalDate endDate
     ) {
         return leaseTermRepository.validateNewLeaseTerm(this, lastInChain(), startDate, endDate);
+    }
+
+    public boolean hideNewTerm(){
+        if (getLease().getStatus()==LeaseStatus.PREVIEW) return true;
+        return false;
     }
 
     public LocalDate default0NewTerm(

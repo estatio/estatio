@@ -52,6 +52,11 @@ public class LeaseTermForFixed extends LeaseTerm {
         return this;
     }
 
+    public boolean hideChangeValue(){
+        if (getLeaseItem().getLease().getStatus()==LeaseStatus.PREVIEW) return true;
+        return false;
+    }
+
     public String validateChangeValue(final BigDecimal value) {
         if (LeaseItemType.RENT_DISCOUNT_FIXED.equals(getLeaseItem().getType()) && isPositive(value)) {
             return "Discount should be negative or zero";
