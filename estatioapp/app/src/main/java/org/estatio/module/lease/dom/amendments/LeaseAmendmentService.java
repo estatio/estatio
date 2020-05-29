@@ -47,6 +47,8 @@ public class LeaseAmendmentService {
 
     public void apply(final LeaseAmendment leaseAmendment, final boolean preview) {
 
+        if (leaseAmendment.getState()==LeaseAmendmentState.APPLIED) return;
+
         // Extra guard for supported types
         if (!Arrays.asList(
                 LeaseAmendmentType.COVID_FRA_50_PERC,
