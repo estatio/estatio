@@ -40,6 +40,15 @@ public class LeaseAmendmentRepository {
     }
 
     @Programmatic
+    public List<LeaseAmendment> findByType(final LeaseAmendmentType leaseAmendmentType) {
+        return repositoryService.allMatches(
+                new QueryDefault<>(
+                        LeaseAmendment.class,
+                        "findByType",
+                        "leaseAmendmentType", leaseAmendmentType));
+    }
+
+    @Programmatic
     public List<LeaseAmendment> findByState(final LeaseAmendmentState state) {
         return repositoryService.allMatches(
                 new QueryDefault<>(

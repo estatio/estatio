@@ -15,8 +15,8 @@ public class Property_maintainLeaseAmendments {
     }
 
     @Action()
-    public LeaseAmendmentManager $$() {
-        return new LeaseAmendmentManager(property);
+    public LeaseAmendmentManager $$(final LeaseAmendmentType leaseAmendmentType) {
+        return new LeaseAmendmentManager(property, leaseAmendmentType);
     }
 
 }

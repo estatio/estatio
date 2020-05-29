@@ -91,6 +91,14 @@ public class LeaseAmendmentRepository_IntegTest extends LeaseModuleIntegTestAbst
         assertThat(resultForState.get(0)).isEqualTo(leaseAmendment);
 
         // and when
+        final List<LeaseAmendment> resultsForDemoType = leaseAmendmentRepository.findByType(LeaseAmendmentType.DEMO_TYPE);
+        final List<LeaseAmendment> resultsForOtherType = leaseAmendmentRepository.findByType(LeaseAmendmentType.COVID_FRA_FREQ_CHANGE);
+        // then
+        assertThat(resultsForDemoType).hasSize(1);
+        assertThat(resultsForDemoType.get(0)).isEqualTo(leaseAmendment);
+        assertThat(resultsForOtherType).isEmpty();
+
+        // and when
         final LeaseAmendmentState adaptedState = LeaseAmendmentState.SIGNED;
         final LocalDate adaptedStartDate = new LocalDate(2020, 1, 16);
         final LocalDate adaptedEndDate = new LocalDate(2020, 4, 1);

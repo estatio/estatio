@@ -70,20 +70,26 @@ public class LeaseAmendmentManager {
     @Action(semantics = SemanticsOf.SAFE)
     public List<LeaseAmendmentImportLine> getLines(){
         List<LeaseAmendmentImportLine> result = new ArrayList<>();
-        final List<Lease> leasesByProperty = leaseRepository.findLeasesByProperty(property)
-                .stream()
-                .filter(l->l.getStatus()== LeaseStatus.ACTIVE || l.getStatus()==LeaseStatus.SUSPENDED_PARTIALLY)
-                .filter(l->getLeaseAmendmentType()!=null ? (l.getTenancyEndDate()==null || l.getTenancyEndDate().isAfter(getLeaseAmendmentType().getAmendmentStartDate())) : (l.getTenancyEndDate()==null || l.getTenancyEndDate().isAfter(clockService.now().withDayOfMonth(1))))
-                .collect(Collectors.toList());
-        for (Lease lease : leasesByProperty){
-            if (this.leaseAmendmentType!=null) {
-                LeaseAmendment amendmentForLeaseAndType = leaseAmendmentRepository.findUnique(lease, leaseAmendmentType);
-                if (amendmentForLeaseAndType!=null) result.add(new LeaseAmendmentImportLine(amendmentForLeaseAndType));
-            } else {
+        if (getProperty()==null) return result; // Should not be possible
+        if (getLeaseAmendmentType()!=null){
+            final List<LeaseAmendment> amendments = leaseAmendmentRepository.findByType(getLeaseAmendmentType())
+                    .stream()
+                    .filter(a -> a.getLease().getProperty() == getProperty())
+                    .collect(Collectors.toList());
+            for (LeaseAmendment amendment : amendments){
+                result.add(new LeaseAmendmentImportLine(amendment));
+            }
+        } else {
+            final List<Lease> leasesByProperty = leaseRepository.findLeasesByProperty(property)
+                    .stream()
+                    .filter(l->l.getStatus()== LeaseStatus.ACTIVE || l.getStatus()==LeaseStatus.SUSPENDED_PARTIALLY)
+                    .filter(l->getLeaseAmendmentType()!=null ? (l.getTenancyEndDate()==null || l.getTenancyEndDate().isAfter(getLeaseAmendmentType().getAmendmentStartDate())) : (l.getTenancyEndDate()==null || l.getTenancyEndDate().isAfter(clockService.now().withDayOfMonth(1))))
+                    .collect(Collectors.toList());
+            for (Lease lease : leasesByProperty){
                 final List<LeaseAmendment> amendmentsForLeaseOfAllTypes = leaseAmendmentRepository.findByLease(lease);
                 final List<LeaseAmendmentImportLine> lines = amendmentsForLeaseOfAllTypes.stream()
-                        .map(a -> new LeaseAmendmentImportLine(a))
-                        .collect(Collectors.toList());
+                      .map(a -> new LeaseAmendmentImportLine(a))
+                      .collect(Collectors.toList());
                 result.addAll(lines);
             }
         }
