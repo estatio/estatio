@@ -161,7 +161,6 @@ public class LeaseAmendmentService {
                             leaseAmendmentItemForFrequencyChange.getStartDate(),
                             originalItem,
                             leaseAmendmentItemForFrequencyChange.getAmendedInvoicingFrequency());
-
                     if (firstNewItem!=null){
                         closeOriginalAndOpenNewLeaseItem(leaseAmendmentItemForFrequencyChange.getEndDate().plusDays(1),
                                 firstNewItem,
@@ -238,7 +237,7 @@ public class LeaseAmendmentService {
 
     public LeaseItem closeOriginalAndOpenNewLeaseItem(final LocalDate startDateNewItem, final LeaseItem originalItem, final InvoicingFrequency invoicingFrequency){
         final Lease lease = originalItem.getLease();
-        lease.verifyUntil(startDateNewItem.plusDays(1));
+        originalItem.verifyUntil(startDateNewItem.plusYears(1).plusDays(1)); // for some reason rent items were not verified correctly when verifying until startDateNewItem.plusDays(1)
         final LeaseTerm currentTerm = originalItem.currentTerm(startDateNewItem);
         if (currentTerm == null){
             LOG.warn(String.format("No current rent term found for lease %s, type %s, starting on %s", lease.getReference(), originalItem.getType(), startDateNewItem.toString()));
@@ -253,9 +252,9 @@ public class LeaseAmendmentService {
         // NOTE: the order matters! We take endate of original
         originalItem.changeDates(originalItem.getStartDate(), startDateNewItem.minusDays(1));
         if (lease.getStatus()!=LeaseStatus.PREVIEW) {
-            final String message = String.format("Item of type %s and invoicing frequency %s for lease %s closed on date %s", originalItem.getType(), originalItem.getInvoicingFrequency(), lease.getReference(), originalItem.getEndDate());
+            final String message = String.format("Item of type %s, charge %s and invoicing frequency %s for lease %s closed on date %s", originalItem.getType(), originalItem.getCharge().getReference(), originalItem.getInvoicingFrequency(), lease.getReference(), originalItem.getEndDate());
             LOG.info(message);
-            final String message1 = String.format("Item of type %s and invoicing frequency %s for lease %s created with interval %s", newItem.getType(), newItem.getInvoicingFrequency(), lease.getReference(), newItem.getInterval().toString());
+            final String message1 = String.format("Item of type %s, charge %s and invoicing frequency %s for lease %s created with interval %s", newItem.getType(), newItem.getCharge(), newItem.getInvoicingFrequency(), lease.getReference(), newItem.getInterval().toString());
             LOG.info(message1);
         }
 
