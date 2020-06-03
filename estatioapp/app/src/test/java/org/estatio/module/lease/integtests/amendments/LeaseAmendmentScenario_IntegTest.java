@@ -126,6 +126,8 @@ public class LeaseAmendmentScenario_IntegTest extends LeaseModuleIntegTestAbstra
 
         assertThat(discountAmendmentItem.calculateDiscountAmountUsingLeasePreview()).isEqualTo(new BigDecimal("-1638.85"));
         assertThat(discountAmendmentItem.getCalculatedDiscountAmount()).isEqualTo(new BigDecimal("-1638.85"));
+        assertThat(discountAmendmentItem.getTotalValueForDateBeforeDiscount()).isEqualTo(new BigDecimal("21305.02"));
+        assertThat(originalRentItem.valueForDate(discountAmendmentItem.getStartDate().minusDays(1))).isEqualTo(new BigDecimal("21305.02")); // EQUALS the value for date just before discount of the only lease item used by amendment item for discount
         assertThat(mixin(Lease_invoiceCalculations.class, leasePreview).$$()).hasSize(20);
 
     }

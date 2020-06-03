@@ -52,6 +52,10 @@ public class LeaseAmendmentItemForDiscount extends LeaseAmendmentItem {
     @Getter @Setter
     private BigDecimal calculatedDiscountAmount;
 
+    @Column(allowsNull = "true", scale = 2)
+    @Getter @Setter
+    private BigDecimal totalValueForDateBeforeDiscount;
+
     @Programmatic
     public BigDecimal calculateDiscountAmountUsingLeasePreview(){
         final Lease leasePreview = getLeaseAmendment().getLeasePreview();
@@ -68,6 +72,27 @@ public class LeaseAmendmentItemForDiscount extends LeaseAmendmentItem {
             }
         }
         return result;
+    }
+
+    @Programmatic
+    public List<LeaseItem> leaseItemsToIncludeForDiscount(final Lease lease){
+        final List<LeaseItem> itemsToIncludeForDiscount = Lists.newArrayList(lease.getItems()).stream()
+                .filter(li -> LeaseAmendmentItem
+                        .applicableToFromString(this.getApplicableTo())
+                        .contains(li.getType()))
+                .filter(li->li.getEffectiveInterval().overlaps(this.getInterval()))
+                .collect(Collectors.toList());
+        return itemsToIncludeForDiscount;
+    }
+
+    @Programmatic
+    public BigDecimal calculateValueForDateBeforeDiscountUsingLeasePreview(){
+        final Lease leasePreview = getLeaseAmendment().getLeasePreview();
+        if (leasePreview==null) return null;
+        return leaseItemsToIncludeForDiscount(leasePreview).stream()
+                .map(li -> li.valueForDate(getStartDate().minusDays(1)))
+                .filter(x->x!=null)
+                .reduce(new BigDecimal("0.00"), BigDecimal::add);
     }
 
     @Action(semantics = SemanticsOf.SAFE)

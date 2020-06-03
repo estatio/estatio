@@ -104,6 +104,9 @@ public class LeaseAmendmentService {
                 final BigDecimal calculatedValue = leaseAmendmentItemForDiscount.calculateDiscountAmountUsingLeasePreview();
                 // at this stage of the process always replace
                 leaseAmendmentItemForDiscount.setCalculatedDiscountAmount(calculatedValue);
+                final BigDecimal totalValueForDate = leaseAmendmentItemForDiscount
+                        .calculateValueForDateBeforeDiscountUsingLeasePreview();
+                leaseAmendmentItemForDiscount.setTotalValueForDateBeforeDiscount(totalValueForDate);
             }
         }
     }
@@ -111,14 +114,7 @@ public class LeaseAmendmentService {
     void applyDiscount(
             final Lease lease,
             final LeaseAmendmentItemForDiscount leaseAmendmentItemForDiscount) {
-        // find lease items included in discount
-        final List<LeaseItem> itemsToIncludeForDiscount = Lists.newArrayList(lease.getItems()).stream()
-                .filter(li -> LeaseAmendmentItem
-                        .applicableToFromString(leaseAmendmentItemForDiscount.getApplicableTo())
-                        .contains(li.getType()))
-                .filter(li->li.getEffectiveInterval().overlaps(leaseAmendmentItemForDiscount.getInterval()))
-                .collect(Collectors.toList());
-        for (LeaseItem li : itemsToIncludeForDiscount){
+        for (LeaseItem li : leaseAmendmentItemForDiscount.leaseItemsToIncludeForDiscount(lease)){
             createDiscountItemAndTerms(li, leaseAmendmentItemForDiscount);
         }
     }
