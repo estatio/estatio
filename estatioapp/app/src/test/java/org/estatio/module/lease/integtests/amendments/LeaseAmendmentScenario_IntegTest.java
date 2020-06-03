@@ -124,6 +124,7 @@ public class LeaseAmendmentScenario_IntegTest extends LeaseModuleIntegTestAbstra
         final LeaseTermForIndexable first = (LeaseTermForIndexable) discountRentItem.getTerms().first();
         assertThat(first.getEffectiveValue()).isEqualTo(new BigDecimal("-10652.51"));
 
+        assertThat(discountAmendmentItem.calculateDiscountAmountUsingLeasePreview()).isEqualTo(new BigDecimal("-1638.85"));
         assertThat(discountAmendmentItem.getCalculatedDiscountAmount()).isEqualTo(new BigDecimal("-1638.85"));
         assertThat(mixin(Lease_invoiceCalculations.class, leasePreview).$$()).hasSize(20);
 

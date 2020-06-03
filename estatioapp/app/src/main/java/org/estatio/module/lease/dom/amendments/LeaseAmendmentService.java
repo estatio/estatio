@@ -1,5 +1,6 @@
 package org.estatio.module.lease.dom.amendments;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -99,6 +100,11 @@ public class LeaseAmendmentService {
         if (preview && leaseAmendment.getLeaseAmendmentType().getPreviewInvoicingStartDate()!=null && leaseAmendment.getLeaseAmendmentType().getPreviewInvoicingEndDate()!=null){
             List<LeaseItemType> typesForCalculation = Arrays.asList(LeaseItemType.RENT, LeaseItemType.RENT_DISCOUNT, LeaseItemType.RENT_DISCOUNT_FIXED, LeaseItemType.SERVICE_CHARGE, LeaseItemType.MARKETING, LeaseItemType.SERVICE_CHARGE_INDEXABLE, LeaseItemType.SERVICE_CHARGE_DISCOUNT_FIXED);
             factoryService.mixin(Lease_calculate.class, lease).exec(InvoiceRunType.NORMAL_RUN, typesForCalculation, leaseAmendment.getLeaseAmendmentType().getPreviewInvoicingStartDate(), leaseAmendment.getLeaseAmendmentType().getPreviewInvoicingStartDate(), leaseAmendment.getLeaseAmendmentType().getPreviewInvoicingEndDate().plusDays(1));
+            if (leaseAmendmentItemForDiscount!=null){
+                final BigDecimal calculatedValue = leaseAmendmentItemForDiscount.calculateDiscountAmountUsingLeasePreview();
+                // at this stage of the process always replace
+                leaseAmendmentItemForDiscount.setCalculatedDiscountAmount(calculatedValue);
+            }
         }
     }
 
@@ -132,6 +138,7 @@ public class LeaseAmendmentService {
         final Charge chargeToUse = chargeFromAmendmentType != null ? chargeFromAmendmentType : sourceItem.getCharge(); // This is a fallback. for testing f.i.
         final LeaseItem newDiscountItem = lease
                 .newItem(sourceItem.getType(), sourceItem.getInvoicedBy(), chargeToUse, sourceItem.getInvoicingFrequency(), sourceItem.getPaymentMethod(), startDateToUse);
+        newDiscountItem.setLeaseAmendmentItem(leaseAmendmentItemForDiscount);
         newDiscountItem.setEndDate(endDateToUse);
         sourceItem.copyTerms(newDiscountItem.getStartDate(), newDiscountItem);
         newDiscountItem.negateAmountsAndApplyPercentageOnTerms(leaseAmendmentItemForDiscount.getDiscountPercentage());
@@ -161,10 +168,14 @@ public class LeaseAmendmentService {
                             leaseAmendmentItemForFrequencyChange.getStartDate(),
                             originalItem,
                             leaseAmendmentItemForFrequencyChange.getAmendedInvoicingFrequency());
+                    originalItem.setLeaseAmendmentItem(leaseAmendmentItemForFrequencyChange);
                     if (firstNewItem!=null){
-                        closeOriginalAndOpenNewLeaseItem(leaseAmendmentItemForFrequencyChange.getEndDate().plusDays(1),
+                        firstNewItem.setLeaseAmendmentItem(leaseAmendmentItemForFrequencyChange);
+                        final LeaseItem nextNewItem = closeOriginalAndOpenNewLeaseItem(
+                                leaseAmendmentItemForFrequencyChange.getEndDate().plusDays(1),
                                 firstNewItem,
                                 leaseAmendmentItemForFrequencyChange.getInvoicingFrequencyOnLease());
+                        if (nextNewItem!=null) nextNewItem.setLeaseAmendmentItem(leaseAmendmentItemForFrequencyChange);
                     }
                     break;
                 default:

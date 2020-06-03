@@ -12,8 +12,7 @@ import javax.validation.constraints.Digits;
 import com.google.common.collect.Lists;
 
 import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.ActionLayout;
-import org.apache.isis.applib.annotation.Contributed;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.module.lease.dom.Lease;
@@ -49,29 +48,22 @@ public class LeaseAmendmentItemForDiscount extends LeaseAmendmentItem {
         return getLeaseAmendment().amendmentDataIsImmutable() ? warning : null;
     }
 
-    @Action(semantics = SemanticsOf.SAFE)
-    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
-    public BigDecimal getCalculatedDiscountAmount(){
+    @Column(allowsNull = "true", scale = 2)
+    @Getter @Setter
+    private BigDecimal calculatedDiscountAmount;
+
+    @Programmatic
+    public BigDecimal calculateDiscountAmountUsingLeasePreview(){
         final Lease leasePreview = getLeaseAmendment().getLeasePreview();
         if (leasePreview==null) return null;
         BigDecimal result = new BigDecimal("0.00");
-        final List<LeaseItem> leaseItemsPossiblyInvolved = Lists.newArrayList(leasePreview.getItems()).stream()
-                .filter(li -> getApplicableToAsList().contains(li.getType()))
+        final List<LeaseItem> leaseItemsInvolved = Lists.newArrayList(leasePreview.getItems()).stream()
+                .filter(li -> li.getLeaseAmendmentItem()==this)
                 .collect(Collectors.toList());
-        for (LeaseItem leaseItem : leaseItemsPossiblyInvolved){
-            final String chargeReferenceForDiscountItemIfAny = getLeaseAmendment().getLeaseAmendmentType()
-                    .getChargeReferenceForDiscountItem();
-            // TODO: this is theoretically not watertight, but should cover current use cases
-            // try to filter by chargeReferenceForDiscount and lease item dates
-            if (chargeReferenceForDiscountItemIfAny!=null
-                    && leaseItem.getCharge().getReference().equals(chargeReferenceForDiscountItemIfAny)
-                    && leaseItem.getStartDate().equals(getStartDate()) //taking start- and end date into account will filter existing discount items with same charge as well
-                    && leaseItem.getEndDate().equals(getEndDate())
-            ){
-                for (LeaseTerm term : leaseItem.getTerms()){
-                    for (PersistedCalculationResult calcResult : persistedCalculationResultRepository.findByLeaseTerm(term)){
-                        result = result.add(calcResult.getValue());
-                    }
+        for (LeaseItem leaseItem : leaseItemsInvolved){
+            for (LeaseTerm term : leaseItem.getTerms()){
+                for (PersistedCalculationResult calcResult : persistedCalculationResultRepository.findByLeaseTerm(term)){
+                    result = result.add(calcResult.getValue());
                 }
             }
         }

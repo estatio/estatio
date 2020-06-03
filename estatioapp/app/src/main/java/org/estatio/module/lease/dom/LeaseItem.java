@@ -81,6 +81,7 @@ import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.module.invoice.dom.InvoicingInterval;
 import org.estatio.module.invoice.dom.PaymentMethod;
+import org.estatio.module.lease.dom.amendments.LeaseAmendmentItem;
 import org.estatio.module.lease.dom.invoicing.InvoiceCalculationService.CalculationResult;
 import org.estatio.module.tax.dom.Tax;
 
@@ -480,6 +481,11 @@ public class LeaseItem
     }
 
     // //////////////////////////////////////
+
+    @Column(name = "leaseAmendmentItemId", allowsNull = "true")
+    @Property(hidden = Where.EVERYWHERE)
+    @Getter @Setter
+    private LeaseAmendmentItem leaseAmendmentItem;
 
     @Programmatic
     @Override
