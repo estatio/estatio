@@ -155,6 +155,13 @@ public class LeaseAmendment extends Agreement {
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     public LeaseAmendment apply(){
+        final Optional<LeaseAmendmentItem> optionalDiscountItem = Lists.newArrayList(getItems()).stream()
+                .filter(i -> i.getType() == LeaseAmendmentItemType.DISCOUNT).findFirst();
+        // make sure a most recent lease preview is created in order to update the calculated values on discount item
+        // NOTE: this preview will be deleted right after this when applying the lease
+        if (optionalDiscountItem.isPresent()){
+            createOrRenewLeasePreview();
+        }
         leaseAmendmentService.apply(this, false);
         setDateApplied(clockService.now());
         return this;
