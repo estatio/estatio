@@ -15,19 +15,23 @@
                             <row>
                                 <col span="12">
                                     <ns2:fieldSet name="General" id="general">
-                                        <ns2:action id="apply"/>
                                         <ns2:property id="reference"/>
                                         <ns2:property id="name"/>
                                         <ns2:property id="lease"/>
                                     </ns2:fieldSet>
                                     <ns2:fieldSet name="Preview" id="preview">
+                                        <ns2:action id="createOrRenewLeasePreview" position="PANEL"/>
                                         <ns2:property id="leasePreview"/>
                                     </ns2:fieldSet>
                                     <ns2:fieldSet name="Amendment type" id="leaseAmendmentType">
                                         <ns2:property id="leaseAmendmentType"/>
                                     </ns2:fieldSet>
                                     <ns2:fieldSet name="State" id="state">
+                                        <ns2:action id="apply" position="PANEL"/>
+                                        <ns2:action id="sign" position="PANEL"/>
                                         <ns2:property id="state"/>
+                                        <ns2:property id="dateSigned"/>
+                                        <ns2:property id="dateApplied"/>
                                     </ns2:fieldSet>
                                 </col>
                             </row>

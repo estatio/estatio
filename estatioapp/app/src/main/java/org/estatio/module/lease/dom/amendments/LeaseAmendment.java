@@ -1,7 +1,6 @@
 package org.estatio.module.lease.dom.amendments;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.SortedSet;
@@ -111,18 +110,23 @@ public class LeaseAmendment extends Agreement {
     @Getter @Setter
     private LeaseAmendmentState state;
 
+    @Column(allowsNull = "true")
+    @Getter @Setter
+    private LocalDate dateSigned;
+
+    @Column(allowsNull = "true")
+    @Getter @Setter
+    private LocalDate dateApplied;
+
     @Action(semantics = SemanticsOf.IDEMPOTENT)
-    public LeaseAmendment changeState(final LeaseAmendmentState state){
-        setState(state);
+    public LeaseAmendment sign(){
+        setState(LeaseAmendmentState.SIGNED);
+        setDateSigned(clockService.now());
         return this;
     }
 
-    public List<LeaseAmendmentState> choices0ChangeState(){
-        return Arrays.asList(LeaseAmendmentState.PROPOSED, LeaseAmendmentState.SIGNED);
-    }
-
-    public String disableChangeState(){
-        return getState()==LeaseAmendmentState.APPLIED ? "The status is applied" : null;
+    public boolean hideSign(){
+        return getState()!=LeaseAmendmentState.PROPOSED;
     }
 
     @Column(name = "leasePreviewId", allowsNull = "true")
@@ -152,11 +156,12 @@ public class LeaseAmendment extends Agreement {
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     public LeaseAmendment apply(){
         leaseAmendmentService.apply(this, false);
+        setDateApplied(clockService.now());
         return this;
     }
 
-    public String disableApply(){
-        return getState()!=LeaseAmendmentState.SIGNED ? "Only signed amendments can be applied" : null;
+    public boolean hideApply(){
+        return getState()!=LeaseAmendmentState.SIGNED;
     }
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
