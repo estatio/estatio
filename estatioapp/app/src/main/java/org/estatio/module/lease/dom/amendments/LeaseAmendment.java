@@ -148,9 +148,19 @@ public class LeaseAmendment extends Agreement {
         return lease.getApplicationTenancy();
     }
 
-    @Programmatic
-    public void remove(){
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
+    public Lease remove(){
+        Lease result = getLease();
+        if (getLeasePreview()!=null){
+            getLeasePreview().remove("Removing amendment");
+        }
         repositoryService.removeAndFlush(this);
+        return result;
+    }
+
+    public String disableRemove(){
+        if (amendmentDataIsImmutable()) return "The amendment is immutable";
+        return null;
     }
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
@@ -246,7 +256,6 @@ public class LeaseAmendment extends Agreement {
     public boolean amendmentDataIsImmutable() {
         return getState()!=LeaseAmendmentState.PROPOSED;
     }
-
     @Inject
     RepositoryService repositoryService;
 
