@@ -25,6 +25,7 @@ import org.estatio.module.budgetassignment.dom.service.CalculationResultsForLeas
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseItem;
 import org.estatio.module.lease.dom.LeaseItemType;
+import org.estatio.module.lease.dom.LeaseStatus;
 import org.estatio.module.lease.dom.LeaseTerm;
 import org.estatio.module.lease.dom.LeaseTermForServiceCharge;
 
@@ -66,6 +67,10 @@ public class Lease_DownloadBudgetCalculations {
 
         WorksheetContent worksheetContent = new WorksheetContent(vmList, spec);
         return excelService.toExcelPivot(worksheetContent, fileName);
+    }
+
+    public boolean hideDownloadBudgetCalculations(){
+        return lease.getStatus()== LeaseStatus.PREVIEW;
     }
 
     public List<Budget> choices0DownloadBudgetCalculations(final Budget budget){

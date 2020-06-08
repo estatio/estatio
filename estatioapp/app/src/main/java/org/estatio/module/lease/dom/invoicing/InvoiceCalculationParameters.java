@@ -22,7 +22,7 @@ import org.estatio.module.lease.dom.LeaseTerm;
 import lombok.Builder;
 import lombok.Singular;
 
-@Builder
+    @Builder
 public class InvoiceCalculationParameters {
 
     private Property property;

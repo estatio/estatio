@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<bs3:grid xsi:schemaLocation="http://isis.apache.org/applib/layout/component http://isis.apache.org/applib/layout/component/component.xsd http://isis.apache.org/applib/layout/grid/bootstrap3 http://isis.apache.org/applib/layout/grid/bootstrap3/bootstrap3.xsd" xmlns:bs3="http://isis.apache.org/applib/layout/grid/bootstrap3" xmlns:cpt="http://isis.apache.org/applib/layout/component" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <bs3:row>
+        <bs3:col span="0" unreferencedActions="true">
+            <cpt:action id="recentChanges"/>
+        </bs3:col>
+        <bs3:col span="12" unreferencedActions="false">
+            <cpt:domainObject/>
+            <cpt:action id="impersonate"/>
+            <cpt:action id="stopImpersonating"/>
+            <cpt:action id="clearHints"/>
+            <cpt:action id="downloadLayoutXml"/>
+        </bs3:col>
+    </bs3:row>
+    <bs3:row>
+        <bs3:col span="6">
+            <cpt:fieldSet name="Property" id="property">
+                <cpt:property id="property"/>
+            </cpt:fieldSet>
+        </bs3:col>
+        <bs3:col span="6">
+            <cpt:fieldSet name="Lease amendment type" id="leaseAmendmentType">
+                <cpt:action id="filterByType" position="PANEL"/>
+                <cpt:property id="leaseAmendmentType"/>
+            </cpt:fieldSet>
+        </bs3:col>
+    </bs3:row>
+    <bs3:row>
+        <bs3:col span="12">
+            <cpt:collection id="lines">
+                <cpt:action id="downloadNewAmendmentProposalsForType" position="PANEL"/>
+                <cpt:action id="download" position="PANEL"/>
+                <cpt:action id="importAmendments" position="PANEL"/>
+                <cpt:action id="applyAll" position="PANEL"/>
+            </cpt:collection>
+        </bs3:col>
+    </bs3:row>
+
+    <bs3:row>
+        <bs3:col span="0">
+            <cpt:fieldSet name="General" id="general" unreferencedProperties="true"/>
+        </bs3:col>
+    </bs3:row>
+    <bs3:row>
+        <bs3:col span="0" unreferencedCollections="true">
+            <cpt:action id="rebuildMetamodel"/>
+            <cpt:action id="recentAuditEntries"/>
+            <cpt:action id="findChangesByDate"/>
+            <cpt:action id="recentChanges"/>
+            <cpt:action id="downloadLayoutXml"/>
+            <cpt:action id="clearHints"/>
+            <cpt:action id="links"/>
+        </bs3:col>
+    </bs3:row>
+</bs3:grid>

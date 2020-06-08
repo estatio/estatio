@@ -385,11 +385,26 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
         }
         final int sequenceToUse = findFreeSequence();
         BigDecimal transferAmount = coalesce(incomingInvoice.getGrossAmount(), BigDecimal.ZERO);
-        final String remittanceInformation = incomingInvoice.getInvoiceNumber();
         final PaymentLine line =
-                new PaymentLine(this, sequenceToUse, incomingInvoice, transferAmount, remittanceInformation);
+                new PaymentLine(this, sequenceToUse, incomingInvoice, transferAmount, constructRemittanceInformation(incomingInvoice));
         serviceRegistry2.injectServicesInto(lineIfAny);
         getLines().add(line);
+    }
+
+    String constructRemittanceInformation(final IncomingInvoice incomingInvoice){
+        String remittanceInformation;
+        if (incomingInvoice.getAtPath().startsWith("/BEL") && incomingInvoice.getCommunicationNumber()!=null){
+            remittanceInformation = incomingInvoice.getCommunicationNumber().trim();
+            if (incomingInvoice.getInvoiceNumber()!=null && incomingInvoice.getCommunicationNumber()!=null && !incomingInvoice.getInvoiceNumber().trim().equals(incomingInvoice.getCommunicationNumber().trim())){
+                remittanceInformation = remittanceInformation.concat(" (" + incomingInvoice.getInvoiceNumber().trim() + ")");
+            }
+        } else {
+            remittanceInformation = incomingInvoice.getInvoiceNumber().trim();
+            if (incomingInvoice.getInvoiceNumber()!=null && incomingInvoice.getCommunicationNumber()!=null && !incomingInvoice.getInvoiceNumber().trim().equals(incomingInvoice.getCommunicationNumber().trim())){
+                remittanceInformation = remittanceInformation.concat(" (" + incomingInvoice.getCommunicationNumber().trim() + ")");
+            }
+        }
+        return remittanceInformation;
     }
 
     private int findFreeSequence() {
@@ -569,8 +584,7 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
             //  -L 17-01-302-RO
             //  -FC-1702CS1-0002-RO
             //  -AF1T2017ASL-RO
-            final String remittanceInformation = extractAndJoin(lines, line -> line.getInvoice().getInvoiceNumber() + (line.getInvoice().getCommunicationNumber() != null ? " (" + line.getInvoice().getCommunicationNumber() + ")" : ""), ";");
-            creditTransfer.setRemittanceInformation(remittanceInformation);
+            creditTransfer.setRemittanceInformation(concatRemittanceInformationAndTruncateIfNeeded(lines));
 
             creditTransfer.setSeller(bankAccount.getOwner());
             creditTransfer.setSellerPostalAddressCountry(ctryFor(bankAccount.getOwner()));
@@ -579,6 +593,12 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
         }
 
         return transfers;
+    }
+
+    String concatRemittanceInformationAndTruncateIfNeeded(final List<PaymentLine> lines){
+        String result = lines.stream().map(l -> l.getRemittanceInformation()).collect(Collectors.joining(";"));
+        if (result.length()>140) result = result.substring(0, 140);
+        return result;
     }
 
     private static <T> Collector<T, ?, List<T>> toSortedList(Comparator<? super T> c) {

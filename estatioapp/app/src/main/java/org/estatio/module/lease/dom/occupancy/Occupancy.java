@@ -233,6 +233,10 @@ public class Occupancy
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE, domainEvent = Occupancy.RemoveEvent.class)
     public Object remove() {
         Lease lease = getLease();
+        final SalesAreaLicense currentSalesAreaLicense = getCurrentSalesAreaLicense();
+        if (currentSalesAreaLicense !=null){
+            currentSalesAreaLicense.remove();
+        }
         remove(this);
         return lease;
     }

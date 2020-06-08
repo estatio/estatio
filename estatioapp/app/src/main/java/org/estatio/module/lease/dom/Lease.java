@@ -59,6 +59,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.eventbus.ActionDomainEvent;
+import org.apache.isis.applib.services.factory.FactoryService;
 import org.apache.isis.applib.services.message.MessageService;
 import org.apache.isis.applib.services.wrapper.WrapperFactory;
 import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
@@ -70,6 +71,7 @@ import org.incode.module.base.dom.managed.ManagedIn;
 import org.incode.module.base.dom.types.NotesType;
 import org.incode.module.base.dom.utils.JodaPeriodUtils;
 import org.incode.module.base.dom.utils.StringUtils;
+import org.incode.module.base.dom.utils.TitleBuilder;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import org.estatio.module.agreement.dom.Agreement;
@@ -95,6 +97,11 @@ import org.estatio.module.financial.dom.BankAccount;
 import org.estatio.module.financial.dom.BankAccountRepository;
 import org.estatio.module.financial.dom.FinancialAccount;
 import org.estatio.module.invoice.dom.PaymentMethod;
+import org.estatio.module.lease.dom.amendments.LeaseAmendment;
+import org.estatio.module.lease.dom.amendments.LeaseAmendmentRepository;
+import org.estatio.module.lease.dom.amendments.Lease_amendments;
+import org.estatio.module.lease.dom.amendments.Lease_invoiceCalculations;
+import org.estatio.module.lease.dom.amendments.PersistedCalculationResult;
 import org.estatio.module.lease.dom.breaks.BreakOption;
 import org.estatio.module.lease.dom.breaks.BreakOptionRepository;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
@@ -128,6 +135,7 @@ import lombok.Setter;
                 value = "SELECT "
                         + "FROM org.estatio.module.lease.dom.Lease "
                         + "WHERE externalReference.indexOf(:externalReference) >= 0 "
+                        + "&& status != LeaseStatus.PREVIEW "
                         + "ORDER BY externalReference DESC "), // somehow DESC in JDOQL does not yield the expected results, so now trying to order in repo
         @javax.jdo.annotations.Query(
                 name = "matchByReferenceOrName", language = "JDOQL",
@@ -137,12 +145,14 @@ import lombok.Setter;
                         + "|| name.matches(:referenceOrName) "
                         + "|| externalReference.matches(:referenceOrName)) "
                         + "&& (:includeTerminated || tenancyEndDate == null || tenancyEndDate >= :date) "
+                        + "&& status != LeaseStatus.PREVIEW "
                         + "ORDER BY reference"),
         @javax.jdo.annotations.Query(
                 name = "findByProperty", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.module.lease.dom.Lease "
                         + "WHERE occupancies.contains(occ) "
+                        + "&& status != LeaseStatus.PREVIEW "
                         + "&& (occ.unit.property == :property) "
                         + "VARIABLES "
                         + "org.estatio.module.lease.dom.occupancy.Occupancy occ "
@@ -152,6 +162,7 @@ import lombok.Setter;
                 value = "SELECT "
                         + "FROM org.estatio.module.lease.dom.Lease "
                         + "WHERE (occupancies.contains(occ) "
+                        + "&& status != LeaseStatus.PREVIEW "
                         + "&& (occ.brand == :brand)) "
                         + "&& (:includeTerminated || tenancyEndDate == null || tenancyEndDate >= :date) "
                         + "VARIABLES "
@@ -162,6 +173,7 @@ import lombok.Setter;
                 value = "SELECT "
                         + "FROM org.estatio.module.lease.dom.Lease "
                         + "WHERE occupancies.contains(occ) "
+                        + "&& status != LeaseStatus.PREVIEW "
                         + "&& (tenancyStartDate == null || tenancyStartDate <= :activeOnDate) "
                         + "&& (tenancyEndDate == null || tenancyEndDate >= :activeOnDate) "
                         + "&& (occ.unit.property == :asset) "
@@ -173,8 +185,9 @@ import lombok.Setter;
                 value = "SELECT " +
                         "FROM org.estatio.module.lease.dom.Lease " +
                         "WHERE " +
-                        "endDate != null && (endDate >= :rangeStartDate && endDate < :rangeEndDate) " +
-                        "ORDER BY endDate")
+                        "endDate != null && (endDate >= :rangeStartDate && endDate < :rangeEndDate) "
+                        + " && status != LeaseStatus.PREVIEW "
+                        + " ORDER BY endDate")
 })
 @DomainObject(autoCompleteRepository = LeaseRepository.class)
 @DomainObjectLayout(bookmarking = BookmarkPolicy.AS_ROOT)
@@ -186,6 +199,17 @@ public class Lease
 
     public Lease() {
         super(LeaseAgreementRoleTypeEnum.LANDLORD, LeaseAgreementRoleTypeEnum.TENANT);
+    }
+
+    @Override
+    public String title() {
+        if (getStatus()==LeaseStatus.PREVIEW){
+            return TitleBuilder.start()
+                    .withName("LEASE PREVIEW")
+                    .withReference(getReference())
+                    .toString();
+        }
+        return super.title();
     }
 
     @Override
@@ -265,8 +289,17 @@ public class Lease
     public Property getProperty() {
         if (!getOccupancies().isEmpty()) {
             return getOccupancies().first().getUnit().getProperty();
+        } else {
+            if (getStatus()==LeaseStatus.PREVIEW){
+                final LeaseAmendment amendment = getAmendmentByLeasePreview();
+                return amendment !=null ? amendment.getLease().getProperty() : null;
+            }
         }
         return null;
+    }
+
+    private LeaseAmendment getAmendmentByLeasePreview() {
+        return leaseAmendmentRepository.findByLeasePreview(this);
     }
 
     // //////////////////////////////////////
@@ -304,6 +337,10 @@ public class Lease
 
     public LeaseType default1Change() {
         return getLeaseType();
+    }
+
+    public boolean hideChange(){
+        return getStatus() == LeaseStatus.PREVIEW;
     }
 
     @Column(allowsNull = "true", length = NotesType.Meta.MAX_LEN)
@@ -411,7 +448,16 @@ public class Lease
         return getTenancyEndDate();
     }
 
+    public boolean hideChangeTenancyDates() {
+        return getStatus()==LeaseStatus.PREVIEW;
+    }
+
     // //////////////////////////////////////
+
+    @Override
+    public boolean hideChangeDates() {
+        return getStatus()==LeaseStatus.PREVIEW;
+    }
 
     @Override
     public String disableChangeDates() {
@@ -466,6 +512,10 @@ public class Lease
         return occupancy;
     }
 
+    public boolean hideNewOccupancy(){
+        return getStatus()== LeaseStatus.PREVIEW;
+    }
+
     public LocalDate default0NewOccupancy() {
         return getTenancyStartDate();
     }
@@ -504,6 +554,45 @@ public class Lease
     @Getter @Setter
     private SortedSet<LeaseItem> items = new TreeSet<>();
 
+    @Action(semantics = SemanticsOf.SAFE)
+    @CollectionLayout(defaultView = "table", paged = 999)
+    public SortedSet<LeaseItem> getRecentAndFutureItems(){
+        SortedSet<LeaseItem> result = new TreeSet<>();
+        final List<LeaseItem> activeAndFutureItems = Lists.newArrayList(getItems())
+                .stream()
+                .filter(li->li.getEffectiveInterval()!=null)
+                .filter(li -> li.getEffectiveInterval().overlaps(LocalDateInterval.including(clockService.now().minusYears(1), clockService.now())) || (li.getStartDate() != null && li.getStartDate()
+                        .isAfter(clockService.now())))
+                .collect(Collectors.toList());
+        result.addAll(activeAndFutureItems);
+        return result;
+    }
+
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
+    public Lease getOriginalLease(){
+        final LeaseAmendment amendment = leaseAmendmentRepository.findByLeasePreview(this);
+        if (amendment==null) return null;
+        return amendment.getLease();
+    }
+
+    public boolean hideOriginalLease(){
+        return this.status!=LeaseStatus.PREVIEW;
+    }
+
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
+    public LeaseAmendment getAmendment(){
+        final LeaseAmendment amendment = leaseAmendmentRepository.findByLeasePreview(this);
+        if (amendment==null) return null;
+        return amendment;
+    }
+
+    public boolean hideAmendment(){
+        return this.status!=LeaseStatus.PREVIEW;
+    }
+
+
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     public LeaseItem newItem(
             final LeaseItemType type,
@@ -514,6 +603,10 @@ public class Lease
             final LocalDate startDate) {
         LeaseItem leaseItem = leaseItemRepository.newLeaseItem(this, type, invoicedBy, charge, invoicingFrequency, paymentMethod, startDate);
         return leaseItem;
+    }
+
+    public boolean hideNewItem(){
+        return getStatus()==LeaseStatus.PREVIEW;
     }
 
     public List<Charge> choices2NewItem() {
@@ -581,6 +674,10 @@ public class Lease
         return this;
     }
 
+    public boolean hideChangePaymentMethodForAll(){
+        return getStatus()==LeaseStatus.PREVIEW;
+    }
+
     public Agreement changePrevious(
             @Parameter(optionality = Optionality.OPTIONAL)
             final Agreement previousAgreement) {
@@ -617,7 +714,16 @@ public class Lease
     }
 
     public List<Agreement> autoComplete0ChangePrevious(final String searchPhrase) {
-        return agreementRepository.findByTypeAndReferenceOrName(getType(), StringUtils.wildcardToCaseInsensitiveRegex("*".concat(searchPhrase).concat("*")));
+        return agreementRepository.findByTypeAndReferenceOrName(getType(), StringUtils.wildcardToCaseInsensitiveRegex("*".concat(searchPhrase).concat("*")))
+                .stream()
+                .filter(l->l.getClass().isAssignableFrom(Lease.class))
+                .map(Lease.class::cast)
+                .filter(l->l.getStatus()!=LeaseStatus.PREVIEW)
+                .collect(Collectors.toList());
+    }
+
+    public boolean hideChangePrevious(){
+        return getStatus()==LeaseStatus.PREVIEW;
     }
 
     @Programmatic
@@ -721,6 +827,10 @@ public class Lease
         return null;
     }
 
+    public boolean hidePaidBy() {
+        return getStatus()==LeaseStatus.PREVIEW;
+    }
+
     public List<BankMandate> choices0PaidBy() {
         return existingBankMandatesForTenant();
     }
@@ -794,6 +904,10 @@ public class Lease
             return "There are no bank accounts available for this tenant";
         }
         return null;
+    }
+
+    public boolean hideNewMandate() {
+        return getStatus()==LeaseStatus.PREVIEW;
     }
 
     public List<BankAccount> choices0NewMandate() {
@@ -883,6 +997,10 @@ public class Lease
         return this;
     }
 
+    public boolean hideTerminate(){
+        return getStatus()==LeaseStatus.PREVIEW;
+    }
+
     public LocalDate default0Terminate() {
         return getClockService().now();
     }
@@ -945,6 +1063,10 @@ public class Lease
         Lease newLease = copyToNewLease(reference, name, tenant, getStartDate(), getEndDate(), tenancyStartDate, null, true);
         this.terminate(LocalDateInterval.endDateFromStartDate(tenancyStartDate));
         return newLease;
+    }
+
+    public boolean hideAssign(){
+        return getStatus()==LeaseStatus.PREVIEW;
     }
 
     public LocalDate default3Assign() {
@@ -1065,6 +1187,10 @@ public class Lease
         return newLease;
     }
 
+    public boolean hideRenew(){
+        return getStatus()==LeaseStatus.PREVIEW;
+    }
+
     public String default0Renew() {
         return getReference();
     }
@@ -1104,13 +1230,27 @@ public class Lease
         for (Occupancy occupancy : getOccupancies()){
             occupancy.remove();
         }
+        if (getStatus()==LeaseStatus.PREVIEW) {
+            for (PersistedCalculationResult result : factoryService.mixin(Lease_invoiceCalculations.class, this).$$()) {
+                result.remove();
+            }
+        }
         for (LeaseItem item : getItems()) {
             item.remove();
+        }
+        final Lease_amendments mixin = factoryService.mixin(Lease_amendments.class, this);
+        for (LeaseAmendment leaseAmendment : mixin.$$()){
+            leaseAmendment.remove();
+        }
+        final LeaseAmendment amendmentIfAny = getAmendmentByLeasePreview();
+        if (amendmentIfAny!=null){
+            amendmentIfAny.setLeasePreview(null);
         }
         remove(this);
     }
 
     public boolean hideRemove() {
+        if (getStatus()==LeaseStatus.PREVIEW) return false;
         return !EstatioRole.ADMINISTRATOR.isApplicableFor(getUser());
     }
 
@@ -1119,6 +1259,11 @@ public class Lease
             return "Cannot remove lease that has successor";
         }
         return null;
+    }
+
+    @Override
+    public boolean hideNewRole(){
+        return getStatus()== LeaseStatus.PREVIEW;
     }
 
     @Programmatic
@@ -1163,7 +1308,7 @@ public class Lease
     // //////////////////////////////////////
 
     @Inject
-    LeaseItemRepository leaseItemRepository;
+    public LeaseItemRepository leaseItemRepository;
 
     @Inject
     OccupancyRepository occupancyRepository;
@@ -1192,6 +1337,10 @@ public class Lease
     private WrapperFactory wrapperFactory;
 
     @Inject MessageService messageService;
+
+    @Inject FactoryService factoryService;
+
+    @Inject LeaseAmendmentRepository leaseAmendmentRepository;
 
 
 

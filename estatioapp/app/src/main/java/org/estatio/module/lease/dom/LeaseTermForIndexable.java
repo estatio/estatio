@@ -139,6 +139,11 @@ public class LeaseTermForIndexable extends LeaseTerm implements Indexable {
         return this;
     }
 
+    public boolean hideChangeParameters(){
+        if (getLeaseItem().getLease().getStatus()==LeaseStatus.PREVIEW) return true;
+        return false;
+    }
+
     public IndexationMethod default0ChangeParameters() {
         return getIndexationMethod();
     }
@@ -222,6 +227,11 @@ public class LeaseTermForIndexable extends LeaseTerm implements Indexable {
         return this;
     }
 
+    public boolean hideChangeValues(){
+        if (getLeaseItem().getLease().getStatus()==LeaseStatus.PREVIEW) return true;
+        return false;
+    }
+
     public BigDecimal default0ChangeValues() {
         return getBaseValue();
     }
@@ -285,6 +295,24 @@ public class LeaseTermForIndexable extends LeaseTerm implements Indexable {
         t.setBaseValue(getBaseValue());
         t.setIndexedValue(getIndexedValue());
         t.setSettledValue(getSettledValue());
+    }
+
+
+    @Override
+    @Programmatic
+    public void negateAmountsAndApplyPercentage(final BigDecimal discountPercentage){
+        if (getBaseIndexValue()!=null) {
+            setBaseIndexValue(applyPercentage(getBaseIndexValue(), discountPercentage).negate());
+        }
+        if (getBaseValue()!=null){
+            setBaseValue(applyPercentage(getBaseValue(), discountPercentage).negate());
+        }
+        if (getIndexedValue()!=null){
+            setIndexedValue(applyPercentage(getIndexedValue(), discountPercentage).negate());
+        }
+        if (getSettledValue()!=null){
+            setSettledValue(applyPercentage(getSettledValue(), discountPercentage).negate());
+        }
     }
 
     // //////////////////////////////////////

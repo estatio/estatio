@@ -17,6 +17,7 @@ import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
@@ -154,6 +155,15 @@ public class SalesAreaLicense extends Agreement {
     @Getter @Setter
     @Property(hidden = Where.EVERYWHERE)
     private String applicationTenancyPath;
+
+    @Programmatic
+    public void remove(){
+        if (getPrevious()==null){
+            repositoryService.removeAndFlush(this);
+        } else {
+            // we do not want occupancies with a history of sales area licences to be removed
+        }
+    }
 
     @Inject
     SalesAreaLicenseRepository salesAreaLicenseRepository;

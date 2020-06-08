@@ -12,9 +12,8 @@ import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.estatio.module.application.app.Lease_closeOldAndOpenNewLeaseItem;
+import org.estatio.module.lease.dom.amendments.Lease_closeOldAndOpenNewLeaseItem;
 import org.estatio.module.application.integtests.ApplicationModuleIntegTestAbstract;
-import org.estatio.module.invoice.dom.InvoiceRepository;
 import org.estatio.module.invoice.dom.InvoiceRunType;
 import org.estatio.module.lease.app.InvoiceMenu;
 import org.estatio.module.lease.contributions.Lease_calculate;
@@ -23,14 +22,12 @@ import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
 import org.estatio.module.lease.dom.LeaseItem;
 import org.estatio.module.lease.dom.LeaseItemType;
-import org.estatio.module.lease.dom.LeaseTerm;
 import org.estatio.module.lease.dom.LeaseTermForIndexable;
 import org.estatio.module.lease.dom.LeaseTermForServiceCharge;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLeaseRepository;
 import org.estatio.module.lease.fixtures.docfrag.enums.DocFragment_demo_enum;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
-import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForIndexableServiceCharge_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForRent_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForServiceCharge_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForTurnoverRent_enum;
@@ -92,7 +89,7 @@ public class Lease_closeOldAndOpenNewLeaseItem_IntegTest extends ApplicationModu
 
         // when
         transactionService.nextTransaction();
-        mixin(Lease_closeOldAndOpenNewLeaseItem.class, topmodelLease).act(newItemStartDate, LeaseItemType.RENT, InvoicingFrequency.QUARTERLY_IN_ADVANCE, InvoicingFrequency.MONTHLY_IN_ADVANCE, true);
+        mixin(Lease_closeOldAndOpenNewLeaseItem.class, topmodelLease).act(newItemStartDate, LeaseItemType.RENT, InvoicingFrequency.QUARTERLY_IN_ADVANCE, InvoicingFrequency.MONTHLY_IN_ADVANCE, false);
         transactionService.nextTransaction();
 
         // then
@@ -110,15 +107,16 @@ public class Lease_closeOldAndOpenNewLeaseItem_IntegTest extends ApplicationModu
 
         Assertions.assertThat(rentItemOld.getEndDate()).isEqualTo(newItemStartDate.minusDays(1));
         final List<InvoiceForLease> topmodelInvoices = invoiceRepository.findByLease(topmodelLease);
-        Assertions.assertThat(topmodelInvoices).hasSize(1);
-        Assertions.assertThat(topmodelInvoices.get(0).getDueDate()).isEqualTo(startOfTheYear);
-        Assertions.assertThat(currentTermOnSCItemOld.getInvoiceItems()).hasSize(1);
+        // ECP-1185: SUPERFLUOUS now that we took out deleting invoices altogether
+        Assertions.assertThat(topmodelInvoices).hasSize(2);
+        Assertions.assertThat(currentTermOnSCItemOld.getInvoiceItems()).hasSize(2);
+        Assertions.assertThat(topmodelInvoices.get(1).getDueDate()).isEqualTo(startOfTheYear);
 
         Assertions.assertThat(turnoverRentItem.getSourceItems()).hasSize(2);
         Assertions.assertThat(turnoverRentItem.getSourceItems().get(1).getSourceItem()).isEqualTo(rentItemNew);
 
         // and when
-        mixin(Lease_closeOldAndOpenNewLeaseItem.class, topmodelLease).act(newItemStartDate, LeaseItemType.SERVICE_CHARGE, InvoicingFrequency.QUARTERLY_IN_ADVANCE, InvoicingFrequency.MONTHLY_IN_ADVANCE, true);
+        mixin(Lease_closeOldAndOpenNewLeaseItem.class, topmodelLease).act(newItemStartDate, LeaseItemType.SERVICE_CHARGE, InvoicingFrequency.QUARTERLY_IN_ADVANCE, InvoicingFrequency.MONTHLY_IN_ADVANCE, false);
         transactionService.nextTransaction();
         // then
         final LeaseItem scItemNew = topmodelLease

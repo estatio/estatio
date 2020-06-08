@@ -25,7 +25,8 @@ public enum LeaseStatus {
     SUSPENDED,
     SUSPENDED_PARTIALLY,
     ACTIVE,
-    TERMINATED;
+    TERMINATED,
+    PREVIEW;
 
     public String title() {
         return StringUtils.enumTitle(this.name());

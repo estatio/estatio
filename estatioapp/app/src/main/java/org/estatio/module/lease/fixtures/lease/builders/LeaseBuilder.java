@@ -57,6 +57,11 @@ import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.dom.LeaseRoleTypeEnum;
 import org.estatio.module.lease.dom.LeaseType;
 import org.estatio.module.lease.dom.LeaseTypeRepository;
+import org.estatio.module.lease.dom.amendments.LeaseAmendment;
+import org.estatio.module.lease.dom.amendments.LeaseAmendmentItemRepository;
+import org.estatio.module.lease.dom.amendments.LeaseAmendmentState;
+import org.estatio.module.lease.dom.amendments.LeaseAmendmentType;
+import org.estatio.module.lease.dom.amendments.LeaseAmendmentRepository;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
 import org.estatio.module.lease.dom.occupancy.OccupancyRepository;
 import org.estatio.module.lease.dom.occupancy.tags.BrandCoverage;
@@ -98,7 +103,6 @@ public final class LeaseBuilder
     @AllArgsConstructor
     @Data
     public static class OccupancySpec {
-        @Getter @Setter
         Unit unit;
         String brand;
         BrandCoverage brandCoverage;
@@ -113,6 +117,14 @@ public final class LeaseBuilder
     }
     @Getter @Setter
     List<OccupancySpec> occupancySpecs = Lists.newArrayList();
+
+    @AllArgsConstructor
+    @Data
+    public static class AmendmentSpec {
+        LeaseAmendmentType leaseAmendmentType;
+    }
+    @Getter @Setter
+    List<AmendmentSpec> amendmentSpecs = Lists.newArrayList();
 
     @Getter @Setter
     Party manager;
@@ -184,6 +196,15 @@ public final class LeaseBuilder
                         .createSalesAreaLicense(spec.salesAreaNonFood, spec.salesAreaFood, spec.foodAndBeveragesArea);
             }
             executionContext.addResult(this, occupancy);
+        }
+        for (final AmendmentSpec spec : amendmentSpecs) {
+            final LeaseAmendment leaseAmendment = leaseAmendmentRepository
+                    .create(lease, spec.leaseAmendmentType, LeaseAmendmentState.PROPOSED, spec.leaseAmendmentType.getAmendmentStartDate(), null);
+            leaseAmendmentItemRepository
+                    .create(leaseAmendment, spec.leaseAmendmentType.getDiscountPercentage(), spec.leaseAmendmentType.getDiscountAppliesTo(), spec.leaseAmendmentType.getDiscountStartDate(), spec.leaseAmendmentType.getDiscountEndDate());
+            leaseAmendmentItemRepository
+                    .create(leaseAmendment, spec.leaseAmendmentType.getFrequencyChanges().get(0).oldFrequency, spec.leaseAmendmentType.getFrequencyChanges().get(0).newFrequency, spec.leaseAmendmentType.getFrequencyChangeAppliesTo(), spec.leaseAmendmentType.getFrequencyChangeStartDate(), spec.leaseAmendmentType.getFrequencyChangeEndDate());
+            executionContext.addResult(this, leaseAmendment);
         }
 
         if(invoiceAddressCreationPolicy == InvoiceAddressCreationPolicy.CREATE) {
@@ -274,6 +295,12 @@ public final class LeaseBuilder
 
     @Inject
     CommunicationChannelRepository communicationChannelRepository;
+
+    @Inject
+    LeaseAmendmentRepository leaseAmendmentRepository;
+
+    @Inject
+    LeaseAmendmentItemRepository leaseAmendmentItemRepository;
 
 
 
