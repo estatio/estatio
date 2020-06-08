@@ -95,7 +95,11 @@ public class TaskReminderService {
                     .filter(t -> t.getPersonAssignedTo().equals(approver))
                     .collect(Collectors.toList());
             if (disableSendReminderToApprover(approver, taskList)==null) {
-                sendReminderToApprover(approver, taskList);
+                try {
+                    sendReminderToApprover(approver, taskList);
+                } catch (Exception e){
+                    // email service will do a re-try
+                }
             } else {
                 // maybe log something if there is a need for it
             }
