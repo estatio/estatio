@@ -1,6 +1,7 @@
 package org.estatio.module.lease.imports;
 
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -11,6 +12,7 @@ import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.ApplicationException;
 import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Nature;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
@@ -38,22 +40,45 @@ import lombok.Setter;
 )
 public class SalesAreaLicenseImport implements ExcelFixtureRowHandler, Importable {
 
+    public SalesAreaLicenseImport(){}
+
+    public SalesAreaLicenseImport(final Occupancy occupancy){
+        this.leaseReference = occupancy.getLease().getReference();
+        this.unitReference = occupancy.getUnit().getReference();
+        this.startDate = occupancy.getStartDate() !=null ? occupancy.getStartDate() : occupancy.getLease().getTenancyStartDate()!=null ? occupancy.getLease().getTenancyStartDate() : occupancy.getLease().getStartDate();
+    }
+
+    public SalesAreaLicenseImport(final SalesAreaLicense license){
+        this.leaseReference = license.getOccupancy().getLease().getReference();
+        this.unitReference = license.getOccupancy().getUnit().getReference();
+        this.startDate = license.getStartDate();
+        this.salesAreaNonFood = license.getSalesAreaNonFood();
+        this.salesAreaFood = license.getSalesAreaFood();
+        this.foodAndBeveragesArea = license.getFoodAndBeveragesArea();
+    }
+
     @Getter @Setter
+    @MemberOrder(sequence = "1")
     private String leaseReference;
 
     @Getter @Setter
+    @MemberOrder(sequence = "2")
     private String unitReference;
 
     @Getter @Setter
+    @MemberOrder(sequence = "3")
     private LocalDate startDate;
 
     @Getter @Setter
+    @MemberOrder(sequence = "4")
     private BigDecimal salesAreaNonFood;
 
     @Getter @Setter
+    @MemberOrder(sequence = "5")
     private BigDecimal salesAreaFood;
 
     @Getter @Setter
+    @MemberOrder(sequence = "6")
     private BigDecimal foodAndBeveragesArea;
 
 
@@ -78,9 +103,15 @@ public class SalesAreaLicenseImport implements ExcelFixtureRowHandler, Importabl
 
         SalesAreaLicense salesAreaLicense;
 
-        // enforce idem potency
+        if (getSalesAreaNonFood()==null && getSalesAreaFood()==null && getFoodAndBeveragesArea()==null){
+            return Collections.emptyList();
+        }
+
         for (SalesAreaLicense license : salesAreaLicenseRepository.findByOccupancy(occupancy)){
             if (license.getStartDate().equals(getStartDate())){
+                license.setSalesAreaNonFood(getSalesAreaNonFood());
+                license.setSalesAreaFood(getSalesAreaFood());
+                license.setFoodAndBeveragesArea(getFoodAndBeveragesArea());
                 return Lists.newArrayList(license);
             }
         }
