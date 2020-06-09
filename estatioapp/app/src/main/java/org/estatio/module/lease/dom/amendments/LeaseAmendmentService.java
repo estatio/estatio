@@ -59,7 +59,8 @@ public class LeaseAmendmentService {
                 LeaseAmendmentType.COVID_ITA_100_PERC_1M,
                 LeaseAmendmentType.COVID_ITA_100_PERC_2M,
                 LeaseAmendmentType.COVID_ITA_FREQ_CHANGE_ONLY,
-                LeaseAmendmentType.DEMO_TYPE).
+                LeaseAmendmentType.DEMO_TYPE,
+                LeaseAmendmentType.DEMO_TYPE2).
                 contains(leaseAmendment.getLeaseAmendmentType())
         ) {
             messageService.warnUser(String.format("Amendment type %s is not implemented (yet...)", leaseAmendment.getLeaseAmendmentType()));
@@ -79,21 +80,25 @@ public class LeaseAmendmentService {
                 .filter(lai -> lai.getClass().isAssignableFrom(LeaseAmendmentItemForDiscount.class))
                 .map(LeaseAmendmentItemForDiscount.class::cast)
                 .findFirst().orElse(null);
-        // NOTE: we apply discount first, before frequency change, because it copies the original invoice frequnecy ...
-        if (leaseAmendmentItemForDiscount!=null){
-            final String message1 = String.format("Applying amendment item for discount for lease %s", preview ? leaseAmendment.getLeasePreview().getReference() : leaseAmendment.getLease().getReference());
-            LOG.info(message1);
-            applyDiscount(lease, leaseAmendmentItemForDiscount);
-        }
+
         final LeaseAmendmentItemForFrequencyChange leaseAmendmentItemForFrequencyChange = Lists
                 .newArrayList(leaseAmendment.getItems()).stream()
                 .filter(lai -> lai.getClass().isAssignableFrom(LeaseAmendmentItemForFrequencyChange.class))
                 .map(LeaseAmendmentItemForFrequencyChange.class::cast)
                 .findFirst().orElse(null);
+
+        // NOTE we apply frequency change first - at the moment this happens to work because French discounts are in the past (before the freq change on 1-7-2020) and Italian discount in the future (after applying freq change on 1-7-2020)
+        // ALSO NOTE that the last amendment item affecting a lease item is referenced to by LeaseItem#getLeaseAmendmentItem !!
+        // TODO: make this more "SAFE" and generic?
         if (leaseAmendmentItemForFrequencyChange!=null){
             final String message2 = String.format("Applying amendment item for frequency change for lease %s", preview ? leaseAmendment.getLeasePreview().getReference() : leaseAmendment.getLease().getReference());
             LOG.info(message2);
             applyFrequencyChange(lease, leaseAmendmentItemForFrequencyChange);
+        }
+        if (leaseAmendmentItemForDiscount!=null){
+            final String message1 = String.format("Applying amendment item for discount for lease %s", preview ? leaseAmendment.getLeasePreview().getReference() : leaseAmendment.getLease().getReference());
+            LOG.info(message1);
+            applyDiscount(lease, leaseAmendmentItemForDiscount);
         }
         if (!preview) {
             final String message3 = String.format("Amendment %s for lease %s applied", leaseAmendment.getReference(), leaseAmendment.getLease().getReference());
@@ -139,22 +144,21 @@ public class LeaseAmendmentService {
                 lease,
                 sourceItem.getInvoicedBy(),
                 chargeFromAmendmentType,
-                sourceItem.getInvoicingFrequency(),
                 sourceItem.getPaymentMethod(),
                 leaseAmendmentItemForDiscount.getStartDate(),
                 leaseAmendmentItemForDiscount.getEndDate(),
                 leaseAmendmentItemForDiscount.getManualDiscountAmount());
         newDiscountItem.setLeaseAmendmentItem(leaseAmendmentItemForDiscount);
-        sourceItem.setLeaseAmendmentItem(leaseAmendmentItemForDiscount);
+//        sourceItem.setLeaseAmendmentItem(leaseAmendmentItemForDiscount);
     }
 
-    LeaseItem createFixedDiscountItem(final Lease lease, final LeaseAgreementRoleTypeEnum invoicedBy, final Charge charge, final InvoicingFrequency invoicingFrequency, final PaymentMethod paymentMethod, final LocalDate startDate, final LocalDate endDate, final BigDecimal value){
+    LeaseItem createFixedDiscountItem(final Lease lease, final LeaseAgreementRoleTypeEnum invoicedBy, final Charge charge, final PaymentMethod paymentMethod, final LocalDate startDate, final LocalDate endDate, final BigDecimal value){
         final LeaseItem newDiscountItem = lease
-                .newItem(LeaseItemType.RENT_DISCOUNT_FIXED, invoicedBy, charge, invoicingFrequency, paymentMethod, startDate);
+                .newItem(LeaseItemType.RENT_DISCOUNT_FIXED, invoicedBy, charge, InvoicingFrequency.FIXED_IN_ADVANCE, paymentMethod, startDate);
         newDiscountItem.setEndDate(endDate);
         final LeaseTermForFixed newTerm = (LeaseTermForFixed) newDiscountItem
                 .newTerm(startDate, endDate);
-        newTerm.setValue(value);
+        newTerm.setValue(value); // TODO: negate? Are users inclined to use a '-'?
         return newDiscountItem;
     }
 

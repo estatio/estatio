@@ -54,6 +54,7 @@ public class LeaseAmendmentItemForDiscount extends LeaseAmendmentItem {
     @Getter @Setter
     private BigDecimal manualDiscountAmount; //TODO: implement; SQL db script; add to import/export?
 
+    @Action
     public LeaseAmendmentItemForDiscount changeManualDiscountAmount(@Nullable final BigDecimal manualDiscountAmount){
         setManualDiscountAmount(manualDiscountAmount);
         this.getLeaseAmendment().createOrRenewLeasePreview();
@@ -106,7 +107,10 @@ public class LeaseAmendmentItemForDiscount extends LeaseAmendmentItem {
     public BigDecimal calculateValueForDateBeforeDiscountUsingLeasePreview(){
         final Lease leasePreview = getLeaseAmendment().getLeasePreview();
         if (leasePreview==null) return null;
-        return leaseItemsToIncludeForDiscount(leasePreview).stream()
+        return Lists.newArrayList(leasePreview.getItems()).stream()
+                .filter(li -> LeaseAmendmentItem
+                        .applicableToFromString(this.getApplicableTo())
+                        .contains(li.getType()))
                 .map(li -> li.valueForDate(getStartDate().minusDays(1)))
                 .filter(x->x!=null)
                 .reduce(new BigDecimal("0.00"), BigDecimal::add);

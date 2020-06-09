@@ -39,6 +39,7 @@ import org.estatio.module.lease.dom.amendments.LeaseAmendmentItemForFrequencyCha
 import org.estatio.module.lease.dom.amendments.LeaseAmendmentItemType;
 import org.estatio.module.lease.dom.amendments.LeaseAmendmentRepository;
 import org.estatio.module.lease.dom.amendments.LeaseAmendmentType;
+import org.estatio.module.lease.dom.amendments.Lease_createLeaseAmendment;
 import org.estatio.module.lease.dom.amendments.Lease_invoiceCalculations;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForDeposit_enum;
@@ -129,6 +130,50 @@ public class LeaseAmendmentScenario_IntegTest extends LeaseModuleIntegTestAbstra
         assertThat(discountAmendmentItem.getTotalValueForDateBeforeDiscount()).isEqualTo(new BigDecimal("21305.02"));
         assertThat(originalRentItem.valueForDate(discountAmendmentItem.getStartDate().minusDays(1))).isEqualTo(new BigDecimal("21305.02")); // EQUALS the value for date just before discount of the only lease item used by amendment item for discount
         assertThat(mixin(Lease_invoiceCalculations.class, leasePreview).$$()).hasSize(20);
+
+    }
+
+    @Test
+    public void scenario_manual_discount_value() throws Exception {
+
+        Lease oxf = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
+
+        mixin(Lease_createLeaseAmendment.class, oxf).$$(LeaseAmendmentType.DEMO_TYPE2);
+        transactionService.nextTransaction();
+        final LeaseAmendment amendment = leaseAmendmentRepository.findUnique(oxf, LeaseAmendmentType.DEMO_TYPE2);
+        assertThat(amendment).isNotNull();
+        assertThat(amendment.getLeasePreview()).isNull();
+
+        final LeaseAmendmentItemForDiscount discountAmendmentItem = (LeaseAmendmentItemForDiscount) amendment.findItemsOfType(LeaseAmendmentItemType.DISCOUNT)
+                .stream().findFirst().orElse(null);
+        final LeaseAmendmentItemForFrequencyChange frqChangeAmendmentItem = (LeaseAmendmentItemForFrequencyChange) amendment.findItemsOfType(LeaseAmendmentItemType.INVOICING_FREQUENCY_CHANGE)
+                .stream().findFirst().orElse(null);
+
+        final LeaseItem originalRentItem = LeaseItemForRent_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
+        assertThat(originalRentItem.getEndDate()).isEqualTo(new LocalDate(2022, 7,14));
+        assertThat(originalRentItem.getTerms()).hasSize(1);
+        assertThat(originalRentItem.getInvoicingFrequency()).isEqualTo(InvoicingFrequency.QUARTERLY_IN_ADVANCE);
+        assertThat(oxf.findItemsOfType(LeaseItemType.RENT)).hasSize(1);
+
+        // when
+        final BigDecimal manualDiscountAmount = new BigDecimal("-1234.56");
+        discountAmendmentItem.changeManualDiscountAmount(manualDiscountAmount);
+
+        // then
+        Lease leasePreview = amendment.getLeasePreview();
+        final LeaseItem firstNewRentItem = leasePreview.findItemsOfType(LeaseItemType.RENT_DISCOUNT_FIXED).stream()
+                .filter(li -> li.getCharge().getReference().equals( LeaseAmendmentType.DEMO_TYPE2.getChargeReferenceForDiscountItem().get(0).newValue))
+                .findFirst().orElse(null);
+        assertThat(firstNewRentItem.getInvoicingFrequency()).isEqualTo(InvoicingFrequency.FIXED_IN_ADVANCE);
+        assertThat(discountAmendmentItem.calculateDiscountAmountUsingLeasePreview()).isEqualTo(manualDiscountAmount);
+        assertThat(discountAmendmentItem.getCalculatedDiscountAmount()).isEqualTo(manualDiscountAmount);
+        assertThat(originalRentItem.valueForDate(discountAmendmentItem.getStartDate().minusDays(1))).isEqualTo(new BigDecimal("21305.02")); // EQUALS the value for date just before discount of the only lease item used by amendment item for discount
+
+        final LeaseItem rentItemUsedInTotalValueCalculationBeforeDiscount = leasePreview.findItemsOfType(LeaseItemType.RENT).stream()
+                .filter(li -> li.getInterval().contains(discountAmendmentItem.getStartDate().minusDays(1))).findFirst()
+                .orElse(null);
+        assertThat(rentItemUsedInTotalValueCalculationBeforeDiscount.valueForDate(discountAmendmentItem.getStartDate().minusDays(1))).isEqualTo(new BigDecimal("21305.02"));
+        assertThat(discountAmendmentItem.getTotalValueForDateBeforeDiscount()).isEqualTo(new BigDecimal("21305.02"));
 
     }
 

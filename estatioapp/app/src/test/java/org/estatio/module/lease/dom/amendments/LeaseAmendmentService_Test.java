@@ -51,7 +51,7 @@ public class LeaseAmendmentService_Test {
         final BigDecimal value = new BigDecimal("123.45");
         final LeaseAgreementRoleTypeEnum landlord = LeaseAgreementRoleTypeEnum.LANDLORD;
         final Charge charge = new Charge();
-        final InvoicingFrequency quarterlyInAdvance = InvoicingFrequency.QUARTERLY_IN_ADVANCE;
+        final InvoicingFrequency fixedInAdvance = InvoicingFrequency.FIXED_IN_ADVANCE;
         final PaymentMethod directDebit = PaymentMethod.DIRECT_DEBIT;
 
         final LeaseTermForFixed fixedTerm = new LeaseTermForFixed();
@@ -66,12 +66,12 @@ public class LeaseAmendmentService_Test {
 
         // expect
         context.checking(new Expectations(){{
-            oneOf(mockLease).newItem(LeaseItemType.RENT_DISCOUNT_FIXED,landlord, charge, quarterlyInAdvance, directDebit, startDate);
+            oneOf(mockLease).newItem(LeaseItemType.RENT_DISCOUNT_FIXED,landlord, charge, fixedInAdvance, directDebit, startDate);
             will(returnValue(discountItem));
         }});
 
         // when
-        service.createFixedDiscountItem(mockLease, landlord, charge, quarterlyInAdvance, directDebit, startDate, endDate, value);
+        service.createFixedDiscountItem(mockLease, landlord, charge, directDebit, startDate, endDate, value);
 
         // then
         assertThat(discountItem.getEndDate()).isEqualTo(endDate);
