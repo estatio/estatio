@@ -26,6 +26,7 @@ import org.estatio.module.agreement.dom.role.AgreementRoleTypeRepository;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.module.invoice.dom.InvoiceRunType;
+import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.lease.contributions.Lease_calculate;
 import org.estatio.module.lease.dom.InvoicingFrequency;
 import org.estatio.module.lease.dom.Lease;
@@ -36,6 +37,7 @@ import org.estatio.module.lease.dom.LeaseItemSourceRepository;
 import org.estatio.module.lease.dom.LeaseItemType;
 import org.estatio.module.lease.dom.LeaseStatus;
 import org.estatio.module.lease.dom.LeaseTerm;
+import org.estatio.module.lease.dom.LeaseTermForFixed;
 import org.estatio.module.party.dom.Party;
 
 @DomainService(
@@ -115,12 +117,48 @@ public class LeaseAmendmentService {
     void applyDiscount(
             final Lease lease,
             final LeaseAmendmentItemForDiscount leaseAmendmentItemForDiscount) {
-        for (LeaseItem li : leaseAmendmentItemForDiscount.leaseItemsToIncludeForDiscount(lease)){
-            createDiscountItemAndTerms(li, leaseAmendmentItemForDiscount);
+        if (leaseAmendmentItemForDiscount.getManualDiscountAmount()==null) {
+            for (LeaseItem li : leaseAmendmentItemForDiscount.leaseItemsToIncludeForDiscount(lease)) {
+                createDiscountItemAndTermsFromPercentage(li, leaseAmendmentItemForDiscount);
+            }
+        } else {
+            final LeaseItem firstRentItemIfAny = leaseAmendmentItemForDiscount.leaseItemsToIncludeForDiscount(lease).stream()
+                    .filter(li -> li.getType() == LeaseItemType.RENT).findFirst().orElse(null);
+            if (firstRentItemIfAny!=null) {
+                createDiscountItemAndTermsFromManualValue(firstRentItemIfAny, leaseAmendmentItemForDiscount);
+            } else {
+                LOG.warn(String.format("No rent item found from lease %s when trying to apply manual discount value", lease.getReference()));
+            }
         }
     }
 
-    void createDiscountItemAndTerms(LeaseItem sourceItem, final LeaseAmendmentItemForDiscount leaseAmendmentItemForDiscount){
+    void createDiscountItemAndTermsFromManualValue(final LeaseItem sourceItem, final LeaseAmendmentItemForDiscount leaseAmendmentItemForDiscount){
+        final Lease lease = sourceItem.getLease();
+        final Charge chargeFromAmendmentType = chargeDerivedFromAmendmentTypeAndChargeSourceItem(sourceItem.getCharge(), leaseAmendmentItemForDiscount.getLeaseAmendment().getLeaseAmendmentType());
+        final LeaseItem newDiscountItem = createFixedDiscountItem(
+                lease,
+                sourceItem.getInvoicedBy(),
+                chargeFromAmendmentType,
+                sourceItem.getInvoicingFrequency(),
+                sourceItem.getPaymentMethod(),
+                leaseAmendmentItemForDiscount.getStartDate(),
+                leaseAmendmentItemForDiscount.getEndDate(),
+                leaseAmendmentItemForDiscount.getManualDiscountAmount());
+        newDiscountItem.setLeaseAmendmentItem(leaseAmendmentItemForDiscount);
+        sourceItem.setLeaseAmendmentItem(leaseAmendmentItemForDiscount);
+    }
+
+    LeaseItem createFixedDiscountItem(final Lease lease, final LeaseAgreementRoleTypeEnum invoicedBy, final Charge charge, final InvoicingFrequency invoicingFrequency, final PaymentMethod paymentMethod, final LocalDate startDate, final LocalDate endDate, final BigDecimal value){
+        final LeaseItem newDiscountItem = lease
+                .newItem(LeaseItemType.RENT_DISCOUNT_FIXED, invoicedBy, charge, invoicingFrequency, paymentMethod, startDate);
+        newDiscountItem.setEndDate(endDate);
+        final LeaseTermForFixed newTerm = (LeaseTermForFixed) newDiscountItem
+                .newTerm(startDate, endDate);
+        newTerm.setValue(value);
+        return newDiscountItem;
+    }
+
+    void createDiscountItemAndTermsFromPercentage(LeaseItem sourceItem, final LeaseAmendmentItemForDiscount leaseAmendmentItemForDiscount){
 
         LocalDate startDateToUse = sourceItem.getStartDate()==null || sourceItem.getStartDate().isBefore(leaseAmendmentItemForDiscount.getStartDate()) ? leaseAmendmentItemForDiscount.getStartDate() : sourceItem.getStartDate();
         LocalDate endDateToUse = sourceItem.getEndDate()==null || sourceItem.getEndDate().isAfter(leaseAmendmentItemForDiscount.getEndDate()) ? leaseAmendmentItemForDiscount.getEndDate() : sourceItem.getEndDate();

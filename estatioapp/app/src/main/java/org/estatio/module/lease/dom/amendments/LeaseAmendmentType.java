@@ -86,6 +86,8 @@ public enum LeaseAmendmentType {
             Arrays.asList(
                     new Tuple<>("6001", "6031"),
                     new Tuple<>("6002", "6032"),
+                    new Tuple<>("6031", "6031"), // current discount charge on any discount item
+                    new Tuple<>("6032", "6032"), // current discount charge on any discount item
                     new Tuple<>(null, "6032") // TODO: check DEFAULT with users?
             ),
             Arrays.asList(

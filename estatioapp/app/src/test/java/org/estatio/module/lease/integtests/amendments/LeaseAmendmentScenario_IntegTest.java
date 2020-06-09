@@ -119,7 +119,7 @@ public class LeaseAmendmentScenario_IntegTest extends LeaseModuleIntegTestAbstra
                 .filter(li -> li.getStartDate().equals(discountAmendmentItem.getStartDate()))
                 .findFirst().orElse(null);
         assertThat(discountRentItem.getEndDate()).isEqualTo(discountAmendmentItem.getEndDate());
-        assertThat(discountRentItem.getCharge().getReference()).isEqualTo(amendment.getLeaseAmendmentType().getChargeReferenceForDiscountItem());
+        assertThat(discountRentItem.getCharge().getReference()).isEqualTo(amendment.getLeaseAmendmentType().getChargeReferenceForDiscountItem().get(0).newValue);
         assertThat(discountRentItem.getTerms()).hasSize(1);
         final LeaseTermForIndexable first = (LeaseTermForIndexable) discountRentItem.getTerms().first();
         assertThat(first.getEffectiveValue()).isEqualTo(new BigDecimal("-10652.51"));

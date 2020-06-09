@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.InheritanceStrategy;
@@ -36,6 +37,7 @@ public class LeaseAmendmentItemForDiscount extends LeaseAmendmentItem {
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     public LeaseAmendmentItemForDiscount changeDiscountPercentage(@Digits(integer = 3, fraction = 2) final BigDecimal newPercentage){
         setDiscountPercentage(newPercentage);
+        this.getLeaseAmendment().createOrRenewLeasePreview();
         return this;
     }
 
@@ -46,6 +48,21 @@ public class LeaseAmendmentItemForDiscount extends LeaseAmendmentItem {
     public String disableChangeDiscountPercentage(){
         final String warning = String.format("Amendment in state of %s cannot be changed", getLeaseAmendment().getState());
         return getLeaseAmendment().amendmentDataIsImmutable() ? warning : null;
+    }
+
+    @Column(allowsNull = "true", scale = 2)
+    @Getter @Setter
+    private BigDecimal manualDiscountAmount; //TODO: implement; SQL db script; add to import/export?
+
+    public LeaseAmendmentItemForDiscount changeManualDiscountAmount(@Nullable final BigDecimal manualDiscountAmount){
+        setManualDiscountAmount(manualDiscountAmount);
+        this.getLeaseAmendment().createOrRenewLeasePreview();
+        return this;
+    }
+
+    public String disableChangeManualDiscountAmount(){
+        if (getLeaseAmendment().amendmentDataIsImmutable()) return "The amendment is immutable";
+        return null;
     }
 
     @Column(allowsNull = "true", scale = 2)
