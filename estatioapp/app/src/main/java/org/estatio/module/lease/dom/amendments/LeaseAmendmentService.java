@@ -54,8 +54,9 @@ public class LeaseAmendmentService {
         if (!Arrays.asList(
                 LeaseAmendmentType.COVID_FRA_50_PERC,
                 LeaseAmendmentType.COVID_FRA_100_PERC,
-                LeaseAmendmentType.COVID_FRA_FREQ_CHANGE,
-                LeaseAmendmentType.COVID_ITA_FREQ_CHANGE,
+                LeaseAmendmentType.COVID_ITA_100_PERC_1M,
+                LeaseAmendmentType.COVID_ITA_100_PERC_2M,
+                LeaseAmendmentType.COVID_ITA_FREQ_CHANGE_ONLY,
                 LeaseAmendmentType.DEMO_TYPE).
                 contains(leaseAmendment.getLeaseAmendmentType())
         ) {
@@ -128,12 +129,9 @@ public class LeaseAmendmentService {
         // prevent an item copy from being created when no terms for the discount period
         if (!sourceItem.hasTermsOverlapping(LocalDateInterval.including(leaseAmendmentItemForDiscount.getStartDate(), leaseAmendmentItemForDiscount.getEndDate()))) return;
 
-        final Charge chargeFromAmendmentType = chargeRepository.findByReference(
-                leaseAmendmentItemForDiscount.getLeaseAmendment().getLeaseAmendmentType()
-                        .getChargeReferenceForDiscountItem());
-        final Charge chargeToUse = chargeFromAmendmentType != null ? chargeFromAmendmentType : sourceItem.getCharge(); // This is a fallback. for testing f.i.
+        final Charge chargeFromAmendmentType = chargeDerivedFromAmendmentTypeAndChargeSourceItem(sourceItem.getCharge(), leaseAmendmentItemForDiscount.getLeaseAmendment().getLeaseAmendmentType());
         final LeaseItem newDiscountItem = lease
-                .newItem(sourceItem.getType(), sourceItem.getInvoicedBy(), chargeToUse, sourceItem.getInvoicingFrequency(), sourceItem.getPaymentMethod(), startDateToUse);
+                .newItem(sourceItem.getType(), sourceItem.getInvoicedBy(), chargeFromAmendmentType, sourceItem.getInvoicingFrequency(), sourceItem.getPaymentMethod(), startDateToUse);
         newDiscountItem.setLeaseAmendmentItem(leaseAmendmentItemForDiscount);
         newDiscountItem.setEndDate(endDateToUse);
         sourceItem.copyTerms(newDiscountItem.getStartDate(), newDiscountItem);
@@ -141,6 +139,29 @@ public class LeaseAmendmentService {
         if (lease.getStatus()!=LeaseStatus.PREVIEW) {
             final String message = String.format("Item of type %s and charge %s for lease %s created with interval %s", newDiscountItem.getType(), newDiscountItem.getCharge().getReference(), lease.getReference(), newDiscountItem.getInterval().toString());
             LOG.info(message);
+        }
+    }
+
+    Charge chargeDerivedFromAmendmentTypeAndChargeSourceItem(final Charge sourceCharge, final LeaseAmendmentType leaseAmendmentType){
+        String chargeRefToUse = leaseAmendmentType.getChargeReferenceForDiscountItem()
+                .stream()
+                .filter(t->t.oldValue!=null)
+                .filter(t -> t.oldValue.equals(sourceCharge.getReference()))
+                .map(t -> t.newValue)
+                .findFirst().orElse(null);
+        if (chargeRefToUse==null) {
+            chargeRefToUse = leaseAmendmentType.getChargeReferenceForDiscountItem()
+                    .stream()
+                    .filter(t -> t.oldValue == null)
+                    .map(t -> t.newValue)
+                    .findFirst().orElse(null);
+        }
+        if (chargeRefToUse!=null) {
+            final Charge charge = chargeRepository.findByReference(chargeRefToUse);
+            if (charge==null) throw new RuntimeException(String.format("Charge with reference %s not found", chargeRefToUse));
+            return charge;
+        } else {
+            return sourceCharge; // This is a fallback. for testing f.i.
         }
     }
 
@@ -296,7 +317,7 @@ public class LeaseAmendmentService {
     boolean hasChangingFrequency(final LeaseItem i, final LeaseAmendmentType leaseAmendmentType){
         final LeaseAmendmentType.Tuple<InvoicingFrequency, InvoicingFrequency> tuple = leaseAmendmentType.getFrequencyChanges()
                 .stream()
-                .filter(t -> t.oldFrequency == i.getInvoicingFrequency())
+                .filter(t -> t.oldValue == i.getInvoicingFrequency())
                 .findFirst().orElse(null);
         return tuple != null;
     }
@@ -304,7 +325,7 @@ public class LeaseAmendmentService {
     LeaseAmendmentType.Tuple<InvoicingFrequency, InvoicingFrequency>  getTuple(final LeaseItem i, final LeaseAmendmentType leaseAmendmentType){
         return leaseAmendmentType.getFrequencyChanges()
                 .stream()
-                .filter(t -> t.oldFrequency == i.getInvoicingFrequency())
+                .filter(t -> t.oldValue == i.getInvoicingFrequency())
                 .findFirst().orElse(null);
     }
 

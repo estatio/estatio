@@ -29,7 +29,7 @@ public class Lease_createLeaseAmendment {
         final LeaseAmendmentType.Tuple<InvoicingFrequency, InvoicingFrequency> frequencyTuple = leaseAmendmentService
                 .findInvoiceFrequencyTupleOnfirstFrequencyChangeCandidate(amendment);
         if (frequencyTuple!=null && leaseAmendmentType.getFrequencyChanges()!=null && leaseAmendmentType.getFrequencyChangeAppliesTo()!=null && leaseAmendmentType.getFrequencyChangeStartDate()!=null && leaseAmendmentType.getFrequencyChangeEndDate()!=null) {
-            leaseAmendmentItemRepository.create(amendment, frequencyTuple.oldFrequency, frequencyTuple.newFrequency, leaseAmendmentType.getFrequencyChangeAppliesTo(),
+            leaseAmendmentItemRepository.create(amendment, frequencyTuple.oldValue, frequencyTuple.newValue, leaseAmendmentType.getFrequencyChangeAppliesTo(),
                     leaseAmendmentType.getFrequencyChangeStartDate(), leaseAmendmentType.getFrequencyChangeEndDate());
         }
         return lease;

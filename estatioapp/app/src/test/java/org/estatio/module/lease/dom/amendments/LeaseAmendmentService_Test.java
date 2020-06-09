@@ -16,6 +16,8 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
+import org.estatio.module.charge.dom.Charge;
+import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.module.lease.dom.InvoicingFrequency;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseItem;
@@ -119,7 +121,7 @@ public class LeaseAmendmentService_Test {
             }
         };
         rentItem.setType(LeaseItemType.RENT);
-        rentItem.setInvoicingFrequency(LeaseAmendmentType.COVID_FRA_50_PERC.getFrequencyChanges().get(1).oldFrequency);
+        rentItem.setInvoicingFrequency(LeaseAmendmentType.COVID_FRA_50_PERC.getFrequencyChanges().get(1).oldValue);
         Lease lease = new Lease(){
             @Override public SortedSet<LeaseItem> getItems() {
                 return new TreeSet<>(Arrays.asList(
@@ -133,6 +135,35 @@ public class LeaseAmendmentService_Test {
                 .findInvoiceFrequencyTupleOnfirstFrequencyChangeCandidate(lease, LeaseAmendmentType.COVID_FRA_50_PERC);
         // then
         assertThat(tuple).isEqualTo(LeaseAmendmentType.COVID_FRA_50_PERC.getFrequencyChanges().get(1));
+
+    }
+
+    @Mock ChargeRepository mockChargeRepository;
+
+    @Test
+    public void chargeDerivedFromAmendmentTypeAndChargeSourceItem_works() throws Exception {
+
+        // given
+        LeaseAmendmentService service = new LeaseAmendmentService();
+        service.chargeRepository = mockChargeRepository;
+        Charge sourceCharge1 = new Charge();
+        sourceCharge1.setReference("6001");
+        Charge sourceCharge2 = new Charge();
+        sourceCharge2.setReference("6002");
+        Charge sourceCharge3 = new Charge();
+        sourceCharge2.setReference("xxxx");
+
+        // expect
+        context.checking(new Expectations(){{
+            oneOf(mockChargeRepository).findByReference(LeaseAmendmentType.COVID_ITA_100_PERC_1M.getChargeReferenceForDiscountItem().get(0).newValue);
+            oneOf(mockChargeRepository).findByReference(LeaseAmendmentType.COVID_ITA_100_PERC_1M.getChargeReferenceForDiscountItem().get(1).newValue);
+            oneOf(mockChargeRepository).findByReference(LeaseAmendmentType.COVID_ITA_100_PERC_1M.getChargeReferenceForDiscountItem().get(2).newValue);
+        }});
+
+        // when
+        service.chargeDerivedFromAmendmentTypeAndChargeSourceItem(sourceCharge1, LeaseAmendmentType.COVID_ITA_100_PERC_1M);
+        service.chargeDerivedFromAmendmentTypeAndChargeSourceItem(sourceCharge2, LeaseAmendmentType.COVID_ITA_100_PERC_1M);
+        service.chargeDerivedFromAmendmentTypeAndChargeSourceItem(sourceCharge3, LeaseAmendmentType.COVID_ITA_100_PERC_1M);
 
     }
 

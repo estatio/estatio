@@ -196,7 +196,7 @@ public final class LeaseBuilder
             leaseAmendmentItemRepository
                     .create(leaseAmendment, spec.leaseAmendmentType.getDiscountPercentage(), spec.leaseAmendmentType.getDiscountAppliesTo(), spec.leaseAmendmentType.getDiscountStartDate(), spec.leaseAmendmentType.getDiscountEndDate());
             leaseAmendmentItemRepository
-                    .create(leaseAmendment, spec.leaseAmendmentType.getFrequencyChanges().get(0).oldFrequency, spec.leaseAmendmentType.getFrequencyChanges().get(0).newFrequency, spec.leaseAmendmentType.getFrequencyChangeAppliesTo(), spec.leaseAmendmentType.getFrequencyChangeStartDate(), spec.leaseAmendmentType.getFrequencyChangeEndDate());
+                    .create(leaseAmendment, spec.leaseAmendmentType.getFrequencyChanges().get(0).oldValue, spec.leaseAmendmentType.getFrequencyChanges().get(0).newValue, spec.leaseAmendmentType.getFrequencyChangeAppliesTo(), spec.leaseAmendmentType.getFrequencyChangeStartDate(), spec.leaseAmendmentType.getFrequencyChangeEndDate());
             executionContext.addResult(this, leaseAmendment);
         }
 
