@@ -184,7 +184,7 @@ public enum LeaseAmendmentType {
             false),
     DEMO_TYPE2(
             new LocalDate(2020,7,1),
-            new BigDecimal("50"),
+            new BigDecimal("100"),
             Arrays.asList(LeaseItemType.RENT, LeaseItemType.RENT_DISCOUNT, LeaseItemType.RENT_DISCOUNT_FIXED),
             new LocalDate(2020,7,1),
             new LocalDate(2020,8,31),
@@ -192,7 +192,7 @@ public enum LeaseAmendmentType {
                     new Tuple<>(null, "GBR_DISCOUNT")
             ),
             Arrays.asList(
-                    new Tuple<>(InvoicingFrequency.QUARTERLY_IN_ADVANCE, InvoicingFrequency.MONTHLY_IN_ARREARS)
+                    new Tuple<>(InvoicingFrequency.QUARTERLY_IN_ADVANCE, InvoicingFrequency.MONTHLY_IN_ADVANCE)
             ),
             Arrays.asList(LeaseItemType.RENT, LeaseItemType.SERVICE_CHARGE),
             new LocalDate(2020,7,1),

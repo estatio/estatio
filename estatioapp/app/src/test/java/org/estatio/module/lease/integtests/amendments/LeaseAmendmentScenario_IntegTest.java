@@ -156,11 +156,29 @@ public class LeaseAmendmentScenario_IntegTest extends LeaseModuleIntegTestAbstra
         assertThat(oxf.findItemsOfType(LeaseItemType.RENT)).hasSize(1);
 
         // when
+        amendment.createOrRenewLeasePreview();
+
+        // then
+        Lease leasePreview = amendment.getLeasePreview();
+        final LeaseItem discountRentItem = leasePreview.findItemsOfType(LeaseItemType.RENT).stream()
+                .filter(li -> li.getStartDate().equals(discountAmendmentItem.getStartDate()))
+                .findFirst().orElse(null);
+        assertThat(discountRentItem.getEndDate()).isEqualTo(discountAmendmentItem.getEndDate());
+        assertThat(discountRentItem.getCharge().getReference()).isEqualTo(amendment.getLeaseAmendmentType().getChargeReferenceForDiscountItem().get(0).newValue);
+        assertThat(discountRentItem.getTerms()).hasSize(2);
+        final LeaseTermForIndexable first = (LeaseTermForIndexable) discountRentItem.getTerms().first();
+        assertThat(first.getEffectiveValue()).isEqualTo(new BigDecimal("-21305.02"));
+        assertThat(discountAmendmentItem.calculateDiscountAmountUsingLeasePreview()).isEqualTo(new BigDecimal("-3550.84"));
+        assertThat(discountAmendmentItem.getCalculatedDiscountAmount()).isEqualTo(new BigDecimal("-3550.84"));
+        assertThat(discountAmendmentItem.getTotalValueForDateBeforeDiscount()).isEqualTo(new BigDecimal("21305.02"));
+        assertThat(originalRentItem.valueForDate(discountAmendmentItem.getStartDate().minusDays(1))).isEqualTo(new BigDecimal("21305.02")); // EQUALS the value for date just before discount of the only lease item used by amendment item for discount
+
+        // when using manual value
         final BigDecimal manualDiscountAmount = new BigDecimal("-1234.56");
         discountAmendmentItem.changeManualDiscountAmount(manualDiscountAmount);
 
         // then
-        Lease leasePreview = amendment.getLeasePreview();
+        leasePreview = amendment.getLeasePreview();
         final LeaseItem firstNewRentItem = leasePreview.findItemsOfType(LeaseItemType.RENT_DISCOUNT_FIXED).stream()
                 .filter(li -> li.getCharge().getReference().equals( LeaseAmendmentType.DEMO_TYPE2.getChargeReferenceForDiscountItem().get(0).newValue))
                 .findFirst().orElse(null);
