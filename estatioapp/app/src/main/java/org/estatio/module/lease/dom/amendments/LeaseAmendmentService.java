@@ -174,13 +174,24 @@ public class LeaseAmendmentService {
         final Charge chargeFromAmendmentType = chargeDerivedFromAmendmentTypeAndChargeSourceItem(sourceItem.getCharge(), leaseAmendmentItemForDiscount.getLeaseAmendment().getLeaseAmendmentType());
         final LeaseItem newDiscountItem = lease
                 .newItem(sourceItem.getType(), sourceItem.getInvoicedBy(), chargeFromAmendmentType, sourceItem.getInvoicingFrequency(), sourceItem.getPaymentMethod(), startDateToUse);
+        if (sourceItem.getType()==LeaseItemType.RENT) newDiscountItem.setType(LeaseItemType.RENT_DISCOUNT); // for current discounts we leave the types as they are
         newDiscountItem.setLeaseAmendmentItem(leaseAmendmentItemForDiscount);
         newDiscountItem.setEndDate(endDateToUse);
         sourceItem.copyTerms(newDiscountItem.getStartDate(), newDiscountItem);
+        // SINCE RENT_FIXED items do not autocreate terms, we do a fix here when needed
+        if (newDiscountItem.getType()==LeaseItemType.RENT_DISCOUNT) createTermsIfNeededForTheItemInterval(newDiscountItem);
         newDiscountItem.negateAmountsAndApplyPercentageOnTerms(leaseAmendmentItemForDiscount.getDiscountPercentage());
         if (lease.getStatus()!=LeaseStatus.PREVIEW) {
             final String message = String.format("Item of type %s and charge %s for lease %s created with interval %s", newDiscountItem.getType(), newDiscountItem.getCharge().getReference(), lease.getReference(), newDiscountItem.getInterval().toString());
             LOG.info(message);
+        }
+    }
+
+    public void createTermsIfNeededForTheItemInterval(final LeaseItem leaseItem){
+        for (LeaseTerm term : leaseItem.getTerms()){
+            if (term.getNext()==null && term.getEndDate()!=null && term.getEndDate().isBefore(leaseItem.getEndDate())){
+                term.createNext(term.getEndDate().plusDays(1), null);
+            }
         }
     }
 

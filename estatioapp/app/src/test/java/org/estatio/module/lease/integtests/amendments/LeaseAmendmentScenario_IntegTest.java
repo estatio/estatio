@@ -94,7 +94,8 @@ public class LeaseAmendmentScenario_IntegTest extends LeaseModuleIntegTestAbstra
         assertThat(originalRentItem.getTerms()).hasSize(11);
         final Lease leasePreview = amendment.getLeasePreview();
         assertThat(leasePreview).isNotNull();
-        assertThat(leasePreview.findItemsOfType(LeaseItemType.RENT)).hasSize(4);
+        assertThat(leasePreview.findItemsOfType(LeaseItemType.RENT)).hasSize(3);
+        assertThat(leasePreview.findItemsOfType(LeaseItemType.RENT_DISCOUNT)).hasSize(1);
 
         final LeaseItem firstNewRentItem = leasePreview.findItemsOfType(LeaseItemType.RENT).stream()
                 .filter(li -> li.getStartDate().equals(originalRentItem.getStartDate()))
@@ -116,7 +117,7 @@ public class LeaseAmendmentScenario_IntegTest extends LeaseModuleIntegTestAbstra
         assertThat(thirdNewRentItem.getInvoicingFrequency()).isEqualTo(InvoicingFrequency.QUARTERLY_IN_ADVANCE);
         assertThat(thirdNewRentItem.getTerms()).hasSize(1);
 
-        final LeaseItem discountRentItem = leasePreview.findItemsOfType(LeaseItemType.RENT).stream()
+        final LeaseItem discountRentItem = leasePreview.findItemsOfType(LeaseItemType.RENT_DISCOUNT).stream()
                 .filter(li -> li.getStartDate().equals(discountAmendmentItem.getStartDate()))
                 .findFirst().orElse(null);
         assertThat(discountRentItem.getEndDate()).isEqualTo(discountAmendmentItem.getEndDate());
@@ -160,7 +161,7 @@ public class LeaseAmendmentScenario_IntegTest extends LeaseModuleIntegTestAbstra
 
         // then
         Lease leasePreview = amendment.getLeasePreview();
-        final LeaseItem discountRentItem = leasePreview.findItemsOfType(LeaseItemType.RENT).stream()
+        final LeaseItem discountRentItem = leasePreview.findItemsOfType(LeaseItemType.RENT_DISCOUNT).stream()
                 .filter(li -> li.getStartDate().equals(discountAmendmentItem.getStartDate()))
                 .findFirst().orElse(null);
         assertThat(discountRentItem.getEndDate()).isEqualTo(discountAmendmentItem.getEndDate());
