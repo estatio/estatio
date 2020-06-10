@@ -1,6 +1,7 @@
 package org.estatio.module.lease.dom.amendments;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.SortedSet;
@@ -178,7 +179,7 @@ public class LeaseAmendment extends Agreement {
     }
 
     public boolean hideApply(){
-        return getState()!=LeaseAmendmentState.SIGNED;
+        return !Arrays.asList(LeaseAmendmentState.SIGNED, LeaseAmendmentState.APPLY).contains(getState());
     }
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
@@ -267,5 +268,6 @@ public class LeaseAmendment extends Agreement {
     @Inject
     LeaseAmendmentService leaseAmendmentService;
 
-    @Inject LeaseAmendmentItemRepository leaseAmendmentItemRepository;
+    @Inject
+    LeaseAmendmentItemRepository leaseAmendmentItemRepository;
 }

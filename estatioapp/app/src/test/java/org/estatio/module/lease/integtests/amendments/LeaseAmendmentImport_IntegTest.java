@@ -1,0 +1,146 @@
+/*
+ *
+ *  Copyright 2012-2014 Eurocommercial Properties NV
+ *
+ *
+ *  Licensed under the Apache License, Version 2.0 (the
+ *  "License"); you may not use this file except in compliance
+ *  with the License.  You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.  See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
+ */
+package org.estatio.module.lease.integtests.amendments;
+
+import java.math.BigDecimal;
+import java.util.List;
+
+import javax.inject.Inject;
+
+import org.assertj.core.api.Assertions;
+import org.joda.time.LocalDate;
+import org.junit.Before;
+import org.junit.Test;
+
+import org.apache.isis.applib.fixturescripts.FixtureResult;
+import org.apache.isis.applib.fixturescripts.FixtureScript;
+import org.apache.isis.applib.services.registry.ServiceRegistry2;
+import org.apache.isis.applib.value.Blob;
+
+import org.estatio.module.asset.dom.Property;
+import org.estatio.module.asset.fixtures.property.enums.Property_enum;
+import org.estatio.module.lease.dom.Lease;
+import org.estatio.module.lease.dom.amendments.LeaseAmendment;
+import org.estatio.module.lease.dom.amendments.LeaseAmendmentItemForDiscount;
+import org.estatio.module.lease.dom.amendments.LeaseAmendmentItemForFrequencyChange;
+import org.estatio.module.lease.dom.amendments.LeaseAmendmentManager;
+import org.estatio.module.lease.dom.amendments.LeaseAmendmentRepository;
+import org.estatio.module.lease.dom.amendments.LeaseAmendmentState;
+import org.estatio.module.lease.dom.amendments.LeaseAmendmentType;
+import org.estatio.module.lease.dom.amendments.Property_maintainLeaseAmendments;
+import org.estatio.module.lease.fixtures.imports.LeaseAmendmentImportFixture;
+import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
+import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForRent_enum;
+import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForServiceCharge_enum;
+import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
+
+import static org.estatio.module.lease.dom.InvoicingFrequency.MONTHLY_IN_ADVANCE;
+import static org.estatio.module.lease.dom.InvoicingFrequency.QUARTERLY_IN_ADVANCE;
+
+public class LeaseAmendmentImport_IntegTest extends LeaseModuleIntegTestAbstract {
+
+    List<FixtureResult> fixtureResults;
+
+    @Before
+    public void setupData() {
+        runFixtureScript(new FixtureScript() {
+            @Override
+            protected void execute(ExecutionContext executionContext) {
+                executionContext.executeChild(this, new LeaseAmendmentImportFixture());
+                executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.builder());
+                executionContext.executeChild(this, LeaseItemForRent_enum.OxfTopModel001Gb.builder());
+                executionContext.executeChild(this, LeaseItemForServiceCharge_enum.OxfTopModel001Gb.builder());
+                executionContext.executeChild(this, Lease_enum.OxfMediaX002Gb.builder());
+                executionContext.executeChild(this, LeaseItemForRent_enum.OxfMediaX002Gb.builder());
+                executionContext.executeChild(this, LeaseItemForServiceCharge_enum.OxfMediaX002Gb.builder());
+                executionContext.executeChild(this, Lease_enum.OxfMiracl005Gb.builder());
+                executionContext.executeChild(this, LeaseItemForRent_enum.OxfMiracl005Gb.builder());
+                executionContext.executeChild(this, LeaseItemForServiceCharge_enum.OxfMiracl005Gb.builder());
+                executionContext.executeChild(this, Lease_enum.OxfPoison003Gb.builder());
+                executionContext.executeChild(this, LeaseItemForRent_enum.OxfPoison003Gb.builder());
+                executionContext.executeChild(this, LeaseItemForServiceCharge_enum.OxfPoison003Gb.builder());
+                fixtureResults = executionContext.getResults();
+            }
+        });
+    }
+
+    @Test
+    public void import_leaseamendments_test() throws Exception {
+
+        // given
+        Blob excelSheet = (Blob) fixtureResults.get(0).getObject();
+        Assertions.assertThat(excelSheet).isNotNull();
+        Property oxf = Property_enum.OxfGb.findUsing(serviceRegistry);
+        Assertions.assertThat(leaseAmendmentRepository.findByType(LeaseAmendmentType.DEMO_TYPE2)).isEmpty();
+
+
+        // when
+        final LeaseAmendmentManager manager = mixin(Property_maintainLeaseAmendments.class, oxf)
+                .$$(LeaseAmendmentType.DEMO_TYPE2);
+        serviceRegistry2.injectServicesInto(manager);
+        manager.importAmendments(excelSheet);
+
+        // then
+        Assertions.assertThat(leaseAmendmentRepository.findByType(LeaseAmendmentType.DEMO_TYPE2)).hasSize(4);
+        final Lease topmodelLease = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
+        final LeaseAmendment amendmentForTopmodel = leaseAmendmentRepository.findUnique(topmodelLease, LeaseAmendmentType.DEMO_TYPE2);
+        Assertions.assertThat(amendmentForTopmodel.getState()).isEqualTo(LeaseAmendmentState.APPLY);
+        Assertions.assertThat(amendmentForTopmodel.getStartDate()).isEqualTo(new LocalDate(2020,6,1));
+        Assertions.assertThat(amendmentForTopmodel.getItems()).hasSize(1);
+        final LeaseAmendmentItemForDiscount amendmentItemForTopmodel = (LeaseAmendmentItemForDiscount) amendmentForTopmodel.getItems().first();
+        Assertions.assertThat(amendmentItemForTopmodel.getManualDiscountAmount()).isEqualTo(new BigDecimal("-3500.12"));
+        Assertions.assertThat(amendmentItemForTopmodel.getStartDate()).isEqualTo(new LocalDate(2020,7,2));
+        Assertions.assertThat(amendmentItemForTopmodel.getEndDate()).isEqualTo(new LocalDate(2020,8,30));
+
+        final Lease poisonLease = Lease_enum.OxfPoison003Gb.findUsing(serviceRegistry);
+        final LeaseAmendment amendmentForPoison = leaseAmendmentRepository.findUnique(poisonLease, LeaseAmendmentType.DEMO_TYPE2);
+        Assertions.assertThat(amendmentForPoison.getState()).isEqualTo(LeaseAmendmentState.SIGNED);
+        Assertions.assertThat(amendmentForPoison.getStartDate()).isEqualTo(new LocalDate(2020,7,1));
+        Assertions.assertThat(amendmentForPoison.getItems()).hasSize(2);
+        final LeaseAmendmentItemForDiscount firsPoisonAmendmentItem = (LeaseAmendmentItemForDiscount) amendmentForPoison.getItems().first();
+        final LeaseAmendmentItemForFrequencyChange lastPoisonAmendmentItem = (LeaseAmendmentItemForFrequencyChange) amendmentForPoison.getItems().last();
+        Assertions.assertThat(firsPoisonAmendmentItem.getManualDiscountAmount()).isNull();
+        Assertions.assertThat(firsPoisonAmendmentItem.getDiscountPercentage()).isEqualTo(new BigDecimal("100.0"));
+        Assertions.assertThat(lastPoisonAmendmentItem.getAmendedInvoicingFrequency()).isEqualTo(MONTHLY_IN_ADVANCE);
+        Assertions.assertThat(lastPoisonAmendmentItem.getInvoicingFrequencyOnLease()).isEqualTo(QUARTERLY_IN_ADVANCE);
+        Assertions.assertThat(lastPoisonAmendmentItem.getStartDate()).isEqualTo(new LocalDate(2020,7,1));
+        Assertions.assertThat(lastPoisonAmendmentItem.getEndDate()).isEqualTo(new LocalDate(2020,12,31));
+
+        final Lease miracleLease = Lease_enum.OxfMiracl005Gb.findUsing(serviceRegistry);
+        final LeaseAmendment amendmentForMiracle = leaseAmendmentRepository.findUnique(miracleLease, LeaseAmendmentType.DEMO_TYPE2);
+        Assertions.assertThat(amendmentForMiracle.getState()).isEqualTo(LeaseAmendmentState.PROPOSED);
+        Assertions.assertThat(amendmentForMiracle.getStartDate()).isEqualTo(new LocalDate(2020,7,1));
+        Assertions.assertThat(amendmentForMiracle.getItems()).hasSize(2);
+        final LeaseAmendmentItemForDiscount firstMiracleAmendmentItem = (LeaseAmendmentItemForDiscount) amendmentForMiracle.getItems().first();
+        Assertions.assertThat(firstMiracleAmendmentItem.getManualDiscountAmount()).isNull();
+        Assertions.assertThat(firstMiracleAmendmentItem.getDiscountPercentage()).isEqualTo(new BigDecimal("55.55"));
+
+        final Lease mediaLease = Lease_enum.OxfMediaX002Gb.findUsing(serviceRegistry);
+        final LeaseAmendment amendmentForMedia = leaseAmendmentRepository.findUnique(mediaLease, LeaseAmendmentType.DEMO_TYPE2);
+        Assertions.assertThat(amendmentForMedia.getState()).isEqualTo(LeaseAmendmentState.PROPOSED);
+        Assertions.assertThat(amendmentForMedia.getItems()).isEmpty();
+    }
+
+    @Inject
+    LeaseAmendmentRepository leaseAmendmentRepository;
+
+    @Inject
+    ServiceRegistry2 serviceRegistry2;
+
+}
