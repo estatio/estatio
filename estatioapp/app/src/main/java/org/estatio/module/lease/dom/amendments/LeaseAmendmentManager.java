@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
@@ -105,6 +106,35 @@ public class LeaseAmendmentManager {
     public LeaseAmendmentManager filterByType(@Nullable final LeaseAmendmentType leaseAmendmentType){
         return new LeaseAmendmentManager(property, leaseAmendmentType);
     }
+
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
+    public  LeaseAmendmentManager applyAllWithStatusApply(){
+        for (LeaseAmendmentImportLine line : getLines()){
+            if (line.getLeaseAmendmentState()==LeaseAmendmentState.APPLY) {
+                final Lease lease = leaseRepository.findLeaseByReference(line.getLeaseReference());
+                if (lease != null) {
+                    final LeaseAmendment amendment = leaseAmendmentRepository
+                            .findUnique(lease, getLeaseAmendmentType());
+                    if (amendment != null && amendment.getState() != LeaseAmendmentState.APPLIED) {
+                        backgroundService2.execute(amendment)
+                                .apply();
+                    }
+                }
+            }
+        }
+        return new LeaseAmendmentManager(getProperty(), getLeaseAmendmentType());
+    }
+
+    public String disableApplyAllWithStatusApply(){
+        final Optional<LeaseAmendmentImportLine> optional = getLines().stream()
+                .filter(l -> l.getLeaseAmendmentState() == LeaseAmendmentState.APPLY).findFirst();
+        if (optional.isPresent()) {
+            return null;
+        } else {
+            return String.format("No amendments with status APPLY present for property %s and type %s", getProperty().getReference(), getLeaseAmendmentType()!=null ? getLeaseAmendmentType() : "all types");
+        }
+    }
+
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     public LeaseAmendmentManager applyAll(){
