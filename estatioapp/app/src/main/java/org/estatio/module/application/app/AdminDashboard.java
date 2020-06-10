@@ -77,6 +77,8 @@ import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
 import org.estatio.module.lease.dom.LeaseItemType;
 import org.estatio.module.lease.dom.LeaseRepository;
+import org.estatio.module.lease.dom.amendments.LeaseAmendmentRepository;
+import org.estatio.module.lease.dom.amendments.LeaseAmendmentState;
 import org.estatio.module.lease.dom.amendments.Lease_closeOldAndOpenNewLeaseItem;
 import org.estatio.module.lease.dom.settings.LeaseInvoicingSettingsService;
 import org.estatio.module.party.dom.Organisation;
@@ -655,6 +657,12 @@ public class AdminDashboard implements ViewModel {
                             removeinvoicesOldItem);
         });
     }
+
+    public void recreateLeasePreviewsForAllLeaseAmendmentsNotApplied(){
+        leaseAmendmentRepository.listAll().stream().filter(la->la.getState()!=LeaseAmendmentState.APPLIED).forEach(la->{
+            backgroundService2.execute(la).createOrRenewLeasePreview();
+        });
+    }
     
     @Inject
     CodaCmpCodeService codaCmpCodeService;
@@ -741,5 +749,7 @@ public class AdminDashboard implements ViewModel {
 
     @Inject
     StateTransitionService stateTransitionService;
+
+    @Inject LeaseAmendmentRepository leaseAmendmentRepository;
 
 }
