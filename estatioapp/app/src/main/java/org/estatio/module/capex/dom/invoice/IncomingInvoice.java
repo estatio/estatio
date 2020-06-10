@@ -2376,6 +2376,11 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
 
     @Override
     public int compareTo(final IncomingInvoice other) {
+        if (getSeller()==null || other.getSeller()==null || getInvoiceNumber()==null || other.getInvoiceNumber()==null) {
+            return ComparisonChain.start()
+                    .compare(getBarcode(), other.getBarcode())
+                    .result();
+        }
         return ComparisonChain.start()
                 .compare(getSeller(), other.getSeller())
                 .compare(getInvoiceNumber(), other.getInvoiceNumber())
