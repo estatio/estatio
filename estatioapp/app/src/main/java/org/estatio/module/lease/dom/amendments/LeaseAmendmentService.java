@@ -172,9 +172,9 @@ public class LeaseAmendmentService {
         if (!sourceItem.hasTermsOverlapping(LocalDateInterval.including(leaseAmendmentItemForDiscount.getStartDate(), leaseAmendmentItemForDiscount.getEndDate()))) return;
 
         final Charge chargeFromAmendmentType = chargeDerivedFromAmendmentTypeAndChargeSourceItem(sourceItem.getCharge(), leaseAmendmentItemForDiscount.getLeaseAmendment().getLeaseAmendmentType());
+        final LeaseItemType newItemType = sourceItem.getType()==LeaseItemType.RENT ? LeaseItemType.RENT_DISCOUNT : sourceItem.getType(); // for current discounts we leave the types as they are
         final LeaseItem newDiscountItem = lease
-                .newItem(sourceItem.getType(), sourceItem.getInvoicedBy(), chargeFromAmendmentType, sourceItem.getInvoicingFrequency(), sourceItem.getPaymentMethod(), startDateToUse);
-        if (sourceItem.getType()==LeaseItemType.RENT) newDiscountItem.setType(LeaseItemType.RENT_DISCOUNT); // for current discounts we leave the types as they are
+                .newItem(newItemType, sourceItem.getInvoicedBy(), chargeFromAmendmentType, sourceItem.getInvoicingFrequency(), sourceItem.getPaymentMethod(), startDateToUse);
         newDiscountItem.setLeaseAmendmentItem(leaseAmendmentItemForDiscount);
         newDiscountItem.setEndDate(endDateToUse);
         sourceItem.copyTerms(newDiscountItem.getStartDate(), newDiscountItem);
