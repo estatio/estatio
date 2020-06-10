@@ -114,7 +114,7 @@ public class LeaseAmendmentManager {
                 final Lease lease = leaseRepository.findLeaseByReference(line.getLeaseReference());
                 if (lease != null) {
                     final LeaseAmendment amendment = leaseAmendmentRepository
-                            .findUnique(lease, getLeaseAmendmentType());
+                            .findUnique(lease, line.getLeaseAmendmentType());
                     if (amendment != null && amendment.getState() != LeaseAmendmentState.APPLIED) {
                         backgroundService2.execute(amendment)
                                 .apply();
