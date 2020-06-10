@@ -284,6 +284,7 @@ public class LeaseTermForIndexable extends LeaseTerm implements Indexable {
     public void copyValuesTo(final LeaseTerm target) {
         LeaseTermForIndexable t = (LeaseTermForIndexable) target;
         super.copyValuesTo(t);
+        t.setIndexationMethod(getIndexationMethod());
         t.setIndex(getIndex());
         t.setBaseIndexStartDate(getBaseIndexStartDate());
         t.setBaseIndexValue(getBaseIndexValue());

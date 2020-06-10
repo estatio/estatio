@@ -40,6 +40,7 @@ import org.estatio.module.lease.dom.LeaseItemType;
 import org.estatio.module.lease.dom.LeaseStatus;
 import org.estatio.module.lease.dom.LeaseTermForIndexable;
 import org.estatio.module.lease.dom.amendments.LeaseAmendmentService;
+import org.estatio.module.lease.dom.indexation.IndexationMethod;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForDeposit_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForDiscount_enum;
@@ -73,6 +74,8 @@ public class LeaseAmendmentService_IntegTest extends LeaseModuleIntegTestAbstrac
         // given
         Lease oxfLease = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
         final LeaseItem originalRentItem = LeaseItemForRent_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
+        final LeaseTermForIndexable lastRentTerm = (LeaseTermForIndexable) originalRentItem.getTerms().last();
+        lastRentTerm.setIndexationMethod(IndexationMethod.BASE_INDEX_ALLOW_DECREASE);
         final LeaseItem depositItem = LeaseItemForDeposit_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
 
         endDateOriginalItem = originalRentItem.getEndDate();
@@ -106,6 +109,10 @@ public class LeaseAmendmentService_IntegTest extends LeaseModuleIntegTestAbstrac
                 Collectors.toList())).contains(firstNewItem);
         assertThat(leaseItemSourceRepository.findByItem(depositItem).stream().map(s->s.getSourceItem()).collect(
                 Collectors.toList())).contains(originalRentItem);
+        firstNewItem.getTerms().forEach(lt->{
+            LeaseTermForIndexable lfi = (LeaseTermForIndexable) lt;
+            assertThat(lfi.getIndexationMethod()).isEqualTo(IndexationMethod.BASE_INDEX_ALLOW_DECREASE);
+        });
 
         // and when
         final LeaseItem secondNewItem = leaseAmendmentService
@@ -124,6 +131,10 @@ public class LeaseAmendmentService_IntegTest extends LeaseModuleIntegTestAbstrac
         assertThat(leaseItemSourceRepository.findByItem(depositItem)).hasSize(3);
         assertThat(leaseItemSourceRepository.findByItem(depositItem).stream().map(s->s.getSourceItem()).collect(
                 Collectors.toList())).contains(secondNewItem);
+        secondNewItem.getTerms().forEach(lt->{
+            LeaseTermForIndexable lfi = (LeaseTermForIndexable) lt;
+            assertThat(lfi.getIndexationMethod()).isEqualTo(IndexationMethod.BASE_INDEX_ALLOW_DECREASE);
+        });
 
     }
 
