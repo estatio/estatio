@@ -230,8 +230,13 @@ public class LeaseAmendment extends Agreement {
     }
 
     @Programmatic
-    public LeaseAmendment upsertItem(final BigDecimal discountPercentage, final List<LeaseItemType> discountAppliesTo, final LocalDate discountStartDate, final LocalDate discountEndDate) {
-        leaseAmendmentItemRepository.upsert(this, discountPercentage, discountAppliesTo, discountStartDate, discountEndDate);
+    public LeaseAmendment upsertItem(
+            final BigDecimal discountPercentage,
+            final BigDecimal manualDiscountAmount,
+            final List<LeaseItemType> discountAppliesTo,
+            final LocalDate discountStartDate,
+            final LocalDate discountEndDate) {
+        leaseAmendmentItemRepository.upsert(this, discountPercentage, manualDiscountAmount, discountAppliesTo, discountStartDate, discountEndDate);
         return this;
     }
 
