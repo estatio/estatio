@@ -92,7 +92,9 @@ public enum LeaseAmendmentType {
             ),
             Arrays.asList(
                     new Tuple<>(InvoicingFrequency.QUARTERLY_IN_ADVANCE, InvoicingFrequency.MONTHLY_IN_ADVANCE),
-                    new Tuple<>(InvoicingFrequency.QUARTERLY_IN_ARREARS, InvoicingFrequency.MONTHLY_IN_ADVANCE)
+                    new Tuple<>(InvoicingFrequency.QUARTERLY_IN_ARREARS, InvoicingFrequency.MONTHLY_IN_ADVANCE),
+                    new Tuple<>(InvoicingFrequency.QUARTERLY_IN_ADVANCE_PLUS1M, InvoicingFrequency.MONTHLY_IN_ADVANCE),
+                    new Tuple<>(InvoicingFrequency.QUARTERLY_IN_ADVANCE_PLUS2M, InvoicingFrequency.MONTHLY_IN_ADVANCE)
             ),
             Arrays.asList(
                     LeaseItemType.RENT,
@@ -104,7 +106,7 @@ public enum LeaseAmendmentType {
             new LocalDate(2020,7,1),
             new LocalDate(2020,12,31),
             "-A1M",
-            new LocalDate(2020,7,1),
+            new LocalDate(2020,4,1), // because of _PLUSM1 / _PLUSM2 calcs
             new LocalDate(2020,12,31),
             false),
     COVID_ITA_100_PERC_2M(
@@ -124,7 +126,9 @@ public enum LeaseAmendmentType {
             ),
             Arrays.asList(
                     new Tuple<>(InvoicingFrequency.QUARTERLY_IN_ADVANCE, InvoicingFrequency.MONTHLY_IN_ADVANCE),
-                    new Tuple<>(InvoicingFrequency.QUARTERLY_IN_ARREARS, InvoicingFrequency.MONTHLY_IN_ADVANCE)
+                    new Tuple<>(InvoicingFrequency.QUARTERLY_IN_ARREARS, InvoicingFrequency.MONTHLY_IN_ADVANCE),
+                    new Tuple<>(InvoicingFrequency.QUARTERLY_IN_ADVANCE_PLUS1M, InvoicingFrequency.MONTHLY_IN_ADVANCE),
+                    new Tuple<>(InvoicingFrequency.QUARTERLY_IN_ADVANCE_PLUS2M, InvoicingFrequency.MONTHLY_IN_ADVANCE)
             ),
             Arrays.asList(
                     LeaseItemType.RENT,
@@ -136,7 +140,7 @@ public enum LeaseAmendmentType {
             new LocalDate(2020,7,1),
             new LocalDate(2020,12,31),
             "-A2M",
-            new LocalDate(2020,7,1),
+            new LocalDate(2020,4,1), // because of _PLUSM1 / _PLUSM2 calcs
             new LocalDate(2020,12,31),
             false),
     COVID_ITA_FREQ_CHANGE_ONLY(
@@ -148,7 +152,9 @@ public enum LeaseAmendmentType {
             null,
             Arrays.asList(
                     new Tuple<>(InvoicingFrequency.QUARTERLY_IN_ADVANCE, InvoicingFrequency.MONTHLY_IN_ADVANCE),
-                    new Tuple<>(InvoicingFrequency.QUARTERLY_IN_ARREARS, InvoicingFrequency.MONTHLY_IN_ADVANCE)
+                    new Tuple<>(InvoicingFrequency.QUARTERLY_IN_ARREARS, InvoicingFrequency.MONTHLY_IN_ADVANCE),
+                    new Tuple<>(InvoicingFrequency.QUARTERLY_IN_ADVANCE_PLUS1M, InvoicingFrequency.MONTHLY_IN_ADVANCE),
+                    new Tuple<>(InvoicingFrequency.QUARTERLY_IN_ADVANCE_PLUS2M, InvoicingFrequency.MONTHLY_IN_ADVANCE)
             ),
             Arrays.asList(
                     LeaseItemType.RENT,
@@ -160,7 +166,7 @@ public enum LeaseAmendmentType {
             new LocalDate(2020,7,1),
             new LocalDate(2020,12,31),
             "-AF",
-            new LocalDate(2020,7,1),
+            new LocalDate(2020,4,1), // because of _PLUSM1 / _PLUSM2 calcs
             new LocalDate(2020,12,31),
             true),
     DEMO_TYPE(
