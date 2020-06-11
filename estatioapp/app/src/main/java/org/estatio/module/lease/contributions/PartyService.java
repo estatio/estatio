@@ -23,20 +23,14 @@ import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
-import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.ActionLayout;
-import org.apache.isis.applib.annotation.CollectionLayout;
-import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.estatio.module.base.dom.UdoDomainService;
 import org.estatio.module.agreement.dom.AgreementRoleRepository;
 import org.estatio.module.agreement.dom.role.AgreementRoleTypeRepository;
-import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
+import org.estatio.module.base.dom.UdoDomainService;
 import org.estatio.module.lease.dom.Lease;
+import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
 import org.estatio.module.party.dom.Party;
 
 @DomainService(menuOrder = "40", nature = NatureOfService.DOMAIN)
@@ -50,6 +44,7 @@ public class PartyService extends UdoDomainService<PartyService> {
         return agreementRoleRepository.findByPartyAndTypeAndContainsDate(party, agreementRoleTypeRepository.findByTitle(
                 LeaseAgreementRoleTypeEnum.TENANT.getTitle()), getClockService().now())
                 .stream()
+                .filter(agreementRole -> agreementRole.getAgreement().getClass().isAssignableFrom(Lease.class))
                 .map((agreementRole) -> (Lease)agreementRole.getAgreement())
                 .sorted()
                 .collect(Collectors.toList());
@@ -59,6 +54,7 @@ public class PartyService extends UdoDomainService<PartyService> {
         return agreementRoleRepository.findByPartyAndType(party, agreementRoleTypeRepository.findByTitle(
                 LeaseAgreementRoleTypeEnum.TENANT.getTitle()))
                 .stream()
+                .filter(agreementRole -> agreementRole.getAgreement().getClass().isAssignableFrom(Lease.class))
                 .map((agreementRole) -> (Lease)agreementRole.getAgreement())
                 .sorted()
                 .collect(Collectors.toList());
