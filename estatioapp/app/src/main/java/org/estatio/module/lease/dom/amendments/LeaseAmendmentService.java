@@ -223,6 +223,7 @@ public class LeaseAmendmentService {
                 .filter(li -> LeaseAmendmentItem
                         .applicableToFromString(leaseAmendmentItemForFrequencyChange.getApplicableTo())
                         .contains(li.getType()))
+                .filter(li->li.getInvoicedBy()==LeaseAgreementRoleTypeEnum.LANDLORD)
                 .filter(li->li.getInvoicingFrequency()==leaseAmendmentItemForFrequencyChange.getInvoicingFrequencyOnLease())
                 .filter(li->li.getEffectiveInterval().overlaps(leaseAmendmentItemForFrequencyChange.getInterval()))
                 .collect(Collectors.toList());
