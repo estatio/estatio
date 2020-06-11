@@ -31,6 +31,8 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.PropertyLayout;
+import org.apache.isis.applib.annotation.Where;
 
 import org.incode.module.base.dom.utils.MathUtils;
 
@@ -215,6 +217,12 @@ public class LeaseTermForIndexable extends LeaseTerm implements Indexable {
     @Getter @Setter
     private BigDecimal settledValue;
 
+    @Column(scale = 2, allowsNull = "true")
+    @PropertyLayout(hidden = Where.EVERYWHERE)
+    @Getter @Setter
+    private BigDecimal previousIndexedValueWhenNoPrevious;
+
+
     // //////////////////////////////////////
 
     public LeaseTermForIndexable changeValues(
@@ -285,6 +293,10 @@ public class LeaseTermForIndexable extends LeaseTerm implements Indexable {
         LeaseTermForIndexable t = (LeaseTermForIndexable) target;
         super.copyValuesTo(t);
         t.setIndexationMethod(getIndexationMethod());
+        if (t.getPrevious()==null) {
+            t.setPreviousIndexedValueWhenNoPrevious(
+                    getEffectiveIndexedValue());
+        }
         t.setIndex(getIndex());
         t.setBaseIndexStartDate(getBaseIndexStartDate());
         t.setBaseIndexValue(getBaseIndexValue());

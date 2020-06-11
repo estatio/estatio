@@ -20,6 +20,7 @@ package org.estatio.module.lease.dom;
 
 import java.math.BigDecimal;
 
+import org.assertj.core.api.Assertions;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
@@ -223,6 +224,37 @@ public class LeaseTermForIndexable_Test {
         private static PojoTester.FixtureDatumFactory<LeaseTermStatus> statii() {
             return new PojoTester.FixtureDatumFactory(LeaseTermStatus.class, (Object[]) LeaseTermStatus.values());
         }
+
+    }
+
+    public static class Copy extends LeaseTermForIndexable_Test{
+
+        @Test
+        public void copy_of_indexation_method_and_previous_indexed_value_works() throws Exception {
+
+            LeaseTermForIndexable targetNoPrevious = new LeaseTermForIndexable();
+            LeaseTermForIndexable targetWithPrevious = new LeaseTermForIndexable();
+            targetWithPrevious.setPrevious(new LeaseTermForIndexable());
+
+            // given
+            LeaseTermForIndexable term = new LeaseTermForIndexable();
+            final IndexationMethod indexationMethod = IndexationMethod.BASE_INDEX;
+            term.setIndexationMethod(indexationMethod);
+            final BigDecimal effectiveIndexedValue = new BigDecimal("123.45");
+            term.setEffectiveIndexedValue(effectiveIndexedValue);
+
+            // when
+            term.copyValuesTo(targetNoPrevious);
+            term.copyValuesTo(targetWithPrevious);
+
+            // then
+            Assertions.assertThat(targetNoPrevious.getIndexationMethod()).isEqualTo(indexationMethod);
+            Assertions.assertThat(targetNoPrevious.getPreviousIndexedValueWhenNoPrevious()).isEqualTo(effectiveIndexedValue);
+            Assertions.assertThat(targetWithPrevious.getIndexationMethod()).isEqualTo(indexationMethod);
+            Assertions.assertThat(targetWithPrevious.getPreviousIndexedValueWhenNoPrevious()).isNull();
+
+        }
+
 
     }
 
