@@ -326,6 +326,9 @@ public class LeaseTermForIndexable extends LeaseTerm implements Indexable {
         if (getSettledValue()!=null){
             setSettledValue(applyPercentage(getSettledValue(), discountPercentage).negate());
         }
+        if (getPreviousIndexedValueWhenNoPrevious()!=null){
+            setPreviousIndexedValueWhenNoPrevious(applyPercentage(getPreviousIndexedValueWhenNoPrevious(), discountPercentage).negate());
+        }
     }
 
     // //////////////////////////////////////
