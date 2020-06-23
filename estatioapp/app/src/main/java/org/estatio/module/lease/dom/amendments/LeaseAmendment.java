@@ -120,14 +120,33 @@ public class LeaseAmendment extends Agreement {
     private LocalDate dateApplied;
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
-    public LeaseAmendment sign(){
+    public LeaseAmendment sign(final LocalDate dateSigned){
         setState(LeaseAmendmentState.SIGNED);
-        setDateSigned(clockService.now());
+        setDateSigned(dateSigned);
         return this;
     }
 
     public boolean hideSign(){
         return getState()!=LeaseAmendmentState.PROPOSED;
+    }
+
+    public LocalDate default0Sign(){
+        return clockService.now();
+    }
+
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    public LeaseAmendment changeDateSigned(final LocalDate dateSigned){
+        setDateSigned(dateSigned);
+        return this;
+    }
+
+    public LocalDate default0ChangeDateSigned(){
+        return getDateSigned();
+    }
+
+    public String disableChangeDateSigned(){
+        if (getState()!=LeaseAmendmentState.SIGNED) return "Only on signed amendments the date signed can be changed";
+        return null;
     }
 
     @Column(name = "leasePreviewId", allowsNull = "true")
