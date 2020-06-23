@@ -102,6 +102,7 @@ public class LeaseAmendmentImport_IntegTest extends LeaseModuleIntegTestAbstract
         final LeaseAmendment amendmentForTopmodel = leaseAmendmentRepository.findUnique(topmodelLease, LeaseAmendmentType.DEMO_TYPE2);
         Assertions.assertThat(amendmentForTopmodel.getState()).isEqualTo(LeaseAmendmentState.APPLY);
         Assertions.assertThat(amendmentForTopmodel.getStartDate()).isEqualTo(new LocalDate(2020,6,1));
+        Assertions.assertThat(amendmentForTopmodel.getDateSigned()).isNull();
         Assertions.assertThat(amendmentForTopmodel.getItems()).hasSize(1);
         final LeaseAmendmentItemForDiscount amendmentItemForTopmodel = (LeaseAmendmentItemForDiscount) amendmentForTopmodel.getItems().first();
         Assertions.assertThat(amendmentItemForTopmodel.getManualDiscountAmount()).isEqualTo(new BigDecimal("-3500.12"));
@@ -112,6 +113,7 @@ public class LeaseAmendmentImport_IntegTest extends LeaseModuleIntegTestAbstract
         final LeaseAmendment amendmentForPoison = leaseAmendmentRepository.findUnique(poisonLease, LeaseAmendmentType.DEMO_TYPE2);
         Assertions.assertThat(amendmentForPoison.getState()).isEqualTo(LeaseAmendmentState.SIGNED);
         Assertions.assertThat(amendmentForPoison.getStartDate()).isEqualTo(new LocalDate(2020,7,1));
+        Assertions.assertThat(amendmentForPoison.getDateSigned()).isEqualTo(new LocalDate(2020,6, 20));
         Assertions.assertThat(amendmentForPoison.getItems()).hasSize(2);
         final LeaseAmendmentItemForDiscount firsPoisonAmendmentItem = (LeaseAmendmentItemForDiscount) amendmentForPoison.getItems().first();
         final LeaseAmendmentItemForFrequencyChange lastPoisonAmendmentItem = (LeaseAmendmentItemForFrequencyChange) amendmentForPoison.getItems().last();
@@ -126,6 +128,7 @@ public class LeaseAmendmentImport_IntegTest extends LeaseModuleIntegTestAbstract
         final LeaseAmendment amendmentForMiracle = leaseAmendmentRepository.findUnique(miracleLease, LeaseAmendmentType.DEMO_TYPE2);
         Assertions.assertThat(amendmentForMiracle.getState()).isEqualTo(LeaseAmendmentState.PROPOSED);
         Assertions.assertThat(amendmentForMiracle.getStartDate()).isEqualTo(new LocalDate(2020,7,1));
+        Assertions.assertThat(amendmentForMiracle.getDateSigned()).isNull();
         Assertions.assertThat(amendmentForMiracle.getItems()).hasSize(2);
         final LeaseAmendmentItemForDiscount firstMiracleAmendmentItem = (LeaseAmendmentItemForDiscount) amendmentForMiracle.getItems().first();
         Assertions.assertThat(firstMiracleAmendmentItem.getManualDiscountAmount()).isNull();
@@ -134,6 +137,7 @@ public class LeaseAmendmentImport_IntegTest extends LeaseModuleIntegTestAbstract
         final Lease mediaLease = Lease_enum.OxfMediaX002Gb.findUsing(serviceRegistry);
         final LeaseAmendment amendmentForMedia = leaseAmendmentRepository.findUnique(mediaLease, LeaseAmendmentType.DEMO_TYPE2);
         Assertions.assertThat(amendmentForMedia.getState()).isEqualTo(LeaseAmendmentState.PROPOSED);
+        Assertions.assertThat(amendmentForMedia.getDateSigned()).isNull();
         Assertions.assertThat(amendmentForMedia.getItems()).isEmpty();
     }
 
