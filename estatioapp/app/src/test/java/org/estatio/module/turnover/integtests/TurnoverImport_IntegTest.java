@@ -25,7 +25,6 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.joda.time.LocalDate;
-import org.joda.time.LocalDateTime;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -72,7 +71,8 @@ public class TurnoverImport_IntegTest extends TurnoverModuleIntegTestAbstract {
         assertThat(first.getType()).isEqualTo(Type.PRELIMINARY);
         assertThat(first.getFrequency()).isEqualTo(Frequency.MONTHLY);
         assertThat(first.getStatus()).isEqualTo(Status.APPROVED);
-        assertThat(first.getReportedAt().toLocalDate()).isEqualTo(new LocalDate(2018,11,19));
+        // ECP-1201: we now always over-write with timestamp of import
+//        assertThat(first.getReportedAt().toLocalDate()).isEqualTo(new LocalDate(2018,11,19));
         assertThat(first.getReportedBy()).isEqualTo("manager abc");
         assertThat(first.getCurrency()).isEqualTo(Currency_enum.EUR.findUsing(serviceRegistry2));
         assertThat(first.getNetAmount()).isEqualTo(new BigDecimal("12345.56"));
@@ -88,7 +88,8 @@ public class TurnoverImport_IntegTest extends TurnoverModuleIntegTestAbstract {
         assertThat(second.getType()).isEqualTo(Type.AUDITED);
         assertThat(second.getFrequency()).isEqualTo(Frequency.DAILY);
         assertThat(second.getStatus()).isEqualTo(Status.APPROVED);
-        assertThat(second.getReportedAt()).isEqualTo(new LocalDateTime(2018,11,19, 11, 06, 20,400));
+        // ECP-1201: we now always over-write with timestamp of import
+//        assertThat(second.getReportedAt()).isEqualTo(new LocalDateTime(2018,11,19, 11, 06, 20,400));
         assertThat(second.getReportedBy()).isEqualTo("manager abc");
         assertThat(second.getCurrency()).isEqualTo(Currency_enum.GBP.findUsing(serviceRegistry2));
         assertThat(second.getNetAmount()).isEqualTo(new BigDecimal("0.00"));

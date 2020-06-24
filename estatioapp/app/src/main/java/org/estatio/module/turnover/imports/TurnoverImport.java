@@ -19,6 +19,7 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Nature;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
+import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.message.MessageService;
 import org.apache.isis.core.commons.lang.ArrayExtensions;
 
@@ -261,8 +262,6 @@ public class TurnoverImport implements Importable, ExcelFixtureRowHandler, Fixtu
             return Lists.newArrayList();
         }
 
-        final LocalDateTime reportedAtToUse = ArrayExtensions.coalesce(reportedAt, LocalDateTime.now());
-
         final String reportedByToUse = ArrayExtensions.coalesce(reportedBy, meService.me().getUsername());
 
         Turnover turnover = turnoverRepository.upsert(
@@ -271,7 +270,7 @@ public class TurnoverImport implements Importable, ExcelFixtureRowHandler, Fixtu
                 typeEnum,
                 frequencyEnum,
                 Status.APPROVED,
-                reportedAtToUse,
+                clockService.nowAsLocalDateTime(),
                 reportedByToUse,
                 currency,
                 netAmountToUse(),
@@ -344,5 +343,7 @@ public class TurnoverImport implements Importable, ExcelFixtureRowHandler, Fixtu
     @Inject TurnoverReportingConfigRepository turnoverReportingConfigRepository;
 
     @Inject MeService meService;
+
+    @Inject ClockService clockService;
 
 }
