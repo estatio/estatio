@@ -21,7 +21,6 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.message.MessageService;
-import org.apache.isis.core.commons.lang.ArrayExtensions;
 
 import org.isisaddons.module.excel.dom.ExcelFixture;
 import org.isisaddons.module.excel.dom.ExcelFixture2;
@@ -262,8 +261,6 @@ public class TurnoverImport implements Importable, ExcelFixtureRowHandler, Fixtu
             return Lists.newArrayList();
         }
 
-        final String reportedByToUse = ArrayExtensions.coalesce(reportedBy, meService.me().getUsername());
-
         Turnover turnover = turnoverRepository.upsert(
                 config,
                 date,
@@ -271,7 +268,7 @@ public class TurnoverImport implements Importable, ExcelFixtureRowHandler, Fixtu
                 frequencyEnum,
                 Status.APPROVED,
                 clockService.nowAsLocalDateTime(),
-                reportedByToUse,
+                meService.me().getUsername(),
                 currency,
                 netAmountToUse(),
                 grossAmount,
