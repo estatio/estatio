@@ -59,16 +59,18 @@ import org.estatio.module.capex.dom.documents.LookupAttachedPdfService;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceItemRepository;
+import org.estatio.module.capex.dom.invoice.IncomingInvoiceQueryObject;
+import org.estatio.module.capex.dom.invoice.IncomingInvoiceQueryObjectRepo;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceRepository;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceType;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
-import org.estatio.module.task.dom.state.NatureOfTransition;
-import org.estatio.module.task.dom.state.StateTransitionRepositoryGeneric;
 import org.estatio.module.capex.dom.util.InvoicePageRange;
 import org.estatio.module.capex.platform.pdfmanipulator.PdfManipulator;
 import org.estatio.module.countryapptenancy.dom.CountryServiceForCurrentUser;
 import org.estatio.module.invoice.dom.InvoiceItem;
+import org.estatio.module.task.dom.state.NatureOfTransition;
+import org.estatio.module.task.dom.state.StateTransitionRepositoryGeneric;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -151,6 +153,22 @@ public class IncomingInvoiceDownloadManager {
                 .map(IncomingInvoice.class::cast)
                 .distinct()
                 .collect(Collectors.toList());
+    }
+
+    @CollectionLayout(defaultView = "table")
+    public List<IncomingInvoice> getInvoicesNEW() {
+        List<IncomingInvoice> result = new ArrayList<>();
+        for (IncomingInvoiceQueryObject o : getQueryObjects()){
+            IncomingInvoice inv = incomingInvoiceRepository.findUnique(o.getInvoiceUuid());
+            if (inv!=null && !result.contains(inv)){
+                result.add(inv);
+            }
+        }
+        return result;
+    }
+
+    List<IncomingInvoiceQueryObject> getQueryObjects(){
+        return incomingInvoiceQueryObjectRepo.findCompletedOrLaterByFixedAssetAndTypeAndReportedDateAndCountry(getProperty(), getIncomingInvoiceType(), getReportedDate(), getCountry());
     }
 
     List<IncomingInvoiceItem> getInvoiceItems() {
@@ -614,5 +632,9 @@ public class IncomingInvoiceDownloadManager {
     @Inject
     @XmlTransient
     MessageService2 messageService;
+
+    @Inject
+    @XmlTransient
+    IncomingInvoiceQueryObjectRepo incomingInvoiceQueryObjectRepo;
 
 }
