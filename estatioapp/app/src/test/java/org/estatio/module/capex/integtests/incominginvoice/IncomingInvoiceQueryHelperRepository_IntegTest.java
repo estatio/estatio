@@ -1,5 +1,7 @@
 package org.estatio.module.capex.integtests.incominginvoice;
 
+import java.util.Arrays;
+
 import javax.inject.Inject;
 
 import org.joda.time.LocalDate;
@@ -15,7 +17,7 @@ import org.estatio.module.assetfinancial.fixtures.enums.BankAccountFaFa_enum;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceItemRepository;
-import org.estatio.module.capex.dom.invoice.IncomingInvoiceQueryObjectRepo;
+import org.estatio.module.capex.dom.invoice.IncomingInvoiceQueryHelperRepo;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceRepository;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceType;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
@@ -29,7 +31,7 @@ import org.estatio.module.party.fixtures.orgcomms.enums.OrganisationAndComms_enu
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class IncomingInvoiceQueryObjectRepository_IntegTest extends CapexModuleIntegTestAbstract {
+public class IncomingInvoiceQueryHelperRepository_IntegTest extends CapexModuleIntegTestAbstract {
 
     @Inject
     IncomingInvoiceRepository incomingInvoiceRepository;
@@ -80,15 +82,15 @@ public class IncomingInvoiceQueryObjectRepository_IntegTest extends CapexModuleI
                         null, null);
 
         // when, then
-        assertThat(incomingInvoiceQueryObjectRepo.findByInvoiceItemReportedDate(null)).hasSize(4);
+        assertThat(incomingInvoiceQueryHelperRepo.findByInvoiceItemReportedDate(null)).hasSize(4);
 
         // and when
         final LocalDate reportedDate = new LocalDate(2020, 1, 1);
         item1OnInv1.setReportedDate(reportedDate);
 
         // then
-        assertThat(incomingInvoiceQueryObjectRepo.findByInvoiceItemReportedDate(reportedDate)).hasSize(1);
-        assertThat(incomingInvoiceQueryObjectRepo.findByInvoiceItemReportedDate(null)).hasSize(3);
+        assertThat(incomingInvoiceQueryHelperRepo.findByInvoiceItemReportedDate(reportedDate)).hasSize(1);
+        assertThat(incomingInvoiceQueryHelperRepo.findByInvoiceItemReportedDate(null)).hasSize(3);
 
     }
 
@@ -104,46 +106,52 @@ public class IncomingInvoiceQueryObjectRepository_IntegTest extends CapexModuleI
                         null, null);
 
         // when, then
-        assertThat(incomingInvoiceQueryObjectRepo.findByFixedAssetReferenceAndItemTypeAndReportedDateAndBuyerAtPath(
+        assertThat(incomingInvoiceQueryHelperRepo.findByFixedAssetReferenceAndItemTypeAndReportedDateAndBuyerAtPathsContains(
                 Property_enum.OxfGb.findUsing(serviceRegistry).getReference(),
                 IncomingInvoiceType.CAPEX,
                 null,
-                OrganisationAndComms_enum.HelloWorldGb.findUsing(serviceRegistry).getAtPath()
+                Arrays.asList(OrganisationAndComms_enum.HelloWorldGb.findUsing(serviceRegistry).getAtPath())
 
         )).hasSize(1);
-        assertThat(incomingInvoiceQueryObjectRepo.findByFixedAssetReferenceAndItemTypeAndReportedDateAndBuyerAtPath(
+        assertThat(incomingInvoiceQueryHelperRepo.findByFixedAssetReferenceAndItemTypeAndReportedDateAndBuyerAtPathsContains(
+                Property_enum.OxfGb.findUsing(serviceRegistry).getReference(),
+                IncomingInvoiceType.CAPEX,
+                null,
+                Arrays.asList("/GBR", "/XXX", "/YYY/XXX")
+
+        )).hasSize(1);
+        assertThat(incomingInvoiceQueryHelperRepo.findByFixedAssetReferenceAndItemTypeAndReportedDateAndBuyerAtPathsContains(
                 null,
                 IncomingInvoiceType.CAPEX,
                 null,
-                OrganisationAndComms_enum.HelloWorldGb.findUsing(serviceRegistry).getAtPath()
-
+                Arrays.asList(OrganisationAndComms_enum.HelloWorldGb.findUsing(serviceRegistry).getAtPath())
         )).hasSize(1);
-        assertThat(incomingInvoiceQueryObjectRepo.findByFixedAssetReferenceAndItemTypeAndReportedDateAndBuyerAtPath(
+        assertThat(incomingInvoiceQueryHelperRepo.findByFixedAssetReferenceAndItemTypeAndReportedDateAndBuyerAtPathsContains(
                 null,
                 null,
                 null,
-                OrganisationAndComms_enum.HelloWorldGb.findUsing(serviceRegistry).getAtPath()
+                Arrays.asList(OrganisationAndComms_enum.HelloWorldGb.findUsing(serviceRegistry).getAtPath())
 
         )).hasSize(0);
-        assertThat(incomingInvoiceQueryObjectRepo.findByFixedAssetReferenceAndItemTypeAndReportedDateAndBuyerAtPath(
+        assertThat(incomingInvoiceQueryHelperRepo.findByFixedAssetReferenceAndItemTypeAndReportedDateAndBuyerAtPathsContains(
                 null,
                 IncomingInvoiceType.INTERCOMPANY,
                 null,
-                OrganisationAndComms_enum.HelloWorldGb.findUsing(serviceRegistry).getAtPath()
+                Arrays.asList(OrganisationAndComms_enum.HelloWorldGb.findUsing(serviceRegistry).getAtPath())
 
         )).hasSize(0);
-        assertThat(incomingInvoiceQueryObjectRepo.findByFixedAssetReferenceAndItemTypeAndReportedDateAndBuyerAtPath(
+        assertThat(incomingInvoiceQueryHelperRepo.findByFixedAssetReferenceAndItemTypeAndReportedDateAndBuyerAtPathsContains(
                 null,
                 IncomingInvoiceType.CAPEX,
                 null,
                 null
 
         )).hasSize(0);
-        assertThat(incomingInvoiceQueryObjectRepo.findByFixedAssetReferenceAndItemTypeAndReportedDateAndBuyerAtPath(
+        assertThat(incomingInvoiceQueryHelperRepo.findByFixedAssetReferenceAndItemTypeAndReportedDateAndBuyerAtPathsContains(
                 null,
                 IncomingInvoiceType.CAPEX,
                 null,
-                "/XXX"
+                Arrays.asList("/XXX")
 
         )).hasSize(0);
 
@@ -152,101 +160,20 @@ public class IncomingInvoiceQueryObjectRepository_IntegTest extends CapexModuleI
         item1OnInv1.setReportedDate(reportedDate);
 
         // then
-        assertThat(incomingInvoiceQueryObjectRepo.findByFixedAssetReferenceAndItemTypeAndReportedDateAndBuyerAtPath(
+        assertThat(incomingInvoiceQueryHelperRepo.findByFixedAssetReferenceAndItemTypeAndReportedDateAndBuyerAtPathsContains(
                 Property_enum.OxfGb.findUsing(serviceRegistry).getReference(),
                 IncomingInvoiceType.CAPEX,
                 null,
-                OrganisationAndComms_enum.HelloWorldGb.findUsing(serviceRegistry).getAtPath()
+                Arrays.asList(OrganisationAndComms_enum.HelloWorldGb.findUsing(serviceRegistry).getAtPath())
 
         )).hasSize(0);
-        assertThat(incomingInvoiceQueryObjectRepo.findByFixedAssetReferenceAndItemTypeAndReportedDateAndBuyerAtPath(
+        assertThat(incomingInvoiceQueryHelperRepo.findByFixedAssetReferenceAndItemTypeAndReportedDateAndBuyerAtPathsContains(
                 Property_enum.OxfGb.findUsing(serviceRegistry).getReference(),
                 IncomingInvoiceType.CAPEX,
                 reportedDate,
-                OrganisationAndComms_enum.HelloWorldGb.findUsing(serviceRegistry).getAtPath()
+                Arrays.asList(OrganisationAndComms_enum.HelloWorldGb.findUsing(serviceRegistry).getAtPath())
 
         )).hasSize(1);
-
-    }
-
-    @Test
-    public void findByTypeAndReportedDateAndBuyerAtPath_works() throws Exception {
-        // given
-        final IncomingInvoice invoice1 = createIncomingInvoice();
-        final IncomingInvoiceItem item1OnInv1 = incomingInvoiceItemRepository
-                .addItem(invoice1, IncomingInvoiceType.CAPEX, null, null, null, null, null, null, null, null, Property_enum.OxfGb.findUsing(serviceRegistry),
-                        null, null);
-        final IncomingInvoiceItem item2OnInv1 = incomingInvoiceItemRepository
-                .addItem(invoice1, IncomingInvoiceType.SERVICE_CHARGES, null, null, null, null, null, null, null, null, null,
-                        null, null);
-
-        // when, then
-        assertThat(incomingInvoiceQueryObjectRepo.findByItemTypeAndReportedDateAndBuyerAtPath(
-                IncomingInvoiceType.CAPEX,
-                null,
-                OrganisationAndComms_enum.HelloWorldGb.findUsing(serviceRegistry).getAtPath()
-
-        )).hasSize(1);
-        assertThat(incomingInvoiceQueryObjectRepo.findByItemTypeAndReportedDateAndBuyerAtPath(
-                IncomingInvoiceType.SERVICE_CHARGES,
-                null,
-                OrganisationAndComms_enum.HelloWorldGb.findUsing(serviceRegistry).getAtPath()
-
-        )).hasSize(1);
-        assertThat(incomingInvoiceQueryObjectRepo.findByItemTypeAndReportedDateAndBuyerAtPath(
-                null,
-                null,
-                OrganisationAndComms_enum.HelloWorldGb.findUsing(serviceRegistry).getAtPath()
-
-        )).hasSize(0);
-        assertThat(incomingInvoiceQueryObjectRepo.findByItemTypeAndReportedDateAndBuyerAtPath(
-                IncomingInvoiceType.INTERCOMPANY,
-                null,
-                OrganisationAndComms_enum.HelloWorldGb.findUsing(serviceRegistry).getAtPath()
-
-        )).hasSize(0);
-        assertThat(incomingInvoiceQueryObjectRepo.findByItemTypeAndReportedDateAndBuyerAtPath(
-                IncomingInvoiceType.CAPEX,
-                null,
-                null
-
-        )).hasSize(0);
-        assertThat(incomingInvoiceQueryObjectRepo.findByItemTypeAndReportedDateAndBuyerAtPath(
-                IncomingInvoiceType.CAPEX,
-                null,
-                "/XXX"
-
-        )).hasSize(0);
-
-        // and when
-        LocalDate reportedDate = new LocalDate(2020,1,1);
-        item1OnInv1.setReportedDate(reportedDate);
-
-        // then
-        assertThat(incomingInvoiceQueryObjectRepo.findByItemTypeAndReportedDateAndBuyerAtPath(
-                IncomingInvoiceType.CAPEX,
-                null,
-                OrganisationAndComms_enum.HelloWorldGb.findUsing(serviceRegistry).getAtPath()
-
-        )).hasSize(0);
-        assertThat(incomingInvoiceQueryObjectRepo.findByItemTypeAndReportedDateAndBuyerAtPath(
-                IncomingInvoiceType.SERVICE_CHARGES,
-                null,
-                OrganisationAndComms_enum.HelloWorldGb.findUsing(serviceRegistry).getAtPath()
-
-        )).hasSize(1);
-        assertThat(incomingInvoiceQueryObjectRepo.findByItemTypeAndReportedDateAndBuyerAtPath(
-                IncomingInvoiceType.CAPEX,
-                reportedDate,
-                OrganisationAndComms_enum.HelloWorldGb.findUsing(serviceRegistry).getAtPath()
-
-        )).hasSize(1);
-        assertThat(incomingInvoiceQueryObjectRepo.findByItemTypeAndReportedDateAndBuyerAtPath(
-                IncomingInvoiceType.SERVICE_CHARGES,
-                reportedDate,
-                OrganisationAndComms_enum.HelloWorldGb.findUsing(serviceRegistry).getAtPath()
-
-        )).hasSize(0);
 
     }
 
@@ -262,34 +189,34 @@ public class IncomingInvoiceQueryObjectRepository_IntegTest extends CapexModuleI
                         null, null);
 
         // when, then
-        assertThat(incomingInvoiceQueryObjectRepo.findByFixedAssetReferenceAndReportedDateAndBuyerAtPath(
+        assertThat(incomingInvoiceQueryHelperRepo.findByFixedAssetReferenceAndReportedDateAndBuyerAtPathContains(
                 Property_enum.OxfGb.findUsing(serviceRegistry).getReference(),
                 null,
-                OrganisationAndComms_enum.HelloWorldGb.findUsing(serviceRegistry).getAtPath()
+                Arrays.asList(OrganisationAndComms_enum.HelloWorldGb.findUsing(serviceRegistry).getAtPath())
 
         )).hasSize(1);
-        assertThat(incomingInvoiceQueryObjectRepo.findByFixedAssetReferenceAndReportedDateAndBuyerAtPath(
+        assertThat(incomingInvoiceQueryHelperRepo.findByFixedAssetReferenceAndReportedDateAndBuyerAtPathContains(
                 null,
                 null,
-                OrganisationAndComms_enum.HelloWorldGb.findUsing(serviceRegistry).getAtPath()
+                Arrays.asList(OrganisationAndComms_enum.HelloWorldGb.findUsing(serviceRegistry).getAtPath())
 
         )).hasSize(1);
-        assertThat(incomingInvoiceQueryObjectRepo.findByFixedAssetReferenceAndReportedDateAndBuyerAtPath(
+        assertThat(incomingInvoiceQueryHelperRepo.findByFixedAssetReferenceAndReportedDateAndBuyerAtPathContains(
                 "XXX",
                 null,
-                OrganisationAndComms_enum.HelloWorldGb.findUsing(serviceRegistry).getAtPath()
+                Arrays.asList(OrganisationAndComms_enum.HelloWorldGb.findUsing(serviceRegistry).getAtPath())
 
         )).hasSize(0);
-        assertThat(incomingInvoiceQueryObjectRepo.findByFixedAssetReferenceAndReportedDateAndBuyerAtPath(
+        assertThat(incomingInvoiceQueryHelperRepo.findByFixedAssetReferenceAndReportedDateAndBuyerAtPathContains(
                 null,
                 null,
                 null
 
         )).hasSize(0);
-        assertThat(incomingInvoiceQueryObjectRepo.findByFixedAssetReferenceAndReportedDateAndBuyerAtPath(
+        assertThat(incomingInvoiceQueryHelperRepo.findByFixedAssetReferenceAndReportedDateAndBuyerAtPathContains(
                 null,
                 null,
-                "/XXX"
+                Arrays.asList("/XXX")
 
         )).hasSize(0);
 
@@ -298,16 +225,16 @@ public class IncomingInvoiceQueryObjectRepository_IntegTest extends CapexModuleI
         item1OnInv1.setReportedDate(reportedDate);
 
         // then
-        assertThat(incomingInvoiceQueryObjectRepo.findByFixedAssetReferenceAndReportedDateAndBuyerAtPath(
+        assertThat(incomingInvoiceQueryHelperRepo.findByFixedAssetReferenceAndReportedDateAndBuyerAtPathContains(
                 Property_enum.OxfGb.findUsing(serviceRegistry).getReference(),
                 null,
-                OrganisationAndComms_enum.HelloWorldGb.findUsing(serviceRegistry).getAtPath()
+                Arrays.asList(OrganisationAndComms_enum.HelloWorldGb.findUsing(serviceRegistry).getAtPath())
 
         )).hasSize(0);
-        assertThat(incomingInvoiceQueryObjectRepo.findByFixedAssetReferenceAndReportedDateAndBuyerAtPath(
+        assertThat(incomingInvoiceQueryHelperRepo.findByFixedAssetReferenceAndReportedDateAndBuyerAtPathContains(
                 Property_enum.OxfGb.findUsing(serviceRegistry).getReference(),
                 reportedDate,
-                OrganisationAndComms_enum.HelloWorldGb.findUsing(serviceRegistry).getAtPath()
+                Arrays.asList(OrganisationAndComms_enum.HelloWorldGb.findUsing(serviceRegistry).getAtPath())
 
         )).hasSize(1);
 
@@ -337,8 +264,9 @@ public class IncomingInvoiceQueryObjectRepository_IntegTest extends CapexModuleI
     }
 
     @Inject
-    IncomingInvoiceQueryObjectRepo incomingInvoiceQueryObjectRepo;
+    IncomingInvoiceQueryHelperRepo incomingInvoiceQueryHelperRepo;
 
-    @Inject IncomingInvoiceItemRepository incomingInvoiceItemRepository;
+    @Inject
+    IncomingInvoiceItemRepository incomingInvoiceItemRepository;
 
 }

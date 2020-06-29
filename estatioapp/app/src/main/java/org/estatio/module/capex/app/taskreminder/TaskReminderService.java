@@ -96,7 +96,7 @@ public class TaskReminderService {
                     .collect(Collectors.toList());
             if (disableSendReminderToApprover(approver, taskList)==null) {
                 try {
-                    LOG.info("Trying to send reminder to %s", approver.getUsername());
+                    LOG.info(String.format("Trying to send reminder to %s", approver.getUsername()));
                     sendReminderToApprover(approver, taskList);
                 } catch (Exception e){
                     // email service will do a re-try

@@ -26,70 +26,46 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 
-import org.incode.module.country.dom.impl.Country;
-
-import org.estatio.module.asset.dom.Property;
 import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
 
 @DomainService(nature = NatureOfService.DOMAIN)
-public class IncomingInvoiceQueryObjectRepo extends UdoDomainRepositoryAndFactory<IncomingInvoiceQueryObject> {
+public class IncomingInvoiceQueryHelperRepo extends UdoDomainRepositoryAndFactory<IncomingInvoiceQueryHelper> {
 
-    public IncomingInvoiceQueryObjectRepo() {
-        super(IncomingInvoiceQueryObjectRepo.class, IncomingInvoiceQueryObject.class);
+    public IncomingInvoiceQueryHelperRepo() {
+        super(IncomingInvoiceQueryHelperRepo.class, IncomingInvoiceQueryHelper.class);
     }
 
     @Programmatic
-    public List<IncomingInvoiceQueryObject> findByInvoiceItemReportedDate(
+    public List<IncomingInvoiceQueryHelper> findByInvoiceItemReportedDate(
             final LocalDate invoiceItemReportedDate) {
         return allMatches("findByInvoiceItemReportedDate",
                 "invoiceItemReportedDate", invoiceItemReportedDate);
     }
 
     @Programmatic
-    public List<IncomingInvoiceQueryObject> findCompletedOrLaterByFixedAssetAndTypeAndReportedDateAndCountry(
-            final Property property,
-            final IncomingInvoiceType incomingInvoiceType,
-            final LocalDate reportedDate,
-            final Country country) {
-        return null;
-    }
-
-    @Programmatic
-    public List<IncomingInvoiceQueryObject> findByFixedAssetReferenceAndItemTypeAndReportedDateAndBuyerAtPath(
+    public List<IncomingInvoiceQueryHelper> findByFixedAssetReferenceAndItemTypeAndReportedDateAndBuyerAtPathsContains(
             final String invoiceItemFixedAssetReference,
             final IncomingInvoiceType invoiceItemType,
             final LocalDate invoiceItemReportedDate,
-            final String invoiceBuyerAtPath) {
-        if (invoiceBuyerAtPath==null) return Collections.emptyList();
+            final List<String> atPaths) {
+        if (atPaths==null || atPaths.isEmpty()) return Collections.emptyList();
         return allMatches("findByFixedAssetReferenceAndItemTypeAndReportedDateAndBuyerAtPath",
                 "invoiceItemFixedAssetReference", invoiceItemFixedAssetReference,
                 "invoiceItemType", invoiceItemType,
                 "invoiceItemReportedDate", invoiceItemReportedDate,
-                "invoiceBuyerAtPath", invoiceBuyerAtPath);
+                "atPaths", atPaths);
     }
 
     @Programmatic
-    public List<IncomingInvoiceQueryObject> findByItemTypeAndReportedDateAndBuyerAtPath(
-            final IncomingInvoiceType invoiceItemType,
-            final LocalDate invoiceItemReportedDate,
-            final String invoiceBuyerAtPath) {
-        if (invoiceBuyerAtPath==null) return Collections.emptyList();
-        return allMatches("findByItemTypeAndReportedDateAndBuyerAtPath",
-                "invoiceItemType", invoiceItemType,
-                "invoiceItemReportedDate", invoiceItemReportedDate,
-                "invoiceBuyerAtPath", invoiceBuyerAtPath);
-    }
-
-    @Programmatic
-    public List<IncomingInvoiceQueryObject> findByFixedAssetReferenceAndReportedDateAndBuyerAtPath(
+    public List<IncomingInvoiceQueryHelper> findByFixedAssetReferenceAndReportedDateAndBuyerAtPathContains(
             final String invoiceItemFixedAssetReference,
             final LocalDate invoiceItemReportedDate,
-            final String invoiceBuyerAtPath) {
-        if (invoiceBuyerAtPath==null) return Collections.emptyList();
+            final List<String> atPaths) {
+        if (atPaths==null || atPaths.isEmpty()) return Collections.emptyList();
         return allMatches("findByFixedAssetReferenceAndReportedDateAndBuyerAtPath",
                 "invoiceItemFixedAssetReference", invoiceItemFixedAssetReference,
                 "invoiceItemReportedDate", invoiceItemReportedDate,
-                "invoiceBuyerAtPath", invoiceBuyerAtPath);
+                "atPaths", atPaths);
     }
 
 }

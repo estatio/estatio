@@ -20,6 +20,8 @@ import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+import com.google.common.collect.Lists;
+
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
@@ -42,6 +44,7 @@ import org.isisaddons.module.excel.dom.ExcelService;
 import org.isisaddons.module.excel.dom.WorksheetContent;
 import org.isisaddons.module.excel.dom.WorksheetSpec;
 import org.isisaddons.module.pdfbox.dom.service.PdfBoxService;
+import org.isisaddons.module.security.app.user.MeService;
 
 import org.incode.module.base.dom.MimeTypeData;
 import org.incode.module.country.dom.impl.Country;
@@ -59,8 +62,8 @@ import org.estatio.module.capex.dom.documents.LookupAttachedPdfService;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceItemRepository;
-import org.estatio.module.capex.dom.invoice.IncomingInvoiceQueryObject;
-import org.estatio.module.capex.dom.invoice.IncomingInvoiceQueryObjectRepo;
+import org.estatio.module.capex.dom.invoice.IncomingInvoiceQueryHelper;
+import org.estatio.module.capex.dom.invoice.IncomingInvoiceQueryHelperRepo;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceRepository;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceType;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
@@ -68,7 +71,6 @@ import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStat
 import org.estatio.module.capex.dom.util.InvoicePageRange;
 import org.estatio.module.capex.platform.pdfmanipulator.PdfManipulator;
 import org.estatio.module.countryapptenancy.dom.CountryServiceForCurrentUser;
-import org.estatio.module.invoice.dom.InvoiceItem;
 import org.estatio.module.task.dom.state.NatureOfTransition;
 import org.estatio.module.task.dom.state.StateTransitionRepositoryGeneric;
 
@@ -143,22 +145,13 @@ public class IncomingInvoiceDownloadManager {
 
     @XmlTransient
     public int getNumberOfInvoiceItems() {
-        return getInvoiceItems().size();
+        return getQueryObjects().size();
     }
 
     @CollectionLayout(defaultView = "table")
     public List<IncomingInvoice> getInvoices() {
-        return getInvoiceItems().stream().map(InvoiceItem::getInvoice)
-                .filter(IncomingInvoice.class::isInstance)
-                .map(IncomingInvoice.class::cast)
-                .distinct()
-                .collect(Collectors.toList());
-    }
-
-    @CollectionLayout(defaultView = "table")
-    public List<IncomingInvoice> getInvoicesNEW() {
         List<IncomingInvoice> result = new ArrayList<>();
-        for (IncomingInvoiceQueryObject o : getQueryObjects()){
+        for (IncomingInvoiceQueryHelper o : getQueryObjects()){
             IncomingInvoice inv = incomingInvoiceRepository.findUnique(o.getInvoiceUuid());
             if (inv!=null && !result.contains(inv)){
                 result.add(inv);
@@ -167,28 +160,46 @@ public class IncomingInvoiceDownloadManager {
         return result;
     }
 
-    List<IncomingInvoiceQueryObject> getQueryObjects(){
-        return incomingInvoiceQueryObjectRepo.findCompletedOrLaterByFixedAssetAndTypeAndReportedDateAndCountry(getProperty(), getIncomingInvoiceType(), getReportedDate(), getCountry());
+    List<IncomingInvoiceQueryHelper> getQueryObjects(){
+        final String propRefToUse = getProperty()==null ? null : getProperty().getReference();
+        final List<String> AtPathsToUse = getCountry() == null ? meService.me().getUsername().equals("estatio-admin") ? Arrays.asList("/FRA","/BEL","/ITA","/NLD","/GBR","/SWE") : meService.me().getAllAtPathsUsingSeparator(';') : Arrays.asList("/" + getCountry().getReference());
+        List<IncomingInvoiceQueryHelper> result;
+        if (getIncomingInvoiceType()==null){
+            result = incomingInvoiceQueryHelperRepo
+                    .findByFixedAssetReferenceAndReportedDateAndBuyerAtPathContains(propRefToUse
+                            , getReportedDate()
+                            , AtPathsToUse);
+
+
+        } else {
+            result = incomingInvoiceQueryHelperRepo.findByFixedAssetReferenceAndItemTypeAndReportedDateAndBuyerAtPathsContains(
+                    propRefToUse
+                    , getIncomingInvoiceType()
+                    , getReportedDate()
+                    , AtPathsToUse);
+        }
+        return result
+                .stream()
+                .filter(i->i.getInvoiceApprovalState()!=IncomingInvoiceApprovalState.NEW)
+                // EST-1731: filter items of discarded invoices that are not a reversal
+                //  OLD code .filter(x->!(x.getReversalOf()==null && x.getIncomingInvoice().getApprovalState()== IncomingInvoiceApprovalState.DISCARDED))
+                .filter(i->!(!i.isInvoiceItemIsReversal() && i.getInvoiceApprovalState()==IncomingInvoiceApprovalState.DISCARDED))
+                .collect(Collectors.toList());
     }
 
     List<IncomingInvoiceItem> getInvoiceItems() {
         List<IncomingInvoiceItem> result = new ArrayList<>();
-        if (getIncomingInvoiceType() == null) {
-            result.addAll(incomingInvoiceItemRepository.findCompletedOrLaterByFixedAssetAndReportedDate(
-                    getProperty(), getReportedDate()));
-        } else {
-            result.addAll(incomingInvoiceItemRepository.findCompletedOrLaterByFixedAssetAndIncomingInvoiceTypeAndReportedDate(
-                    getProperty(), getIncomingInvoiceType(), getReportedDate()));
+        for (IncomingInvoiceQueryHelper h : getQueryObjects()){
+            result.addAll(
+                    Lists.newArrayList(incomingInvoiceRepository.findUnique(h.getInvoiceUuid()).getItems())
+                    .stream()
+                    .filter(ii->ii.getClass().isAssignableFrom(IncomingInvoiceItem.class))
+                    .map(IncomingInvoiceItem.class::cast)
+                    .filter(ii->ii.getSequence().equals(h.getInvoiceItemSequence()))
+                    .collect(Collectors.toList())
+            );
         }
-        return filterInvoiceItemsByCountryOfBuyer(getCountry(), result);
-    }
-
-    List<IncomingInvoiceItem> filterInvoiceItemsByCountryOfBuyer(final Country country, final List<IncomingInvoiceItem> invoiceItems) {
-        return country == null
-                ? invoiceItems
-                : invoiceItems.stream()
-                .filter(x -> x.getInvoice().getBuyer().getApplicationTenancyPath().contains(country.getReference()))
-                .collect(Collectors.toList());
+        return result;
     }
 
     @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
@@ -635,6 +646,10 @@ public class IncomingInvoiceDownloadManager {
 
     @Inject
     @XmlTransient
-    IncomingInvoiceQueryObjectRepo incomingInvoiceQueryObjectRepo;
+    IncomingInvoiceQueryHelperRepo incomingInvoiceQueryHelperRepo;
+
+    @Inject
+    @XmlTransient
+    MeService meService;
 
 }

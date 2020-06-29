@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
@@ -661,6 +662,15 @@ public class AdminDashboard implements ViewModel {
     public void recreateLeasePreviewsForAllLeaseAmendmentsNotApplied(){
         leaseAmendmentRepository.listAll().stream().filter(la->la.getState()!=LeaseAmendmentState.APPLIED).forEach(la->{
             backgroundService2.execute(la).createOrRenewLeasePreview();
+        });
+    }
+
+    @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
+    public void assignUUIDToAllIncomingInvoicesThatHaveNone(){
+        incomingInvoiceRepository.listAll().forEach(i->{
+            if (i.getUuid()==null){
+                i.setUuid(UUID.randomUUID().toString());
+            }
         });
     }
     
