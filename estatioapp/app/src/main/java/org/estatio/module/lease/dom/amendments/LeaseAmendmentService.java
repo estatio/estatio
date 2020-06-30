@@ -235,6 +235,7 @@ public class LeaseAmendmentService {
                 case SERVICE_CHARGE:
                 case SERVICE_CHARGE_INDEXABLE:
                 case MARKETING:
+                case PROPERTY_TAX:
                     final LeaseItem firstNewItem = closeOriginalAndOpenNewLeaseItem(
                             leaseAmendmentItemForFrequencyChange.getStartDate(),
                             originalItem,
