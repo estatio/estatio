@@ -76,6 +76,7 @@ public class LeaseAmendmentItemRepository {
     public LeaseAmendmentItemForDiscount upsert(
             final LeaseAmendment leaseAmendment,
             final BigDecimal discountPercentage,
+            final BigDecimal manualDiscountAmount,
             final List<LeaseItemType> applicableToTypes,
             final LocalDate startDate,
             final LocalDate endDate
@@ -87,9 +88,10 @@ public class LeaseAmendmentItemRepository {
                 .findFirst().orElse(null);
         if (leaseAmendment.getState()==LeaseAmendmentState.APPLIED) return item;
         if (item==null){
-            return create(leaseAmendment, discountPercentage, applicableToTypes, startDate, endDate);
+            return create(leaseAmendment, discountPercentage, manualDiscountAmount, applicableToTypes, startDate, endDate);
         } else {
             item.setDiscountPercentage(discountPercentage);
+            item.setManualDiscountAmount(manualDiscountAmount);
             item.setApplicableTo(LeaseAmendmentItem.applicableToToString(applicableToTypes));
             item.setStartDate(startDate);
             item.setEndDate(endDate);
@@ -101,6 +103,7 @@ public class LeaseAmendmentItemRepository {
     public LeaseAmendmentItemForDiscount create(
             final LeaseAmendment leaseAmendment,
             final BigDecimal discountPercentage,
+            final BigDecimal manualDiscountAmount,
             final List<LeaseItemType> applicableToTypes,
             final LocalDate startDate,
             final LocalDate endDate) {
@@ -108,6 +111,7 @@ public class LeaseAmendmentItemRepository {
         final LeaseAmendmentItemForDiscount amendmentItem = new LeaseAmendmentItemForDiscount();
         amendmentItem.setLeaseAmendment(leaseAmendment);
         amendmentItem.setDiscountPercentage(discountPercentage);
+        amendmentItem.setManualDiscountAmount(manualDiscountAmount);
         amendmentItem.setApplicableTo(LeaseAmendmentItem.applicableToToString(applicableToTypes));
         amendmentItem.setStartDate(startDate);
         amendmentItem.setEndDate(endDate);

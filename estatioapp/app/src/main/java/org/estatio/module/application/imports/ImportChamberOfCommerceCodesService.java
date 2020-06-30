@@ -75,6 +75,7 @@ public class ImportChamberOfCommerceCodesService {
                     AgreementRoleType tenantType = agreementRoleTypeRepository.find(LeaseAgreementRoleTypeEnum.TENANT);
                     String propertiesIfAnyWithLeaseStatus = agreementRoleRepository.findByPartyAndType(org, tenantType)
                             .stream()
+                            .filter(role->role.getAgreement().getClass().isAssignableFrom(Lease.class))
                             .map(role -> ((Lease) role.getAgreement()))
                             .map(lease -> {
                                 LeaseStatus status = lease.getStatus();

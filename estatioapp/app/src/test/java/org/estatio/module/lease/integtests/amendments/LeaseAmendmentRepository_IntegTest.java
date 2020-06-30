@@ -92,7 +92,7 @@ public class LeaseAmendmentRepository_IntegTest extends LeaseModuleIntegTestAbst
 
         // and when
         final List<LeaseAmendment> resultsForDemoType = leaseAmendmentRepository.findByType(LeaseAmendmentType.DEMO_TYPE);
-        final List<LeaseAmendment> resultsForOtherType = leaseAmendmentRepository.findByType(LeaseAmendmentType.COVID_FRA_FREQ_CHANGE);
+        final List<LeaseAmendment> resultsForOtherType = leaseAmendmentRepository.findByType(LeaseAmendmentType.COVID_ITA_FREQ_CHANGE_ONLY);
         // then
         assertThat(resultsForDemoType).hasSize(1);
         assertThat(resultsForDemoType.get(0)).isEqualTo(leaseAmendment);

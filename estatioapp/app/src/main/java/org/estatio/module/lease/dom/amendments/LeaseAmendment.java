@@ -111,18 +111,42 @@ public class LeaseAmendment extends Agreement {
     @Getter @Setter
     private LeaseAmendmentState state;
 
+    @Column(allowsNull = "true")
+    @Getter @Setter
+    private LocalDate dateSigned;
+
+    @Column(allowsNull = "true")
+    @Getter @Setter
+    private LocalDate dateApplied;
+
     @Action(semantics = SemanticsOf.IDEMPOTENT)
-    public LeaseAmendment changeState(final LeaseAmendmentState state){
-        setState(state);
+    public LeaseAmendment sign(final LocalDate dateSigned){
+        setState(LeaseAmendmentState.SIGNED);
+        setDateSigned(dateSigned);
         return this;
     }
 
-    public List<LeaseAmendmentState> choices0ChangeState(){
-        return Arrays.asList(LeaseAmendmentState.PROPOSED, LeaseAmendmentState.SIGNED);
+    public boolean hideSign(){
+        return getState()!=LeaseAmendmentState.PROPOSED;
     }
 
-    public String disableChangeState(){
-        return getState()==LeaseAmendmentState.APPLIED ? "The status is applied" : null;
+    public LocalDate default0Sign(){
+        return clockService.now();
+    }
+
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    public LeaseAmendment changeDateSigned(final LocalDate dateSigned){
+        setDateSigned(dateSigned);
+        return this;
+    }
+
+    public LocalDate default0ChangeDateSigned(){
+        return getDateSigned();
+    }
+
+    public String disableChangeDateSigned(){
+        if (getState()!=LeaseAmendmentState.SIGNED) return "Only on signed amendments the date signed can be changed";
+        return null;
     }
 
     @Column(name = "leasePreviewId", allowsNull = "true")
@@ -144,19 +168,37 @@ public class LeaseAmendment extends Agreement {
         return lease.getApplicationTenancy();
     }
 
-    @Programmatic
-    public void remove(){
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
+    public Lease remove(){
+        Lease result = getLease();
+        if (getLeasePreview()!=null){
+            getLeasePreview().remove("Removing amendment");
+        }
         repositoryService.removeAndFlush(this);
+        return result;
+    }
+
+    public String disableRemove(){
+        if (amendmentDataIsImmutable()) return "The amendment is immutable";
+        return null;
     }
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     public LeaseAmendment apply(){
+        final Optional<LeaseAmendmentItem> optionalDiscountItem = Lists.newArrayList(getItems()).stream()
+                .filter(i -> i.getType() == LeaseAmendmentItemType.DISCOUNT).findFirst();
+        // make sure a most recent lease preview is created in order to update the calculated values on discount item
+        // NOTE: this preview will be deleted right after this when applying the lease
+        if (optionalDiscountItem.isPresent()){
+            createOrRenewLeasePreview();
+        }
         leaseAmendmentService.apply(this, false);
+        setDateApplied(clockService.now());
         return this;
     }
 
-    public String disableApply(){
-        return getState()!=LeaseAmendmentState.SIGNED ? "Only signed amendments can be applied" : null;
+    public boolean hideApply(){
+        return !Arrays.asList(LeaseAmendmentState.SIGNED, LeaseAmendmentState.APPLY).contains(getState());
     }
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
@@ -208,8 +250,13 @@ public class LeaseAmendment extends Agreement {
     }
 
     @Programmatic
-    public LeaseAmendment upsertItem(final BigDecimal discountPercentage, final List<LeaseItemType> discountAppliesTo, final LocalDate discountStartDate, final LocalDate discountEndDate) {
-        leaseAmendmentItemRepository.upsert(this, discountPercentage, discountAppliesTo, discountStartDate, discountEndDate);
+    public LeaseAmendment upsertItem(
+            final BigDecimal discountPercentage,
+            final BigDecimal manualDiscountAmount,
+            final List<LeaseItemType> discountAppliesTo,
+            final LocalDate discountStartDate,
+            final LocalDate discountEndDate) {
+        leaseAmendmentItemRepository.upsert(this, discountPercentage, manualDiscountAmount, discountAppliesTo, discountStartDate, discountEndDate);
         return this;
     }
 
@@ -234,12 +281,12 @@ public class LeaseAmendment extends Agreement {
     public boolean amendmentDataIsImmutable() {
         return getState()!=LeaseAmendmentState.PROPOSED;
     }
-
     @Inject
     RepositoryService repositoryService;
 
     @Inject
     LeaseAmendmentService leaseAmendmentService;
 
-    @Inject LeaseAmendmentItemRepository leaseAmendmentItemRepository;
+    @Inject
+    LeaseAmendmentItemRepository leaseAmendmentItemRepository;
 }

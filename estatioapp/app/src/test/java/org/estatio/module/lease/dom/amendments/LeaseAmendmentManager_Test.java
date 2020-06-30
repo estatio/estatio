@@ -42,7 +42,7 @@ public class LeaseAmendmentManager_Test {
             }
         };
         rentItem.setType(LeaseItemType.RENT);
-        rentItem.setInvoicingFrequency(LeaseAmendmentType.COVID_FRA_50_PERC.getFrequencyChanges().get(0).oldFrequency);
+        rentItem.setInvoicingFrequency(LeaseAmendmentType.COVID_FRA_50_PERC.getFrequencyChanges().get(0).oldValue);
         Lease lease = new Lease(){
             @Override public SortedSet<LeaseItem> getItems() {
                 return new TreeSet<>(Arrays.asList(
@@ -74,8 +74,8 @@ public class LeaseAmendmentManager_Test {
         assertThat(line.getDiscountStartDate()).isEqualTo(LeaseAmendmentType.COVID_FRA_50_PERC.getDiscountStartDate());
         assertThat(line.getDiscountEndDate()).isEqualTo(LeaseAmendmentType.COVID_FRA_50_PERC.getDiscountEndDate());
 
-        assertThat(line.getInvoicingFrequencyOnLease()).isEqualTo(LeaseAmendmentType.COVID_FRA_50_PERC.getFrequencyChanges().get(0).oldFrequency);
-        assertThat(line.getAmendedInvoicingFrequency()).isEqualTo(LeaseAmendmentType.COVID_FRA_50_PERC.getFrequencyChanges().get(0).newFrequency);
+        assertThat(line.getInvoicingFrequencyOnLease()).isEqualTo(LeaseAmendmentType.COVID_FRA_50_PERC.getFrequencyChanges().get(0).oldValue);
+        assertThat(line.getAmendedInvoicingFrequency()).isEqualTo(LeaseAmendmentType.COVID_FRA_50_PERC.getFrequencyChanges().get(0).newValue);
         assertThat(line.getFrequencyChangeApplicableTo()).isEqualTo(LeaseAmendmentItem.applicableToToString(LeaseAmendmentType.COVID_FRA_50_PERC.getFrequencyChangeAppliesTo()));
         assertThat(line.getFrequencyChangeStartDate()).isEqualTo(LeaseAmendmentType.COVID_FRA_50_PERC.getFrequencyChangeStartDate());
         assertThat(line.getFrequencyChangeEndDate()).isEqualTo(LeaseAmendmentType.COVID_FRA_50_PERC.getFrequencyChangeEndDate());
@@ -95,7 +95,7 @@ public class LeaseAmendmentManager_Test {
             }
         };
         rentItem.setType(LeaseItemType.RENT);
-        rentItem.setInvoicingFrequency(LeaseAmendmentType.COVID_FRA_50_PERC.getFrequencyChanges().get(1).oldFrequency);
+        rentItem.setInvoicingFrequency(LeaseAmendmentType.COVID_FRA_50_PERC.getFrequencyChanges().get(1).oldValue);
         Lease lease = new Lease(){
             @Override public SortedSet<LeaseItem> getItems() {
                 return new TreeSet<>(Arrays.asList(
@@ -119,8 +119,8 @@ public class LeaseAmendmentManager_Test {
         assertThat(lines).hasSize(1);
         final LeaseAmendmentImportLine line = lines.get(0);
 
-        assertThat(line.getInvoicingFrequencyOnLease()).isEqualTo(LeaseAmendmentType.COVID_FRA_50_PERC.getFrequencyChanges().get(1).oldFrequency);
-        assertThat(line.getAmendedInvoicingFrequency()).isEqualTo(LeaseAmendmentType.COVID_FRA_50_PERC.getFrequencyChanges().get(1).newFrequency);
+        assertThat(line.getInvoicingFrequencyOnLease()).isEqualTo(LeaseAmendmentType.COVID_FRA_50_PERC.getFrequencyChanges().get(1).oldValue);
+        assertThat(line.getAmendedInvoicingFrequency()).isEqualTo(LeaseAmendmentType.COVID_FRA_50_PERC.getFrequencyChanges().get(1).newValue);
     }
 
     @Test
@@ -158,14 +158,14 @@ public class LeaseAmendmentManager_Test {
 
         // when
         final List<LeaseAmendmentImportLine> lines = manager
-                .newLinesForLease(lease, LeaseAmendmentType.COVID_ITA_FREQ_CHANGE);
+                .newLinesForLease(lease, LeaseAmendmentType.COVID_ITA_FREQ_CHANGE_ONLY);
 
         // then
         assertThat(lines).hasSize(1);
         final LeaseAmendmentImportLine line = lines.get(0);
         assertThat(line.getLeaseReference()).isEqualTo(leaseReference);
-        assertThat(line.getLeaseAmendmentType()).isEqualTo(LeaseAmendmentType.COVID_ITA_FREQ_CHANGE);
+        assertThat(line.getLeaseAmendmentType()).isEqualTo(LeaseAmendmentType.COVID_ITA_FREQ_CHANGE_ONLY);
         assertThat(line.getLeaseAmendmentState()).isEqualTo(LeaseAmendmentState.PROPOSED);
-        assertThat(line.getStartDate()).isEqualTo(LeaseAmendmentType.COVID_ITA_FREQ_CHANGE.getAmendmentStartDate());
+        assertThat(line.getStartDate()).isEqualTo(LeaseAmendmentType.COVID_ITA_FREQ_CHANGE_ONLY.getAmendmentStartDate());
     }
 }

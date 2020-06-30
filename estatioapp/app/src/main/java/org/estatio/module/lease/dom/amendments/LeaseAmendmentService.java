@@ -26,6 +26,7 @@ import org.estatio.module.agreement.dom.role.AgreementRoleTypeRepository;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.module.invoice.dom.InvoiceRunType;
+import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.lease.contributions.Lease_calculate;
 import org.estatio.module.lease.dom.InvoicingFrequency;
 import org.estatio.module.lease.dom.Lease;
@@ -36,6 +37,7 @@ import org.estatio.module.lease.dom.LeaseItemSourceRepository;
 import org.estatio.module.lease.dom.LeaseItemType;
 import org.estatio.module.lease.dom.LeaseStatus;
 import org.estatio.module.lease.dom.LeaseTerm;
+import org.estatio.module.lease.dom.LeaseTermForFixed;
 import org.estatio.module.party.dom.Party;
 
 @DomainService(
@@ -54,9 +56,11 @@ public class LeaseAmendmentService {
         if (!Arrays.asList(
                 LeaseAmendmentType.COVID_FRA_50_PERC,
                 LeaseAmendmentType.COVID_FRA_100_PERC,
-                LeaseAmendmentType.COVID_FRA_FREQ_CHANGE,
-                LeaseAmendmentType.COVID_ITA_FREQ_CHANGE,
-                LeaseAmendmentType.DEMO_TYPE).
+                LeaseAmendmentType.COVID_ITA_100_PERC_1M,
+                LeaseAmendmentType.COVID_ITA_100_PERC_2M,
+                LeaseAmendmentType.COVID_ITA_FREQ_CHANGE_ONLY,
+                LeaseAmendmentType.DEMO_TYPE,
+                LeaseAmendmentType.DEMO_TYPE2).
                 contains(leaseAmendment.getLeaseAmendmentType())
         ) {
             messageService.warnUser(String.format("Amendment type %s is not implemented (yet...)", leaseAmendment.getLeaseAmendmentType()));
@@ -76,21 +80,25 @@ public class LeaseAmendmentService {
                 .filter(lai -> lai.getClass().isAssignableFrom(LeaseAmendmentItemForDiscount.class))
                 .map(LeaseAmendmentItemForDiscount.class::cast)
                 .findFirst().orElse(null);
-        // NOTE: we apply discount first, before frequency change, because it copies the original invoice frequnecy ...
-        if (leaseAmendmentItemForDiscount!=null){
-            final String message1 = String.format("Applying amendment item for discount for lease %s", preview ? leaseAmendment.getLeasePreview().getReference() : leaseAmendment.getLease().getReference());
-            LOG.info(message1);
-            applyDiscount(lease, leaseAmendmentItemForDiscount);
-        }
+
         final LeaseAmendmentItemForFrequencyChange leaseAmendmentItemForFrequencyChange = Lists
                 .newArrayList(leaseAmendment.getItems()).stream()
                 .filter(lai -> lai.getClass().isAssignableFrom(LeaseAmendmentItemForFrequencyChange.class))
                 .map(LeaseAmendmentItemForFrequencyChange.class::cast)
                 .findFirst().orElse(null);
+
+        // NOTE we apply frequency change first - at the moment this happens to work because French discounts are in the past (before the freq change on 1-7-2020) and Italian discount in the future (after applying freq change on 1-7-2020)
+        // ALSO NOTE that the last amendment item affecting a lease item is referenced to by LeaseItem#getLeaseAmendmentItem !!
+        // TODO: make this more "SAFE" and generic?
         if (leaseAmendmentItemForFrequencyChange!=null){
             final String message2 = String.format("Applying amendment item for frequency change for lease %s", preview ? leaseAmendment.getLeasePreview().getReference() : leaseAmendment.getLease().getReference());
             LOG.info(message2);
             applyFrequencyChange(lease, leaseAmendmentItemForFrequencyChange);
+        }
+        if (leaseAmendmentItemForDiscount!=null){
+            final String message1 = String.format("Applying amendment item for discount for lease %s", preview ? leaseAmendment.getLeasePreview().getReference() : leaseAmendment.getLease().getReference());
+            LOG.info(message1);
+            applyDiscount(lease, leaseAmendmentItemForDiscount);
         }
         if (!preview) {
             final String message3 = String.format("Amendment %s for lease %s applied", leaseAmendment.getReference(), leaseAmendment.getLease().getReference());
@@ -114,12 +122,47 @@ public class LeaseAmendmentService {
     void applyDiscount(
             final Lease lease,
             final LeaseAmendmentItemForDiscount leaseAmendmentItemForDiscount) {
-        for (LeaseItem li : leaseAmendmentItemForDiscount.leaseItemsToIncludeForDiscount(lease)){
-            createDiscountItemAndTerms(li, leaseAmendmentItemForDiscount);
+        if (leaseAmendmentItemForDiscount.getManualDiscountAmount()==null) {
+            for (LeaseItem li : leaseAmendmentItemForDiscount.leaseItemsToIncludeForDiscount(lease)) {
+                createDiscountItemAndTermsFromPercentage(li, leaseAmendmentItemForDiscount);
+            }
+        } else {
+            final LeaseItem firstRentItemIfAny = leaseAmendmentItemForDiscount.leaseItemsToIncludeForDiscount(lease).stream()
+                    .filter(li -> li.getType() == LeaseItemType.RENT).findFirst().orElse(null);
+            if (firstRentItemIfAny!=null) {
+                createDiscountItemAndTermsFromManualValue(firstRentItemIfAny, leaseAmendmentItemForDiscount);
+            } else {
+                LOG.warn(String.format("No rent item found from lease %s when trying to apply manual discount value", lease.getReference()));
+            }
         }
     }
 
-    void createDiscountItemAndTerms(LeaseItem sourceItem, final LeaseAmendmentItemForDiscount leaseAmendmentItemForDiscount){
+    void createDiscountItemAndTermsFromManualValue(final LeaseItem sourceItem, final LeaseAmendmentItemForDiscount leaseAmendmentItemForDiscount){
+        final Lease lease = sourceItem.getLease();
+        final Charge chargeFromAmendmentType = chargeDerivedFromAmendmentTypeAndChargeSourceItem(sourceItem.getCharge(), leaseAmendmentItemForDiscount.getLeaseAmendment().getLeaseAmendmentType());
+        final LeaseItem newDiscountItem = createFixedDiscountItem(
+                lease,
+                sourceItem.getInvoicedBy(),
+                chargeFromAmendmentType,
+                sourceItem.getPaymentMethod(),
+                leaseAmendmentItemForDiscount.getStartDate(),
+                leaseAmendmentItemForDiscount.getEndDate(),
+                leaseAmendmentItemForDiscount.getManualDiscountAmount());
+        newDiscountItem.setLeaseAmendmentItem(leaseAmendmentItemForDiscount);
+//        sourceItem.setLeaseAmendmentItem(leaseAmendmentItemForDiscount);
+    }
+
+    LeaseItem createFixedDiscountItem(final Lease lease, final LeaseAgreementRoleTypeEnum invoicedBy, final Charge charge, final PaymentMethod paymentMethod, final LocalDate startDate, final LocalDate endDate, final BigDecimal value){
+        final LeaseItem newDiscountItem = lease
+                .newItem(LeaseItemType.RENT_DISCOUNT_FIXED, invoicedBy, charge, InvoicingFrequency.FIXED_IN_ADVANCE, paymentMethod, startDate);
+        newDiscountItem.setEndDate(endDate);
+        final LeaseTermForFixed newTerm = (LeaseTermForFixed) newDiscountItem
+                .newTerm(startDate, endDate);
+        newTerm.setValue(value); // TODO: negate? Are users inclined to use a '-'?
+        return newDiscountItem;
+    }
+
+    void createDiscountItemAndTermsFromPercentage(LeaseItem sourceItem, final LeaseAmendmentItemForDiscount leaseAmendmentItemForDiscount){
 
         LocalDate startDateToUse = sourceItem.getStartDate()==null || sourceItem.getStartDate().isBefore(leaseAmendmentItemForDiscount.getStartDate()) ? leaseAmendmentItemForDiscount.getStartDate() : sourceItem.getStartDate();
         LocalDate endDateToUse = sourceItem.getEndDate()==null || sourceItem.getEndDate().isAfter(leaseAmendmentItemForDiscount.getEndDate()) ? leaseAmendmentItemForDiscount.getEndDate() : sourceItem.getEndDate();
@@ -128,19 +171,50 @@ public class LeaseAmendmentService {
         // prevent an item copy from being created when no terms for the discount period
         if (!sourceItem.hasTermsOverlapping(LocalDateInterval.including(leaseAmendmentItemForDiscount.getStartDate(), leaseAmendmentItemForDiscount.getEndDate()))) return;
 
-        final Charge chargeFromAmendmentType = chargeRepository.findByReference(
-                leaseAmendmentItemForDiscount.getLeaseAmendment().getLeaseAmendmentType()
-                        .getChargeReferenceForDiscountItem());
-        final Charge chargeToUse = chargeFromAmendmentType != null ? chargeFromAmendmentType : sourceItem.getCharge(); // This is a fallback. for testing f.i.
+        final Charge chargeFromAmendmentType = chargeDerivedFromAmendmentTypeAndChargeSourceItem(sourceItem.getCharge(), leaseAmendmentItemForDiscount.getLeaseAmendment().getLeaseAmendmentType());
+        final LeaseItemType newItemType = sourceItem.getType()==LeaseItemType.RENT ? LeaseItemType.RENT_DISCOUNT : sourceItem.getType(); // for current discounts we leave the types as they are
         final LeaseItem newDiscountItem = lease
-                .newItem(sourceItem.getType(), sourceItem.getInvoicedBy(), chargeToUse, sourceItem.getInvoicingFrequency(), sourceItem.getPaymentMethod(), startDateToUse);
+                .newItem(newItemType, sourceItem.getInvoicedBy(), chargeFromAmendmentType, sourceItem.getInvoicingFrequency(), sourceItem.getPaymentMethod(), startDateToUse);
         newDiscountItem.setLeaseAmendmentItem(leaseAmendmentItemForDiscount);
         newDiscountItem.setEndDate(endDateToUse);
         sourceItem.copyTerms(newDiscountItem.getStartDate(), newDiscountItem);
+        // SINCE RENT_FIXED items do not autocreate terms, we do a fix here when needed
+        if (newDiscountItem.getType()==LeaseItemType.RENT_DISCOUNT) createTermsIfNeededForTheItemInterval(newDiscountItem);
         newDiscountItem.negateAmountsAndApplyPercentageOnTerms(leaseAmendmentItemForDiscount.getDiscountPercentage());
         if (lease.getStatus()!=LeaseStatus.PREVIEW) {
             final String message = String.format("Item of type %s and charge %s for lease %s created with interval %s", newDiscountItem.getType(), newDiscountItem.getCharge().getReference(), lease.getReference(), newDiscountItem.getInterval().toString());
             LOG.info(message);
+        }
+    }
+
+    public void createTermsIfNeededForTheItemInterval(final LeaseItem leaseItem){
+        for (LeaseTerm term : leaseItem.getTerms()){
+            if (term.getNext()==null && term.getEndDate()!=null && term.getEndDate().isBefore(leaseItem.getEndDate())){
+                term.createNext(term.getEndDate().plusDays(1), null);
+            }
+        }
+    }
+
+    Charge chargeDerivedFromAmendmentTypeAndChargeSourceItem(final Charge sourceCharge, final LeaseAmendmentType leaseAmendmentType){
+        String chargeRefToUse = leaseAmendmentType.getChargeReferenceForDiscountItem()
+                .stream()
+                .filter(t->t.oldValue!=null)
+                .filter(t -> t.oldValue.equals(sourceCharge.getReference()))
+                .map(t -> t.newValue)
+                .findFirst().orElse(null);
+        if (chargeRefToUse==null) {
+            chargeRefToUse = leaseAmendmentType.getChargeReferenceForDiscountItem()
+                    .stream()
+                    .filter(t -> t.oldValue == null)
+                    .map(t -> t.newValue)
+                    .findFirst().orElse(null);
+        }
+        if (chargeRefToUse!=null) {
+            final Charge charge = chargeRepository.findByReference(chargeRefToUse);
+            if (charge==null) throw new RuntimeException(String.format("Charge with reference %s not found", chargeRefToUse));
+            return charge;
+        } else {
+            return sourceCharge; // This is a fallback. for testing f.i.
         }
     }
 
@@ -149,6 +223,7 @@ public class LeaseAmendmentService {
                 .filter(li -> LeaseAmendmentItem
                         .applicableToFromString(leaseAmendmentItemForFrequencyChange.getApplicableTo())
                         .contains(li.getType()))
+                .filter(li->li.getInvoicedBy()==LeaseAgreementRoleTypeEnum.LANDLORD)
                 .filter(li->li.getInvoicingFrequency()==leaseAmendmentItemForFrequencyChange.getInvoicingFrequencyOnLease())
                 .filter(li->li.getEffectiveInterval().overlaps(leaseAmendmentItemForFrequencyChange.getInterval()))
                 .collect(Collectors.toList());
@@ -160,6 +235,7 @@ public class LeaseAmendmentService {
                 case SERVICE_CHARGE:
                 case SERVICE_CHARGE_INDEXABLE:
                 case MARKETING:
+                case PROPERTY_TAX:
                     final LeaseItem firstNewItem = closeOriginalAndOpenNewLeaseItem(
                             leaseAmendmentItemForFrequencyChange.getStartDate(),
                             originalItem,
@@ -296,7 +372,7 @@ public class LeaseAmendmentService {
     boolean hasChangingFrequency(final LeaseItem i, final LeaseAmendmentType leaseAmendmentType){
         final LeaseAmendmentType.Tuple<InvoicingFrequency, InvoicingFrequency> tuple = leaseAmendmentType.getFrequencyChanges()
                 .stream()
-                .filter(t -> t.oldFrequency == i.getInvoicingFrequency())
+                .filter(t -> t.oldValue == i.getInvoicingFrequency())
                 .findFirst().orElse(null);
         return tuple != null;
     }
@@ -304,7 +380,7 @@ public class LeaseAmendmentService {
     LeaseAmendmentType.Tuple<InvoicingFrequency, InvoicingFrequency>  getTuple(final LeaseItem i, final LeaseAmendmentType leaseAmendmentType){
         return leaseAmendmentType.getFrequencyChanges()
                 .stream()
-                .filter(t -> t.oldFrequency == i.getInvoicingFrequency())
+                .filter(t -> t.oldValue == i.getInvoicingFrequency())
                 .findFirst().orElse(null);
     }
 

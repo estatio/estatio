@@ -23,7 +23,9 @@ public enum LeaseAmendmentType {
             ),
             new LocalDate(2020,3,16),
             new LocalDate(2020,5,10),
-            "FR2052",
+            Arrays.asList(
+                    new Tuple<>(null, "FR2052") // DEFAULT
+            ),
             Arrays.asList(
                     new Tuple<>(InvoicingFrequency.QUARTERLY_IN_ADVANCE, InvoicingFrequency.MONTHLY_IN_ADVANCE),
                     new Tuple<>(InvoicingFrequency.QUARTERLY_IN_ARREARS, InvoicingFrequency.MONTHLY_IN_ARREARS)
@@ -51,7 +53,9 @@ public enum LeaseAmendmentType {
             ),
             new LocalDate(2020,4,1),
             new LocalDate(2020,6,30),
-            "FR2052",
+            Arrays.asList(
+                    new Tuple<>(null, "FR2052") // DEFAULT
+            ),
             Arrays.asList(
                     new Tuple<>(InvoicingFrequency.QUARTERLY_IN_ADVANCE, InvoicingFrequency.MONTHLY_IN_ADVANCE),
                     new Tuple<>(InvoicingFrequency.QUARTERLY_IN_ARREARS, InvoicingFrequency.MONTHLY_IN_ARREARS)
@@ -69,7 +73,55 @@ public enum LeaseAmendmentType {
             new LocalDate(2020,1,1),
             new LocalDate(2020,12,31),
             false),
-    COVID_FRA_FREQ_CHANGE(
+    COVID_ITA_100_PERC_1M(
+            new LocalDate(2020,7,1),
+            new BigDecimal("100.00"),
+            Arrays.asList(
+                    LeaseItemType.RENT,
+                    LeaseItemType.RENT_DISCOUNT,
+                    LeaseItemType.RENT_DISCOUNT_FIXED
+            ),
+            new LocalDate(2020,7,1),
+            new LocalDate(2020,7,31),
+            Arrays.asList(
+                    new Tuple<>("6001", "6031"),
+                    new Tuple<>("6002", "6032"),
+                    new Tuple<>("6031", "6031"), // current discount charge on any discount item
+                    new Tuple<>("6032", "6032"), // current discount charge on any discount item
+                    new Tuple<>(null, "6032") // TODO: check DEFAULT with users?
+            ),
+            null,
+            null,
+            null,
+            null,
+            "-A1M",
+            new LocalDate(2020,4,1), // because of _PLUSM1 / _PLUSM2 calcs
+            new LocalDate(2020,12,31),
+            false),
+    COVID_ITA_100_PERC_2M(
+            new LocalDate(2020,7,1),
+            new BigDecimal("100.00"),
+            Arrays.asList(
+                    LeaseItemType.RENT,
+                    LeaseItemType.RENT_DISCOUNT,
+                    LeaseItemType.RENT_DISCOUNT_FIXED
+            ),
+            new LocalDate(2020,7,1),
+            new LocalDate(2020,8,31),
+            Arrays.asList(
+                    new Tuple<>("6001", "6031"),
+                    new Tuple<>("6002", "6032"),
+                    new Tuple<>(null, "6032") // TODO: check DEFAULT with users?
+            ),
+            null,
+            null,
+            null,
+            null,
+            "-A2M",
+            new LocalDate(2020,4,1), // because of _PLUSM1 / _PLUSM2 calcs
+            new LocalDate(2020,12,31),
+            false),
+    COVID_ITA_FREQ_CHANGE_ONLY(
             new LocalDate(2020,7,1),
             null,
             null,
@@ -78,7 +130,9 @@ public enum LeaseAmendmentType {
             null,
             Arrays.asList(
                     new Tuple<>(InvoicingFrequency.QUARTERLY_IN_ADVANCE, InvoicingFrequency.MONTHLY_IN_ADVANCE),
-                    new Tuple<>(InvoicingFrequency.QUARTERLY_IN_ARREARS, InvoicingFrequency.MONTHLY_IN_ARREARS)
+                    new Tuple<>(InvoicingFrequency.QUARTERLY_IN_ARREARS, InvoicingFrequency.MONTHLY_IN_ADVANCE),
+                    new Tuple<>(InvoicingFrequency.QUARTERLY_IN_ADVANCE_PLUS1M, InvoicingFrequency.MONTHLY_IN_ADVANCE),
+                    new Tuple<>(InvoicingFrequency.QUARTERLY_IN_ADVANCE_PLUS2M, InvoicingFrequency.MONTHLY_IN_ADVANCE)
             ),
             Arrays.asList(
                     LeaseItemType.RENT,
@@ -90,31 +144,7 @@ public enum LeaseAmendmentType {
             new LocalDate(2020,7,1),
             new LocalDate(2020,12,31),
             "-AF",
-            null,
-            null,
-            true),
-    COVID_ITA_FREQ_CHANGE(
-            new LocalDate(2020,7,1),
-            null,
-            null,
-            null,
-            null,
-            null,
-            Arrays.asList(
-                    new Tuple<>(InvoicingFrequency.QUARTERLY_IN_ADVANCE, InvoicingFrequency.MONTHLY_IN_ADVANCE),
-                    new Tuple<>(InvoicingFrequency.QUARTERLY_IN_ARREARS, InvoicingFrequency.MONTHLY_IN_ARREARS)
-            ),
-            Arrays.asList(
-                    LeaseItemType.RENT,
-                    LeaseItemType.RENT_DISCOUNT,
-                    LeaseItemType.RENT_DISCOUNT_FIXED,
-                    LeaseItemType.SERVICE_CHARGE,
-                    LeaseItemType.MARKETING
-            ),
-            new LocalDate(2020,7,1),
-            new LocalDate(2020,12,31),
-            "-AF",
-            new LocalDate(2020,7,1),
+            new LocalDate(2020,4,1), // because of _PLUSM1 / _PLUSM2 calcs
             new LocalDate(2020,12,31),
             true),
     DEMO_TYPE(
@@ -123,7 +153,9 @@ public enum LeaseAmendmentType {
             Arrays.asList(LeaseItemType.RENT, LeaseItemType.RENT_DISCOUNT, LeaseItemType.RENT_DISCOUNT_FIXED),
             new LocalDate(2020,3,16),
             new LocalDate(2020,5,10),
-            "GBR_DISCOUNT",
+            Arrays.asList(
+                    new Tuple<>(null, "GBR_DISCOUNT")
+            ),
             Arrays.asList(
                     new Tuple<>(InvoicingFrequency.QUARTERLY_IN_ADVANCE, InvoicingFrequency.MONTHLY_IN_ARREARS)
             ),
@@ -132,6 +164,25 @@ public enum LeaseAmendmentType {
             new LocalDate(2020, 12, 31),
             "-DEM",
             new LocalDate(2020,1,1),
+            new LocalDate(2020,12,31),
+            false),
+    DEMO_TYPE2(
+            new LocalDate(2020,7,1),
+            new BigDecimal("100"),
+            Arrays.asList(LeaseItemType.RENT, LeaseItemType.RENT_DISCOUNT, LeaseItemType.RENT_DISCOUNT_FIXED),
+            new LocalDate(2020,7,1),
+            new LocalDate(2020,8,31),
+            Arrays.asList(
+                    new Tuple<>(null, "GBR_DISCOUNT")
+            ),
+            Arrays.asList(
+                    new Tuple<>(InvoicingFrequency.QUARTERLY_IN_ADVANCE, InvoicingFrequency.MONTHLY_IN_ADVANCE)
+            ),
+            Arrays.asList(LeaseItemType.RENT, LeaseItemType.SERVICE_CHARGE),
+            new LocalDate(2020,7,1),
+            new LocalDate(2020, 12, 31),
+            "-DEM2",
+            new LocalDate(2020,7,1),
             new LocalDate(2020,12,31),
             false)
     ;
@@ -152,7 +203,7 @@ public enum LeaseAmendmentType {
     private final LocalDate discountEndDate;
 
     @Getter
-    private final String chargeReferenceForDiscountItem;
+    private final List<Tuple<String, String>> chargeReferenceForDiscountItem;
 
     @Getter
     private final List<Tuple<InvoicingFrequency, InvoicingFrequency>> frequencyChanges;
@@ -184,7 +235,7 @@ public enum LeaseAmendmentType {
             final List<LeaseItemType> discountAppliesTo,
             final LocalDate discountStartDate,
             final LocalDate discountEndDate,
-            final String chargeReferenceForDiscountItem,
+            final List<Tuple<String, String>> chargeReferenceForDiscountItem,
             final List<Tuple<InvoicingFrequency, InvoicingFrequency>> frequencyChanges,
             final List<LeaseItemType> frequencyChangeAppliesTo,
             final LocalDate frequencyChangeStartDate,
@@ -210,11 +261,11 @@ public enum LeaseAmendmentType {
     }
 
     public static class Tuple<X, Y> {
-        public final X oldFrequency;
-        public final Y newFrequency;
-        public Tuple(X oldFrequency, Y newFrequency) {
-            this.oldFrequency = oldFrequency;
-            this.newFrequency = newFrequency;
+        public final X oldValue;
+        public final Y newValue;
+        public Tuple(X oldValue, Y newValue) {
+            this.oldValue = oldValue;
+            this.newValue = newValue;
         }
     }
 }

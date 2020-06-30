@@ -64,6 +64,7 @@ public class LeaseAmendmentItemRepository_IntegTest extends LeaseModuleIntegTest
         final LeaseAmendment leaseAmendment = leaseAmendmentRepository
                 .upsert(lease, LeaseAmendmentType.DEMO_TYPE, LeaseAmendmentState.PROPOSED, null, null);
         final BigDecimal discountPercentage = new BigDecimal("50.55");
+        final BigDecimal manualDiscountAmount = new BigDecimal("1234.56");
         final LocalDate itemStartDate = new LocalDate(2020, 1, 15);
         final LocalDate itemEndDate = new LocalDate(2020, 3, 31);
 
@@ -71,27 +72,32 @@ public class LeaseAmendmentItemRepository_IntegTest extends LeaseModuleIntegTest
         LeaseAmendmentItemForDiscount amendmentItemForDiscount = leaseAmendmentItemRepository.upsert(
                 leaseAmendment,
                 discountPercentage,
+                manualDiscountAmount,
                 Arrays.asList(LeaseItemType.RENT, LeaseItemType.SERVICE_CHARGE, LeaseItemType.MARKETING),
                 itemStartDate, itemEndDate);
 
         // then
         assertThat(amendmentItemForDiscount.getLeaseAmendment()).isEqualTo(leaseAmendment);
         assertThat(amendmentItemForDiscount.getDiscountPercentage()).isEqualTo(discountPercentage);
+        assertThat(amendmentItemForDiscount.getManualDiscountAmount()).isEqualTo(manualDiscountAmount);
         assertThat(amendmentItemForDiscount.getApplicableTo()).isEqualTo("RENT,SERVICE_CHARGE,MARKETING");
         assertThat(amendmentItemForDiscount.getStartDate()).isEqualTo(itemStartDate);
         assertThat(amendmentItemForDiscount.getEndDate()).isEqualTo(itemEndDate);
 
         // and when
         final BigDecimal apdaptedDiscountPercentage = new BigDecimal("51.00");
+        final BigDecimal adaptedManualDiscountAmount = new BigDecimal("2345.67");
         final LocalDate adaptedItemStartDate = new LocalDate(2020, 1, 16);
         final LocalDate adaptedItemEndDate = new LocalDate(2020, 4, 1);
         amendmentItemForDiscount = leaseAmendmentItemRepository.upsert(
                 leaseAmendment,
                 apdaptedDiscountPercentage,
+                adaptedManualDiscountAmount,
                 Arrays.asList(LeaseItemType.RENT, LeaseItemType.SERVICE_CHARGE),
                 adaptedItemStartDate, adaptedItemEndDate);
         // then
         assertThat(amendmentItemForDiscount.getDiscountPercentage()).isEqualTo(apdaptedDiscountPercentage);
+        assertThat(amendmentItemForDiscount.getManualDiscountAmount()).isEqualTo(adaptedManualDiscountAmount);
         assertThat(amendmentItemForDiscount.getApplicableTo()).isEqualTo("RENT,SERVICE_CHARGE");
         assertThat(amendmentItemForDiscount.getStartDate()).isEqualTo(adaptedItemStartDate);
         assertThat(amendmentItemForDiscount.getEndDate()).isEqualTo(adaptedItemEndDate);

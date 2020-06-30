@@ -32,6 +32,7 @@
                 <cpt:action id="download" position="PANEL"/>
                 <cpt:action id="importAmendments" position="PANEL"/>
                 <cpt:action id="applyAll" position="PANEL"/>
+                <cpt:action id="applyAllWithStatusApply" position="PANEL"/>
             </cpt:collection>
         </bs3:col>
     </bs3:row>

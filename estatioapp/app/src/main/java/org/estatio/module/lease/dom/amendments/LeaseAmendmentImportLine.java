@@ -41,6 +41,7 @@ public class LeaseAmendmentImportLine implements ExcelFixtureRowHandler, Importa
         this();
         this.leaseAmendmentType = leaseAmendment.getLeaseAmendmentType();
         this.leaseAmendmentState = leaseAmendment.getState();
+        this.dateSigned = leaseAmendment.getDateSigned();
         this.leaseReference = leaseAmendment.getLease().getReference();
         this.startDate = leaseAmendment.getStartDate();
         this.endDate = leaseAmendment.getEndDate();
@@ -48,6 +49,7 @@ public class LeaseAmendmentImportLine implements ExcelFixtureRowHandler, Importa
                 .stream().findFirst().orElse(null);
         if (discountItem!=null) {
             this.discountPercentage = discountItem.getDiscountPercentage();
+            this.manualDiscountAmount = discountItem.getManualDiscountAmount();
             this.discountApplicableTo = discountItem.getApplicableTo();
             this.discountStartDate = discountItem.getStartDate();
             this.discountEndDate = discountItem.getEndDate();
@@ -74,54 +76,62 @@ public class LeaseAmendmentImportLine implements ExcelFixtureRowHandler, Importa
 
     @Getter @Setter
     @MemberOrder(sequence = "3")
-    private String leaseReference;
+    private LocalDate dateSigned;
 
     @Getter @Setter
     @MemberOrder(sequence = "4")
-    private LocalDate startDate;
+    private String leaseReference;
 
     @Getter @Setter
     @MemberOrder(sequence = "5")
-    private LocalDate endDate;
+    private LocalDate startDate;
 
     @Getter @Setter
     @MemberOrder(sequence = "6")
-    private BigDecimal discountPercentage;
+    private LocalDate endDate;
 
     @Getter @Setter
     @MemberOrder(sequence = "7")
-    private BigDecimal calculatedDiscountAmount;
+    private BigDecimal discountPercentage;
 
     @Getter @Setter
     @MemberOrder(sequence = "8")
-    private String discountApplicableTo;
+    private BigDecimal manualDiscountAmount;
 
     @Getter @Setter
     @MemberOrder(sequence = "9")
-    private LocalDate discountStartDate;
+    private BigDecimal calculatedDiscountAmount;
 
     @Getter @Setter
     @MemberOrder(sequence = "10")
-    private LocalDate discountEndDate;
+    private String discountApplicableTo;
 
     @Getter @Setter
     @MemberOrder(sequence = "11")
-    private InvoicingFrequency invoicingFrequencyOnLease;
+    private LocalDate discountStartDate;
 
     @Getter @Setter
     @MemberOrder(sequence = "12")
-    private InvoicingFrequency amendedInvoicingFrequency;
+    private LocalDate discountEndDate;
 
     @Getter @Setter
     @MemberOrder(sequence = "13")
-    private String frequencyChangeApplicableTo;
+    private InvoicingFrequency invoicingFrequencyOnLease;
 
     @Getter @Setter
     @MemberOrder(sequence = "14")
-    private LocalDate frequencyChangeStartDate;
+    private InvoicingFrequency amendedInvoicingFrequency;
 
     @Getter @Setter
     @MemberOrder(sequence = "15")
+    private String frequencyChangeApplicableTo;
+
+    @Getter @Setter
+    @MemberOrder(sequence = "16")
+    private LocalDate frequencyChangeStartDate;
+
+    @Getter @Setter
+    @MemberOrder(sequence = "17")
     private LocalDate frequencyChangeEndDate;
 
 
@@ -144,9 +154,10 @@ public class LeaseAmendmentImportLine implements ExcelFixtureRowHandler, Importa
         }
         final LeaseAmendment amendment = leaseAmendmentRepository.upsert(lease, leaseAmendmentType, leaseAmendmentState, startDate, endDate);
         if (amendment.getState()==LeaseAmendmentState.APPLIED) return Lists.newArrayList(amendment);
+        if (amendment.getState()==LeaseAmendmentState.SIGNED && dateSigned!=null) amendment.setDateSigned(dateSigned);
         
         if (discountPercentage!=null && discountApplicableTo!=null && discountStartDate!=null && discountEndDate!=null) {
-            amendment.upsertItem(discountPercentage, LeaseAmendmentItem.applicableToFromString(discountApplicableTo), discountStartDate, discountEndDate);
+            amendment.upsertItem(discountPercentage, manualDiscountAmount, LeaseAmendmentItem.applicableToFromString(discountApplicableTo), discountStartDate, discountEndDate);
         }
         if (invoicingFrequencyOnLease!=null && amendedInvoicingFrequency !=null && frequencyChangeApplicableTo !=null && frequencyChangeStartDate
                 !=null && frequencyChangeEndDate !=null) {

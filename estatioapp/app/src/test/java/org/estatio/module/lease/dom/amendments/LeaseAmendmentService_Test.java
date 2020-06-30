@@ -16,11 +16,16 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
+import org.estatio.module.charge.dom.Charge;
+import org.estatio.module.charge.dom.ChargeRepository;
+import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.lease.dom.InvoicingFrequency;
 import org.estatio.module.lease.dom.Lease;
+import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
 import org.estatio.module.lease.dom.LeaseItem;
 import org.estatio.module.lease.dom.LeaseItemRepository;
 import org.estatio.module.lease.dom.LeaseItemType;
+import org.estatio.module.lease.dom.LeaseTerm;
 import org.estatio.module.lease.dom.LeaseTermForFixed;
 import org.estatio.module.lease.dom.LeaseTermRepository;
 
@@ -35,8 +40,48 @@ public class LeaseAmendmentService_Test {
 
     @Mock LeaseTermRepository mockLeaseTermRepository;
 
+    @Mock Lease mockLease;
+
     @Test
-    @Ignore
+    public void createFixedDiscountItem_works() throws Exception {
+
+        // given
+        final LocalDate startDate = new LocalDate(2020, 1, 1);
+        final LocalDate endDate = new LocalDate(2020, 3, 1);
+        final BigDecimal value = new BigDecimal("123.45");
+        final LeaseAgreementRoleTypeEnum landlord = LeaseAgreementRoleTypeEnum.LANDLORD;
+        final Charge charge = new Charge();
+        final InvoicingFrequency fixedInAdvance = InvoicingFrequency.FIXED_IN_ADVANCE;
+        final PaymentMethod directDebit = PaymentMethod.DIRECT_DEBIT;
+
+        final LeaseTermForFixed fixedTerm = new LeaseTermForFixed();
+
+        final LeaseItem discountItem = new LeaseItem(){
+            @Override public LeaseTerm newTerm(final LocalDate startDate, final LocalDate endDate) {
+                return fixedTerm;
+            }
+        };
+
+        LeaseAmendmentService service = new LeaseAmendmentService();
+
+        // expect
+        context.checking(new Expectations(){{
+            oneOf(mockLease).newItem(LeaseItemType.RENT_DISCOUNT_FIXED,landlord, charge, fixedInAdvance, directDebit, startDate);
+            will(returnValue(discountItem));
+        }});
+
+        // when
+        service.createFixedDiscountItem(mockLease, landlord, charge, directDebit, startDate, endDate, value);
+
+        // then
+        assertThat(discountItem.getEndDate()).isEqualTo(endDate);
+        assertThat(fixedTerm.getValue()).isEqualTo(value);
+
+    }
+
+
+    @Test
+    @Ignore("Too lazy ...?")
     public void createDiscountItemsAndTerms_works() {
 
         // given
@@ -119,7 +164,7 @@ public class LeaseAmendmentService_Test {
             }
         };
         rentItem.setType(LeaseItemType.RENT);
-        rentItem.setInvoicingFrequency(LeaseAmendmentType.COVID_FRA_50_PERC.getFrequencyChanges().get(1).oldFrequency);
+        rentItem.setInvoicingFrequency(LeaseAmendmentType.COVID_FRA_50_PERC.getFrequencyChanges().get(1).oldValue);
         Lease lease = new Lease(){
             @Override public SortedSet<LeaseItem> getItems() {
                 return new TreeSet<>(Arrays.asList(
@@ -133,6 +178,43 @@ public class LeaseAmendmentService_Test {
                 .findInvoiceFrequencyTupleOnfirstFrequencyChangeCandidate(lease, LeaseAmendmentType.COVID_FRA_50_PERC);
         // then
         assertThat(tuple).isEqualTo(LeaseAmendmentType.COVID_FRA_50_PERC.getFrequencyChanges().get(1));
+
+    }
+
+    @Mock ChargeRepository mockChargeRepository;
+
+    @Test
+    public void chargeDerivedFromAmendmentTypeAndChargeSourceItem_works() throws Exception {
+
+        // given
+        LeaseAmendmentService service = new LeaseAmendmentService();
+        service.chargeRepository = mockChargeRepository;
+        Charge sourceCharge1 = new Charge();
+        sourceCharge1.setReference("6001");
+        Charge sourceCharge2 = new Charge();
+        sourceCharge2.setReference("6002");
+        Charge sourceCharge3 = new Charge();
+        sourceCharge3.setReference("6031");
+        Charge sourceCharge4 = new Charge();
+        sourceCharge4.setReference("6032");
+        Charge unmentionedCharge = new Charge();
+        unmentionedCharge.setReference("xxxx");
+
+        // expect
+        context.checking(new Expectations(){{
+            oneOf(mockChargeRepository).findByReference(LeaseAmendmentType.COVID_ITA_100_PERC_1M.getChargeReferenceForDiscountItem().get(0).newValue);
+            oneOf(mockChargeRepository).findByReference(LeaseAmendmentType.COVID_ITA_100_PERC_1M.getChargeReferenceForDiscountItem().get(1).newValue);
+            oneOf(mockChargeRepository).findByReference(LeaseAmendmentType.COVID_ITA_100_PERC_1M.getChargeReferenceForDiscountItem().get(2).newValue);
+            oneOf(mockChargeRepository).findByReference(LeaseAmendmentType.COVID_ITA_100_PERC_1M.getChargeReferenceForDiscountItem().get(3).newValue);
+            oneOf(mockChargeRepository).findByReference(LeaseAmendmentType.COVID_ITA_100_PERC_1M.getChargeReferenceForDiscountItem().get(4).newValue);
+        }});
+
+        // when
+        service.chargeDerivedFromAmendmentTypeAndChargeSourceItem(sourceCharge1, LeaseAmendmentType.COVID_ITA_100_PERC_1M);
+        service.chargeDerivedFromAmendmentTypeAndChargeSourceItem(sourceCharge2, LeaseAmendmentType.COVID_ITA_100_PERC_1M);
+        service.chargeDerivedFromAmendmentTypeAndChargeSourceItem(sourceCharge3, LeaseAmendmentType.COVID_ITA_100_PERC_1M);
+        service.chargeDerivedFromAmendmentTypeAndChargeSourceItem(sourceCharge4, LeaseAmendmentType.COVID_ITA_100_PERC_1M);
+        service.chargeDerivedFromAmendmentTypeAndChargeSourceItem(unmentionedCharge, LeaseAmendmentType.COVID_ITA_100_PERC_1M);
 
     }
 

@@ -95,7 +95,13 @@ public class TaskReminderService {
                     .filter(t -> t.getPersonAssignedTo().equals(approver))
                     .collect(Collectors.toList());
             if (disableSendReminderToApprover(approver, taskList)==null) {
-                sendReminderToApprover(approver, taskList);
+                try {
+                    LOG.info(String.format("Trying to send reminder to %s", approver.getUsername()));
+                    sendReminderToApprover(approver, taskList);
+                } catch (Exception e){
+                    // email service will do a re-try
+                    LOG.warn(String.format("Exception caught when sending reminders to Italian approvers: %s", e.getMessage()));
+                }
             } else {
                 // maybe log something if there is a need for it
             }

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
@@ -107,6 +108,35 @@ public class LeaseAmendmentManager {
     }
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
+    public  LeaseAmendmentManager applyAllWithStatusApply(){
+        for (LeaseAmendmentImportLine line : getLines()){
+            if (line.getLeaseAmendmentState()==LeaseAmendmentState.APPLY) {
+                final Lease lease = leaseRepository.findLeaseByReference(line.getLeaseReference());
+                if (lease != null) {
+                    final LeaseAmendment amendment = leaseAmendmentRepository
+                            .findUnique(lease, line.getLeaseAmendmentType());
+                    if (amendment != null && amendment.getState() != LeaseAmendmentState.APPLIED) {
+                        backgroundService2.execute(amendment)
+                                .apply();
+                    }
+                }
+            }
+        }
+        return new LeaseAmendmentManager(getProperty(), getLeaseAmendmentType());
+    }
+
+    public String disableApplyAllWithStatusApply(){
+        final Optional<LeaseAmendmentImportLine> optional = getLines().stream()
+                .filter(l -> l.getLeaseAmendmentState() == LeaseAmendmentState.APPLY).findFirst();
+        if (optional.isPresent()) {
+            return null;
+        } else {
+            return String.format("No amendments with status APPLY present for property %s and type %s", getProperty().getReference(), getLeaseAmendmentType()!=null ? getLeaseAmendmentType() : "all types");
+        }
+    }
+
+
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     public LeaseAmendmentManager applyAll(){
         for (LeaseAmendmentImportLine line : getLines()){
             final Lease lease = leaseRepository.findLeaseByReference(line.getLeaseReference());
@@ -193,8 +223,8 @@ public class LeaseAmendmentManager {
             // TODO: now we pick the invoicing frequency from the first item encountered; .. this is cosmetics only and when we use the amendment proposal for import
             final LeaseAmendmentType.Tuple<InvoicingFrequency, InvoicingFrequency> tuple = leaseAmendmentService
                     .findInvoiceFrequencyTupleOnfirstFrequencyChangeCandidate(lease, leaseAmendmentType);
-            newLine.setInvoicingFrequencyOnLease(tuple.oldFrequency);
-            newLine.setAmendedInvoicingFrequency(tuple.newFrequency);
+            newLine.setInvoicingFrequencyOnLease(tuple.oldValue);
+            newLine.setAmendedInvoicingFrequency(tuple.newValue);
         }
         result.add(newLine);
         return result;
@@ -224,7 +254,7 @@ public class LeaseAmendmentManager {
     private boolean hasChangingFrequency(final LeaseItem i, final LeaseAmendmentType leaseAmendmentType){
         final LeaseAmendmentType.Tuple<InvoicingFrequency, InvoicingFrequency> tuple = leaseAmendmentType.getFrequencyChanges()
                 .stream()
-                .filter(t -> t.oldFrequency == i.getInvoicingFrequency())
+                .filter(t -> t.oldValue == i.getInvoicingFrequency())
                 .findFirst().orElse(null);
         return tuple != null;
     }
