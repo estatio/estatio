@@ -117,7 +117,7 @@ public class CodaDocHeadRepository {
         return repositoryService.allMatches(
                 new QueryDefault<>(
                         CodaDocHead.class,
-                        "findByStatPayEqualToAvailable",
+                        "findByStatPay",
                         "statPay", STAT_PAY_AVAILABLE
                 ));
     }

@@ -1,17 +1,20 @@
 package org.estatio.module.capex.app.invoicedownload;
 
-import lombok.Getter;
-import lombok.Setter;
+import java.math.BigDecimal;
+
+import javax.annotation.Nullable;
+
+import org.joda.time.LocalDate;
+
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Nature;
+
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.coda.dom.doc.CodaDocHead;
-import org.joda.time.LocalDate;
 
-
-import javax.annotation.Nullable;
-import java.math.BigDecimal;
+import lombok.Getter;
+import lombok.Setter;
 
 
 @DomainObject(
@@ -45,9 +48,9 @@ public class FullyApprovedInvoiceItaDownload {
             final IncomingInvoice invoice,
             final CodaDocHead codaDocHead
     ){
-        this.property = invoice.getProperty().getReference();
+        this.property = invoice.getProperty()!=null ? invoice.getProperty().getReference() : null;
         this.codaDocHead = String.format("(%s, %s, %s)", codaDocHead.getCmpCode(), codaDocHead.getDocCode(), codaDocHead.getDocNum());
-        this.supplier = String.format("%s %s", invoice.getSeller().getReference(), invoice.getSeller().getName());
+        this.supplier = invoice.getSeller()!=null ? String.format("%s %s", invoice.getSeller().getReference(), invoice.getSeller().getName()) : null;
         this.invoiceNumber = invoice.getInvoiceNumber();
         this.grossAmount = invoice.getGrossAmount();
         this.lastApprovedBy = invoice.getMostRecentApproval()

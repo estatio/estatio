@@ -145,7 +145,7 @@ import lombok.val;
                         + "   && reasonInvalid     != null "
         ),
         @Query(
-                name = "findByStatPayEqualToAvailable", language = "JDOQL",
+                name = "findByStatPay", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.module.coda.dom.doc.CodaDocHead "
                         + "WHERE statPay          == :statPay "
