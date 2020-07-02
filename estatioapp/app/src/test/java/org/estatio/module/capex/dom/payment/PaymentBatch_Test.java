@@ -1,6 +1,7 @@
 package org.estatio.module.capex.dom.payment;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 
@@ -79,12 +80,12 @@ public class PaymentBatch_Test {
 
         // given
         final IncomingInvoice invoice1 =
-                newInvoice(new LocalDate(2017, 7, 7), seller1, seller1BankAccount, "EUR", "361754.46", "AF3T2017");
+                newInvoice(new LocalDate(2017, 7, 7), seller1, seller1BankAccount, "EUR", "361754.46", "AF3T2017", "/FRA");
         invoice1.setCommunicationNumber("+++111/222/333+++");
         final IncomingInvoice invoice2 =
-                newInvoice(new LocalDate(2017, 6, 30), seller2, seller2BankAccount, "EUR", "15251.76", "DGD 11420 - 170522");
+                newInvoice(new LocalDate(2017, 6, 30), seller2, seller2BankAccount, "EUR", "15251.76", "DGD 11420 - 170522", "/FRA");
         final IncomingInvoice invoice3 =
-                newInvoice(new LocalDate(2017, 6, 5), seller1, seller1BankAccount, "EUR", "-172805.79", "REDD2016VT");
+                newInvoice(new LocalDate(2017, 6, 5), seller1, seller1BankAccount, "EUR", "-172805.79", "REDD2016VT", "/FRA");
 
         paymentBatch.addLineIfRequired(invoice1); // sequence = 1
         paymentBatch.addLineIfRequired(invoice2); // sequence = 2
@@ -156,8 +157,13 @@ public class PaymentBatch_Test {
             final Party seller,
             final BankAccount sellerBankAccount,
             final String currencyRef, final String grossAmount,
-            final String invoiceNumber) {
-        final IncomingInvoice invoice = new IncomingInvoice();
+            final String invoiceNumber,
+            final String atPath) {
+        final IncomingInvoice invoice = new IncomingInvoice(){
+            @Override public String getAtPath() {
+                return atPath;
+            }
+        };
         invoice.setInvoiceDate(invoiceDate);
         invoice.setSeller(seller);
         invoice.setBankAccount(sellerBankAccount);
@@ -198,8 +204,117 @@ public class PaymentBatch_Test {
         Assertions.assertThat(paymentBatchWithCreditNote.getUpstreamCreditNoteFound()).isTrue();
         Assertions.assertThat(paymentBatchWithOutCreditNote.getUpstreamCreditNoteFound()).isFalse();
 
+    }
+
+    @Test
+    public void construct_remittance_information_works() throws Exception {
+
+        // given
+        PaymentBatch paymentBatch = new PaymentBatch();
+        IncomingInvoice invoiceFra = new IncomingInvoice(){
+            @Override public String getAtPath() {
+                return "/FRA";
+            }
+        };
+        invoiceFra.setInvoiceNumber(" nr12345  ");
+
+        // when, then
+        final String justInvoiceNumberFra = paymentBatch.constructRemittanceInformation(invoiceFra);
+        Assertions.assertThat(justInvoiceNumberFra).isEqualTo("nr12345");
+        Assertions.assertThat(justInvoiceNumberFra).isEqualTo(invoiceFra.getInvoiceNumber().trim());
+
+        // and when
+        invoiceFra.setCommunicationNumber(" com34567  ");
+        final String invoiceNumberAndCommunicationNumberFra = paymentBatch.constructRemittanceInformation(invoiceFra);
+        // then
+        Assertions.assertThat(invoiceNumberAndCommunicationNumberFra).isEqualTo("nr12345 (com34567)");
+
+        // and when
+        invoiceFra.setCommunicationNumber("    nr12345      ");
+        final String invoiceNumberAndCommunicationNumberFraSimilar = paymentBatch.constructRemittanceInformation(invoiceFra);
+        // then
+        Assertions.assertThat(invoiceNumberAndCommunicationNumberFraSimilar).isEqualTo("nr12345");
+
+        // and given
+        IncomingInvoice invoiceBel = new IncomingInvoice(){
+            @Override public String getAtPath() {
+                return "/BEL";
+            }
+        };
+        invoiceBel.setInvoiceNumber("  nr12345 ");
+
+        // when, then
+        final String justInvoiceNumberBel = paymentBatch.constructRemittanceInformation(invoiceBel);
+        Assertions.assertThat(justInvoiceNumberBel).isEqualTo("nr12345");
+        Assertions.assertThat(justInvoiceNumberBel).isEqualTo(invoiceBel.getInvoiceNumber().trim());
+
+        // and when
+        invoiceBel.setCommunicationNumber(" com34567   ");
+        final String invoiceNumberAndCommunicationNumberBel = paymentBatch.constructRemittanceInformation(invoiceBel);
+        // then
+        Assertions.assertThat(invoiceNumberAndCommunicationNumberBel).isEqualTo("com34567 (nr12345)");
+
+        // and when
+        invoiceBel.setInvoiceNumber("     com34567    ");
+        final String invoiceNumberAndCommunicationNumberBelSimilar = paymentBatch.constructRemittanceInformation(invoiceBel);
+        // then
+        Assertions.assertThat(invoiceNumberAndCommunicationNumberBelSimilar).isEqualTo("com34567");
 
 
+
+    }
+
+    @Test
+    public void concatRemittanceInformation_works() throws Exception {
+
+        // given
+        PaymentBatch paymentBatch = new PaymentBatch();
+        // when
+        List<PaymentLine> lines = new ArrayList<>();
+        // then
+        Assertions.assertThat(paymentBatch.concatRemittanceInformationAndTruncateIfNeeded(lines)).isEqualTo("");
+
+        // and when
+        final PaymentLine line1 = new PaymentLine();
+        line1.setRemittanceInformation("info1");
+        lines.add(line1);
+        // then
+        Assertions.assertThat(paymentBatch.concatRemittanceInformationAndTruncateIfNeeded(lines)).isEqualTo("info1");
+
+        // and when
+        final PaymentLine line2 = new PaymentLine();
+        line2.setRemittanceInformation("info2");
+        lines.add(line2);
+        // then
+        Assertions.assertThat(paymentBatch.concatRemittanceInformationAndTruncateIfNeeded(lines)).isEqualTo("info1;info2");
+
+    }
+
+    @Test
+    public void concatRemittanceInformation_works_when_exceeding_140_chars() throws Exception {
+
+        // given
+        PaymentBatch paymentBatch = new PaymentBatch();
+
+        // when
+        List<PaymentLine> lines = new ArrayList<>();
+        final PaymentLine line = new PaymentLine();
+        final String stringWith138Chars = "xxxxxxxxx1xxxxxxxxx2xxxxxxxxx3xxxxxxxxx4xxxxxxxxx5xxxxxxxxx6xxxxxxxxx7xxxxxxxxx8xxxxxxxxx9xxxxxxxx10xxxxxxxx11xxxxxxxx12xxxxxxxx13xxxxxxxx";
+        Assertions.assertThat(stringWith138Chars.length()).isEqualTo(138);
+        line.setRemittanceInformation(stringWith138Chars);
+        lines.add(line);
+       // then
+        Assertions.assertThat(paymentBatch.concatRemittanceInformationAndTruncateIfNeeded(lines)).isEqualTo(stringWith138Chars);
+
+        // and when
+        final PaymentLine line2 = new PaymentLine();
+        line2.setRemittanceInformation("YYY");
+        lines.add(line2);
+
+        // then
+        // then
+        Assertions.assertThat(paymentBatch.concatRemittanceInformationAndTruncateIfNeeded(lines)).isEqualTo(stringWith138Chars + ";Y");
+        Assertions.assertThat(paymentBatch.concatRemittanceInformationAndTruncateIfNeeded(lines).length()).isEqualTo(140);
 
     }
 

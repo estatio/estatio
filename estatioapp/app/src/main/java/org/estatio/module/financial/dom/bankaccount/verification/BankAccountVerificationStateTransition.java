@@ -9,6 +9,7 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Queries;
 import javax.jdo.annotations.Query;
 
+import org.estatio.module.capex.dom.invoice.IncomingInvoiceRepository;
 import org.joda.time.LocalDateTime;
 
 import org.apache.isis.applib.annotation.DomainObject;
@@ -144,6 +145,15 @@ public class BankAccountVerificationStateTransition
         public Repository() {
             super(BankAccountVerificationStateTransition.class);
         }
+
+    }
+
+    @DomainService(
+            nature = NatureOfService.DOMAIN,
+            repositoryFor = BankAccountVerificationStateTransition.class
+    )
+    public static class IncomingInvoiceRepository
+            extends org.estatio.module.capex.dom.invoice.IncomingInvoiceRepository {
 
     }
 }

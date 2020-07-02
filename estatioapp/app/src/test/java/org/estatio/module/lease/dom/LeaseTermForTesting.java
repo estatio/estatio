@@ -79,6 +79,8 @@ public class LeaseTermForTesting extends LeaseTerm {
         this.leaseTermValueType = leaseTermValueType;
     }
 
+    @Override public void negateAmountsAndApplyPercentage(final BigDecimal discountPercentage) { }
+
     // //////////////////////////////////////
 
     private LeaseTermValueType leaseTermValueType;

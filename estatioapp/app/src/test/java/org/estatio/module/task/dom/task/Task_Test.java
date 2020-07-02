@@ -36,19 +36,19 @@ public class Task_Test {
     public void setUp() throws Exception {
         partyRoleType = PartyRoleType.builder().key("PROJECT_MANAGER").build();
         person = Person.builder().username("jcapriata@abc.loc").build();
-        task1 = new Task(partyRoleType, person, "Feed the cat", LocalDateTime.now().minusWeeks(2), "cat.Cat") {
+        task1 = new Task(partyRoleType, person, "Feed the cat", LocalDateTime.now().minusWeeks(2), "cat.Cat", null) {
             @Override
             void appendTitleOfObject(final StringBuilder buf) {
                 buf.append("Tiddles");
             }
         };
-        task2 = new Task(partyRoleType, person, "Feed the dog", LocalDateTime.now().minusWeeks(1), "dog.Dog") {
+        task2 = new Task(partyRoleType, person, "Feed the dog", LocalDateTime.now().minusWeeks(1), "dog.Dog", null) {
             @Override
             void appendTitleOfObject(final StringBuilder buf) {
                 buf.append("Spot");
             }
         };
-        task3 = new Task(partyRoleType, person, "Feed the parrot", LocalDateTime.now(), "parrot.Parrot") {
+        task3 = new Task(partyRoleType, person, "Feed the parrot", LocalDateTime.now(), "parrot.Parrot", null) {
             @Override
             void appendTitleOfObject(final StringBuilder buf) {
                 buf.append("Lory");

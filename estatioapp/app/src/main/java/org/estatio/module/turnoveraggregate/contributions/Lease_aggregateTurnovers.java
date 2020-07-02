@@ -12,8 +12,7 @@ import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.Publishing;
 
 import org.estatio.module.lease.dom.Lease;
-import org.estatio.module.turnover.dom.Frequency;
-import org.estatio.module.turnover.dom.Type;
+import org.estatio.module.lease.dom.LeaseStatus;
 import org.estatio.module.turnoveraggregate.dom.TurnoverAggregationService;
 
 @Mixin
@@ -40,6 +39,10 @@ public class Lease_aggregateTurnovers {
             if (endDate.isBefore(startDate)) return "The end date cannot be before the start date";
         }
         return null;
+    }
+
+    public boolean hide$$(){
+        return lease.getStatus()== LeaseStatus.PREVIEW;
     }
 
     @Inject TurnoverAggregationService turnoverAggregationService;

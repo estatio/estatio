@@ -37,8 +37,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Ordering;
 import com.google.common.collect.Sets;
 
-import org.apache.isis.applib.services.factory.FactoryService;
-import org.apache.isis.applib.services.repository.RepositoryService;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
@@ -56,6 +54,8 @@ import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.services.factory.FactoryService;
+import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.incode.module.base.dom.Chained;
 import org.incode.module.base.dom.types.NameType;
@@ -365,6 +365,10 @@ public abstract class Agreement
         return null;
     }
 
+    public boolean hideChangeDates() {
+        return false;
+    }
+
     @Override
     public LocalDate default0ChangeDates() {
         return getChangeDates().default0ChangeDates();
@@ -424,6 +428,10 @@ public abstract class Agreement
             final @Parameter(optionality = Optionality.OPTIONAL) LocalDate endDate) {
         createRole(type, party, startDate, endDate);
         return this;
+    }
+
+    public boolean hideNewRole(){
+        return true;
     }
 
     public String validateNewRole(

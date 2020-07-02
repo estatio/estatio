@@ -1,5 +1,6 @@
 package org.estatio.module.task.dom.task;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -70,7 +71,9 @@ public class TaskRepository {
         final List<Task> tasks = findIncompleteForMeOnly();
         final List<Task> myRolesTasksUnassigned = findIncompleteForMyRolesAndUnassigned();
         tasks.addAll(myRolesTasksUnassigned);
-
+        Comparator<Task> comparator = Comparator.comparing(Task::getPriority, Ordering.natural().nullsLast())
+                .thenComparing(Task::getCreatedOn, Ordering.natural().nullsLast());
+        tasks.sort(comparator);
         return tasks;
     }
 
@@ -90,7 +93,9 @@ public class TaskRepository {
         final List<Task> tasks = findIncompleteForAndCreatedOnAfter(meAsPerson, createdOn);
         final List<Task> myRolesTasksUnassigned = findIncompleteForMyRolesAndUnassignedAndCreatedOnAfter(createdOn);
         tasks.addAll(myRolesTasksUnassigned);
-        tasks.sort(Ordering.natural().nullsLast().onResultOf(Task::getCreatedOn));
+        Comparator<Task> comparator = Comparator.comparing(Task::getPriority, Ordering.natural().nullsLast())
+                .thenComparing(Task::getCreatedOn, Ordering.natural().nullsLast());
+        tasks.sort(comparator);
         return tasks;
     }
 
@@ -110,7 +115,9 @@ public class TaskRepository {
         final List<Task> tasks = findIncompleteForAndCreatedOnBefore(meAsPerson, createdOn);
         final List<Task> myRolesTasksUnassigned = findIncompleteForMyRolesAndUnassignedAndCreatedOnBefore(createdOn);
         tasks.addAll(myRolesTasksUnassigned);
-        tasks.sort(Ordering.natural().nullsLast().reverse().onResultOf(Task::getCreatedOn));
+        Comparator<Task> comparator = Comparator.comparing(Task::getPriority, Ordering.natural().nullsLast())
+                .thenComparing(Task::getCreatedOn, Ordering.natural().nullsLast().reverse());
+        tasks.sort(comparator);
         return tasks;
     }
 
@@ -279,7 +286,10 @@ public class TaskRepository {
                         "findIncompleteByPersonAssignedToAndCreatedOnBefore",
                         "personAssignedTo", personAssignedTo,
                         "createdOn", createdOn));
-        tasks.sort(Ordering.natural().nullsLast().reverse().onResultOf(Task::getCreatedOn));
+        Comparator<Task> comparator = Comparator.comparing(Task::getPriority, Ordering.natural().nullsLast())
+                .thenComparing(Task::getCreatedOn, Ordering.natural().nullsLast().reverse());
+        tasks.sort(comparator);
+
         return tasks;
     }
 
@@ -301,7 +311,9 @@ public class TaskRepository {
                         "findIncompleteByPersonAssignedToAndCreatedOnAfter",
                         "personAssignedTo", personAssignedTo,
                         "createdOn", createdOn));
-        tasks.sort(Ordering.natural().nullsLast().onResultOf(Task::getCreatedOn));
+        Comparator<Task> comparator = Comparator.comparing(Task::getPriority, Ordering.natural().nullsLast())
+                .thenComparing(Task::getCreatedOn, Ordering.natural().nullsLast());
+        tasks.sort(comparator);
         return tasks;
     }
 

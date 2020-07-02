@@ -1,6 +1,7 @@
 package org.estatio.module.capex.dom.invoice;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
@@ -51,6 +52,15 @@ public class IncomingInvoiceRepository {
     @Programmatic
     public java.util.List<IncomingInvoice> listAll() {
         return repositoryService.allInstances(IncomingInvoice.class);
+    }
+
+    @Programmatic
+    public IncomingInvoice findUnique(final String uuid) {
+        return repositoryService.uniqueMatch(
+                new QueryDefault<>(
+                        IncomingInvoice.class,
+                        "findByUUID",
+                        "uuid", uuid));
     }
 
     @Programmatic
@@ -199,6 +209,18 @@ public class IncomingInvoiceRepository {
                 new QueryDefault<>(
                         IncomingInvoice.class,
                         "findByBankAccount",
+                        "bankAccount", bankAccount));
+    }
+
+    @Programmatic
+    public List<IncomingInvoice> findByApprovalStateAndBankAccount(
+            final IncomingInvoiceApprovalState approvalState,
+            final BankAccount bankAccount) {
+        return repositoryService.allMatches(
+                new QueryDefault<>(
+                        IncomingInvoice.class,
+                        "findByApprovalStateAndBankAccount",
+                        "approvalState", approvalState,
                         "bankAccount", bankAccount));
     }
 
@@ -406,6 +428,7 @@ public class IncomingInvoiceRepository {
         invoice.setCurrency(currency);
         invoice.setPostedToCodaBooks(postedToCodaBooks);
         invoice.setVatRegistrationDate(vatRegistrationDate);
+        invoice.setUuid(UUID.randomUUID().toString());
 
         serviceRegistry2.injectServicesInto(invoice);
         repositoryService.persistAndFlush(invoice);
@@ -540,6 +563,7 @@ public class IncomingInvoiceRepository {
     IsisJdoSupport isisJdoSupport;
     @Inject
     ServiceRegistry2 serviceRegistry2;
+
     @Inject
     CurrencyRepository currencyRepository;
 

@@ -59,7 +59,7 @@ public class TaskReminderService_Test {
         final PartyRoleType partyRoleType = new PartyRoleType("FOO", "FOO");
 
         final List<Task> overdueTasks = Lists.newArrayList();
-        overdueTasks.add(new Task(partyRoleType, person, "Description", LocalDateTime.now().minusMonths(1), ""));
+        overdueTasks.add(new Task(partyRoleType, person, "Description", LocalDateTime.now().minusMonths(1), "", null));
 
         taskReminderService.emailService = mockEmailService;
         taskReminderService.communicationChannelRepository = mockCommunicationChannelRepository;
@@ -110,32 +110,32 @@ public class TaskReminderService_Test {
         final TaskReminderService taskReminderService = new TaskReminderService();
         taskReminderService.taskRepository = mockTaskRepository;
         taskReminderService.stateTransitionService = mockStateTransitionService;
-        Task taskNonIta = new Task(null, null, null, null, null){
+        Task taskNonIta = new Task(null, null, null, null, null, null){
             @Override public String getAtPath() {
                 return "/FRA";
             }
         };
-        Task taskAtPathNull = new Task(null, null, null, null, null){
+        Task taskAtPathNull = new Task(null, null, null, null, null, null){
             @Override public String getAtPath() {
                 return null;
             }
         };
-        Task taskOtherTransitionType = new Task(null,null, null, null, null){
+        Task taskOtherTransitionType = new Task(null,null, null, null, null, null){
             @Override public String getAtPath() {
                 return "/ITA";
             }
         };
-        Task taskForCompletion = new Task(null,null,null,null,null){
+        Task taskForCompletion = new Task(null,null,null,null,null, null){
             @Override public String getAtPath() {
                 return "/ITA";
             }
         };
-        Task taskForApproval = new Task(null,null,null,null,null){
+        Task taskForApproval = new Task(null,null,null,null,null, null){
             @Override public String getAtPath() {
                 return "/ITA";
             }
         };
-        Task taskForAdvise = new Task(null,null,null,null,null){
+        Task taskForAdvise = new Task(null,null,null,null,null, null){
             @Override public String getAtPath() {
                 return "/ITA";
             }

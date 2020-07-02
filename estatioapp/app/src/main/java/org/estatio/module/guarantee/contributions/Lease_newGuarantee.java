@@ -18,6 +18,7 @@ import org.incode.module.base.dom.types.ReferenceType;
 import org.estatio.module.guarantee.dom.Guarantee;
 import org.estatio.module.guarantee.dom.GuaranteeType;
 import org.estatio.module.lease.dom.Lease;
+import org.estatio.module.lease.dom.LeaseStatus;
 
 /**
  * Cannot be inlined (needs to be a mixin) because Lease does not know about guarantees
@@ -46,6 +47,10 @@ public class Lease_newGuarantee {
         // TODO: need a disableXxx to ensure that there is a primary and secondary party
         //  on the lease at the startDate of the guarantee.
         return leaseGuaranteeService.newGuarantee(lease, reference, name, guaranteeType, startDate, endDate, description, contractualAmount, startAmount);
+    }
+
+    public boolean hideNewGuarantee(){
+        return lease.getStatus()== LeaseStatus.PREVIEW;
     }
 
 

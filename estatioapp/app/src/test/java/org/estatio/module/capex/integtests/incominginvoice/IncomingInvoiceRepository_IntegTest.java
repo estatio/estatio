@@ -187,6 +187,23 @@ public class IncomingInvoiceRepository_IntegTest extends CapexModuleIntegTestAbs
 
     }
 
+    @Test
+    public void UUID_is_created_and_finder_works() throws Exception {
+
+        // given
+        IncomingInvoice invoice1 = createIncomingInvoice();
+        IncomingInvoice invoice2 = createIncomingInvoice();
+        assertThat(invoice1.getUuid()).isNotNull();
+        assertThat(invoice2.getUuid()).isNotNull();
+        final String uuidInvoice1 = invoice1.getUuid();
+        final String uuidInvoice2 = invoice2.getUuid();
+
+        // when
+        assertThat(incomingInvoiceRepository.findUnique(uuidInvoice1)).isEqualTo(invoice1);
+        assertThat(incomingInvoiceRepository.findUnique(uuidInvoice2)).isEqualTo(invoice2);
+
+    }
+
     private IncomingInvoice createIncomingInvoice() {
         seller = OrganisationAndComms_enum.TopModelGb.findUsing(serviceRegistry);
         buyer = OrganisationAndComms_enum.HelloWorldGb.findUsing(serviceRegistry);
