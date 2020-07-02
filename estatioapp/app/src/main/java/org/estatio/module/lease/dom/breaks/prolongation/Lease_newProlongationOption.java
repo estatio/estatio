@@ -9,6 +9,7 @@ import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 
 import org.estatio.module.lease.dom.Lease;
+import org.estatio.module.lease.dom.LeaseStatus;
 
 @Mixin
 public class Lease_newProlongationOption {
@@ -28,6 +29,10 @@ public class Lease_newProlongationOption {
             final String description) {
         prolongationOptionRepository.newProlongationOption(lease,prolongationPeriod,notificationPeriod, description);
         return lease;
+    }
+
+    public boolean hide$$(){
+        return lease.getStatus()== LeaseStatus.PREVIEW;
     }
 
     public String validate$$(

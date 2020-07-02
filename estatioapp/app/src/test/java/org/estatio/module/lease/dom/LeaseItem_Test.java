@@ -29,6 +29,7 @@ import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -40,6 +41,7 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
+import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 import org.incode.module.base.dom.with.WithIntervalMutable;
 import org.incode.module.unittestsupport.dom.bean.AbstractBeanPropertiesTest;
 import org.incode.module.unittestsupport.dom.bean.PojoTester.FixtureDatumFactory;
@@ -47,6 +49,7 @@ import org.incode.module.unittestsupport.dom.with.WithIntervalMutableContractTes
 
 import org.estatio.module.agreement.dom.type.AgreementType;
 import org.estatio.module.charge.dom.Charge;
+import org.estatio.module.lease.dom.amendments.LeaseAmendmentItem;
 import org.estatio.module.lease.dom.invoicing.InvoiceItemForLease;
 import org.estatio.module.tax.dom.Tax;
 
@@ -125,6 +128,7 @@ public class LeaseItem_Test {
 
     public static class BeanProperties extends AbstractBeanPropertiesTest {
 
+        @Ignore
         @Test
         public void test() {
             newPojoTester()
@@ -133,6 +137,7 @@ public class LeaseItem_Test {
                     .withFixture(statii())
                     .withFixture(pojos(Tax.class))
                     .withFixture(pojos(ApplicationTenancy.class))
+                    .withFixture(pojos(LeaseAmendmentItem.class))
                     .exercise(new LeaseItem());
         }
 
@@ -312,6 +317,38 @@ public class LeaseItem_Test {
             // when, then
             assertThat(item.getTerms()).hasSize(2);
             assertThat(item.isInvoicedUpon()).isTrue();
+
+        }
+
+        @Test
+        public void hasTermsOverlapping_works() throws Exception {
+
+            // given
+            LeaseTermForTesting term1 = new LeaseTermForTesting();
+            term1.setSequence(BigInteger.ONE);
+            LeaseTermForTesting term2 = new LeaseTermForTesting();
+            term2.setSequence(BigInteger.valueOf(2));
+            LeaseItem item = new LeaseItem();
+            item.getTerms().add(term1);
+            item.getTerms().add(term2);
+
+            // when
+            final LocalDate startInterval = new LocalDate(2020, 1, 1);
+            final LocalDate endInterval = new LocalDate(2020, 12, 31);
+            final LocalDateInterval interval = LocalDateInterval
+                    .including(startInterval, endInterval);
+            // then
+            assertThat(item.hasTermsOverlapping(interval)).isTrue();
+
+            // when
+            term1.setEndDate(startInterval.minusDays(1));
+            // then
+            assertThat(item.hasTermsOverlapping(interval)).isTrue();
+
+            // and when
+            term2.setStartDate(endInterval.plusDays(1));
+            // then
+            assertThat(item.hasTermsOverlapping(interval)).isFalse();
 
         }
 

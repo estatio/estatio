@@ -1,7 +1,10 @@
 package org.estatio.module.coda.app.paymentbatch;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -12,8 +15,17 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.value.Blob;
 
-import org.estatio.module.coda.app.CodaCmpCodeService;
+import org.isisaddons.module.excel.dom.ExcelService;
+import org.isisaddons.module.excel.dom.WorksheetContent;
+import org.isisaddons.module.excel.dom.WorksheetSpec;
+
+import org.estatio.module.capex.app.invoicedownload.FullyApprovedInvoiceItaDownload;
+import org.estatio.module.capex.dom.invoice.IncomingInvoice;
+import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.module.capex.dom.payment.PaymentBatch;
+import org.estatio.module.coda.app.CodaCmpCodeService;
+import org.estatio.module.coda.dom.doc.CodaDocHead;
+import org.estatio.module.coda.dom.doc.CodaDocHeadRepository;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 
@@ -42,6 +54,38 @@ public class PaymentBatchItaMenu {
         return result;
     }
 
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
+    public Blob downloadFullyApprovedInvoices(){
+        final String fileName = String.format("fullyApprovedInvoicesDownload_%s.xlsx", Date.valueOf(LocalDate.now()));
+        final List<IncomingInvoice> invoices = findFullyApprovedAndAvailableItaInvoices();
+
+        final List<FullyApprovedInvoiceItaDownload> exports = invoices.stream()
+                .map(invoice -> new FullyApprovedInvoiceItaDownload(
+                        invoice,
+                        codaDocHeadRepository.findByIncomingInvoice(invoice)
+                ))
+                .collect(Collectors.toList());
+
+        WorksheetSpec spec = new WorksheetSpec(FullyApprovedInvoiceItaDownload.class, "fullyApprovedInvoicesDownload");
+        WorksheetContent worksheetContent = new WorksheetContent(exports, spec);
+        return excelService.toExcel(worksheetContent, fileName);
+    }
+
+    private List<IncomingInvoice> findFullyApprovedAndAvailableItaInvoices() {
+        List<CodaDocHead> availableCodaDocHeads = codaDocHeadRepository.findAvailable();
+        List<IncomingInvoice> invoices = availableCodaDocHeads.stream()
+                .filter(cdh->cdh.getIncomingInvoice()!=null)
+                .map(CodaDocHead::getIncomingInvoice)
+                .collect(Collectors.toList());
+        List<IncomingInvoice> fullyApprovedItaInvoices = invoices.stream().filter(incomingInvoice ->
+                incomingInvoice.getAtPath().startsWith("/ITA") && (
+                incomingInvoice.getApprovalState().equals(IncomingInvoiceApprovalState.PAYABLE) ||
+                incomingInvoice.getApprovalState().equals(IncomingInvoiceApprovalState.PAYABLE_BYPASSING_APPROVAL) ||
+                incomingInvoice.getApprovalState().equals(IncomingInvoiceApprovalState.PENDING_CODA_BOOKS_CHECK))
+        ).collect(Collectors.toList());
+
+        return fullyApprovedItaInvoices;
+    }
 
     @Inject
     private PaymentBatchItaUploadService paymentBatchItaUploadService;
@@ -51,5 +95,11 @@ public class PaymentBatchItaMenu {
 
     @Inject
     private PartyRepository partyRepository;
+
+    @Inject
+    private ExcelService excelService;
+
+    @Inject
+    private CodaDocHeadRepository codaDocHeadRepository;
 
 }

@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
@@ -77,6 +78,9 @@ import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
 import org.estatio.module.lease.dom.LeaseItemType;
 import org.estatio.module.lease.dom.LeaseRepository;
+import org.estatio.module.lease.dom.amendments.LeaseAmendmentRepository;
+import org.estatio.module.lease.dom.amendments.LeaseAmendmentState;
+import org.estatio.module.lease.dom.amendments.Lease_closeOldAndOpenNewLeaseItem;
 import org.estatio.module.lease.dom.settings.LeaseInvoicingSettingsService;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.OrganisationRepository;
@@ -654,6 +658,21 @@ public class AdminDashboard implements ViewModel {
                             removeinvoicesOldItem);
         });
     }
+
+    public void recreateLeasePreviewsForAllLeaseAmendmentsNotApplied(){
+        leaseAmendmentRepository.listAll().stream().filter(la->la.getState()!=LeaseAmendmentState.APPLIED).forEach(la->{
+            backgroundService2.execute(la).createOrRenewLeasePreview();
+        });
+    }
+
+    @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
+    public void assignUUIDToAllIncomingInvoicesThatHaveNone(){
+        incomingInvoiceRepository.listAll().forEach(i->{
+            if (i.getUuid()==null){
+                i.setUuid(UUID.randomUUID().toString());
+            }
+        });
+    }
     
     @Inject
     CodaCmpCodeService codaCmpCodeService;
@@ -740,5 +759,7 @@ public class AdminDashboard implements ViewModel {
 
     @Inject
     StateTransitionService stateTransitionService;
+
+    @Inject LeaseAmendmentRepository leaseAmendmentRepository;
 
 }

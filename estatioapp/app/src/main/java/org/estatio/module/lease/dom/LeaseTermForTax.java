@@ -79,6 +79,11 @@ public class LeaseTermForTax extends LeaseTerm {
         return this;
     }
 
+    public boolean hideChangeTax(){
+        if (getLeaseItem().getLease().getStatus()==LeaseStatus.PREVIEW) return true;
+        return false;
+    }
+
     public BigDecimal default0ChangeTax() {
         return getTaxPercentage();
     }
@@ -106,6 +111,11 @@ public class LeaseTermForTax extends LeaseTerm {
             final LocalDate paymentDate) {
         setPaymentDate(paymentDate);
         return this;
+    }
+
+    public boolean hideChangePaymentDate(){
+        if (getLeaseItem().getLease().getStatus()==LeaseStatus.PREVIEW) return true;
+        return false;
     }
 
     public LocalDate default0ChangePaymentDate() {
@@ -148,6 +158,11 @@ public class LeaseTermForTax extends LeaseTerm {
         return this;
     }
 
+    public boolean hideChangeInvoicing(){
+        if (getLeaseItem().getLease().getStatus()==LeaseStatus.PREVIEW) return true;
+        return false;
+    }
+
     public BigDecimal default0ChangeInvoicing() {
         return getTaxPercentage();
     }
@@ -180,6 +195,7 @@ public class LeaseTermForTax extends LeaseTerm {
     }
 
     public boolean hideDizableInvoicing() {
+        if (getLeaseItem().getLease().getStatus()==LeaseStatus.PREVIEW) return true;
         return isInvoicingDisabled();
     }
 
@@ -192,6 +208,7 @@ public class LeaseTermForTax extends LeaseTerm {
     }
 
     public boolean hideEnableInvoicing() {
+        if (getLeaseItem().getLease().getStatus()==LeaseStatus.PREVIEW) return true;
         return !isInvoicingDisabled();
     }
 
@@ -242,6 +259,11 @@ public class LeaseTermForTax extends LeaseTerm {
         setOfficeName(officeName);
         setDescription(description);
         return this;
+    }
+
+    public boolean hideChangeRegistration() {
+        if (getLeaseItem().getLease().getStatus()==LeaseStatus.PREVIEW) return true;
+        return !isInvoicingDisabled();
     }
 
     public LocalDate default0ChangeRegistration() {
@@ -341,6 +363,12 @@ public class LeaseTermForTax extends LeaseTerm {
         t.setPaymentDate(getPaymentDate());
         t.setRecoverablePercentage(getRecoverablePercentage());
         t.setTaxPercentage(getTaxPercentage());
+    }
+
+    @Override
+    @Programmatic
+    public void negateAmountsAndApplyPercentage(final BigDecimal discountPercentage){
+        // NOT implemented
     }
 
     // //////////////////////////////////////

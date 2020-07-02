@@ -141,6 +141,9 @@
                                         <cpt:property id="accountCodeEl5">
                                             <cpt:named>El 5</cpt:named>
                                         </cpt:property>
+                                        <cpt:property id="accountCodeEl5Charge">
+                                            <cpt:named>Budget Item Charge</cpt:named>
+                                        </cpt:property>
                                     </cpt:fieldSet>
                                 </bs3:col>
                                 <bs3:col span="3">

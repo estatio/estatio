@@ -21,13 +21,12 @@ import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
+import org.estatio.module.asset.dom.FixedAsset;
+import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.capex.dom.project.ProjectItem;
 import org.estatio.module.capex.dom.util.PeriodUtil;
-import org.estatio.module.asset.dom.FixedAsset;
-import org.estatio.module.asset.dom.Property;
-import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.invoice.dom.Invoice;
 import org.estatio.module.party.dom.Party;
@@ -263,40 +262,6 @@ public class IncomingInvoiceItemRepository {
     }
 
     @Programmatic
-    public List<IncomingInvoiceItem> findCompletedOrLaterByFixedAssetAndReportedDate(
-            final Property property,
-            final LocalDate reportedDate) {
-
-        final List<IncomingInvoiceItem> items = repositoryService.allMatches(
-                new QueryDefault<>(
-                        IncomingInvoiceItem.class,
-                        "findByFixedAssetAndReportedDate",
-                        "fixedAsset", property,
-                        "reportedDate", reportedDate
-                ));
-
-        return filterByCompletedOrLaterInvoices(items, reportedDate);
-    }
-
-    @Programmatic
-    public List<IncomingInvoiceItem> findCompletedOrLaterByFixedAssetAndIncomingInvoiceTypeAndReportedDate(
-            final Property property,
-            final IncomingInvoiceType incomingInvoiceType,
-            final LocalDate reportedDate) {
-
-        final List<IncomingInvoiceItem> items = repositoryService.allMatches(
-                new QueryDefault<>(
-                        IncomingInvoiceItem.class,
-                        "findByFixedAssetAndIncomingInvoiceTypeAndReportedDate",
-                        "fixedAsset", property,
-                        "incomingInvoiceType", incomingInvoiceType,
-                        "reportedDate", reportedDate
-                ));
-
-        return filterByCompletedOrLaterInvoices(items, reportedDate);
-    }
-
-    @Programmatic
     public List<IncomingInvoiceItem> findCompletedOrLaterByReportedDate(
             final LocalDate reportedDate) {
 
@@ -330,7 +295,6 @@ public class IncomingInvoiceItemRepository {
                 .filter(x->!(x.getReversalOf()==null && x.getIncomingInvoice().getApprovalState()== IncomingInvoiceApprovalState.DISCARDED))
                 .collect(Collectors.toList());
     }
-
 
     @Programmatic
     public List<LocalDate> findDistinctReportDates() {

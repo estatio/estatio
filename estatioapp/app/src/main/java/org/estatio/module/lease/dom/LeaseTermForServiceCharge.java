@@ -83,6 +83,11 @@ public class LeaseTermForServiceCharge extends LeaseTerm {
         return this;
     }
 
+    public boolean hideChangeValues(){
+        if (getLeaseItem().getLease().getStatus()==LeaseStatus.PREVIEW) return true;
+        return false;
+    }
+
     public BigDecimal default0ChangeValues() {
         return getBudgetedValue();
     }
@@ -97,6 +102,11 @@ public class LeaseTermForServiceCharge extends LeaseTerm {
         return this;
     }
 
+    public boolean hideChangeManualValue(){
+        if (getLeaseItem().getLease().getStatus()==LeaseStatus.PREVIEW) return true;
+        return false;
+    }
+
     public BigDecimal default0ChangeManualValue() {
         return getManualServiceChargeValue();
     }
@@ -104,6 +114,11 @@ public class LeaseTermForServiceCharge extends LeaseTerm {
     public LeaseTermForServiceCharge changeShortfall(final @Parameter(optionality = Optionality.OPTIONAL) BigDecimal shortfall){
         setShortfall(shortfall);
         return this;
+    }
+
+    public boolean hideChangeShortfall(){
+        if (getLeaseItem().getLease().getStatus()==LeaseStatus.PREVIEW) return true;
+        return false;
     }
 
     public BigDecimal default0ChangeShortfall() {
@@ -168,6 +183,20 @@ public class LeaseTermForServiceCharge extends LeaseTerm {
         t.setAuditedValue(getAuditedValue());
         t.setManualServiceChargeValue(getManualServiceChargeValue());
         t.setShortfall(getShortfall());
+    }
+
+    @Override
+    @Programmatic
+    public void negateAmountsAndApplyPercentage(final BigDecimal discountPercentage){
+        if (getBudgetedValue()!=null) {
+            setBudgetedValue(applyPercentage(getBudgetedValue(), discountPercentage).negate());
+        }
+        if (getAuditedValue()!=null){
+            setAuditedValue(applyPercentage(getAuditedValue(), discountPercentage).negate());
+        }
+        if (getManualServiceChargeValue()!=null){
+            setManualServiceChargeValue(applyPercentage(getManualServiceChargeValue(), discountPercentage).negate());
+        }
     }
 
 }

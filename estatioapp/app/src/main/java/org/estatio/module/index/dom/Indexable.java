@@ -59,4 +59,6 @@ public interface Indexable {
     BigDecimal getSettledValue();
 
     IndexationCalculationMethod getIndexationCalculation();
+
+    BigDecimal getPreviousIndexedValueWhenNoPrevious();
 }

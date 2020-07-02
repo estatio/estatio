@@ -153,7 +153,7 @@ public class TurnoverAggregationService {
         });
         List<TurnoverAggregation> aggregationsToCalculate = selectAggregationsToCalculate(analysisReports, calculationPeriod);
         aggregationsToCalculate.forEach(a->{
-            // dirty checking
+            // dirty checking -- NOTE: ECP-1201 when importing turnovers we now always replace Turnover#createdAt by the timestamp of the upload, so this may be of no effect at all in practice when the selection of aggregations to calculate is tight
             if (a.getCalculatedOn()==null || changedAt==null || changedAt.isAfter(a.getCalculatedOn())) {
                 calculateAggregation(a, turnoverSelectionForCalculations, analysisReports);
             }

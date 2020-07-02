@@ -40,7 +40,6 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.incode.module.base.dom.utils.JodaPeriodUtils;
 import org.incode.module.base.dom.utils.StringUtils;
 
-import org.estatio.module.agreement.dom.AgreementRoleCommunicationChannelTypeRepository;
 import org.estatio.module.agreement.dom.role.AgreementRoleType;
 import org.estatio.module.agreement.dom.role.AgreementRoleTypeRepository;
 import org.estatio.module.agreement.dom.type.AgreementType;
@@ -135,6 +134,7 @@ public class LeaseRepository extends UdoDomainRepositoryAndFactory<Lease> {
         String pattern = StringUtils.wildcardToCaseInsensitiveRegex(tenantName);
         return allMatches("findByProperty", "property", property)
                 .stream()
+                .filter(x->x.getSecondaryParty()!=null)
                 .filter(x -> x.getSecondaryParty().getName().matches(pattern))
                 .collect(Collectors.toList());
     }
@@ -202,7 +202,4 @@ public class LeaseRepository extends UdoDomainRepositoryAndFactory<Lease> {
 
     @Inject
     ClockService clockService;
-
-    @Inject
-    AgreementRoleCommunicationChannelTypeRepository agreementRoleCommunicationChannelTypeRepository;
 }
