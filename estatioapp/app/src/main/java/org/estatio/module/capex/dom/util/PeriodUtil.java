@@ -37,8 +37,13 @@ public class PeriodUtil {
         LocalDate endDate = null;
         if (financialYearPattern.matcher(period).matches()){
             Integer year = Integer.valueOf(period.substring(1,5));
-            startDate = new LocalDate(year-1, 7, 1);
-            endDate = new LocalDate(year, 6, 30);
+            // F2021 has 9 months; After 2021 financial year equals calendar year
+            if (year<=2021) {
+                startDate = new LocalDate(year - 1, 7, 1);
+                endDate = year == 2021 ? new LocalDate(year - 1, 12, 31) : new LocalDate(year, 6, 30);
+            } else {
+                //
+            }
         }
         if (yearPattern.matcher(period).matches()){
             Integer year = Integer.valueOf(period.substring(0,4));
@@ -57,6 +62,7 @@ public class PeriodUtil {
             return String.valueOf(endDate.getYear());
         }
         if (matchesFinancialYear(interval)){
+            if (endDate.equals(new LocalDate(2020,12,31))) return "F2021"; // this is the only 9 months financial year
             return "F".concat(String.valueOf(endDate.getYear()));
         }
         return null;
@@ -70,6 +76,7 @@ public class PeriodUtil {
     }
 
     public static String reasonInvalidPeriod(final String period){
+        if (period.equals("F2022")) return "Financial periods are not supported after F2021";
         return isValidPeriod(period) ? null : "Not a valid period; use four digits of the year with optional prefix F for a financial year (for example: F2017)";
     }
 
@@ -97,10 +104,13 @@ public class PeriodUtil {
     }
 
     private static boolean matchesStartFinancialYear(final LocalDate date){
+        if (date.getYear()>2020) return false; // the last financial year is starts at 2020-7-1
         return date.getDayOfMonth() == 1 && date.getMonthOfYear() == 7 ? true : false;
     }
 
     private static boolean matchesEndFinancialYear(final LocalDate date){
+        if (date.equals(new LocalDate(2020,12,31))) return true; // the last financial year end date that we can recognize as such ...
+        if (date.getYear()>2020) return false;
         return date.getDayOfMonth() == 30 && date.getMonthOfYear() == 6 ? true : false;
     }
 

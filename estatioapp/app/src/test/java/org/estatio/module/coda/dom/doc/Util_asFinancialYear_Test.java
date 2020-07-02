@@ -13,7 +13,16 @@ public class Util_asFinancialYear_Test {
         assertThat(Util.asFinancialYear("2019/999")).isEqualTo("F2019");
 
         assertThat(Util.asFinancialYear("2020/1")).isEqualTo("F2020");
+        assertThat(Util.asFinancialYear("2021/1")).isEqualTo("2021"); // should not happen in reality
+        assertThat(Util.asFinancialYear("2022/1")).isEqualTo("2022");
         assertThat(Util.asFinancialYear("  2020/1")).isEqualTo("F2020");
+        assertThat(Util.asFinancialYear("  2020/13")).isEqualTo("F2021");
+        assertThat(Util.asFinancialYear("  2020/18")).isEqualTo("F2021");
+        assertThat(Util.asFinancialYear("  2020/19")).isEqualTo("F2021"); // should not happen in reality
+        assertThat(Util.asFinancialYear("  2021/1")).isEqualTo("2021"); // should not happen in reality
+        assertThat(Util.asFinancialYear("  2021/18")).isEqualTo("2021"); // should not happen in reality
+        assertThat(Util.asFinancialYear("  2022/1")).isEqualTo("2022");
+        assertThat(Util.asFinancialYear("  2022/18")).isEqualTo("2022");
     }
 
     @Test
