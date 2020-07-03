@@ -2384,7 +2384,7 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     public int compareTo(final IncomingInvoice other) {
         if (getSeller()==null || other.getSeller()==null || getInvoiceNumber()==null || other.getInvoiceNumber()==null) {
             return ComparisonChain.start()
-                    .compare(getBarcode(), other.getBarcode())
+                    .compare(getUuid(), other.getUuid())
                     .result();
         }
         return ComparisonChain.start()
