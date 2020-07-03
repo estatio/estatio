@@ -181,8 +181,6 @@ public class Occupancy
     @Getter @Setter
     private LocalDate endDate;
 
-
-
     private WithIntervalMutable.Helper<Occupancy> changeDates = new WithIntervalMutable.Helper<>(this);
 
     WithIntervalMutable.Helper<Occupancy> getChangeDates() {
@@ -236,9 +234,6 @@ public class Occupancy
         return !EstatioRole.SUPERUSER.isApplicableFor(getUser()) ? "You need Superuser rights to remove an occupancy" : null;
     }
 
-
-
-
     @Override
     @Programmatic
     public LocalDateInterval getInterval() {
@@ -251,7 +246,12 @@ public class Occupancy
         return getInterval().overlap(this.getLease().getEffectiveInterval());
     }
 
-    @Programmatic
+    @Action(semantics = SemanticsOf.SAFE)
+    public LocalDate getEffectiveStartDate() {
+        return getStartDate()==null ? getEffectiveInterval().startDate() : getStartDate();
+    }
+
+    @Action(semantics = SemanticsOf.SAFE)
     public LocalDate getEffectiveEndDate(){
         return getEndDate()==null ? getEffectiveInterval().endDate() : getEndDate();
     }
@@ -290,9 +290,6 @@ public class Occupancy
     private Brand brand;
 
 
-
-
-
     @ActionLayout(describedAs = "Change unit size, sector, activity and/or brand")
     public Occupancy changeClassification(
             @Nullable final UnitSize unitSize,
@@ -326,8 +323,6 @@ public class Occupancy
         return null;
     }
 
-
-
     @Programmatic
     public Occupancy setBrandName(
             final String name,
@@ -355,9 +350,6 @@ public class Occupancy
         return this;
     }
 
-
-
-
     @javax.jdo.annotations.Column(allowsNull = "false", length = OccupancyReportingType.Meta.MAX_LEN)
     @Property(editing = Editing.DISABLED, editingDisabledReason = "Change using action", hidden = Where.PARENTED_TABLES)
     @Getter @Setter
@@ -368,8 +360,6 @@ public class Occupancy
     @Property(editing = Editing.DISABLED, editingDisabledReason = "Change using action", hidden = Where.PARENTED_TABLES)
     @Getter @Setter
     private OccupancyReportingType reportRent;
-
-
 
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = OccupancyReportingType.Meta.MAX_LEN)

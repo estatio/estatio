@@ -91,6 +91,7 @@ public abstract class LeaseAmendmentItem extends UdoDomainObject2<LeaseAmendment
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     public LeaseAmendmentItem changeApplicableTo(final List<LeaseItemType> leaseItemTypes){
         setApplicableTo(LeaseAmendmentItem.applicableToToString(leaseItemTypes));
+        this.getLeaseAmendment().createOrRenewLeasePreview();
         return this;
     }
 
@@ -112,6 +113,7 @@ public abstract class LeaseAmendmentItem extends UdoDomainObject2<LeaseAmendment
     public LeaseAmendmentItem changeDates(final LocalDate startDate, final LocalDate endDate){
         setStartDate(startDate);
         setEndDate(endDate);
+        this.getLeaseAmendment().createOrRenewLeasePreview();
         return this;
     }
 

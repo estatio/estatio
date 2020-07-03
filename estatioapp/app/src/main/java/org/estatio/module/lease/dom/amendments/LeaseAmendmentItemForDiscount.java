@@ -52,7 +52,7 @@ public class LeaseAmendmentItemForDiscount extends LeaseAmendmentItem {
 
     @Column(allowsNull = "true", scale = 2)
     @Getter @Setter
-    private BigDecimal manualDiscountAmount; //TODO: add to import/export?
+    private BigDecimal manualDiscountAmount;
 
     @Action
     public LeaseAmendmentItemForDiscount changeManualDiscountAmount(@Nullable final BigDecimal manualDiscountAmount){

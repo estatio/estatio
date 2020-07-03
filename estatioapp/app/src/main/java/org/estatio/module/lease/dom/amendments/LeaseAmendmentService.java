@@ -172,15 +172,26 @@ public class LeaseAmendmentService {
         if (!sourceItem.hasTermsOverlapping(LocalDateInterval.including(leaseAmendmentItemForDiscount.getStartDate(), leaseAmendmentItemForDiscount.getEndDate()))) return;
 
         final Charge chargeFromAmendmentType = chargeDerivedFromAmendmentTypeAndChargeSourceItem(sourceItem.getCharge(), leaseAmendmentItemForDiscount.getLeaseAmendment().getLeaseAmendmentType());
+        final LeaseItemType newItemType = sourceItem.getType()==LeaseItemType.RENT ? LeaseItemType.RENT_DISCOUNT : sourceItem.getType(); // for current discounts we leave the types as they are
         final LeaseItem newDiscountItem = lease
-                .newItem(sourceItem.getType(), sourceItem.getInvoicedBy(), chargeFromAmendmentType, sourceItem.getInvoicingFrequency(), sourceItem.getPaymentMethod(), startDateToUse);
+                .newItem(newItemType, sourceItem.getInvoicedBy(), chargeFromAmendmentType, sourceItem.getInvoicingFrequency(), sourceItem.getPaymentMethod(), startDateToUse);
         newDiscountItem.setLeaseAmendmentItem(leaseAmendmentItemForDiscount);
         newDiscountItem.setEndDate(endDateToUse);
         sourceItem.copyTerms(newDiscountItem.getStartDate(), newDiscountItem);
+        // SINCE RENT_FIXED items do not autocreate terms, we do a fix here when needed
+        if (newDiscountItem.getType()==LeaseItemType.RENT_DISCOUNT) createTermsIfNeededForTheItemInterval(newDiscountItem);
         newDiscountItem.negateAmountsAndApplyPercentageOnTerms(leaseAmendmentItemForDiscount.getDiscountPercentage());
         if (lease.getStatus()!=LeaseStatus.PREVIEW) {
             final String message = String.format("Item of type %s and charge %s for lease %s created with interval %s", newDiscountItem.getType(), newDiscountItem.getCharge().getReference(), lease.getReference(), newDiscountItem.getInterval().toString());
             LOG.info(message);
+        }
+    }
+
+    public void createTermsIfNeededForTheItemInterval(final LeaseItem leaseItem){
+        for (LeaseTerm term : leaseItem.getTerms()){
+            if (term.getNext()==null && term.getEndDate()!=null && term.getEndDate().isBefore(leaseItem.getEndDate())){
+                term.createNext(term.getEndDate().plusDays(1), null);
+            }
         }
     }
 
@@ -212,6 +223,7 @@ public class LeaseAmendmentService {
                 .filter(li -> LeaseAmendmentItem
                         .applicableToFromString(leaseAmendmentItemForFrequencyChange.getApplicableTo())
                         .contains(li.getType()))
+                .filter(li->li.getInvoicedBy()==LeaseAgreementRoleTypeEnum.LANDLORD)
                 .filter(li->li.getInvoicingFrequency()==leaseAmendmentItemForFrequencyChange.getInvoicingFrequencyOnLease())
                 .filter(li->li.getEffectiveInterval().overlaps(leaseAmendmentItemForFrequencyChange.getInterval()))
                 .collect(Collectors.toList());
@@ -223,6 +235,7 @@ public class LeaseAmendmentService {
                 case SERVICE_CHARGE:
                 case SERVICE_CHARGE_INDEXABLE:
                 case MARKETING:
+                case PROPERTY_TAX:
                     final LeaseItem firstNewItem = closeOriginalAndOpenNewLeaseItem(
                             leaseAmendmentItemForFrequencyChange.getStartDate(),
                             originalItem,

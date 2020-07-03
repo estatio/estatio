@@ -41,6 +41,7 @@ import org.estatio.module.lease.dom.amendments.LeaseAmendmentRepository;
 import org.estatio.module.lease.dom.amendments.LeaseAmendmentType;
 import org.estatio.module.lease.dom.amendments.Lease_createLeaseAmendment;
 import org.estatio.module.lease.dom.amendments.Lease_invoiceCalculations;
+import org.estatio.module.lease.dom.indexation.IndexationMethod;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForDeposit_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForDiscount_enum;
@@ -94,7 +95,8 @@ public class LeaseAmendmentScenario_IntegTest extends LeaseModuleIntegTestAbstra
         assertThat(originalRentItem.getTerms()).hasSize(11);
         final Lease leasePreview = amendment.getLeasePreview();
         assertThat(leasePreview).isNotNull();
-        assertThat(leasePreview.findItemsOfType(LeaseItemType.RENT)).hasSize(4);
+        assertThat(leasePreview.findItemsOfType(LeaseItemType.RENT)).hasSize(3);
+        assertThat(leasePreview.findItemsOfType(LeaseItemType.RENT_DISCOUNT)).hasSize(1);
 
         final LeaseItem firstNewRentItem = leasePreview.findItemsOfType(LeaseItemType.RENT).stream()
                 .filter(li -> li.getStartDate().equals(originalRentItem.getStartDate()))
@@ -116,7 +118,7 @@ public class LeaseAmendmentScenario_IntegTest extends LeaseModuleIntegTestAbstra
         assertThat(thirdNewRentItem.getInvoicingFrequency()).isEqualTo(InvoicingFrequency.QUARTERLY_IN_ADVANCE);
         assertThat(thirdNewRentItem.getTerms()).hasSize(1);
 
-        final LeaseItem discountRentItem = leasePreview.findItemsOfType(LeaseItemType.RENT).stream()
+        final LeaseItem discountRentItem = leasePreview.findItemsOfType(LeaseItemType.RENT_DISCOUNT).stream()
                 .filter(li -> li.getStartDate().equals(discountAmendmentItem.getStartDate()))
                 .findFirst().orElse(null);
         assertThat(discountRentItem.getEndDate()).isEqualTo(discountAmendmentItem.getEndDate());
@@ -160,7 +162,7 @@ public class LeaseAmendmentScenario_IntegTest extends LeaseModuleIntegTestAbstra
 
         // then
         Lease leasePreview = amendment.getLeasePreview();
-        final LeaseItem discountRentItem = leasePreview.findItemsOfType(LeaseItemType.RENT).stream()
+        final LeaseItem discountRentItem = leasePreview.findItemsOfType(LeaseItemType.RENT_DISCOUNT).stream()
                 .filter(li -> li.getStartDate().equals(discountAmendmentItem.getStartDate()))
                 .findFirst().orElse(null);
         assertThat(discountRentItem.getEndDate()).isEqualTo(discountAmendmentItem.getEndDate());
@@ -193,6 +195,61 @@ public class LeaseAmendmentScenario_IntegTest extends LeaseModuleIntegTestAbstra
         assertThat(rentItemUsedInTotalValueCalculationBeforeDiscount.valueForDate(discountAmendmentItem.getStartDate().minusDays(1))).isEqualTo(new BigDecimal("21305.02"));
         assertThat(discountAmendmentItem.getTotalValueForDateBeforeDiscount()).isEqualTo(new BigDecimal("21305.02"));
 
+    }
+
+    @Test
+    public void scenario_no_indexed_value() throws Exception {
+
+        // given
+        Lease oxfLease = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
+        LeaseItem rentItem = LeaseItemForRent_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
+        assertThat(rentItem.getTerms()).hasSize(1);
+        final LeaseTermForIndexable term1 = (LeaseTermForIndexable) rentItem.getTerms().first();
+        term1.setIndexationMethod(IndexationMethod.BASE_INDEX);
+
+        // when
+        final LeaseAmendment amendment = leaseAmendmentRepository.findUnique(oxfLease, LeaseAmendmentType.DEMO_TYPE);
+        amendment.createOrRenewLeasePreview();
+
+        // then
+        assertThat(rentItem.getTerms()).hasSize(11);
+        final LeaseTermForIndexable lastRentTerm = (LeaseTermForIndexable) rentItem.getTerms().last();
+        final BigDecimal baseValue = new BigDecimal("20000.00");
+        assertThat(lastRentTerm.getBaseValue()).isEqualTo(baseValue);
+        final BigDecimal effectiveIndexedValueOnLastRentTerm = new BigDecimal("21300.00");
+        assertThat(lastRentTerm.getEffectiveIndexedValue()).isEqualTo(effectiveIndexedValueOnLastRentTerm);
+
+        final Lease leasePreview = amendment.getLeasePreview();
+
+        assertThat(leasePreview.findItemsOfType(LeaseItemType.RENT)).hasSize(3);
+        final LeaseItem rentItemPrev1 = leasePreview.findItemsOfType(LeaseItemType.RENT).stream()
+                .filter(li -> li.getStartDate().equals(rentItem.getStartDate())).findFirst()
+                .orElse(null);
+        final LeaseItem rentItemPrev2 = leasePreview.findItemsOfType(LeaseItemType.RENT).stream()
+                .filter(li -> li.getStartDate().equals(new LocalDate(2020,7,1))).findFirst()
+                .orElse(null);
+        final LeaseItem rentItemPrev3 = leasePreview.findItemsOfType(LeaseItemType.RENT).stream()
+                .filter(li -> li.getStartDate().equals(new LocalDate(2021,1,1))).findFirst()
+                .orElse(null);
+        assertThat(rentItemPrev1.getTerms()).hasSize(1);
+        final LeaseTermForIndexable term1RentItemPrev1 = (LeaseTermForIndexable) rentItemPrev1.getTerms().first();
+        assertThat(term1RentItemPrev1.getBaseValue()).isEqualTo(baseValue);
+        assertThat(term1RentItemPrev1.getEffectiveIndexedValue()).isEqualTo(effectiveIndexedValueOnLastRentTerm);
+
+        final LeaseTermForIndexable term1RentItemPrev2 = (LeaseTermForIndexable) rentItemPrev2.getTerms().first();
+        assertThat(term1RentItemPrev2.getBaseValue()).isEqualTo(baseValue);
+        assertThat(term1RentItemPrev2.getEffectiveIndexedValue()).isEqualTo(effectiveIndexedValueOnLastRentTerm);
+
+        final LeaseTermForIndexable term1RentItemPrev3 = (LeaseTermForIndexable) rentItemPrev3.getTerms().first();
+        assertThat(term1RentItemPrev3.getBaseValue()).isEqualTo(baseValue);
+        assertThat(term1RentItemPrev3.getEffectiveIndexedValue()).isEqualTo(effectiveIndexedValueOnLastRentTerm);
+
+        assertThat(leasePreview.findItemsOfType(LeaseItemType.RENT_DISCOUNT)).hasSize(1);
+        final LeaseItem rent_discount_item = leasePreview.findItemsOfType(LeaseItemType.RENT_DISCOUNT).get(0);
+        assertThat(rent_discount_item.getTerms()).hasSize(1);
+        final LeaseTermForIndexable discountTerm = (LeaseTermForIndexable) rent_discount_item.getTerms().first();
+        assertThat(discountTerm.getBaseValue()).isEqualTo(new BigDecimal("-10000.00"));
+        assertThat(discountTerm.getEffectiveIndexedValue()).isEqualTo(new BigDecimal("-10650.00"));
     }
 
     @Inject

@@ -90,21 +90,10 @@ public enum LeaseAmendmentType {
                     new Tuple<>("6032", "6032"), // current discount charge on any discount item
                     new Tuple<>(null, "6032") // TODO: check DEFAULT with users?
             ),
-            Arrays.asList(
-                    new Tuple<>(InvoicingFrequency.QUARTERLY_IN_ADVANCE, InvoicingFrequency.MONTHLY_IN_ADVANCE),
-                    new Tuple<>(InvoicingFrequency.QUARTERLY_IN_ARREARS, InvoicingFrequency.MONTHLY_IN_ADVANCE),
-                    new Tuple<>(InvoicingFrequency.QUARTERLY_IN_ADVANCE_PLUS1M, InvoicingFrequency.MONTHLY_IN_ADVANCE),
-                    new Tuple<>(InvoicingFrequency.QUARTERLY_IN_ADVANCE_PLUS2M, InvoicingFrequency.MONTHLY_IN_ADVANCE)
-            ),
-            Arrays.asList(
-                    LeaseItemType.RENT,
-                    LeaseItemType.RENT_DISCOUNT,
-                    LeaseItemType.RENT_DISCOUNT_FIXED,
-                    LeaseItemType.SERVICE_CHARGE,
-                    LeaseItemType.MARKETING
-            ),
-            new LocalDate(2020,7,1),
-            new LocalDate(2020,12,31),
+            null,
+            null,
+            null,
+            null,
             "-A1M",
             new LocalDate(2020,4,1), // because of _PLUSM1 / _PLUSM2 calcs
             new LocalDate(2020,12,31),
@@ -124,21 +113,10 @@ public enum LeaseAmendmentType {
                     new Tuple<>("6002", "6032"),
                     new Tuple<>(null, "6032") // TODO: check DEFAULT with users?
             ),
-            Arrays.asList(
-                    new Tuple<>(InvoicingFrequency.QUARTERLY_IN_ADVANCE, InvoicingFrequency.MONTHLY_IN_ADVANCE),
-                    new Tuple<>(InvoicingFrequency.QUARTERLY_IN_ARREARS, InvoicingFrequency.MONTHLY_IN_ADVANCE),
-                    new Tuple<>(InvoicingFrequency.QUARTERLY_IN_ADVANCE_PLUS1M, InvoicingFrequency.MONTHLY_IN_ADVANCE),
-                    new Tuple<>(InvoicingFrequency.QUARTERLY_IN_ADVANCE_PLUS2M, InvoicingFrequency.MONTHLY_IN_ADVANCE)
-            ),
-            Arrays.asList(
-                    LeaseItemType.RENT,
-                    LeaseItemType.RENT_DISCOUNT,
-                    LeaseItemType.RENT_DISCOUNT_FIXED,
-                    LeaseItemType.SERVICE_CHARGE,
-                    LeaseItemType.MARKETING
-            ),
-            new LocalDate(2020,7,1),
-            new LocalDate(2020,12,31),
+            null,
+            null,
+            null,
+            null,
             "-A2M",
             new LocalDate(2020,4,1), // because of _PLUSM1 / _PLUSM2 calcs
             new LocalDate(2020,12,31),

@@ -153,7 +153,7 @@ public class TurnoverAggregationService {
         });
         List<TurnoverAggregation> aggregationsToCalculate = selectAggregationsToCalculate(analysisReports, calculationPeriod);
         aggregationsToCalculate.forEach(a->{
-            // dirty checking
+            // dirty checking -- NOTE: ECP-1201 when importing turnovers we now always replace Turnover#createdAt by the timestamp of the upload, so this may be of no effect at all in practice when the selection of aggregations to calculate is tight
             if (a.getCalculatedOn()==null || changedAt==null || changedAt.isAfter(a.getCalculatedOn())) {
                 calculateAggregation(a, turnoverSelectionForCalculations, analysisReports);
             }
@@ -585,15 +585,22 @@ public class TurnoverAggregationService {
     }
 
     public List<TurnoverReportingConfig> choicesForChildConfig(final TurnoverReportingConfig config) {
-        Lease lease = config.getOccupancy().getLease();
+        Lease parentLease = config.getOccupancy().getLease();
         List<TurnoverReportingConfig> result = new ArrayList<>();
-        if (lease.getPrevious()!=null) {
-            lease = (Lease) lease.getPrevious();
-            Lists.newArrayList(lease.getOccupancies()).stream()
+        if (parentLease.getPrevious()!=null) {
+            Lease childLease = (Lease) parentLease.getPrevious();
+            Lists.newArrayList(childLease.getOccupancies()).stream()
                     .forEach(o->{
                         result.addAll(turnoverReportingConfigRepository.findByOccupancyAndTypeAndFrequency(o, Type.PRELIMINARY, Frequency.MONTHLY));
                     });
         }
+        // ECP-1205: also add configs of occs on the same lease that are terminated before the config starts
+        final List<Occupancy> closedOccupanciesOnSameLeaseWithEndDateBeforeStartDateConfig = Lists.newArrayList(parentLease.getOccupancies()).stream()
+                .filter(o -> o.getEndDate() != null && o.getEndDate().isBefore(config.getStartDate()))
+                .collect(Collectors.toList());
+        closedOccupanciesOnSameLeaseWithEndDateBeforeStartDateConfig.forEach(o->{
+            result.addAll(turnoverReportingConfigRepository.findByOccupancyAndTypeAndFrequency(o,Type.PRELIMINARY, Frequency.MONTHLY));
+        });
         return result;
     }
 

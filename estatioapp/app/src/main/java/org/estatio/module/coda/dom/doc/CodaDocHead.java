@@ -145,6 +145,12 @@ import lombok.val;
                         + "   && reasonInvalid     != null "
         ),
         @Query(
+                name = "findByStatPay", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.module.coda.dom.doc.CodaDocHead "
+                        + "WHERE statPay          == :statPay "
+        ),
+        @Query(
                 name = "findByCmpCodeAndIncomingInvoiceApprovalStateIsNotFinal", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.module.coda.dom.doc.CodaDocHead "
