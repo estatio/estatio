@@ -38,6 +38,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 import org.apache.commons.lang3.ObjectUtils;
+import org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum;
 import org.joda.time.LocalDate;
 import org.joda.time.Period;
 import org.joda.time.PeriodType;
@@ -1180,7 +1181,12 @@ public class Lease
             final LocalDate endDate
     ) {
         Party tenant = secondaryPartyAsOfElseCurrent(startDate);
-        final Lease newLease = copyToNewLease(reference, name, tenant, startDate, endDate, startDate, endDate, false);
+        LocalDate endDateTenancy = endDate;
+        if (applicationTenancyPath.startsWith("/SWE")) {
+            endDateTenancy = null;
+        }
+        final Lease newLease = copyToNewLease(reference, name, tenant, startDate, endDate, startDate, endDateTenancy, false);
+
         if (newLease != null){
             wrapperFactory.wrapSkipRules(this).terminate(startDate.minusDays(1));
         }

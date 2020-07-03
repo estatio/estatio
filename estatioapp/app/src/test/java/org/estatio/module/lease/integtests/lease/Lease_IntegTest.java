@@ -671,4 +671,41 @@ public class Lease_IntegTest extends LeaseModuleIntegTestAbstract {
 
 
     }
+
+    public static class Renew extends Lease_IntegTest {
+
+        @Before
+        public void setupData() {
+            runFixtureScript(new FixtureScript() {
+                @Override
+                protected void execute(ExecutionContext executionContext) {
+
+                    executionContext.executeChild(this, Lease_enum.HanTopModel002Se.builder());
+                    executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.builder());
+                }
+            });
+        }
+
+        @Test
+        public void tenancyEndDateNotSetSweden() throws Exception {
+            // given
+            Lease leaseSe = Lease_enum.HanTopModel002Se.findUsing(serviceRegistry);
+            Lease leaseGb = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
+            LocalDate startDate = ld(2022, 7, 15);
+            LocalDate endDate = ld(2032, 7, 14);
+
+            // when
+            Lease leaseSe2 = leaseSe.renew("HAN-TOPMODEL-003", "Lease2", startDate, endDate);
+            Lease leaseGb2 = leaseGb.renew("OXF-TOPMODEL-002", "Lease2", startDate, endDate);
+
+            // then
+            assertThat(leaseSe2.getTenancyEndDate()).isNull();
+            assertThat(leaseGb2.getTenancyEndDate()).isEqualTo(endDate);
+
+
+        }
+
+
+
+    }
 }
