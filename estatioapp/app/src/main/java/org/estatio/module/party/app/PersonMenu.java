@@ -33,7 +33,6 @@ import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.estatio.module.party.dom.role.PartyRoleType;
 import org.incode.module.base.dom.Dflt;
 import org.incode.module.country.dom.impl.Country;
 
@@ -42,6 +41,7 @@ import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.PersonGenderType;
 import org.estatio.module.party.dom.PersonRepository;
+import org.estatio.module.party.dom.role.PartyRoleType;
 
 @DomainService(
         nature = NatureOfService.VIEW_MENU_ONLY,
@@ -94,7 +94,7 @@ public class PersonMenu {
         return person;
     }
 
-    @Action(semantics = SemanticsOf.SAFE, restrictTo = RestrictTo.PROTOTYPING)
+    @Action(semantics = SemanticsOf.SAFE)
     @MemberOrder(sequence = "3")
     public List<Person> findPersonsByRole(PartyRoleType partyRoleType) {
         return personRepository.findByRoleType(partyRoleType);
