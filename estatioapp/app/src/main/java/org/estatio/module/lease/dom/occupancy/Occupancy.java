@@ -182,6 +182,27 @@ public class Occupancy
     private LocalDate endDate;
 
 
+    public LocalDate getEffectiveStartDate() {
+        if(startDate!=null) {
+            return startDate;
+        } else if(lease.getTenancyStartDate()!=null) {
+            return lease.getTenancyStartDate();
+        } else {
+            return lease.getStartDate();
+        }
+    }
+
+    public LocalDate getEffectiveEndDate() {
+        if(endDate!=null) {
+            return endDate;
+        } else if(lease.getTenancyEndDate()!=null) {
+            return lease.getTenancyEndDate();
+        } else {
+            return lease.getEndDate();
+        }
+    }
+
+
 
     private WithIntervalMutable.Helper<Occupancy> changeDates = new WithIntervalMutable.Helper<>(this);
 
@@ -251,10 +272,10 @@ public class Occupancy
         return getInterval().overlap(this.getLease().getEffectiveInterval());
     }
 
-    @Programmatic
-    public LocalDate getEffectiveEndDate(){
-        return getEndDate()==null ? getEffectiveInterval().endDate() : getEndDate();
-    }
+//    @Programmatic
+//    public LocalDate getEffectiveEndDate(){
+//        return getEndDate()==null ? getEffectiveInterval().endDate() : getEndDate();
+//    }
 
     public boolean isCurrent() {
         return isActiveOn(getClockService().now());
