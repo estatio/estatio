@@ -27,11 +27,13 @@ import javax.jdo.annotations.InheritanceStrategy;
 
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.ViewModel;
 import org.apache.isis.applib.annotation.Where;
 
@@ -41,6 +43,7 @@ import org.incode.module.base.dom.utils.TitleBuilder;
 
 import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.invoice.dom.InvoiceStatus;
+import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
 import org.estatio.module.lease.dom.invoicing.NumeratorForOutgoingInvoicesRepository;
 import org.estatio.module.numerator.dom.Numerator;
@@ -207,6 +210,16 @@ public class InvoiceSummaryForPropertyDueDateStatus extends InvoiceSummaryAbstra
     }
 
     public String disableChangeDueDates() {
+        return !getStatus().invoiceIsChangable() ? "Only new and approved invoices can be changed" : null;
+    }
+
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
+    public InvoiceSummaryForPropertyDueDateStatus changePaymentMethodForAll(final PaymentMethod paymentMethod){
+        getInvoices().forEach(i->i.setPaymentMethod(paymentMethod));
+        return this;
+    }
+
+    public String disableChangePaymentMethodForAll(){
         return !getStatus().invoiceIsChangable() ? "Only new and approved invoices can be changed" : null;
     }
 

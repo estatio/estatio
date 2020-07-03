@@ -131,7 +131,7 @@ public enum IndexationMethod {
                     MathUtils.maxUsingFirstSignum(
                             term.getBaseValue(),
                             term.getIndexedValue(),
-                            previous == null ? null : previous.getEffectiveIndexedValue()));
+                            previous == null ? term.getPreviousIndexedValueWhenNoPrevious() : previous.getEffectiveIndexedValue()));
         }
     }
 
@@ -145,7 +145,7 @@ public enum IndexationMethod {
     private BigDecimal valueAllowingDecrease(Indexable term, Indexable previous){
         return MathUtils.firstNonZero(
                 term.getIndexedValue(),
-                previous == null ? null : MathUtils.firstNonZero(previous.getEffectiveIndexedValue(), previous.getIndexedValue()),
+                previous == null ? term.getPreviousIndexedValueWhenNoPrevious() : MathUtils.firstNonZero(previous.getEffectiveIndexedValue(), previous.getIndexedValue()),
                 term.getBaseValue()
         );
     }
@@ -154,7 +154,7 @@ public enum IndexationMethod {
         return MathUtils.maxUsingFirstSignum(
                 term.getBaseValue(),
                 term.getIndexedValue(),
-                previous == null ? null : MathUtils.firstNonZero(previous.getEffectiveIndexedValue(), previous.getIndexedValue())
+                previous == null ? term.getPreviousIndexedValueWhenNoPrevious() : MathUtils.firstNonZero(previous.getEffectiveIndexedValue(), previous.getIndexedValue())
         );
     }
 

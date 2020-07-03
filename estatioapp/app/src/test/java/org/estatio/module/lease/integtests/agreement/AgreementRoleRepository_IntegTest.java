@@ -154,7 +154,7 @@ public class AgreementRoleRepository_IntegTest extends LeaseModuleIntegTestAbstr
         public void findByParty() throws Exception {
             List<AgreementRole> results = agreementRoleRepository.findByParty(party);
             AgreementRole result = results.get(0);
-            assertThat(results.size(), is(1));
+            assertThat(results.size(), is(2)); //TODO: change due to adding amendment to fixture; maybe change this test ...?
         }
     }
 
@@ -162,8 +162,8 @@ public class AgreementRoleRepository_IntegTest extends LeaseModuleIntegTestAbstr
 
         @Test
         public void happyCase() throws Exception {
-            assertThat(finder(agreement.getStartDate()).size(), is(1));
-            assertThat(finder(agreement.getEndDate()).size(), is(1));
+            assertThat(finder(agreement.getStartDate()).size(), is(2)); //TODO: change due to adding amendment to fixture; maybe change this test ...?
+            assertThat(finder(agreement.getEndDate()).size(), is(2)); //TODO: change due to adding amendment to fixture; maybe change this test ...?
         }
 
         @Test

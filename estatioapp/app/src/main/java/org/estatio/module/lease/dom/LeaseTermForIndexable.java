@@ -31,6 +31,8 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.PropertyLayout;
+import org.apache.isis.applib.annotation.Where;
 
 import org.incode.module.base.dom.utils.MathUtils;
 
@@ -139,6 +141,11 @@ public class LeaseTermForIndexable extends LeaseTerm implements Indexable {
         return this;
     }
 
+    public boolean hideChangeParameters(){
+        if (getLeaseItem().getLease().getStatus()==LeaseStatus.PREVIEW) return true;
+        return false;
+    }
+
     public IndexationMethod default0ChangeParameters() {
         return getIndexationMethod();
     }
@@ -210,6 +217,12 @@ public class LeaseTermForIndexable extends LeaseTerm implements Indexable {
     @Getter @Setter
     private BigDecimal settledValue;
 
+    @Column(scale = 2, allowsNull = "true")
+    @PropertyLayout(hidden = Where.EVERYWHERE)
+    @Getter @Setter
+    private BigDecimal previousIndexedValueWhenNoPrevious;
+
+
     // //////////////////////////////////////
 
     public LeaseTermForIndexable changeValues(
@@ -220,6 +233,11 @@ public class LeaseTermForIndexable extends LeaseTerm implements Indexable {
         setIndexedValue(null);
         doAlign();
         return this;
+    }
+
+    public boolean hideChangeValues(){
+        if (getLeaseItem().getLease().getStatus()==LeaseStatus.PREVIEW) return true;
+        return false;
     }
 
     public BigDecimal default0ChangeValues() {
@@ -274,6 +292,11 @@ public class LeaseTermForIndexable extends LeaseTerm implements Indexable {
     public void copyValuesTo(final LeaseTerm target) {
         LeaseTermForIndexable t = (LeaseTermForIndexable) target;
         super.copyValuesTo(t);
+        t.setIndexationMethod(getIndexationMethod());
+        if (t.getPrevious()==null) {
+            t.setPreviousIndexedValueWhenNoPrevious(
+                    getEffectiveIndexedValue());
+        }
         t.setIndex(getIndex());
         t.setBaseIndexStartDate(getBaseIndexStartDate());
         t.setBaseIndexValue(getBaseIndexValue());
@@ -285,6 +308,27 @@ public class LeaseTermForIndexable extends LeaseTerm implements Indexable {
         t.setBaseValue(getBaseValue());
         t.setIndexedValue(getIndexedValue());
         t.setSettledValue(getSettledValue());
+    }
+
+
+    @Override
+    @Programmatic
+    public void negateAmountsAndApplyPercentage(final BigDecimal discountPercentage){
+        if (getBaseIndexValue()!=null) {
+            setBaseIndexValue(applyPercentage(getBaseIndexValue(), discountPercentage).negate());
+        }
+        if (getBaseValue()!=null){
+            setBaseValue(applyPercentage(getBaseValue(), discountPercentage).negate());
+        }
+        if (getIndexedValue()!=null){
+            setIndexedValue(applyPercentage(getIndexedValue(), discountPercentage).negate());
+        }
+        if (getSettledValue()!=null){
+            setSettledValue(applyPercentage(getSettledValue(), discountPercentage).negate());
+        }
+        if (getPreviousIndexedValueWhenNoPrevious()!=null){
+            setPreviousIndexedValueWhenNoPrevious(applyPercentage(getPreviousIndexedValueWhenNoPrevious(), discountPercentage).negate());
+        }
     }
 
     // //////////////////////////////////////

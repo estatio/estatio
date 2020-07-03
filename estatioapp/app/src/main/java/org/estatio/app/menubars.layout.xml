@@ -391,6 +391,9 @@
                 <mb3:serviceAction objectType="payments.PaymentBatchItaMenu" id="importPaymentBatch">
                     <cpt:named>Import PaymentBatch (Italy)</cpt:named>
                 </mb3:serviceAction>
+                <mb3:serviceAction objectType="payments.PaymentBatchItaMenu" id="downloadFullyApprovedInvoices">
+                    <cpt:named>Download Fully Approved Invoices (Italy)</cpt:named>
+                </mb3:serviceAction>
             </mb3:section>
         </mb3:menu>
         <mb3:menu>

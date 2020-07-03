@@ -20,11 +20,20 @@ package org.estatio.module.lease.dom.breaks;
 
 import javax.inject.Inject;
 
-import org.apache.isis.applib.annotation.*;
 import org.joda.time.LocalDate;
 
-import org.estatio.module.base.dom.UdoDomainService;
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
+import org.apache.isis.applib.annotation.Contributed;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Mixin;
+import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.ParameterLayout;
+import org.apache.isis.applib.annotation.SemanticsOf;
+
 import org.estatio.module.lease.dom.Lease;
+import org.estatio.module.lease.dom.LeaseStatus;
 
 @Mixin(method = "act")
 public class Lease_newBreakOption {
@@ -48,6 +57,10 @@ public class Lease_newBreakOption {
             final @Parameter(optionality = Optionality.OPTIONAL) String description
     ) {
         return leaseBreakOptionService.newBreakOption(this.lease, breakDate, notificationPeriod, breakType, breakExerciseType, description);
+    }
+
+    public boolean hideAct(){
+        return lease.getStatus()== LeaseStatus.PREVIEW;
     }
 
     public String validateAct(

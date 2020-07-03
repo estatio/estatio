@@ -28,6 +28,7 @@ import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budget.BudgetRepository;
+import org.estatio.module.budget.dom.budget.Status;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceItem;
@@ -605,10 +606,10 @@ public class DerivedObjectUpdater {
         return chargeRepository.findByReference(accountCodeEl5);
     }
 
-    private BudgetItem deriveBudgetItem(final Property property, final LocalDate invoiceDate, final Charge charge){
+    BudgetItem deriveBudgetItem(final Property property, final LocalDate invoiceDate, final Charge charge){
         if (property==null || charge ==null || invoiceDate==null) return null;
         final Budget budgetIfAny = budgetRepository.findByPropertyAndDate(property, invoiceDate);
-        if (budgetIfAny==null || budgetIfAny.getItems().size()==0) return null;
+        if (budgetIfAny==null || budgetIfAny.getStatus() != Status.ASSIGNED ||budgetIfAny.getItems().size()==0) return null;
         return Lists.newArrayList(budgetIfAny.getItems())
                 .stream()
                 .filter(i->i.getCharge().equals(charge))

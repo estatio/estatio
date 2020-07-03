@@ -130,7 +130,7 @@ public class PartySubscriptions_IntegTest extends LeaseModuleIntegTestAbstract {
 
             // then
             assertThat(agreementRoleRepository.findByParty(oldParty).size()).isEqualTo(0);
-            assertThat(agreementRoleRepository.findByParty(newParty).size()).isEqualTo(1);
+            assertThat(agreementRoleRepository.findByParty(newParty).size()).isEqualTo(2);  //TODO: change due to adding amendment to fixture; maybe change this test ...?
         }
 
         @Test
