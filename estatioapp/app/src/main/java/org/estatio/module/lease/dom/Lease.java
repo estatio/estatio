@@ -34,10 +34,13 @@ import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 import org.apache.commons.lang3.ObjectUtils;
+import org.estatio.module.agreement.dom.AgreementRoleRepository;
+import org.incode.module.base.dom.with.WithInterval;
 import org.joda.time.LocalDate;
 import org.joda.time.Period;
 import org.joda.time.PeriodType;
@@ -1211,6 +1214,12 @@ public class Lease
     ) {
         if (endDate.isBefore(startDate)) {
             return "End date can not be before start date.";
+        }
+
+        AgreementRoleType tenantRoleType = agreementRoleTypeRepository.find(secondaryRoleType);
+        AgreementRole tenantAgreementRole = agreementRoleRepository.findByAgreementAndTypeAndContainsDate(this, tenantRoleType, startDate);
+        if(tenantAgreementRole==null) {
+            return "No tenant role found for start date";
         }
         return leaseRepository.findLeaseByReferenceElseNull(reference) == null ? null : "Lease reference already exists.";
     }
