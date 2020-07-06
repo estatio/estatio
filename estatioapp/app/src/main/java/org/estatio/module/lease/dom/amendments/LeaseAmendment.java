@@ -1,6 +1,7 @@
 package org.estatio.module.lease.dom.amendments;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.SortedSet;
@@ -119,14 +120,33 @@ public class LeaseAmendment extends Agreement {
     private LocalDate dateApplied;
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
-    public LeaseAmendment sign(){
+    public LeaseAmendment sign(final LocalDate dateSigned){
         setState(LeaseAmendmentState.SIGNED);
-        setDateSigned(clockService.now());
+        setDateSigned(dateSigned);
         return this;
     }
 
     public boolean hideSign(){
         return getState()!=LeaseAmendmentState.PROPOSED;
+    }
+
+    public LocalDate default0Sign(){
+        return clockService.now();
+    }
+
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    public LeaseAmendment changeDateSigned(final LocalDate dateSigned){
+        setDateSigned(dateSigned);
+        return this;
+    }
+
+    public LocalDate default0ChangeDateSigned(){
+        return getDateSigned();
+    }
+
+    public String disableChangeDateSigned(){
+        if (getState()!=LeaseAmendmentState.SIGNED) return "Only on signed amendments the date signed can be changed";
+        return null;
     }
 
     @Column(name = "leasePreviewId", allowsNull = "true")
@@ -148,9 +168,19 @@ public class LeaseAmendment extends Agreement {
         return lease.getApplicationTenancy();
     }
 
-    @Programmatic
-    public void remove(){
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
+    public Lease remove(){
+        Lease result = getLease();
+        if (getLeasePreview()!=null){
+            getLeasePreview().remove("Removing amendment");
+        }
         repositoryService.removeAndFlush(this);
+        return result;
+    }
+
+    public String disableRemove(){
+        if (amendmentDataIsImmutable()) return "The amendment is immutable";
+        return null;
     }
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
@@ -168,7 +198,7 @@ public class LeaseAmendment extends Agreement {
     }
 
     public boolean hideApply(){
-        return getState()!=LeaseAmendmentState.SIGNED;
+        return !Arrays.asList(LeaseAmendmentState.SIGNED, LeaseAmendmentState.APPLY).contains(getState());
     }
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
@@ -220,8 +250,13 @@ public class LeaseAmendment extends Agreement {
     }
 
     @Programmatic
-    public LeaseAmendment upsertItem(final BigDecimal discountPercentage, final List<LeaseItemType> discountAppliesTo, final LocalDate discountStartDate, final LocalDate discountEndDate) {
-        leaseAmendmentItemRepository.upsert(this, discountPercentage, discountAppliesTo, discountStartDate, discountEndDate);
+    public LeaseAmendment upsertItem(
+            final BigDecimal discountPercentage,
+            final BigDecimal manualDiscountAmount,
+            final List<LeaseItemType> discountAppliesTo,
+            final LocalDate discountStartDate,
+            final LocalDate discountEndDate) {
+        leaseAmendmentItemRepository.upsert(this, discountPercentage, manualDiscountAmount, discountAppliesTo, discountStartDate, discountEndDate);
         return this;
     }
 
@@ -246,12 +281,12 @@ public class LeaseAmendment extends Agreement {
     public boolean amendmentDataIsImmutable() {
         return getState()!=LeaseAmendmentState.PROPOSED;
     }
-
     @Inject
     RepositoryService repositoryService;
 
     @Inject
     LeaseAmendmentService leaseAmendmentService;
 
-    @Inject LeaseAmendmentItemRepository leaseAmendmentItemRepository;
+    @Inject
+    LeaseAmendmentItemRepository leaseAmendmentItemRepository;
 }

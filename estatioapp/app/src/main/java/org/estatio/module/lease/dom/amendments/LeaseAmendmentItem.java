@@ -3,6 +3,7 @@ package org.estatio.module.lease.dom.amendments;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.DatastoreIdentity;
 import javax.jdo.annotations.DiscriminatorStrategy;
@@ -25,6 +26,7 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
@@ -89,6 +91,7 @@ public abstract class LeaseAmendmentItem extends UdoDomainObject2<LeaseAmendment
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     public LeaseAmendmentItem changeApplicableTo(final List<LeaseItemType> leaseItemTypes){
         setApplicableTo(LeaseAmendmentItem.applicableToToString(leaseItemTypes));
+        this.getLeaseAmendment().createOrRenewLeasePreview();
         return this;
     }
 
@@ -110,6 +113,7 @@ public abstract class LeaseAmendmentItem extends UdoDomainObject2<LeaseAmendment
     public LeaseAmendmentItem changeDates(final LocalDate startDate, final LocalDate endDate){
         setStartDate(startDate);
         setEndDate(endDate);
+        this.getLeaseAmendment().createOrRenewLeasePreview();
         return this;
     }
 
@@ -129,6 +133,21 @@ public abstract class LeaseAmendmentItem extends UdoDomainObject2<LeaseAmendment
     @Action(semantics = SemanticsOf.SAFE)
     public LeaseAmendmentItemType getType(){
         return this.getClass().isAssignableFrom(LeaseAmendmentItemForFrequencyChange.class) ? LeaseAmendmentItemType.INVOICING_FREQUENCY_CHANGE : LeaseAmendmentItemType.DISCOUNT;
+    }
+
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
+    public LeaseAmendment remove(){
+        LeaseAmendment result = getLeaseAmendment();
+        if (getLeaseAmendment().getLeasePreview()!=null){
+            getLeaseAmendment().getLeasePreview().remove("Removing amendment item");
+        }
+        repositoryService.removeAndFlush(this);
+        return result;
+    }
+
+    public String disableRemove(){
+        if (getLeaseAmendment().amendmentDataIsImmutable()) return "The lease amendment is immutable";
+        return null;
     }
 
     @Override
@@ -164,5 +183,8 @@ public abstract class LeaseAmendmentItem extends UdoDomainObject2<LeaseAmendment
     public LocalDateInterval getInterval() {
         return LocalDateInterval.including(getStartDate(), getEndDate());
     }
+
+    @Inject
+    RepositoryService repositoryService;
 
 }

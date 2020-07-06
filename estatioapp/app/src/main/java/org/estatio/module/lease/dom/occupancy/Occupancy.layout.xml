@@ -56,6 +56,8 @@
                 </tab>
             </tabGroup>
             <ns2:fieldSet name="Dates" id="dates">
+                <ns2:property id="effectiveStartDate"/>
+                <ns2:property id="effectiveEndDate"/>
                 <ns2:property id="startDate"/>
                 <ns2:property id="endDate">
                     <ns2:action id="changeDates" position="BELOW"/>

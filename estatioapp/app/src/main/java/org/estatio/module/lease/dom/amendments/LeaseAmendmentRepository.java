@@ -10,6 +10,7 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.query.QueryDefault;
+import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
@@ -91,6 +92,7 @@ public class LeaseAmendmentRepository {
         } else {
             if (amendment.getState()==LeaseAmendmentState.APPLIED) return amendment;
             amendment.setState(stateToUse);
+            if (state==LeaseAmendmentState.SIGNED) amendment.setDateSigned(clockService.now());
             amendment.setStartDate(startDate);
             amendment.setEndDate(endDate);
             return amendment;
@@ -138,4 +140,6 @@ public class LeaseAmendmentRepository {
 
     @Inject
     AgreementRoleTypeRepository agreementRoleTypeRepository;
+
+    @Inject ClockService clockService;
 }

@@ -126,6 +126,11 @@ import lombok.Setter;
 )
 @Queries({
         @Query(
+                name = "findByUUID", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.module.capex.dom.invoice.IncomingInvoice "
+                        + "WHERE uuid == :uuid "),
+        @Query(
                 name = "findByApprovalState", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.module.capex.dom.invoice.IncomingInvoice "
@@ -281,7 +286,8 @@ import lombok.Setter;
         @Index(name = "IncomingInvoice_approvalState_IDX", members = { "approvalState" }),
         @Index(name = "IncomingInvoice_atPath_approvalState_IDX", members = { "applicationTenancyPath", "approvalState" }),
         @Index(name = "IncomingInvoice_approvalState_atPath_IDX", members = { "approvalState", "applicationTenancyPath" }),
-        @Index(name = "IncomingInvoice_barcode_IDX", members = { "barcode" })
+        @Index(name = "IncomingInvoice_barcode_IDX", members = { "barcode" }),
+        @Index(name = "IncomingInvoice_uuid_IDX", members = { "uuid" }),
 })
 // unused, since rolled-up
 //@Unique(name = "IncomingInvoice_invoiceNumber_UNQ", members = { "invoiceNumber" })
@@ -2376,6 +2382,11 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
 
     @Override
     public int compareTo(final IncomingInvoice other) {
+        if (getSeller()==null || other.getSeller()==null || getInvoiceNumber()==null || other.getInvoiceNumber()==null) {
+            return ComparisonChain.start()
+                    .compare(getUuid(), other.getUuid())
+                    .result();
+        }
         return ComparisonChain.start()
                 .compare(getSeller(), other.getSeller())
                 .compare(getInvoiceNumber(), other.getInvoiceNumber())

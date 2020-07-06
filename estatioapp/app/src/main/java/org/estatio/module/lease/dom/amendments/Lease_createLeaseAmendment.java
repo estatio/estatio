@@ -24,12 +24,12 @@ public class Lease_createLeaseAmendment {
     ) {
         final LeaseAmendment amendment = leaseAmendmentRepository.create(lease, leaseAmendmentType, LeaseAmendmentState.PROPOSED, leaseAmendmentType.getAmendmentStartDate(), null);
         if (leaseAmendmentType.getDiscountPercentage()!=null && leaseAmendmentType.getDiscountAppliesTo()!=null && leaseAmendmentType.getDiscountStartDate()!=null && leaseAmendmentType.getDiscountEndDate()!=null) {
-            leaseAmendmentItemRepository.create(amendment, leaseAmendmentType.getDiscountPercentage(), leaseAmendmentType.getDiscountAppliesTo(), leaseAmendmentType.getDiscountStartDate(), leaseAmendmentType.getDiscountEndDate());
+            leaseAmendmentItemRepository.create(amendment, leaseAmendmentType.getDiscountPercentage(), null, leaseAmendmentType.getDiscountAppliesTo(), leaseAmendmentType.getDiscountStartDate(), leaseAmendmentType.getDiscountEndDate());
         }
         final LeaseAmendmentType.Tuple<InvoicingFrequency, InvoicingFrequency> frequencyTuple = leaseAmendmentService
                 .findInvoiceFrequencyTupleOnfirstFrequencyChangeCandidate(amendment);
         if (frequencyTuple!=null && leaseAmendmentType.getFrequencyChanges()!=null && leaseAmendmentType.getFrequencyChangeAppliesTo()!=null && leaseAmendmentType.getFrequencyChangeStartDate()!=null && leaseAmendmentType.getFrequencyChangeEndDate()!=null) {
-            leaseAmendmentItemRepository.create(amendment, frequencyTuple.oldFrequency, frequencyTuple.newFrequency, leaseAmendmentType.getFrequencyChangeAppliesTo(),
+            leaseAmendmentItemRepository.create(amendment, frequencyTuple.oldValue, frequencyTuple.newValue, leaseAmendmentType.getFrequencyChangeAppliesTo(),
                     leaseAmendmentType.getFrequencyChangeStartDate(), leaseAmendmentType.getFrequencyChangeEndDate());
         }
         return lease;

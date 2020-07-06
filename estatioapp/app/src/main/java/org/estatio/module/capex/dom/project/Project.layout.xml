@@ -87,8 +87,14 @@
                         <col span="12"></col>
                     </row>
                 </tab>
+                <tab name="Orders">
+                    <row>
+                        <col span="12">
+                            <ns2:collection id="orders" defaultView="excel" />
+                        </col>
+                    </row>
+                </tab>
             </tabGroup>
-
         </col>
     </row>
 </grid>

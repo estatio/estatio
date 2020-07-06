@@ -287,4 +287,65 @@ public class Occupancy_Test {
 
     }
 
+    @Test
+    public void effective_start_date_works() throws Exception {
+
+        // given
+        LocalDate startDate;
+        LocalDate endDate;
+        Occupancy occupancy = new Occupancy();
+        Lease lease = new Lease(){
+            @Override
+            public LocalDateInterval getEffectiveInterval() {
+                return LocalDateInterval.including(null, null);
+            }
+        };
+        occupancy.setLease(lease);
+
+        // when, then
+        assertThat(occupancy.getEffectiveStartDate()).isEqualTo(null);
+
+        // when
+        startDate = new LocalDate(2018,5,5);
+        Lease lease2 = new Lease(){
+            @Override
+            public LocalDateInterval getEffectiveInterval() {
+                return LocalDateInterval.including(startDate, null);
+            }
+        };
+        occupancy.setLease(lease2);
+        // then
+        assertThat(occupancy.getEffectiveStartDate()).isEqualTo(startDate);
+
+        // when
+        endDate = new LocalDate(2019,1,2);
+        Lease lease3 = new Lease(){
+            @Override
+            public LocalDateInterval getEffectiveInterval() {
+                return LocalDateInterval.including(startDate, endDate);
+            }
+        };
+        occupancy.setLease(lease3);
+        // then
+        assertThat(occupancy.getEffectiveStartDate()).isEqualTo(startDate);
+
+        // when
+        Lease lease4 = new Lease(){
+            @Override
+            public LocalDateInterval getEffectiveInterval() {
+                return LocalDateInterval.including(null, endDate);
+            }
+        };
+        occupancy.setLease(lease4);
+        // then
+        assertThat(occupancy.getEffectiveStartDate()).isEqualTo(null);
+
+        // when
+        final LocalDate occStartDate = new LocalDate(2019, 1, 1);
+        occupancy.setStartDate(occStartDate);
+        // then
+        assertThat(occupancy.getEffectiveStartDate()).isEqualTo(occStartDate);
+
+    }
+
 }

@@ -1,5 +1,7 @@
 package org.estatio.module.lease.dom.amendments;
 
+import javax.annotation.Nullable;
+
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.Mixin;
 
@@ -15,7 +17,7 @@ public class Property_maintainLeaseAmendments {
     }
 
     @Action()
-    public LeaseAmendmentManager $$(final LeaseAmendmentType leaseAmendmentType) {
+    public LeaseAmendmentManager $$(@Nullable final LeaseAmendmentType leaseAmendmentType) {
         return new LeaseAmendmentManager(property, leaseAmendmentType);
     }
 

@@ -4,6 +4,19 @@ import java.util.Arrays;
 
 import javax.inject.Inject;
 
+import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
+import org.apache.isis.applib.services.sudo.SudoService;
+import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
+import org.estatio.module.asset.fixtures.person.enums.Person_enum;
+import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
+import org.estatio.module.capex.dom.invoice.approval.triggers.IncomingInvoice_approve;
+import org.estatio.module.capex.dom.invoice.approval.triggers.IncomingInvoice_complete;
+import org.estatio.module.capex.dom.invoice.approval.triggers.IncomingInvoice_markAsPaidByIbp;
+import org.estatio.module.financial.dom.bankaccount.verification.BankAccountVerificationState;
+import org.estatio.module.invoice.dom.PaymentMethod;
+import org.estatio.module.party.dom.role.PartyRoleType;
+import org.estatio.module.party.dom.role.PartyRoleTypeEnum;
+import org.estatio.module.party.dom.role.PartyRoleTypeRepository;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
@@ -55,7 +68,9 @@ public class PaymentBatch_IntegTest extends CapexModuleIntegTestAbstract {
                         BankAccount_enum.TopSellerFr,
                         Currency_enum.EUR,
                         IncomingInvoice_enum.fakeInvoice2Pdf,
-                        IncomingInvoice_enum.fakeInvoice3Pdf);
+                        IncomingInvoice_enum.fakeInvoice3Pdf,
+                        Person_enum.BrunoTreasurerFr,
+                        Person_enum.BertrandIncomingInvoiceManagerFr);
             }
         });
 
@@ -134,10 +149,46 @@ public class PaymentBatch_IntegTest extends CapexModuleIntegTestAbstract {
 
     }
 
+    @Test
+    public void paymentBatch_is_set_to_paid_automatically() throws Exception {
+        // given
+        paymentBatch.addLineIfRequired(invoice2);
+        wrap(mixin(PaymentBatch_complete.class, paymentBatch)).act(DateTime.parse("2018-02-01T12:00:00"), null);
+        assertThat(paymentBatch.getApprovalState()).isEqualTo(PaymentBatchApprovalState.COMPLETED);
+        assertThat(paymentBatch.getLines()).hasSize(1);
+
+        PaymentBatch paymentBatch2 = paymentBatchRepository.create(DateTime.parse("2018-01-01T12:00:00"), debtorBankAccount, PaymentBatchApprovalState.NEW);
+        paymentBatch2.addLineIfRequired(invoice1);
+        paymentBatch2.addLineIfRequired(invoice2);
+        wrap(mixin(PaymentBatch_complete.class, paymentBatch2)).act(DateTime.parse("2018-02-01T12:00:00"), null);
+        assertThat(paymentBatch2.getApprovalState()).isEqualTo(PaymentBatchApprovalState.COMPLETED);
+        assertThat(paymentBatch2.getLines()).hasSize(2);
+
+        assertThat(invoice2.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.PAYABLE);
+
+        // when
+        wrap(mixin(IncomingInvoice_markAsPaidByIbp.class, invoice2)).act();
+        assertThat(invoice2.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.PAID);
+
+        // then
+        assertThat(paymentBatch.getApprovalState()).isEqualTo(PaymentBatchApprovalState.PAID);
+        assertThat(paymentBatch2.getApprovalState()).isNotEqualTo(PaymentBatchApprovalState.PAID);
+    }
+
+
     @Inject
     PaymentBatchRepository paymentBatchRepository;
 
     @Inject
     FactoryService factoryService;
+
+    @Inject
+    QueryResultsCache queryResultsCache;
+
+    @Inject
+    PartyRoleTypeRepository partyRoleTypeRepository;
+
+    @Inject
+    SudoService sudoService;
 
 }
