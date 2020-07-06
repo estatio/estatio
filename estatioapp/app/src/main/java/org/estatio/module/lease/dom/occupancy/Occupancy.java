@@ -452,13 +452,14 @@ public class Occupancy
             @Nullable
             final BigDecimal salesAreaFood,
             @Nullable
-            final BigDecimal foodAndBeveragesArea){
+            final BigDecimal foodAndBeveragesArea,
+            final LocalDate startDate
+    ){
         final SalesAreaLicense salesAreaLicense = salesAreaLicenseRepository.newSalesAreaLicense(
                 this,
                 getLease().getReference(),
                 getLease().getReference().concat("-SAL"),
-                getStartDate(),
-                getEndDate(),
+                startDate,
                 lease.getSecondaryParty(),
                 lease.getPrimaryParty(),
                 salesAreaNonFood,
@@ -467,8 +468,24 @@ public class Occupancy
         return this;
     }
 
+    public LocalDate default3CreateSalesAreaLicense(){
+        return getEffectiveStartDate();
+    }
+
     public boolean hideCreateSalesAreaLicense(){
         return getCurrentSalesAreaLicense()!=null ? true : false;
+    }
+
+    public String validateCreateSalesAreaLicense(
+            @Nullable
+            final BigDecimal salesAreaNonFood,
+            @Nullable
+            final BigDecimal salesAreaFood,
+            @Nullable
+            final BigDecimal foodAndBeveragesArea,
+            @Nullable
+            final LocalDate startDate){
+        return SalesAreaLicense.validate(this, null, startDate, salesAreaFood, salesAreaNonFood, foodAndBeveragesArea);
     }
 
     @Action

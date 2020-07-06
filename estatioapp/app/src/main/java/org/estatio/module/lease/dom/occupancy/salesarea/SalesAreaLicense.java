@@ -75,7 +75,7 @@ public class SalesAreaLicense extends Agreement {
 
     @Action(semantics = SemanticsOf.SAFE)
     public LocalDate getEffectiveEndDate(){
-        return getEndDate()!=null ? getEndDate() : getOccupancy().getEndDate();
+        return getEndDate()!=null ? getEndDate() : getOccupancy().getEffectiveEndDate();
     }
 
     @Action
@@ -90,7 +90,7 @@ public class SalesAreaLicense extends Agreement {
             final BigDecimal foodAndBeveragesArea){
         final SalesAreaLicense license = salesAreaLicenseRepository
                 .newSalesAreaLicense(getOccupancy(), getOccupancy().getLease().getReference().concat("-" + version()), getOccupancy().getLease().getReference().concat("-SAL").concat(version()), startDate,
-                        null, getSecondaryParty(), getPrimaryParty(), salesAreaNonFood, salesAreaFood,
+                        getSecondaryParty(), getPrimaryParty(), salesAreaNonFood, salesAreaFood,
                         foodAndBeveragesArea);
         this.setNext(license);
         this.setEndDate(startDate.minusDays(1).isBefore(this.getStartDate()) ? startDate : startDate.minusDays(1));
@@ -105,11 +105,27 @@ public class SalesAreaLicense extends Agreement {
             final BigDecimal salesAreaNonFood,
             @Nullable
             final BigDecimal foodAndBeveragesArea){
-        if (getOccupancy().getEndDate()!=null && startDate.isAfter(getOccupancy().getEndDate())){
-            return "The start date cannot be after the occupancy end date";
-        }
-        if (startDate.isBefore(getStartDate())){
+        return validate(getOccupancy(), this, startDate, salesAreaFood, salesAreaNonFood, foodAndBeveragesArea);
+    }
+
+    public static String validate(final Occupancy o, final SalesAreaLicense l, final LocalDate s, final BigDecimal saf, final BigDecimal sanf, final BigDecimal fba){
+        if (l!=null && l.getStartDate()!=null && s.isBefore(l.getStartDate())){
             return "The start date cannot be before the current start date";
+        }
+        if (saf==null && sanf==null && fba==null){
+            return "Please fill in at least 1 area";
+        }
+        if (o.getEndDate()!=null && s.isAfter(o.getEndDate())){
+            return "The license start date cannot be after the occupancy end date";
+        }
+        if (o.getEffectiveEndDate()!=null && s.isAfter(o.getEffectiveEndDate())){
+            return "The license start date cannot be after the occupancy effective end date";
+        }
+        if (o.getStartDate()!=null && s.isBefore(o.getStartDate())){
+            return "The license start date cannot be before the occupancy start date";
+        }
+        if (o.getEffectiveStartDate()!=null && s.isBefore(o.getEffectiveStartDate())){
+            return "The license start date cannot be before the occupancy effective start date";
         }
         return null;
     }

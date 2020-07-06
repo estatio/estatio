@@ -45,13 +45,15 @@ public class SalesAreaLicenseImport implements ExcelFixtureRowHandler, Importabl
     public SalesAreaLicenseImport(final Occupancy occupancy){
         this.leaseReference = occupancy.getLease().getReference();
         this.unitReference = occupancy.getUnit().getReference();
-        this.startDate = occupancy.getStartDate() !=null ? occupancy.getStartDate() : occupancy.getLease().getTenancyStartDate()!=null ? occupancy.getLease().getTenancyStartDate() : occupancy.getLease().getStartDate();
+        this.occupancyStartDate = occupancy.getStartDate();
+        this.licenseStartDate = occupancy.getEffectiveStartDate();
     }
 
     public SalesAreaLicenseImport(final SalesAreaLicense license){
         this.leaseReference = license.getOccupancy().getLease().getReference();
         this.unitReference = license.getOccupancy().getUnit().getReference();
-        this.startDate = license.getStartDate();
+        this.occupancyStartDate = license.getOccupancy().getStartDate();
+        this.licenseStartDate = license.getStartDate();
         this.salesAreaNonFood = license.getSalesAreaNonFood();
         this.salesAreaFood = license.getSalesAreaFood();
         this.foodAndBeveragesArea = license.getFoodAndBeveragesArea();
@@ -67,18 +69,22 @@ public class SalesAreaLicenseImport implements ExcelFixtureRowHandler, Importabl
 
     @Getter @Setter
     @MemberOrder(sequence = "3")
-    private LocalDate startDate;
+    private LocalDate occupancyStartDate;
 
     @Getter @Setter
     @MemberOrder(sequence = "4")
-    private BigDecimal salesAreaNonFood;
+    private LocalDate licenseStartDate;
 
     @Getter @Setter
     @MemberOrder(sequence = "5")
-    private BigDecimal salesAreaFood;
+    private BigDecimal salesAreaNonFood;
 
     @Getter @Setter
     @MemberOrder(sequence = "6")
+    private BigDecimal salesAreaFood;
+
+    @Getter @Setter
+    @MemberOrder(sequence = "7")
     private BigDecimal foodAndBeveragesArea;
 
 
@@ -108,7 +114,7 @@ public class SalesAreaLicenseImport implements ExcelFixtureRowHandler, Importabl
         }
 
         for (SalesAreaLicense license : salesAreaLicenseRepository.findByOccupancy(occupancy)){
-            if (license.getStartDate().equals(getStartDate())){
+            if (license.getStartDate().equals(getLicenseStartDate())){
                 license.setSalesAreaNonFood(getSalesAreaNonFood());
                 license.setSalesAreaFood(getSalesAreaFood());
                 license.setFoodAndBeveragesArea(getFoodAndBeveragesArea());
@@ -118,13 +124,19 @@ public class SalesAreaLicenseImport implements ExcelFixtureRowHandler, Importabl
 
         // when no license
         if (salesAreaLicenseRepository.findMostRecentForOccupancy(occupancy)==null){
-            occupancy.createSalesAreaLicense(getSalesAreaNonFood(), getSalesAreaFood(), getFoodAndBeveragesArea());
-            salesAreaLicense = occupancy.getCurrentSalesAreaLicense();
-            return Lists.newArrayList(salesAreaLicense);
+            try {
+                wrapperFactory.wrap(occupancy)
+                        .createSalesAreaLicense(getSalesAreaNonFood(), getSalesAreaFood(), getFoodAndBeveragesArea(),
+                                getLicenseStartDate());
+                salesAreaLicense = occupancy.getCurrentSalesAreaLicense();
+                return Lists.newArrayList(salesAreaLicense);
+            } catch (Exception e){
+                throw new ApplicationException(e);
+            }
         } else {
             // when there is a license
             try {
-                wrapperFactory.wrap(occupancy).createNextSalesAreaLicense(getStartDate(), getSalesAreaNonFood(), getSalesAreaFood(), getFoodAndBeveragesArea());
+                wrapperFactory.wrap(occupancy).createNextSalesAreaLicense(getLicenseStartDate(), getSalesAreaNonFood(), getSalesAreaFood(), getFoodAndBeveragesArea());
                 salesAreaLicense = occupancy.getCurrentSalesAreaLicense();
                 return Lists.newArrayList(salesAreaLicense);
             } catch (Exception e){
@@ -153,12 +165,12 @@ public class SalesAreaLicenseImport implements ExcelFixtureRowHandler, Importabl
 
     private Occupancy fetchOccupancy(final Lease lease, final Unit unit) {
         final Occupancy o;
-        o = occupancyRepository.findByLeaseAndUnitAndStartDate(lease, unit, getStartDate());
+        o = occupancyRepository.findByLeaseAndUnitAndStartDate(lease, unit, getOccupancyStartDate());
         if (o == null) {
             throw new ApplicationException(String.format("Occupancy for lease %s and unit %s with start date %s not found.",
                     lease.getReference(),
                     unit.getReference(),
-                    getStartDate()));
+                    getOccupancyStartDate()));
         }
         return o;
     }

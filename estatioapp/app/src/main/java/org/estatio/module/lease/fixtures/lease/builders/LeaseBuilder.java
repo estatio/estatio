@@ -193,7 +193,7 @@ public final class LeaseBuilder
             occupancy.setReportTurnover(Occupancy.OccupancyReportingType.YES);
             if (spec.salesAreaFood!=null || spec.salesAreaNonFood!=null || spec.foodAndBeveragesArea!=null) {
                 wrap(occupancy)
-                        .createSalesAreaLicense(spec.salesAreaNonFood, spec.salesAreaFood, spec.foodAndBeveragesArea);
+                        .createSalesAreaLicense(spec.salesAreaNonFood, spec.salesAreaFood, spec.foodAndBeveragesArea, occupancy.getStartDate());
             }
             executionContext.addResult(this, occupancy);
         }

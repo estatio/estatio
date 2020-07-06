@@ -19,7 +19,6 @@ import org.estatio.module.asset.dom.Property;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
-import org.estatio.module.lease.dom.occupancy.salesarea.SalesAreaLicenseRepository;
 import org.estatio.module.lease.imports.SalesAreaLicenseImport;
 
 @DomainService(
@@ -64,8 +63,6 @@ public class SalesAreaMenu {
     }
 
     @Inject LeaseRepository leaseRepository;
-
-    @Inject SalesAreaLicenseRepository salesAreaLicenseRepository;
 
     @Inject ExcelService excelService;
 

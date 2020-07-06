@@ -93,7 +93,7 @@ public class SalesAreaLicense_IntegTest extends LeaseModuleIntegTestAbstract {
         assertThat(landlordRole.getParty()).isEqualTo(landlordRoleNext.getParty());
 
         // and when
-        wrap(occ).createNextSalesAreaLicense(startDate, null, null ,null);
+        wrap(occ).createNextSalesAreaLicense(startDate, BigDecimal.ZERO, null ,null);
         transactionService.nextTransaction();
         // then
         final SalesAreaLicense lastLicenseWithSameStartDate = occ.getCurrentSalesAreaLicense();

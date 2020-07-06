@@ -54,7 +54,6 @@ public class SalesAreaLicenseRepository extends UdoDomainRepositoryAndFactory<Sa
             final String reference,
             final String name,
             final LocalDate startDate,
-            final LocalDate endDate,
             final Party tenant,
             final Party landlord,
             final BigDecimal salesAreaNonFood,
@@ -67,7 +66,6 @@ public class SalesAreaLicenseRepository extends UdoDomainRepositoryAndFactory<Sa
         license.setReference(reference);
         license.setName(name);
         license.setStartDate(startDate);
-        license.setEndDate(endDate);
         license.setSalesAreaNonFood(salesAreaNonFood);
         license.setSalesAreaFood(salesAreaFood);
         license.setFoodAndBeveragesArea(foodAndBeveragesArea);

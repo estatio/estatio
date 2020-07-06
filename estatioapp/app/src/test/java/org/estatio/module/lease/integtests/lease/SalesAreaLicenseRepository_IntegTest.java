@@ -80,7 +80,6 @@ public class SalesAreaLicenseRepository_IntegTest extends LeaseModuleIntegTestAb
                 reference,
                 name,
                 startDate,
-                endDate,
                 tenant,
                 landlord,
                 salesAreaNonFood,
@@ -93,7 +92,6 @@ public class SalesAreaLicenseRepository_IntegTest extends LeaseModuleIntegTestAb
         assertThat(salesAreaLicense.getReference()).isEqualTo(reference);
         assertThat(salesAreaLicense.getName()).isEqualTo(name);
         assertThat(salesAreaLicense.getStartDate()).isEqualTo(startDate);
-        assertThat(salesAreaLicense.getEndDate()).isEqualTo(endDate);
         assertThat(salesAreaLicense.getSalesAreaNonFood()).isEqualTo(salesAreaNonFood);
         assertThat(salesAreaLicense.getSalesAreaFood()).isEqualTo(salesAreaFood);
         assertThat(salesAreaLicense.getFoodAndBeveragesArea()).isEqualTo(foodAndBeveragesArea);
