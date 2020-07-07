@@ -65,6 +65,8 @@ import org.estatio.module.capex.dom.invoice.IncomingInvoiceRepository;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceRoleTypeEnum;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
+import org.estatio.module.charge.dom.Charge;
+import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.module.coda.EstatioCodaModule;
 import org.estatio.module.coda.app.CodaCmpCodeService;
 import org.estatio.module.coda.app.CodaDocCodeService;
@@ -73,14 +75,22 @@ import org.estatio.module.coda.dom.hwm.CodaHwm;
 import org.estatio.module.coda.dom.hwm.CodaHwmRepository;
 import org.estatio.module.countryapptenancy.dom.CountryServiceForCurrentUser;
 import org.estatio.module.countryapptenancy.dom.EstatioApplicationTenancyRepositoryForCountry;
+import org.estatio.module.invoice.dom.InvoiceItem;
+import org.estatio.module.invoice.dom.InvoiceStatus;
 import org.estatio.module.lease.dom.InvoicingFrequency;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
+import org.estatio.module.lease.dom.LeaseItem;
+import org.estatio.module.lease.dom.LeaseItemRepository;
 import org.estatio.module.lease.dom.LeaseItemType;
 import org.estatio.module.lease.dom.LeaseRepository;
+import org.estatio.module.lease.dom.LeaseTerm;
 import org.estatio.module.lease.dom.amendments.LeaseAmendmentRepository;
 import org.estatio.module.lease.dom.amendments.LeaseAmendmentState;
 import org.estatio.module.lease.dom.amendments.Lease_closeOldAndOpenNewLeaseItem;
+import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
+import org.estatio.module.lease.dom.invoicing.InvoiceForLeaseRepository;
+import org.estatio.module.lease.dom.invoicing.InvoiceItemForLease;
 import org.estatio.module.lease.dom.settings.LeaseInvoicingSettingsService;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.OrganisationRepository;
@@ -673,7 +683,78 @@ public class AdminDashboard implements ViewModel {
             }
         });
     }
-    
+
+    @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
+    public void linkManualInvoicesToTerms(final org.estatio.module.asset.dom.Property property, final LeaseItemType leaseItemType, final Charge charge){
+        List<LeaseItem> itemsForPropertyTypeAndCharge = new ArrayList<>();
+        leaseRepository.findLeasesByProperty(property).forEach(l->{
+            final List<LeaseItem> leaseItemsByTypeAndChargedInvoicedByLandlord = leaseItemRepository.findLeaseItemsByType(l, leaseItemType)
+                    .stream()
+                    .filter(li->li.getInvoicedBy()==LeaseAgreementRoleTypeEnum.LANDLORD)
+                    .filter(li->li.getCharge().equals(charge))
+                    .collect(Collectors.toList());
+            itemsForPropertyTypeAndCharge.addAll(leaseItemsByTypeAndChargedInvoicedByLandlord);
+        });
+
+        List<InvoiceItemForLease> unlinkedInvoiceItem = findUnlinkedInvoiceItemsForPropertyAndCharge(property, charge);
+
+        for (LeaseItem leaseItem : itemsForPropertyTypeAndCharge){
+            for (LeaseTerm lt : leaseItem.getTerms()){
+                unlinkedInvoiceItem.stream()
+                        .filter(ii->ii.getLease()==leaseItem.getLease())
+                        .filter(ii->lt.getInterval().contains(ii.getDueDate()))
+                        .forEach(ii->{
+                            LOG.info("Linking item for invoice %s to term %s of item of type %s of lease %s",ii.getInvoice().getInvoiceNumber(), lt.getSequence(), lt.getLeaseItem().getType(), lt.getLeaseItem().getLease().getReference());
+                            ii.setLeaseTerm(lt);
+                        });
+
+            }
+        }
+    }
+
+    public List<LeaseItemType> choices1LinkManualInvoicesToTerms(){
+        return Arrays.asList(LeaseItemType.PROPERTY_TAX, LeaseItemType.OFFICE_TAX, LeaseItemType.RETAIL_TAX);
+    }
+
+    public List<Charge> choices2LinkManualInvoicesToTerms(){
+        List<Charge> result = new ArrayList<>();
+        // property tax all except ..
+        result.add(chargeRepository.findByReference("FR4560"));
+        // prop tax SL
+        result.add(chargeRepository.findByReference("FR4561"));
+
+        // office tax all except
+        result.add(chargeRepository.findByReference("FR4580"));
+        // prop tax SL
+        result.add(chargeRepository.findByReference("FR4583"));
+
+        // retail tax
+        result.add(chargeRepository.findByReference("FR4570"));
+        return result;
+    }
+
+    private List<InvoiceItemForLease> findUnlinkedInvoiceItemsForPropertyAndCharge(final org.estatio.module.asset.dom.Property property, final Charge charge){
+        final List<InvoiceForLease> invoices = invoiceForLeaseRepository
+                .findByFixedAssetAndStatus(property, InvoiceStatus.INVOICED);
+        List<InvoiceItemForLease> result = new ArrayList<>();
+        for (InvoiceForLease invoice : invoices){
+            for (InvoiceItem invoiceItem : invoice.getItems()){
+                InvoiceItemForLease castedItem = (InvoiceItemForLease) invoiceItem;
+                if (castedItem.getLeaseTerm()==null && castedItem.getCharge()==charge){
+                    result.add(castedItem);
+                }
+            }
+        }
+        return result;
+    }
+
+    @Inject LeaseItemRepository leaseItemRepository;
+
+    @Inject InvoiceForLeaseRepository invoiceForLeaseRepository;
+
+    @Inject
+    ChargeRepository chargeRepository;
+
     @Inject
     CodaCmpCodeService codaCmpCodeService;
 
