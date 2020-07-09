@@ -704,7 +704,7 @@ public class AdminDashboard implements ViewModel {
                         .filter(ii->ii.getLease()==leaseItem.getLease())
                         .filter(ii->lt.getInterval().contains(ii.getDueDate()))
                         .forEach(ii->{
-                            LOG.info("Linking item for invoice %s to term %s of item of type %s of lease %s",ii.getInvoice().getInvoiceNumber(), lt.getSequence(), lt.getLeaseItem().getType(), lt.getLeaseItem().getLease().getReference());
+                            LOG.info(String.format("Linking item for invoice %s to term %s of item of type %s of lease %s",ii.getInvoice().getInvoiceNumber(), lt.getSequence(), lt.getLeaseItem().getType(), lt.getLeaseItem().getLease().getReference()));
                             ii.setLeaseTerm(lt);
                         });
 
