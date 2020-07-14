@@ -84,11 +84,11 @@ public enum LeaseAmendmentType {
             new LocalDate(2020,7,1),
             new LocalDate(2020,7,31),
             Arrays.asList(
-                    new Tuple<>("6001", "6031"),
-                    new Tuple<>("6002", "6032"),
-                    new Tuple<>("6031", "6031"), // current discount charge on any discount item
-                    new Tuple<>("6032", "6032"), // current discount charge on any discount item
-                    new Tuple<>(null, "6032") // TODO: check DEFAULT with users?
+                    new Tuple<>("6001", "6014"),
+                    new Tuple<>("6002", "6015"),
+                    new Tuple<>("6031", "6014"), // current discount charge on any discount item
+                    new Tuple<>("6032", "6015"), // current discount charge on any discount item
+                    new Tuple<>(null, "6015") // TODO: check DEFAULT with users?
             ),
             null,
             null,
@@ -109,9 +109,11 @@ public enum LeaseAmendmentType {
             new LocalDate(2020,7,1),
             new LocalDate(2020,8,31),
             Arrays.asList(
-                    new Tuple<>("6001", "6031"),
-                    new Tuple<>("6002", "6032"),
-                    new Tuple<>(null, "6032") // TODO: check DEFAULT with users?
+                    new Tuple<>("6001", "6014"),
+                    new Tuple<>("6002", "6015"),
+                    new Tuple<>("6031", "6014"), // current discount charge on any discount item
+                    new Tuple<>("6032", "6015"), // current discount charge on any discount item
+                    new Tuple<>(null, "6015") // TODO: check DEFAULT with users?
             ),
             null,
             null,
