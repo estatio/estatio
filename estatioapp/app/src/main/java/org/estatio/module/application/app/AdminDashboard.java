@@ -5,6 +5,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -59,6 +60,7 @@ import org.incode.module.country.dom.impl.Country;
 import org.incode.module.slack.impl.SlackService;
 
 import org.estatio.module.application.contributions.Organisation_syncToCoda;
+import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.capex.app.taskreminder.TaskReminderService;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceRepository;
@@ -747,6 +749,50 @@ public class AdminDashboard implements ViewModel {
         }
         return result;
     }
+
+    @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
+    public void closePropertyTaxItemsInvoicedByManager(final org.estatio.module.asset.dom.Property property, final LocalDate currentEndDate){
+        final LocalDate end2019 = new LocalDate(2019, 12, 31);
+        final List<Lease> leasesForProperty = leaseRepository.findLeasesByProperty(property);
+        for (Lease lease : leasesForProperty){
+            for (LeaseItem leaseItem : lease.getItems()){
+                if (leaseItem.getType()==LeaseItemType.PROPERTY_TAX && leaseItem.getInvoicedBy()==LeaseAgreementRoleTypeEnum.MANAGER && (leaseItem.getEndDate()==null || leaseItem.getEndDate().equals(currentEndDate))){
+                    LOG.info(String.format("Closing property tax item invoiced by manager for %s with endDate %s on %s", leaseItem.getLease().getReference(), leaseItem.getEndDate(), end2019));
+                    leaseItem.setEndDate(end2019);
+                }
+            }
+        }
+    }
+
+    public List<org.estatio.module.asset.dom.Property> choices0ClosePropertyTaxItemsInvoicedByManager(){
+        List<org.estatio.module.asset.dom.Property> result = new ArrayList<>();
+        result.add(propertyRepository.findPropertyByReference("AM"));
+        result.add(propertyRepository.findPropertyByReference("AT"));
+        result.add(propertyRepository.findPropertyByReference("AZ"));
+        result.add(propertyRepository.findPropertyByReference("BP"));
+        result.add(propertyRepository.findPropertyByReference("BT"));
+        result.add(propertyRepository.findPropertyByReference("CH"));
+        result.add(propertyRepository.findPropertyByReference("HA"));
+        result.add(propertyRepository.findPropertyByReference("MO"));
+        result.add(propertyRepository.findPropertyByReference("PH"));
+        result.add(propertyRepository.findPropertyByReference("PT"));
+        result.add(propertyRepository.findPropertyByReference("RC"));
+        result.add(propertyRepository.findPropertyByReference("SL"));
+        result.add(propertyRepository.findPropertyByReference("TD"));
+        result.add(propertyRepository.findPropertyByReference("VT"));
+        return result.stream().sorted(Comparator.comparing(org.estatio.module.asset.dom.Property::getReference)).collect(
+                Collectors.toList());
+    }
+
+    public List<LocalDate> choices1ClosePropertyTaxItemsInvoicedByManager(){
+        return Arrays.asList(new LocalDate(2020,6,30));
+    }
+
+    public LocalDate default1ClosePropertyTaxItemsInvoicedByManager(){
+        return new LocalDate(2020,6,30);
+    }
+
+    @Inject PropertyRepository propertyRepository;
 
     @Inject LeaseItemRepository leaseItemRepository;
 
