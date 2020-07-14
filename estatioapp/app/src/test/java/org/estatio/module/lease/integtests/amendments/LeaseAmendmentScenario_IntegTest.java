@@ -116,7 +116,7 @@ public class LeaseAmendmentScenario_IntegTest extends LeaseModuleIntegTestAbstra
                 .findFirst().orElse(null);
         assertThat(thirdNewRentItem.getEndDate()).isEqualTo(originalRentItem.getEndDate());
         assertThat(thirdNewRentItem.getInvoicingFrequency()).isEqualTo(InvoicingFrequency.QUARTERLY_IN_ADVANCE);
-        assertThat(thirdNewRentItem.getTerms()).hasSize(1);
+        assertThat(thirdNewRentItem.getTerms()).hasSize(2);
 
         final LeaseItem discountRentItem = leasePreview.findItemsOfType(LeaseItemType.RENT_DISCOUNT).stream()
                 .filter(li -> li.getStartDate().equals(discountAmendmentItem.getStartDate()))
@@ -129,8 +129,10 @@ public class LeaseAmendmentScenario_IntegTest extends LeaseModuleIntegTestAbstra
 
         assertThat(discountAmendmentItem.calculateDiscountAmountUsingLeasePreview()).isEqualTo(new BigDecimal("-1638.85"));
         assertThat(discountAmendmentItem.getCalculatedDiscountAmount()).isEqualTo(new BigDecimal("-1638.85"));
-        assertThat(discountAmendmentItem.getTotalValueForDateBeforeDiscount()).isEqualTo(new BigDecimal("21305.02"));
-        assertThat(originalRentItem.valueForDate(discountAmendmentItem.getStartDate().minusDays(1))).isEqualTo(new BigDecimal("21305.02")); // EQUALS the value for date just before discount of the only lease item used by amendment item for discount
+        assertThat(discountAmendmentItem.getTotalValueForDateBeforeDiscount()).isEqualTo(new BigDecimal("19305.02")); // is the value for date of the original rent item and the original discount item
+        assertThat(originalRentItem.valueForDate(discountAmendmentItem.getStartDate().minusDays(1))).isEqualTo(new BigDecimal("21305.02"));
+        final LeaseItem originalDiscountItem = LeaseItemForDiscount_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
+        assertThat(originalDiscountItem.valueForDate(discountAmendmentItem.getStartDate().minusDays(1))).isEqualTo(new BigDecimal("-2000.00"));
         assertThat(mixin(Lease_invoiceCalculations.class, leasePreview).$$()).hasSize(20);
 
     }
@@ -172,8 +174,10 @@ public class LeaseAmendmentScenario_IntegTest extends LeaseModuleIntegTestAbstra
         assertThat(first.getEffectiveValue()).isEqualTo(new BigDecimal("-21305.02"));
         assertThat(discountAmendmentItem.calculateDiscountAmountUsingLeasePreview()).isEqualTo(new BigDecimal("-3550.84"));
         assertThat(discountAmendmentItem.getCalculatedDiscountAmount()).isEqualTo(new BigDecimal("-3550.84"));
-        assertThat(discountAmendmentItem.getTotalValueForDateBeforeDiscount()).isEqualTo(new BigDecimal("21305.02"));
-        assertThat(originalRentItem.valueForDate(discountAmendmentItem.getStartDate().minusDays(1))).isEqualTo(new BigDecimal("21305.02")); // EQUALS the value for date just before discount of the only lease item used by amendment item for discount
+        assertThat(discountAmendmentItem.getTotalValueForDateBeforeDiscount()).isEqualTo(new BigDecimal("19305.02")); // is the value for date of the original rent item and the original discount item
+        assertThat(originalRentItem.valueForDate(discountAmendmentItem.getStartDate().minusDays(1))).isEqualTo(new BigDecimal("21305.02"));
+        final LeaseItem originalDiscountItem = LeaseItemForDiscount_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
+        assertThat(originalDiscountItem.valueForDate(discountAmendmentItem.getStartDate().minusDays(1))).isEqualTo(new BigDecimal("-2000.00"));
 
         // when using manual value
         final BigDecimal manualDiscountAmount = new BigDecimal("-1234.56");
@@ -193,7 +197,8 @@ public class LeaseAmendmentScenario_IntegTest extends LeaseModuleIntegTestAbstra
                 .filter(li -> li.getInterval().contains(discountAmendmentItem.getStartDate().minusDays(1))).findFirst()
                 .orElse(null);
         assertThat(rentItemUsedInTotalValueCalculationBeforeDiscount.valueForDate(discountAmendmentItem.getStartDate().minusDays(1))).isEqualTo(new BigDecimal("21305.02"));
-        assertThat(discountAmendmentItem.getTotalValueForDateBeforeDiscount()).isEqualTo(new BigDecimal("21305.02"));
+        assertThat(originalDiscountItem.valueForDate(discountAmendmentItem.getStartDate().minusDays(1))).isEqualTo(new BigDecimal("-2000.00"));
+        assertThat(discountAmendmentItem.getTotalValueForDateBeforeDiscount()).isEqualTo(new BigDecimal("19305.02"));
 
     }
 
@@ -250,6 +255,16 @@ public class LeaseAmendmentScenario_IntegTest extends LeaseModuleIntegTestAbstra
         final LeaseTermForIndexable discountTerm = (LeaseTermForIndexable) rent_discount_item.getTerms().first();
         assertThat(discountTerm.getBaseValue()).isEqualTo(new BigDecimal("-10000.00"));
         assertThat(discountTerm.getEffectiveIndexedValue()).isEqualTo(new BigDecimal("-10650.00"));
+    }
+
+    @Test
+    public void scenario_first_indexation_after_frequency_amendment_enddate() throws Exception {
+
+        // given
+        Lease oxf = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
+
+
+
     }
 
     @Inject

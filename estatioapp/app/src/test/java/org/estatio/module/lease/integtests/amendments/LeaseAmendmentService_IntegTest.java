@@ -191,7 +191,7 @@ public class LeaseAmendmentService_IntegTest extends LeaseModuleIntegTestAbstrac
         final LeaseItem rentPreviewItem = previewLease.findItemsOfType(LeaseItemType.RENT).get(0);
         assertThat(rentPreviewItem.getStartDate()).isEqualTo(originalRentItem.getStartDate());
         assertThat(rentPreviewItem.getEndDate()).isEqualTo(originalRentItem.getEndDate());
-        assertThat(rentPreviewItem.getTerms()).hasSize(1);
+        assertThat(rentPreviewItem.getTerms()).hasSize(2);
 
         final LeaseItem depositPreviewItem = previewLease.findItemsOfType(LeaseItemType.DEPOSIT).get(0);
         assertThat(depositPreviewItem.getStartDate()).isEqualTo(originalDepositItem.getStartDate());

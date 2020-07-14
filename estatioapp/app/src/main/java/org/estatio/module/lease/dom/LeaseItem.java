@@ -808,6 +808,23 @@ public class LeaseItem
     }
 
     @Programmatic
+    public void copyAllTermsStartingFrom(final LocalDate startDate, final LeaseItem newItem) {
+        LeaseTerm lastTerm = null;
+        for (LeaseTerm term : getTerms()) {
+            if (term.getInterval().contains(startDate) || (term.getStartDate()!=null && term.getStartDate().isAfter(startDate))) {
+                LeaseTerm newTerm;
+                if (lastTerm == null) {
+                    newTerm = newItem.newTerm(term.getStartDate(), null);
+                } else {
+                    newTerm = lastTerm.createNext(term.getStartDate(), term.getEndDate());
+                }
+                term.copyValuesTo(newTerm);
+                lastTerm = newTerm;
+            }
+        }
+    }
+
+    @Programmatic
     public void negateAmountsAndApplyPercentageOnTerms(final BigDecimal discountPercentage) {
         for (LeaseTerm term : getTerms()){
             term.negateAmountsAndApplyPercentage(discountPercentage);

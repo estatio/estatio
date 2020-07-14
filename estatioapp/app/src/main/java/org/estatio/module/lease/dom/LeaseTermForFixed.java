@@ -99,4 +99,11 @@ public class LeaseTermForFixed extends LeaseTerm {
         return LeaseTermValueType.FIXED;
     }
 
+    @Override
+    public void copyValuesTo(final LeaseTerm target) {
+        LeaseTermForFixed t = (LeaseTermForFixed) target;
+        super.copyValuesTo(t);
+        t.setValue(getValue());
+    }
+
 }

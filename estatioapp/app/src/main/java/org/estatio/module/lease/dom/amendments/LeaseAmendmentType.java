@@ -78,8 +78,7 @@ public enum LeaseAmendmentType {
             new BigDecimal("100.00"),
             Arrays.asList(
                     LeaseItemType.RENT,
-                    LeaseItemType.RENT_DISCOUNT,
-                    LeaseItemType.RENT_DISCOUNT_FIXED
+                    LeaseItemType.RENT_DISCOUNT
             ),
             new LocalDate(2020,7,1),
             new LocalDate(2020,7,31),
@@ -103,8 +102,7 @@ public enum LeaseAmendmentType {
             new BigDecimal("100.00"),
             Arrays.asList(
                     LeaseItemType.RENT,
-                    LeaseItemType.RENT_DISCOUNT,
-                    LeaseItemType.RENT_DISCOUNT_FIXED
+                    LeaseItemType.RENT_DISCOUNT
             ),
             new LocalDate(2020,7,1),
             new LocalDate(2020,8,31),

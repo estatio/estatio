@@ -38,6 +38,7 @@ import org.estatio.module.lease.dom.LeaseItemType;
 import org.estatio.module.lease.dom.LeaseStatus;
 import org.estatio.module.lease.dom.LeaseTerm;
 import org.estatio.module.lease.dom.LeaseTermForFixed;
+import org.estatio.module.lease.dom.LeaseTermForIndexable;
 import org.estatio.module.party.dom.Party;
 
 @DomainService(
@@ -310,7 +311,7 @@ public class LeaseAmendmentService {
                         originalItem.getStartDate()
                 );
                 newItem.setEndDate(originalItem.getEndDate());
-                originalItem.copyTerms(referenceDate, newItem);
+                originalItem.copyAllTermsStartingFrom(referenceDate, newItem);
                 //TODO: NOTE THAT WE COPY ALL ITEM TYPES BUT NOT THEIR SOURCES; this adds complications and may not be needed for reporting / forecasting
                 // ANOTHER APPROACH would be to not copy these itemtypes at all ...
             }
@@ -321,7 +322,7 @@ public class LeaseAmendmentService {
     public LeaseItem closeOriginalAndOpenNewLeaseItem(final LocalDate startDateNewItem, final LeaseItem originalItem, final InvoicingFrequency invoicingFrequency){
         final Lease lease = originalItem.getLease();
         originalItem.verifyUntil(startDateNewItem.plusYears(1).plusDays(1)); // for some reason rent items were not verified correctly when verifying until startDateNewItem.plusDays(1)
-        final LeaseTerm currentTerm = originalItem.currentTerm(startDateNewItem);
+        LeaseTerm currentTerm = originalItem.currentTerm(startDateNewItem);
         if (currentTerm == null){
             LOG.warn(String.format("No current rent term found for lease %s, type %s, starting on %s", lease.getReference(), originalItem.getType(), startDateNewItem.toString()));
             return null;
@@ -341,8 +342,17 @@ public class LeaseAmendmentService {
             LOG.info(message1);
         }
 
-        final LeaseTerm newTerm = newItem.newTerm(startDateNewItem, null);
+        LeaseTerm newTerm = newItem.newTerm(startDateNewItem, null);
         currentTerm.copyValuesTo(newTerm);
+        // we need to copy future terms for leaseterms for indexable as well, because if indexation information
+        if (currentTerm.getClass().isAssignableFrom(LeaseTermForIndexable.class)) {
+            while (currentTerm.getNext() != null) {
+                currentTerm = currentTerm.getNext();
+                newTerm = newTerm.createNext(currentTerm.getStartDate(), null);
+                currentTerm.copyValuesTo(newTerm);
+            }
+        }
+
         // link new item to items that had old item as source
         final List<LeaseItemSource> sourceItems = leaseItemSourceRepository.findBySourceItem(originalItem);
         sourceItems.stream()
