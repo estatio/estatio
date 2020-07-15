@@ -80,10 +80,6 @@ public enum InvoicingFrequency {
             Frequency.YEARLY,
             PaidIn.ADVANCE,
             BigDecimal.valueOf(1), BigDecimal.valueOf(1)),
-    YEARLY_IN_ADVANCE_PLUS2M(
-            Frequency.YEARLY_PLUS2M,
-            PaidIn.ADVANCE,
-            BigDecimal.valueOf(1), BigDecimal.valueOf(1)),
     YEARLY_IN_ARREARS(
             Frequency.YEARLY,
             PaidIn.ARREARS,
