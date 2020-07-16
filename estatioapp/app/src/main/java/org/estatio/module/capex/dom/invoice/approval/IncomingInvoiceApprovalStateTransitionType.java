@@ -58,6 +58,7 @@ public enum IncomingInvoiceApprovalStateTransitionType
     REJECT(
             Lists.newArrayList(
                     IncomingInvoiceApprovalState.COMPLETED,
+                    IncomingInvoiceApprovalState.MONITORED,
                     IncomingInvoiceApprovalState.APPROVED,
                     IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_DIRECTOR,
                     IncomingInvoiceApprovalState.PENDING_BANK_ACCOUNT_CHECK,
@@ -205,6 +206,27 @@ public enum IncomingInvoiceApprovalStateTransitionType
         }
 
     },
+    MONITOR(IncomingInvoiceApprovalState.COMPLETED,
+            IncomingInvoiceApprovalState.MONITORED,
+            NextTransitionSearchStrategy.firstMatchingExcluding(REJECT),
+            null, // task assignment strategy overridden below
+            AdvancePolicy.MANUAL
+            ){
+        @Override
+        public boolean isMatch(
+                final IncomingInvoice domainObject, final ServiceRegistry2 serviceRegistry2) {
+            return isCompletedInvoiceWithMonitoring(domainObject);
+        }
+
+        @Override
+        public TaskAssignmentStrategy getTaskAssignmentStrategy() {
+            return (TaskAssignmentStrategy<
+                    IncomingInvoice,
+                    IncomingInvoiceApprovalStateTransition,
+                    IncomingInvoiceApprovalStateTransitionType,
+                    IncomingInvoiceApprovalState>) (incomingInvoice, serviceRegistry2) -> Arrays.asList(FixedAssetRoleTypeEnum.PROPERTY_MANAGER);
+        }
+    },
     SUSPEND(
             Lists.newArrayList(
                     IncomingInvoiceApprovalState.NEW,
@@ -222,7 +244,9 @@ public enum IncomingInvoiceApprovalStateTransitionType
         }
     },
     APPROVE(
-            IncomingInvoiceApprovalState.COMPLETED,
+            Lists.newArrayList(
+                    IncomingInvoiceApprovalState.COMPLETED,
+                    IncomingInvoiceApprovalState.MONITORED),
             IncomingInvoiceApprovalState.APPROVED,
             NextTransitionSearchStrategy.firstMatchingExcluding(REJECT),
             null, // task assignment strategy overridden below
@@ -268,6 +292,8 @@ public enum IncomingInvoiceApprovalStateTransitionType
                 if (domainObject.getType() == IncomingInvoiceType.ITA_RECOVERABLE && hasCenterManager(domainObject.getProperty()))
                     return false;
             }
+            if (isCompletedInvoiceWithMonitoring(domainObject)) return false;
+
             return getTaskAssignmentStrategy().getAssignTo(domainObject, serviceRegistry2) != null;
         }
 
@@ -334,7 +360,9 @@ public enum IncomingInvoiceApprovalStateTransitionType
 
     },
     APPROVE_AS_CENTER_MANAGER(
-            IncomingInvoiceApprovalState.COMPLETED,
+            Lists.newArrayList(
+                    IncomingInvoiceApprovalState.COMPLETED,
+                    IncomingInvoiceApprovalState.MONITORED),
             IncomingInvoiceApprovalState.APPROVED_BY_CENTER_MANAGER,
             NextTransitionSearchStrategy.firstMatchingExcluding(REJECT),
             TaskAssignmentStrategy.to(FixedAssetRoleTypeEnum.CENTER_MANAGER),
@@ -350,6 +378,7 @@ public enum IncomingInvoiceApprovalStateTransitionType
 
             if (incomingInvoice.getType() == null || incomingInvoice.getProperty() == null)
                 return false;
+            if (isCompletedInvoiceWithMonitoring(incomingInvoice)) return false;
             return incomingInvoice.getType() == IncomingInvoiceType.ITA_RECOVERABLE && hasCenterManager(incomingInvoice.getProperty());
         }
 
@@ -826,5 +855,9 @@ public enum IncomingInvoiceApprovalStateTransitionType
         return false;
     }
 
+    public static boolean isCompletedInvoiceWithMonitoring(final IncomingInvoice incomingInvoice){
+        return incomingInvoice.getApprovalState()==IncomingInvoiceApprovalState.COMPLETED && incomingInvoice.hasMonitoring();
+    }
+    
 }
 

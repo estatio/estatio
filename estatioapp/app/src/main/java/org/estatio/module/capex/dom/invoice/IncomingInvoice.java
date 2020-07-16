@@ -66,10 +66,9 @@ import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.capex.app.IncomingInvoiceNotificationService;
 import org.estatio.module.capex.app.SupplierCreationService;
 import org.estatio.module.capex.app.invoice.IncomingInvoiceTemplateViewModel;
-import org.estatio.module.financial.dom.bankaccount.verification.BankAccountVerificationState;
-import org.estatio.module.financial.dom.bankaccount.verification.BankAccountVerificationStateTransition;
 import org.estatio.module.capex.dom.documents.BudgetItemChooser;
 import org.estatio.module.capex.dom.documents.LookupAttachedPdfService;
+import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalConfigurationSupportService;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
 import org.estatio.module.capex.dom.order.Order;
@@ -82,11 +81,6 @@ import org.estatio.module.capex.dom.payment.PaymentLine;
 import org.estatio.module.capex.dom.payment.PaymentLineRepository;
 import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.capex.dom.project.ProjectRepository;
-import org.estatio.module.task.dom.state.State;
-import org.estatio.module.task.dom.state.StateTransition;
-import org.estatio.module.task.dom.state.StateTransitionService;
-import org.estatio.module.task.dom.state.StateTransitionType;
-import org.estatio.module.task.dom.state.Stateful;
 import org.estatio.module.capex.dom.util.CountryUtil;
 import org.estatio.module.capex.dom.util.FinancialAmountUtil;
 import org.estatio.module.capex.dom.util.PeriodUtil;
@@ -96,6 +90,8 @@ import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.module.currency.dom.Currency;
 import org.estatio.module.financial.dom.BankAccount;
 import org.estatio.module.financial.dom.BankAccountRepository;
+import org.estatio.module.financial.dom.bankaccount.verification.BankAccountVerificationState;
+import org.estatio.module.financial.dom.bankaccount.verification.BankAccountVerificationStateTransition;
 import org.estatio.module.financial.dom.utils.IBANValidator;
 import org.estatio.module.invoice.dom.Invoice;
 import org.estatio.module.invoice.dom.InvoiceItem;
@@ -107,6 +103,11 @@ import org.estatio.module.party.dom.OrganisationRepository;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.dom.role.PartyRoleRepository;
+import org.estatio.module.task.dom.state.State;
+import org.estatio.module.task.dom.state.StateTransition;
+import org.estatio.module.task.dom.state.StateTransitionService;
+import org.estatio.module.task.dom.state.StateTransitionType;
+import org.estatio.module.task.dom.state.Stateful;
 import org.estatio.module.tax.dom.Tax;
 
 import lombok.AllArgsConstructor;
@@ -2693,6 +2694,11 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     @Column(allowsNull = "true")
     @Getter @Setter
     private Boolean useAsTemplate;
+
+    @Programmatic
+    public boolean hasMonitoring() {
+        return IncomingInvoiceApprovalConfigurationSupportService.hasMonitoring(this);
+    }
 
     //endregion
 
