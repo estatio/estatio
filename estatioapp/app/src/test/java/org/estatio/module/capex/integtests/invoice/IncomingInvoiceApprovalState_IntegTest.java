@@ -26,11 +26,9 @@ import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
 import org.estatio.module.asset.fixtures.person.enums.Person_enum;
 import org.estatio.module.asset.fixtures.property.enums.Property_enum;
 import org.estatio.module.base.spiimpl.togglz.EstatioTogglzFeature;
-import org.estatio.module.financial.dom.bankaccount.verification.BankAccountVerificationState;
-import org.estatio.module.financial.dom.bankaccount.verification.BankAccountVerificationStateTransition;
-import org.estatio.module.financial.dom.bankaccount.verification.BankAccount_verificationState;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceRepository;
+import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalConfigurationUtil;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionType;
@@ -38,13 +36,11 @@ import org.estatio.module.capex.dom.invoice.approval.triggers.IncomingInvoice_ap
 import org.estatio.module.capex.dom.invoice.approval.triggers.IncomingInvoice_approveAsCountryDirector;
 import org.estatio.module.capex.dom.invoice.approval.triggers.IncomingInvoice_checkPayment;
 import org.estatio.module.capex.dom.invoice.approval.triggers.IncomingInvoice_complete;
+import org.estatio.module.capex.dom.invoice.approval.triggers.IncomingInvoice_monitor;
 import org.estatio.module.capex.dom.invoice.approval.triggers.IncomingInvoice_reject;
 import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.capex.dom.project.ProjectRepository;
 import org.estatio.module.capex.dom.project.ProjectRoleTypeEnum;
-import org.estatio.module.task.dom.state.StateTransitionService;
-import org.estatio.module.task.dom.task.Task;
-import org.estatio.module.task.dom.task.TaskRepository;
 import org.estatio.module.capex.fixtures.incominginvoice.enums.IncomingInvoice_enum;
 import org.estatio.module.capex.integtests.CapexModuleIntegTestAbstract;
 import org.estatio.module.capex.seed.DocumentTypesAndTemplatesForCapexFixture;
@@ -52,17 +48,24 @@ import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.module.charge.fixtures.incoming.builders.IncomingChargesFraXlsxFixture;
 import org.estatio.module.financial.dom.BankAccount;
+import org.estatio.module.financial.dom.bankaccount.verification.BankAccountVerificationState;
+import org.estatio.module.financial.dom.bankaccount.verification.BankAccountVerificationStateTransition;
+import org.estatio.module.financial.dom.bankaccount.verification.BankAccount_verificationState;
 import org.estatio.module.financial.fixtures.bankaccount.enums.BankAccount_enum;
 import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.dom.Person;
+import org.estatio.module.party.dom.role.IPartyRoleType;
 import org.estatio.module.party.dom.role.PartyRole;
 import org.estatio.module.party.dom.role.PartyRoleType;
 import org.estatio.module.party.dom.role.PartyRoleTypeEnum;
 import org.estatio.module.party.dom.role.PartyRoleTypeRepository;
 import org.estatio.module.party.fixtures.orgcomms.enums.OrganisationAndComms_enum;
+import org.estatio.module.task.dom.state.StateTransitionService;
+import org.estatio.module.task.dom.task.Task;
+import org.estatio.module.task.dom.task.TaskRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.estatio.module.financial.dom.bankaccount.verification.BankAccountVerificationState.NOT_VERIFIED;
@@ -94,6 +97,7 @@ public class IncomingInvoiceApprovalState_IntegTest extends CapexModuleIntegTest
                         BankAccount_enum.TopModelFr,
                         Person_enum.BrunoTreasurerFr,
                         Person_enum.BertrandIncomingInvoiceManagerFr,
+                        Person_enum.OlivePropertyManagerFr,
                         Person_enum.PeterPanProjectManagerFr,
                         Person_enum.GabrielCountryDirectorFr);
             }
@@ -418,6 +422,178 @@ public class IncomingInvoiceApprovalState_IntegTest extends CapexModuleIntegTest
         assertThat(incomingInvoice.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.NEW);
         assertThat(taskRepository.findIncompleteByRole(typeForIncInvoiceManager).get(1).getDescription()).isEqualTo("Complete (test)");
         assertThat(taskRepository.findIncompleteByRole(typeForIncInvoiceManager).get(1).getPriority()).isEqualTo(1);
+
+    }
+
+    @Test
+    public void workflow_for_invoice_having_monitoring_works() throws Exception {
+
+        // given
+        final Property propertyForMac = Property_enum.MacFr.findUsing(serviceRegistry);
+
+        buyer = OrganisationAndComms_enum.HelloWorldFr.findUsing(serviceRegistry);
+        seller = OrganisationAndComms_enum.TopModelFr.findUsing(serviceRegistry);
+
+        ((Organisation) seller).setChamberOfCommerceCode("Code");
+
+        france = countryRepository.findCountry(Country_enum.FRA.getRef3());
+        charge_for_works = chargeRepository.findByReference("WORKS");
+
+        bankAccount = BankAccount_enum.TopModelFr.findUsing(serviceRegistry);
+
+        incomingInvoice = incomingInvoiceRepository.findByInvoiceNumberAndSellerAndInvoiceDate("65432", seller, new LocalDate(2014,5,13));
+        incomingInvoice.setBankAccount(bankAccount);
+        incomingInvoice.setProperty(propertyForMac);
+
+        assertThat(incomingInvoice.getProperty().getReference()).isEqualTo("MAC");
+        assertThat(IncomingInvoiceApprovalConfigurationUtil.hasMonitoring(incomingInvoice)).isTrue();
+        assertThat(incomingInvoice).isNotNull();
+        assertThat(incomingInvoice.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.NEW);
+        assertState(bankAccount, NOT_VERIFIED);
+
+
+
+        Person personOlive = (Person) partyRepository.findPartyByReference(
+                Person_enum.OlivePropertyManagerFr.getRef());
+        SortedSet<PartyRole> rolesforEmma = personOlive.getRoles();
+        assertThat(rolesforEmma.size()).isEqualTo(2);
+        assertThat(rolesforEmma.last().getRoleType()).isEqualTo(FixedAssetRoleTypeEnum.PROPERTY_MANAGER.findUsing(partyRoleTypeRepository));
+        assertThat(incomingInvoice.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.NEW);
+
+        List<? extends IPartyRoleType> iPartyRoleTypesWhenPeeking = mixin(IncomingInvoice_complete.class, incomingInvoice)
+                .choices0Act();
+        assertThat(iPartyRoleTypesWhenPeeking).hasSize(1);
+        assertThat(iPartyRoleTypesWhenPeeking.get(0)).isEqualTo(FixedAssetRoleTypeEnum.PROPERTY_MANAGER);
+
+        // when
+
+        queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
+        sudoService.sudo(Person_enum.BertrandIncomingInvoiceManagerFr.getRef().toLowerCase(), (Runnable) () ->
+                wrap(mixin(IncomingInvoice_complete.class, incomingInvoice)).act(FixedAssetRoleTypeEnum.PROPERTY_MANAGER.findUsing(partyRoleTypeRepository), null, null));
+
+        // then
+        assertThat(incomingInvoice.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.COMPLETED);
+        List<IncomingInvoiceApprovalStateTransition> transitions = incomingInvoiceStateTransitionRepository.findByDomainObject(incomingInvoice);
+        assertThat(transitions.size()).isEqualTo(3);
+        final IncomingInvoiceApprovalStateTransition monitorTransition = transitions.get(0);
+        assertThat(monitorTransition.getTransitionType()).isEqualTo(IncomingInvoiceApprovalStateTransitionType.MONITOR);
+        Task monitorTask = monitorTransition.getTask();
+        assertThat(monitorTask.getPersonAssignedTo()).isEqualTo(personOlive);
+        assertThat(monitorTask.getAssignedTo()).isEqualTo(FixedAssetRoleTypeEnum.PROPERTY_MANAGER.findUsing(partyRoleTypeRepository));
+
+        iPartyRoleTypesWhenPeeking = mixin(IncomingInvoice_monitor.class, incomingInvoice)
+                .choices0Act();
+        assertThat(iPartyRoleTypesWhenPeeking).hasSize(1);
+        assertThat(iPartyRoleTypesWhenPeeking.get(0)).isEqualTo(ProjectRoleTypeEnum.PROJECT_MANAGER);
+
+        // and when
+        queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
+        sudoService.sudo(Person_enum.OlivePropertyManagerFr.getRef().toLowerCase(), (Runnable) () ->
+                wrap(mixin(IncomingInvoice_monitor.class, incomingInvoice)).act(ProjectRoleTypeEnum.PROJECT_MANAGER.findUsing(partyRoleTypeRepository), null, null));
+        // then
+        assertThat(incomingInvoice.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.MONITORED);
+        transitions = incomingInvoiceStateTransitionRepository.findByDomainObject(incomingInvoice);
+        assertThat(transitions.size()).isEqualTo(5);
+        final IncomingInvoiceApprovalStateTransition approveTransition = transitions.get(0);
+        assertThat(approveTransition.getTransitionType()).isEqualTo(IncomingInvoiceApprovalStateTransitionType.APPROVE);
+        Task approveTask = approveTransition.getTask();
+        assertThat(approveTask.getAssignedTo()).isEqualTo(ProjectRoleTypeEnum.PROJECT_MANAGER.findUsing(partyRoleTypeRepository));
+
+        iPartyRoleTypesWhenPeeking = mixin(IncomingInvoice_approve.class, incomingInvoice)
+                .choices0Act();
+        assertThat(iPartyRoleTypesWhenPeeking).hasSize(1);
+        assertThat(iPartyRoleTypesWhenPeeking.get(0)).isEqualTo(PartyRoleTypeEnum.COUNTRY_DIRECTOR);
+
+        // and when
+        queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
+        sudoService.sudo(Person_enum.PeterPanProjectManagerFr.getRef().toLowerCase(), (Runnable) () ->
+                wrap(mixin(IncomingInvoice_approve.class, incomingInvoice)).act(null, null, null, false));
+
+        // then
+        assertThat(incomingInvoice.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.APPROVED);
+        transitions = incomingInvoiceStateTransitionRepository.findByDomainObject(incomingInvoice);
+        assertThat(transitions.size()).isEqualTo(6);
+
+    }
+
+    @Test
+    public void workflow_for_invoice_having_monitoring_works_when_rejecting() throws Exception {
+
+        // given
+        final Property propertyForMac = Property_enum.MacFr.findUsing(serviceRegistry);
+
+        buyer = OrganisationAndComms_enum.HelloWorldFr.findUsing(serviceRegistry);
+        seller = OrganisationAndComms_enum.TopModelFr.findUsing(serviceRegistry);
+
+        ((Organisation) seller).setChamberOfCommerceCode("Code");
+
+        france = countryRepository.findCountry(Country_enum.FRA.getRef3());
+        charge_for_works = chargeRepository.findByReference("WORKS");
+
+        bankAccount = BankAccount_enum.TopModelFr.findUsing(serviceRegistry);
+
+        incomingInvoice = incomingInvoiceRepository.findByInvoiceNumberAndSellerAndInvoiceDate("65432", seller, new LocalDate(2014,5,13));
+        incomingInvoice.setBankAccount(bankAccount);
+        incomingInvoice.setProperty(propertyForMac);
+
+        assertThat(incomingInvoice.getProperty().getReference()).isEqualTo("MAC");
+        assertThat(IncomingInvoiceApprovalConfigurationUtil.hasMonitoring(incomingInvoice)).isTrue();
+        assertThat(incomingInvoice).isNotNull();
+        assertThat(incomingInvoice.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.NEW);
+        assertState(bankAccount, NOT_VERIFIED);
+
+
+
+        Person personOlive = (Person) partyRepository.findPartyByReference(
+                Person_enum.OlivePropertyManagerFr.getRef());
+        SortedSet<PartyRole> rolesforEmma = personOlive.getRoles();
+        assertThat(rolesforEmma.size()).isEqualTo(2);
+        assertThat(rolesforEmma.last().getRoleType()).isEqualTo(FixedAssetRoleTypeEnum.PROPERTY_MANAGER.findUsing(partyRoleTypeRepository));
+        assertThat(incomingInvoice.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.NEW);
+
+        // when
+
+        queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
+        sudoService.sudo(Person_enum.BertrandIncomingInvoiceManagerFr.getRef().toLowerCase(), (Runnable) () ->
+                wrap(mixin(IncomingInvoice_complete.class, incomingInvoice)).act(FixedAssetRoleTypeEnum.PROPERTY_MANAGER.findUsing(partyRoleTypeRepository), null, null));
+
+        // then
+        assertThat(incomingInvoice.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.COMPLETED);
+        List<IncomingInvoiceApprovalStateTransition> transitions = incomingInvoiceStateTransitionRepository.findByDomainObject(incomingInvoice);
+        assertThat(transitions.size()).isEqualTo(3);
+        final IncomingInvoiceApprovalStateTransition monitorTransition = transitions.get(0);
+        assertThat(monitorTransition.getTransitionType()).isEqualTo(IncomingInvoiceApprovalStateTransitionType.MONITOR);
+        Task monitorTask = monitorTransition.getTask();
+        assertThat(monitorTask.getPersonAssignedTo()).isEqualTo(personOlive);
+        assertThat(monitorTask.getAssignedTo()).isEqualTo(FixedAssetRoleTypeEnum.PROPERTY_MANAGER.findUsing(partyRoleTypeRepository));
+
+        // and when
+        queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
+        sudoService.sudo(Person_enum.OlivePropertyManagerFr.getRef().toLowerCase(), (Runnable) () ->
+                wrap(mixin(IncomingInvoice_reject.class, incomingInvoice)).act(ProjectRoleTypeEnum.PROJECT_MANAGER.findUsing(partyRoleTypeRepository), null, "No good"));
+        // then
+        assertThat(incomingInvoice.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.NEW);
+        transitions = incomingInvoiceStateTransitionRepository.findByDomainObject(incomingInvoice);
+        assertThat(transitions.size()).isEqualTo(4);
+        final IncomingInvoiceApprovalStateTransition completeTransition = transitions.get(0);
+        final IncomingInvoiceApprovalStateTransition rejectTransition = transitions.get(1);
+        assertThat(rejectTransition.getTransitionType()).isEqualTo(IncomingInvoiceApprovalStateTransitionType.REJECT);
+        Task completeTask = completeTransition.getTask();
+        assertThat(completeTask.getAssignedTo()).isEqualTo(PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER.findUsing(partyRoleTypeRepository));
+
+        queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
+        sudoService.sudo(Person_enum.BertrandIncomingInvoiceManagerFr.getRef().toLowerCase(), (Runnable) () ->
+                wrap(mixin(IncomingInvoice_complete.class, incomingInvoice)).act(FixedAssetRoleTypeEnum.PROPERTY_MANAGER.findUsing(partyRoleTypeRepository), null, "Now should be OK"));
+        queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
+        sudoService.sudo(Person_enum.OlivePropertyManagerFr.getRef().toLowerCase(), (Runnable) () ->
+                wrap(mixin(IncomingInvoice_monitor.class, incomingInvoice)).act(ProjectRoleTypeEnum.PROJECT_MANAGER.findUsing(partyRoleTypeRepository), null, null));
+
+        transitions = incomingInvoiceStateTransitionRepository.findByDomainObject(incomingInvoice);
+        assertThat(transitions.size()).isEqualTo(7);
+        final IncomingInvoiceApprovalStateTransition approveTransition = transitions.get(0);
+        assertThat(approveTransition.getTransitionType()).isEqualTo(IncomingInvoiceApprovalStateTransitionType.APPROVE);
+        Task approveTask = approveTransition.getTask();
+        assertThat(approveTask.getAssignedTo()).isEqualTo(ProjectRoleTypeEnum.PROJECT_MANAGER.findUsing(partyRoleTypeRepository));
 
     }
 

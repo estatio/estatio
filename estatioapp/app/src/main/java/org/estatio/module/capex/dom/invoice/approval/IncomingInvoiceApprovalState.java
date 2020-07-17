@@ -10,6 +10,7 @@ import lombok.Getter;
 public enum IncomingInvoiceApprovalState implements State<IncomingInvoiceApprovalState> {
     NEW                          (false, false),
     COMPLETED                    (false, false),
+    PRE_MONITORED                    (false, false),
     MONITORED                    (false, false),
     DISCARDED                    (false, true ),
     APPROVED                     (true,  false),

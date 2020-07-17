@@ -68,7 +68,6 @@ import org.estatio.module.capex.app.SupplierCreationService;
 import org.estatio.module.capex.app.invoice.IncomingInvoiceTemplateViewModel;
 import org.estatio.module.capex.dom.documents.BudgetItemChooser;
 import org.estatio.module.capex.dom.documents.LookupAttachedPdfService;
-import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalConfigurationSupportService;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
 import org.estatio.module.capex.dom.order.Order;
@@ -2694,11 +2693,6 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     @Column(allowsNull = "true")
     @Getter @Setter
     private Boolean useAsTemplate;
-
-    @Programmatic
-    public boolean hasMonitoring() {
-        return IncomingInvoiceApprovalConfigurationSupportService.hasMonitoring(this);
-    }
 
     //endregion
 
