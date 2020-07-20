@@ -177,6 +177,12 @@ public class EstatioAppHomePage {
                 AT_PATHS_FRA_OFFICE, IncomingInvoiceApprovalState.APPROVED);
     }
 
+    @Collection(notPersisted = true)
+    public List<IncomingInvoice> getIncomingInvoicesFraMonitored() {
+        return findByAtPathPrefixesAndApprovalState(
+                AT_PATHS_FRA_OFFICE, IncomingInvoiceApprovalState.MONITORED);
+    }
+
     public List<IncomingInvoice> getIncomingInvoicesFraPendingBankAccountCheck() {
         return findByAtPathPrefixesAndApprovalState(
                 AT_PATHS_FRA_OFFICE, IncomingInvoiceApprovalState.PENDING_BANK_ACCOUNT_CHECK);
