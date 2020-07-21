@@ -35,6 +35,7 @@
                                         <cpt:property id="aggregate6Month"/>
                                         <cpt:property id="aggregate9Month"/>
                                         <cpt:property id="aggregate12Month"/>
+                                        <cpt:property id="aggregate12MonthCovid"/>
                                     </cpt:fieldSet>
                                 </bs3:col>
                                 <bs3:col span="4">
