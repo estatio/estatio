@@ -194,6 +194,7 @@ public class LeaseAmendmentManager {
         final List<LeaseItem> discountCandidates = Lists.newArrayList(lease.getItems()).stream()
                 .filter(i->leaseAmendmentType.getDiscountAppliesTo()!=null)
                 .filter(i -> leaseAmendmentType.getDiscountAppliesTo().contains(i.getType()))
+                .filter(i->i.getEffectiveInterval()!= null) // guard for 'inconsistent' data
                 .filter(i->i.getEffectiveInterval().overlaps(LocalDateInterval.including(leaseAmendmentType.getDiscountStartDate(), leaseAmendmentType
                         .getDiscountEndDate())))
                 .collect(Collectors.toList());
