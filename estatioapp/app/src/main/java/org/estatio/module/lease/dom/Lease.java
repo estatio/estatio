@@ -1340,9 +1340,6 @@ public class Lease
     ChargeRepository chargeRepository;
 
     @Inject
-    ClockService clockService;
-
-    @Inject
     private WrapperFactory wrapperFactory;
 
     @Inject MessageService messageService;
