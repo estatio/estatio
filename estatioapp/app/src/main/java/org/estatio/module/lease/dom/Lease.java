@@ -1215,12 +1215,6 @@ public class Lease
         if (endDate.isBefore(startDate)) {
             return "End date can not be before start date.";
         }
-
-        AgreementRoleType tenantRoleType = agreementRoleTypeRepository.find(secondaryRoleType);
-        AgreementRole tenantAgreementRole = agreementRoleRepository.findByAgreementAndTypeAndContainsDate(this, tenantRoleType, startDate);
-        if(tenantAgreementRole==null) {
-            return "No tenant role found for start date";
-        }
         return leaseRepository.findLeaseByReferenceElseNull(reference) == null ? null : "Lease reference already exists.";
     }
 
