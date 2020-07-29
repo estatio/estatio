@@ -35,7 +35,9 @@ public enum InvoiceCalculationSelection {
             LeaseItemType.DEPOSIT,
             LeaseItemType.TAX,
             LeaseItemType.MARKETING,
-            LeaseItemType.PROPERTY_TAX
+            LeaseItemType.PROPERTY_TAX,
+            LeaseItemType.OFFICE_TAX,
+            LeaseItemType.RETAIL_TAX
     ),
     ALL_ITEMS(
             LeaseItemType.RENT,
@@ -50,7 +52,10 @@ public enum InvoiceCalculationSelection {
             LeaseItemType.ENTRY_FEE,
             LeaseItemType.DEPOSIT,
             LeaseItemType.MARKETING,
-            LeaseItemType.PROPERTY_TAX
+            LeaseItemType.PROPERTY_TAX,
+            LeaseItemType.OFFICE_TAX,
+            LeaseItemType.RETAIL_TAX,
+            LeaseItemType.LEASE_WRITING_FEE
     ),
     ONLY_DEPOSIT(
             LeaseItemType.DEPOSIT)

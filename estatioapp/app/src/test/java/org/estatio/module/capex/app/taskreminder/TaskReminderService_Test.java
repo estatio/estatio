@@ -23,7 +23,12 @@ import org.incode.module.communications.dom.impl.commchannel.CommunicationChanne
 import org.incode.module.communications.dom.impl.commchannel.EmailAddress;
 
 import org.estatio.module.application.spiimpl.email.EmailService2;
-import org.estatio.module.capex.dom.task.Task;
+import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
+import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionType;
+import org.estatio.module.capex.dom.order.approval.OrderApprovalStateTransition;
+import org.estatio.module.task.dom.state.StateTransitionService;
+import org.estatio.module.task.dom.task.Task;
+import org.estatio.module.task.dom.task.TaskRepository;
 import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.role.PartyRoleType;
 
@@ -54,7 +59,7 @@ public class TaskReminderService_Test {
         final PartyRoleType partyRoleType = new PartyRoleType("FOO", "FOO");
 
         final List<Task> overdueTasks = Lists.newArrayList();
-        overdueTasks.add(new Task(partyRoleType, person, "Description", LocalDateTime.now().minusMonths(1), ""));
+        overdueTasks.add(new Task(partyRoleType, person, "Description", LocalDateTime.now().minusMonths(1), "", null));
 
         taskReminderService.emailService = mockEmailService;
         taskReminderService.communicationChannelRepository = mockCommunicationChannelRepository;
@@ -92,5 +97,79 @@ public class TaskReminderService_Test {
 
         // then
         assertThat(taskReminderService.disableSendReminder(person, overdueTasks)).isEqualTo("A reminder has been sent to John Doe today already");
+    }
+
+    @Mock TaskRepository mockTaskRepository;
+
+    @Mock StateTransitionService mockStateTransitionService;
+
+    @Test
+    public void findIncompleteItalianApprovalTasks_works() throws Exception {
+
+        // given
+        final TaskReminderService taskReminderService = new TaskReminderService();
+        taskReminderService.taskRepository = mockTaskRepository;
+        taskReminderService.stateTransitionService = mockStateTransitionService;
+        Task taskNonIta = new Task(null, null, null, null, null, null){
+            @Override public String getAtPath() {
+                return "/FRA";
+            }
+        };
+        Task taskAtPathNull = new Task(null, null, null, null, null, null){
+            @Override public String getAtPath() {
+                return null;
+            }
+        };
+        Task taskOtherTransitionType = new Task(null,null, null, null, null, null){
+            @Override public String getAtPath() {
+                return "/ITA";
+            }
+        };
+        Task taskForCompletion = new Task(null,null,null,null,null, null){
+            @Override public String getAtPath() {
+                return "/ITA";
+            }
+        };
+        Task taskForApproval = new Task(null,null,null,null,null, null){
+            @Override public String getAtPath() {
+                return "/ITA";
+            }
+        };
+        Task taskForAdvise = new Task(null,null,null,null,null, null){
+            @Override public String getAtPath() {
+                return "/ITA";
+            }
+        };
+
+        final IncomingInvoiceApprovalStateTransition stateTransitionComplete = new IncomingInvoiceApprovalStateTransition();
+        stateTransitionComplete.setTransitionType(IncomingInvoiceApprovalStateTransitionType.COMPLETE);
+        final IncomingInvoiceApprovalStateTransition stateTransitionApprove = new IncomingInvoiceApprovalStateTransition();
+        stateTransitionApprove.setTransitionType(IncomingInvoiceApprovalStateTransitionType.APPROVE);
+        final IncomingInvoiceApprovalStateTransition stateTransitionAdvise = new IncomingInvoiceApprovalStateTransition();
+        stateTransitionAdvise.setTransitionType(IncomingInvoiceApprovalStateTransitionType.ADVISE_TO_APPROVE);
+
+        // expect
+        context.checking(new Expectations(){{
+            oneOf(mockTaskRepository).findTasksIncomplete();
+            will(returnValue(Arrays.asList(taskNonIta, taskAtPathNull, taskOtherTransitionType, taskForApproval, taskForCompletion, taskForAdvise)));
+            oneOf(mockStateTransitionService).findFor(taskOtherTransitionType);
+            will(returnValue(new OrderApprovalStateTransition()));
+            allowing(mockStateTransitionService).findFor(taskForCompletion);
+            will(returnValue(stateTransitionComplete));
+            allowing(mockStateTransitionService).findFor(taskForApproval);
+            will(returnValue(stateTransitionApprove));
+            allowing(mockStateTransitionService).findFor(taskForAdvise);
+            will(returnValue(stateTransitionAdvise));
+        }});
+
+        // when
+        final List<Task> incompleteItalianApprovalTasks = taskReminderService.findIncompleteItalianApprovalTasks();
+
+        // then
+        assertThat(incompleteItalianApprovalTasks).hasSize(2);
+        assertThat(incompleteItalianApprovalTasks).contains(taskForApproval);
+        assertThat(incompleteItalianApprovalTasks).contains(taskForAdvise);
+
+
     }
 }

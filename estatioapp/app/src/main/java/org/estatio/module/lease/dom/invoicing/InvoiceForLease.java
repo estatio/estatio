@@ -390,6 +390,7 @@ public class InvoiceForLease
 
             final Numerator numerator = collectionNumerator();
             invoice.setCollectionNumber(numerator.nextIncrementStr());
+            invoiceVatRoundingService.distributeVatRoundingByVatPercentage(invoice);
             return invoice;
         }
 
@@ -431,6 +432,9 @@ public class InvoiceForLease
 
         @javax.inject.Inject
         NumeratorForOutgoingInvoicesRepository numeratorRepository;
+
+        @Inject
+        InvoiceVatRoundingService invoiceVatRoundingService;
 
     }
 

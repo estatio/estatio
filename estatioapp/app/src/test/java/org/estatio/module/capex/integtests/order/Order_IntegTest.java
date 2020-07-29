@@ -32,7 +32,7 @@ import org.estatio.module.capex.dom.order.Order;
 import org.estatio.module.capex.dom.order.OrderRepository;
 import org.estatio.module.capex.fixtures.order.enums.Order_enum;
 import org.estatio.module.capex.integtests.CapexModuleIntegTestAbstract;
-import org.estatio.module.charge.fixtures.incoming.builders.IncomingChargesItaXlsxFixture;
+import org.estatio.module.capex.fixtures.charge.builders.IncomingChargesItaXlsxFixture;
 
 public class Order_IntegTest extends CapexModuleIntegTestAbstract {
 

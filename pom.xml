@@ -22,7 +22,7 @@ language governing permissions and limitations under the License.
         <groupId>org.incode</groupId>
         <artifactId>incode-parent</artifactId>
         <!-- NB: also update incode-platform.version property below. -->
-        <version>1.17.0.20191014-0757-3407d35a</version>
+        <version>1.17.0.20200512-1112-74dd4256</version>
         <relativePath/>
     </parent>
 
@@ -78,7 +78,7 @@ language governing permissions and limitations under the License.
         Also specify the incode-platform.version by changing the parent's version, above.
         And, update the pom.xml for estatio-ecp similarly
          -->
-        <incode-platform.version>1.17.0.20191014-0757-3407d35a</incode-platform.version>
+        <incode-platform.version>1.17.0.20200512-1112-74dd4256</incode-platform.version>
 
         <estatio-canonical.version>2.4.0.20190920-1106-a6a1958b</estatio-canonical.version>
         <docflow-canonical.version>2.2.0.20190416-1656-3a162ef2</docflow-canonical.version>

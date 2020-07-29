@@ -19,7 +19,8 @@ public class LineData {
             final CodaDocLine codaDocLine) {
         this(Optional.ofNullable(codaDocLine.getIncomingInvoiceItem()),
              Optional.ofNullable(codaDocLine.getExtRefProject()),
-             Optional.ofNullable(codaDocLine.getExtRefWorkTypeCharge()));
+             Optional.ofNullable(codaDocLine.getExtRefWorkTypeCharge()==null ? codaDocLine.getAccountCodeEl5Charge() : codaDocLine.getExtRefWorkTypeCharge())
+        );
     }
 
     LineData(

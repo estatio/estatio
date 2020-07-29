@@ -159,7 +159,10 @@ public class LeaseTerm_Test {
             final LeaseTermForTesting term = new LeaseTermForTesting();
             final LeaseItemType leaseItemType = LeaseItemType.RENT_DISCOUNT;
             final LeaseItem item = new LeaseItem();
+            final Lease lease = new Lease();
+            lease.setStatus(LeaseStatus.ACTIVE);
             item.setType(leaseItemType);
+            item.setLease(lease);
             term.setLeaseItem(item);
             //when, then
             then(leaseItemType.autoCreateTerms()).isFalse();
@@ -410,6 +413,8 @@ public class LeaseTerm_Test {
                 public BigDecimal valueForDate(LocalDate dueDate) {
                     return null;
                 }
+
+                @Override public void negateAmountsAndApplyPercentage(final BigDecimal discountPercentage) { }
             };
             assertThat(leaseTerm.getChangeDates()).isNotNull();
         }
@@ -435,6 +440,8 @@ public class LeaseTerm_Test {
             public BigDecimal valueForDate(LocalDate dueDate) {
                 return null;
             }
+
+            @Override public void negateAmountsAndApplyPercentage(final BigDecimal discountPercentage) { }
         }
     }
 

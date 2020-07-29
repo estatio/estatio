@@ -33,8 +33,13 @@ import org.slf4j.LoggerFactory;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.query.QueryDefault;
+import org.apache.isis.applib.services.eventbus.AbstractDomainEvent;
+import org.apache.isis.applib.services.eventbus.ActionDomainEvent;
+import org.apache.isis.applib.services.eventbus.EventBusService;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.repository.RepositoryService;
+
+import org.isisaddons.module.security.app.user.MeService;
 
 import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.module.currency.dom.Currency;
@@ -68,6 +73,9 @@ public class TurnoverRepository extends UdoDomainRepositoryAndFactory<Turnover> 
         return turnover;
     }
 
+    public static class TurnoverUpsertEvent
+            extends ActionDomainEvent<Turnover> {}
+
     public Turnover upsert(
             final TurnoverReportingConfig config,
             final LocalDate turnoverDate,
@@ -96,6 +104,14 @@ public class TurnoverRepository extends UdoDomainRepositoryAndFactory<Turnover> 
         turnover.setPurchaseCount(purchaseCount);
         turnover.setComments(comments);
         turnover.setNonComparable(nonComparable);
+
+        // fire upsert event
+
+        final TurnoverUpsertEvent event = new TurnoverUpsertEvent();
+        event.setEventPhase(AbstractDomainEvent.Phase.EXECUTED);
+        event.setSource(turnover);
+        eventBusService.post(event);
+
         return turnover;
     }
 
@@ -215,6 +231,55 @@ public class TurnoverRepository extends UdoDomainRepositoryAndFactory<Turnover> 
                         "date", date ));
     }
 
+    public List<Turnover> findApprovedByOccupancyAndTypeAndFrequencyAndPeriod(final Occupancy occupancy, final Type type, final Frequency frequency, final LocalDate periodStartDate, final LocalDate periodEndDate){
+        final List<TurnoverReportingConfig> configs = turnoverReportingConfigRepository
+                .findByOccupancyAndTypeAndFrequency(occupancy, type, frequency);
+        List<Turnover> result = new ArrayList<>();
+        configs.forEach(
+                c->{
+                    result.addAll(findByConfigAndTypeAndFrequencyAndStatusInPeriod(c, type, frequency, Status.APPROVED, periodStartDate, periodEndDate));
+                });
+        return result;
+    }
+
+    public List<Turnover> findApprovedByOccupancyAndTypeAndFrequency(
+            final Occupancy occupancy,
+            final Type type,
+            final Frequency frequency) {
+        final List<TurnoverReportingConfig> configs = turnoverReportingConfigRepository
+                .findByOccupancyAndTypeAndFrequency(occupancy, type, frequency);
+        List<Turnover> result = new ArrayList<>();
+        configs.forEach(
+                c->{
+                    result.addAll(findApprovedByConfigAndTypeAndFrequency(c, type, frequency));
+                });
+        return result;
+    }
+
+    public List<Turnover> findApprovedByConfigAndTypeAndFrequency(final TurnoverReportingConfig config, final Type type, final Frequency frequency) {
+        return repositoryService.allMatches(
+                new QueryDefault<>(
+                        Turnover.class,
+                        "findByConfigAndTypeAndFrequencyAndStatus",
+                        "config", config,
+                        "type", type,
+                        "frequency", frequency,
+                        "status", Status.APPROVED));
+    }
+
+    public List<Turnover> findByConfigAndTypeAndFrequencyAndStatusInPeriod(final TurnoverReportingConfig config, final Type type, final Frequency frequency, final Status status, final LocalDate startDate, final LocalDate endDate){
+        return repositoryService.allMatches(
+                new QueryDefault<>(
+                        Turnover.class,
+                        "findByConfigAndTypeAndFrequencyAndStatusInPeriod",
+                        "config", config,
+                        "type", type,
+                        "frequency", frequency,
+                        "status", status,
+                        "startDate", startDate,
+                        "endDate", endDate));
+    }
+
     public List<Turnover> listAll() {
         return allInstances();
     }
@@ -227,4 +292,9 @@ public class TurnoverRepository extends UdoDomainRepositoryAndFactory<Turnover> 
 
     @Inject
     TurnoverReportingConfigRepository turnoverReportingConfigRepository;
+
+    @Inject
+    EventBusService eventBusService;
+
+    @Inject MeService meService;
 }

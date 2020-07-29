@@ -19,9 +19,9 @@ import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
-import org.estatio.module.capex.dom.state.StateTransitionAbstract;
-import org.estatio.module.capex.dom.state.StateTransitionRepositoryAbstract;
-import org.estatio.module.capex.dom.task.Task;
+import org.estatio.module.task.dom.state.StateTransitionAbstract;
+import org.estatio.module.task.dom.state.StateTransitionRepositoryAbstract;
+import org.estatio.module.task.dom.task.Task;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -108,6 +108,7 @@ public class IncomingInvoiceApprovalStateTransition
 
     @Getter @Setter
     @Column(allowsNull = "true")
+    @PropertyLayout(named = "completedOn (UTC time)")
     private LocalDateTime completedOn;
 
     @Getter @Setter

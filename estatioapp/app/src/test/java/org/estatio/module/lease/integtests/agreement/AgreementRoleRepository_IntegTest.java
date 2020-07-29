@@ -19,9 +19,11 @@
 package org.estatio.module.lease.integtests.agreement;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
+import org.assertj.core.api.Assertions;
 import org.joda.time.LocalDate;
 import org.junit.Assert;
 import org.junit.Before;
@@ -43,6 +45,8 @@ import org.estatio.module.agreement.dom.type.AgreementTypeRepository;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
 import org.estatio.module.lease.dom.LeaseAgreementTypeEnum;
+import org.estatio.module.lease.dom.amendments.LeaseAmendment;
+import org.estatio.module.lease.dom.occupancy.salesarea.SalesAreaLicense;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 import org.estatio.module.party.dom.OrganisationRepository;
@@ -153,8 +157,16 @@ public class AgreementRoleRepository_IntegTest extends LeaseModuleIntegTestAbstr
         @Test
         public void findByParty() throws Exception {
             List<AgreementRole> results = agreementRoleRepository.findByParty(party);
-            AgreementRole result = results.get(0);
-            assertThat(results.size(), is(1));
+            assertThat(results.size(), is(3)); //TODO: change due to adding amendment to fixture; maybe change this test ...?
+            Assertions.assertThat(results.stream().filter(x->x.getAgreement().getClass().isAssignableFrom(
+                    SalesAreaLicense.class)).collect(
+                    Collectors.toList())).hasSize(1);
+            Assertions.assertThat(results.stream().filter(x->x.getAgreement().getClass().isAssignableFrom(
+                    LeaseAmendment.class)).collect(
+                    Collectors.toList())).hasSize(1);
+            Assertions.assertThat(results.stream().filter(x->x.getAgreement().getClass().isAssignableFrom(
+                    Lease.class)).collect(
+                    Collectors.toList())).hasSize(1);
         }
     }
 
@@ -162,8 +174,8 @@ public class AgreementRoleRepository_IntegTest extends LeaseModuleIntegTestAbstr
 
         @Test
         public void happyCase() throws Exception {
-            assertThat(finder(agreement.getStartDate()).size(), is(1));
-            assertThat(finder(agreement.getEndDate()).size(), is(1));
+            assertThat(finder(agreement.getStartDate()).size(), is(3)); //TODO: change due to adding amendment to fixture; maybe change this test ...?
+            assertThat(finder(agreement.getEndDate()).size(), is(3)); //TODO: change due to adding amendment to fixture; maybe change this test ...?
         }
 
         @Test

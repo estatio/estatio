@@ -5,7 +5,7 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
-import org.estatio.module.capex.dom.state.StateTransitionEvent;
+import org.estatio.module.task.dom.state.StateTransitionEvent;
 
 @DomainService(nature = NatureOfService.DOMAIN)
 public class IncomingInvoiceApprovedFullySubscriber extends AbstractSubscriber {

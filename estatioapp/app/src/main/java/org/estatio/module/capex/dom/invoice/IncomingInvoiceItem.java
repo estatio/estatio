@@ -93,27 +93,6 @@ import lombok.Setter;
                         + "WHERE reportedDate == :reportedDate "
         ),
         @Query(
-                name = "findByIncomingInvoiceTypeAndReportedDate", language = "JDOQL",
-                value = "SELECT "
-                        + "FROM org.estatio.module.capex.dom.invoice.IncomingInvoiceItem "
-                        + "WHERE incomingInvoiceType == :incomingInvoiceType "
-                        + "   && reportedDate == :reportedDate "
-        ),
-        @Query(
-                name = "findByFixedAssetAndReportedDate", language = "JDOQL",
-                value = "SELECT "
-                        + "FROM org.estatio.module.capex.dom.invoice.IncomingInvoiceItem "
-                        + "WHERE fixedAsset == :fixedAsset "
-                        + "   && reportedDate == :reportedDate "),
-
-        @Query(
-                name = "findByFixedAssetAndIncomingInvoiceTypeAndReportedDate", language = "JDOQL",
-                value = "SELECT "
-                        + "FROM org.estatio.module.capex.dom.invoice.IncomingInvoiceItem "
-                        + "WHERE fixedAsset == :fixedAsset "
-                        + "   && incomingInvoiceType == :incomingInvoiceType "
-                        + "   && reportedDate == :reportedDate "),
-        @Query(
                 name = "findByProject", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.module.capex.dom.invoice.IncomingInvoiceItem "

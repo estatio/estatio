@@ -6,8 +6,8 @@ import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionType;
-import org.estatio.module.capex.dom.task.Task;
-import org.estatio.module.capex.dom.triggers.DomainObject_triggerAbstract;
+import org.estatio.module.task.dom.task.Task;
+import org.estatio.module.task.dom.triggers.DomainObject_triggerAbstract;
 
 public abstract class IncomingInvoice_triggerAbstract
         extends DomainObject_triggerAbstract<

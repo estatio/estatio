@@ -14,8 +14,8 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.message.MessageService;
 
-import org.estatio.module.application.app.CodaCmpCodeService;
-import org.estatio.module.application.app.CodaDocCodeService;
+import org.estatio.module.coda.app.CodaCmpCodeService;
+import org.estatio.module.coda.app.CodaDocCodeService;
 
 @DomainService(
         nature = NatureOfService.VIEW_MENU_ONLY,

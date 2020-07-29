@@ -34,7 +34,7 @@ public class LeaseItemType_Test {
         List<LeaseItemType> typesForServiceChargeFound = LeaseItemType.typesForLeaseTermForServiceCharge();
 
         // then
-        assertThat(typesForServiceChargeFound.size()).isEqualTo(3);
+        assertThat(typesForServiceChargeFound.size()).isEqualTo(5);
         assertThat(typesForServiceChargeFound.get(0)).isEqualTo(LeaseItemType.SERVICE_CHARGE);
     }
 

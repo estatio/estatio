@@ -24,7 +24,7 @@ import org.estatio.module.base.spiimpl.togglz.EstatioTogglzFeature;
 import org.estatio.module.capex.dom.order.Order;
 import org.estatio.module.capex.dom.order.approval.OrderApprovalState;
 import org.estatio.module.capex.dom.order.approval.triggers.Order_completeWithApproval;
-import org.estatio.module.capex.dom.task.TaskRepository;
+import org.estatio.module.task.dom.task.TaskRepository;
 import org.estatio.module.capex.fixtures.order.enums.Order_enum;
 import org.estatio.module.capex.integtests.CapexModuleIntegTestAbstract;
 import org.estatio.module.capex.seed.DocumentTypesAndTemplatesForCapexFixture;

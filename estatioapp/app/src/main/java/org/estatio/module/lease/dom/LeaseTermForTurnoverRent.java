@@ -80,6 +80,11 @@ public class LeaseTermForTurnoverRent extends LeaseTerm {
         return this;
     }
 
+    public boolean hideChangeParameters() {
+        if (getLeaseItem().getLease().getStatus()==LeaseStatus.PREVIEW) return true;
+        return false;
+    }
+
     public String default0ChangeParameters() {
         return getTurnoverRentRule();
     }
@@ -135,6 +140,11 @@ public class LeaseTermForTurnoverRent extends LeaseTerm {
     public LeaseTermForTurnoverRent changeManualTurnoverRent(@Parameter(optionality = Optionality.OPTIONAL) final BigDecimal manualTurnoverRent){
         setManualTurnoverRent(manualTurnoverRent);
         return this;
+    }
+
+    public boolean hideChangeManualTurnoverRent() {
+        if (getLeaseItem().getLease().getStatus()==LeaseStatus.PREVIEW) return true;
+        return false;
     }
 
     public BigDecimal default0ChangeManualTurnoverRent(){
@@ -251,6 +261,13 @@ public class LeaseTermForTurnoverRent extends LeaseTerm {
         t.setAuditedTurnover(getAuditedTurnover());
         t.setContractualRent(getContractualRent());
     }
+
+    @Override
+    @Programmatic
+    public void negateAmountsAndApplyPercentage(final BigDecimal discountPercentage){
+        // NOT implemented
+    }
+
 
     // //////////////////////////////////////
 

@@ -12,6 +12,7 @@ import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.module.capex.dom.order.OrderItem;
 import org.estatio.module.capex.dom.order.OrderItemRepository;
@@ -29,7 +30,7 @@ public class Project_OrderedAmountNotOnProjectItems {
     }
 
     @Action(semantics = SemanticsOf.SAFE)
-    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
+    @ActionLayout(contributed = Contributed.AS_ASSOCIATION, hidden = Where.ALL_TABLES)
     @Column(scale = 2)
     public BigDecimal orderedAmountNotOnProjectItems(){
         return sum(OrderItem::getNetAmount);

@@ -51,6 +51,7 @@
         <col span="3">
             <ns2:fieldSet name="Stats" id="stats">
                 <ns2:property id="total"/>
+                <ns2:property id="lastInvoiceNumber"/>
             </ns2:fieldSet>
         </col>
         <col span="3">
@@ -65,7 +66,9 @@
                 <tab name="Invoices">
                     <row>
                         <col span="12">
-                            <ns2:collection id="invoices"/>
+                            <ns2:collection id="invoices">
+                                <ns2:action id="changePaymentMethodForAll" position="PANEL"/>
+                            </ns2:collection>
                         </col>
                     </row>
                 </tab>

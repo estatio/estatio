@@ -89,6 +89,7 @@ public class TurnoverReportingConfigRepository extends UdoDomainRepositoryAndFac
             final Frequency frequency,
             final Currency currency) {
         TurnoverReportingConfig config = new TurnoverReportingConfig(occupancy, type, reporter, startDate, frequency, currency);
+        config.setAggregationInitialized(false);
         serviceRegistry2.injectServicesInto(config);
         repositoryService.persistAndFlush(config);
         return config;
@@ -118,6 +119,19 @@ public class TurnoverReportingConfigRepository extends UdoDomainRepositoryAndFac
                         "findByOccupancyAndType",
                         "occupancy", occupancy,
                         "type", type));
+    }
+
+    public List<TurnoverReportingConfig> findByOccupancyAndTypeAndFrequency(
+            final Occupancy occupancy,
+            final Type type,
+            final Frequency frequency) {
+        return repositoryService.allMatches(
+                new QueryDefault<>(
+                        TurnoverReportingConfig.class,
+                        "findByOccupancyAndTypeAndFrequency",
+                        "occupancy", occupancy,
+                        "type", type,
+                        "frequency", frequency));
     }
 
     public List<TurnoverReportingConfig> findAllActiveOnDate(final LocalDate date) {

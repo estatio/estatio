@@ -1,6 +1,5 @@
 package org.estatio.module.capex.dom.invoice.approval;
 
-import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -22,13 +21,6 @@ import org.estatio.module.capex.dom.invoice.IncomingInvoiceRepository;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceRoleTypeEnum;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceType;
 import org.estatio.module.capex.dom.project.ProjectRoleTypeEnum;
-import org.estatio.module.capex.dom.state.AdvancePolicy;
-import org.estatio.module.capex.dom.state.NextTransitionSearchStrategy;
-import org.estatio.module.capex.dom.state.StateTransitionEvent;
-import org.estatio.module.capex.dom.state.StateTransitionRepository;
-import org.estatio.module.capex.dom.state.StateTransitionServiceSupportAbstract;
-import org.estatio.module.capex.dom.state.StateTransitionType;
-import org.estatio.module.capex.dom.state.TaskAssignmentStrategy;
 import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.Party;
@@ -36,6 +28,13 @@ import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.role.IPartyRoleType;
 import org.estatio.module.party.dom.role.PartyRole;
 import org.estatio.module.party.dom.role.PartyRoleTypeEnum;
+import org.estatio.module.task.dom.state.AdvancePolicy;
+import org.estatio.module.task.dom.state.NextTransitionSearchStrategy;
+import org.estatio.module.task.dom.state.StateTransitionEvent;
+import org.estatio.module.task.dom.state.StateTransitionRepository;
+import org.estatio.module.task.dom.state.StateTransitionServiceSupportAbstract;
+import org.estatio.module.task.dom.state.StateTransitionType;
+import org.estatio.module.task.dom.state.TaskAssignmentStrategy;
 
 import lombok.Getter;
 import static org.estatio.module.capex.dom.util.CountryUtil.isItalian;
@@ -58,6 +57,7 @@ public enum IncomingInvoiceApprovalStateTransitionType
     REJECT(
             Lists.newArrayList(
                     IncomingInvoiceApprovalState.COMPLETED,
+                    IncomingInvoiceApprovalState.MONITORED,
                     IncomingInvoiceApprovalState.APPROVED,
                     IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_DIRECTOR,
                     IncomingInvoiceApprovalState.PENDING_BANK_ACCOUNT_CHECK,
@@ -147,12 +147,17 @@ public enum IncomingInvoiceApprovalStateTransitionType
                     IncomingInvoiceApprovalState>) (incomingInvoice, serviceRegistry2) -> {
 
                 if (isItalian(incomingInvoice)) {
-                    if (incomingInvoice.getProperty() != null &&
-                            hasPropertyInvoiceManager(incomingInvoice.getProperty()) &&          // ie Carasello, and also...
+                    if (
+                            incomingInvoice.getProperty() != null
+                            &&
+                            hasPropertyInvoiceManager(incomingInvoice.getProperty())
+                            &&
                             (
-                                    (incomingInvoice.getType() == IncomingInvoiceType.ITA_RECOVERABLE &&       // either IT01 service charges
-                                            incomingInvoice.getBuyer().getReference().equals("IT01")) ||
-                                            incomingInvoice.getBuyer().getReference().equals("IT04")) // or everything for IT04
+                                (
+                                        incomingInvoice.getType() == IncomingInvoiceType.ITA_RECOVERABLE &&  IncomingInvoiceApprovalConfigurationUtil.hasRecoverableCompletedByPropertyInvoiceManager(incomingInvoice)
+                                ) ||
+                                        IncomingInvoiceApprovalConfigurationUtil.hasAllTypesCompletedByPropertyInvoiceManager(incomingInvoice)
+                            )
                     ) {
                         return Collections.singletonList(FixedAssetRoleTypeEnum.PROPERTY_INV_MANAGER);
                     }
@@ -197,13 +202,34 @@ public enum IncomingInvoiceApprovalStateTransitionType
         public String reasonGuardNotSatisified(
                 final IncomingInvoice incomingInvoice,
                 final ServiceRegistry2 serviceRegistry2) {
-            final boolean missingChamberOfCommerceCode = !incomingInvoice.getAtPath().startsWith("/ITA") && incomingInvoice.getSeller() instanceof Organisation && ((Organisation) incomingInvoice.getSeller()).getChamberOfCommerceCode() == null;
+            final boolean missingChamberOfCommerceCode = !isItalian(incomingInvoice) && incomingInvoice.getSeller() instanceof Organisation && ((Organisation) incomingInvoice.getSeller()).getChamberOfCommerceCode() == null;
 
             return missingChamberOfCommerceCode ?
                     "Supplier is missing chamber of commerce code" :
                     incomingInvoice.reasonIncomplete();
         }
 
+    },
+    MONITOR(IncomingInvoiceApprovalState.COMPLETED,
+            IncomingInvoiceApprovalState.PRE_MONITORED,
+            NextTransitionSearchStrategy.firstMatchingExcluding(REJECT),
+            null, // task assignment strategy overridden below
+            AdvancePolicy.MANUAL
+            ){
+        @Override
+        public boolean isMatch(
+                final IncomingInvoice domainObject, final ServiceRegistry2 serviceRegistry2) {
+            return isInvoiceWithMonitoring(domainObject);
+        }
+
+        @Override
+        public TaskAssignmentStrategy getTaskAssignmentStrategy() {
+            return (TaskAssignmentStrategy<
+                    IncomingInvoice,
+                    IncomingInvoiceApprovalStateTransition,
+                    IncomingInvoiceApprovalStateTransitionType,
+                    IncomingInvoiceApprovalState>) (incomingInvoice, serviceRegistry2) -> Arrays.asList(FixedAssetRoleTypeEnum.PROPERTY_MANAGER);
+        }
     },
     SUSPEND(
             Lists.newArrayList(
@@ -222,7 +248,9 @@ public enum IncomingInvoiceApprovalStateTransitionType
         }
     },
     APPROVE(
-            IncomingInvoiceApprovalState.COMPLETED,
+            Lists.newArrayList(
+                    IncomingInvoiceApprovalState.COMPLETED,
+                    IncomingInvoiceApprovalState.MONITORED),
             IncomingInvoiceApprovalState.APPROVED,
             NextTransitionSearchStrategy.firstMatchingExcluding(REJECT),
             null, // task assignment strategy overridden below
@@ -237,20 +265,20 @@ public enum IncomingInvoiceApprovalStateTransitionType
                 if (incomingInvoice.getBuyer() != null && hasPreferredManagerAndDirector(incomingInvoice.getBuyer())) {
                     return Collections.singletonList(PartyRoleTypeEnum.PREFERRED_MANAGER);
                 }
-                if (isItalian(incomingInvoice) && incomingInvoice.getProperty() == null)
+                if (isItalian(incomingInvoice) && incomingInvoice.getProperty() == null && !IncomingInvoiceApprovalConfigurationUtil.hasAllTypesApprovedByAssetManager(incomingInvoice))
                     return Collections.singletonList(PartyRoleTypeEnum.CORPORATE_MANAGER);
                 // guard since EST-1508 type can be not set
                 if (incomingInvoice.getType() == null)
                     return null;
 
+                if (isItalian(incomingInvoice))
+                    return Arrays.asList(FixedAssetRoleTypeEnum.ASSET_MANAGER, PartyRoleTypeEnum.TECHNICIAN);
+
                 switch (incomingInvoice.getType()) {
-                    case CAPEX:
-                        if (isItalian(incomingInvoice))
-                            return Arrays.asList(FixedAssetRoleTypeEnum.ASSET_MANAGER, PartyRoleTypeEnum.TECHNICIAN);
+                case CAPEX:
                         return Collections.singletonList(ProjectRoleTypeEnum.PROJECT_MANAGER);
                     case PROPERTY_EXPENSES:
                     case SERVICE_CHARGES:
-                        return Collections.singletonList(FixedAssetRoleTypeEnum.ASSET_MANAGER);
                     case ITA_MANAGEMENT_COSTS:
                     case ITA_RECOVERABLE:
                         return Arrays.asList(FixedAssetRoleTypeEnum.ASSET_MANAGER);
@@ -268,6 +296,8 @@ public enum IncomingInvoiceApprovalStateTransitionType
                 if (domainObject.getType() == IncomingInvoiceType.ITA_RECOVERABLE && hasCenterManager(domainObject.getProperty()))
                     return false;
             }
+            if (isInvoiceWithMonitoring(domainObject) && domainObject.getApprovalState()!=IncomingInvoiceApprovalState.MONITORED) return false;
+
             return getTaskAssignmentStrategy().getAssignTo(domainObject, serviceRegistry2) != null;
         }
 
@@ -282,6 +312,49 @@ public enum IncomingInvoiceApprovalStateTransitionType
         public boolean isAutoGuardSatisfied(
                 final IncomingInvoice domainObject, final ServiceRegistry2 serviceRegistry2) {
             return domainObject.isApprovedFully();
+        }
+    },
+    // ECP-1208: this auto transition is a kind of "hack"
+    // for APPROVAL transition, when 'peeking' and using isMatch the state of an invoice having monitoring could still be COMPLETED
+    // when not using this auto transition
+    AUTO_TRANSITION_TO_MONITORED(
+            IncomingInvoiceApprovalState.PRE_MONITORED,
+            IncomingInvoiceApprovalState.MONITORED,
+            NextTransitionSearchStrategy.firstMatchingExcluding(REJECT),
+            null,
+            AdvancePolicy.AUTOMATIC) {
+        // ECP-1208: we take a "FRANCE only" taskassignment strategy copy from Approve here
+        @Override
+        public TaskAssignmentStrategy getTaskAssignmentStrategy() {
+            return (TaskAssignmentStrategy<
+                    IncomingInvoice,
+                    IncomingInvoiceApprovalStateTransition,
+                    IncomingInvoiceApprovalStateTransitionType,
+                    IncomingInvoiceApprovalState>) (incomingInvoice, serviceRegistry2) -> {
+                if (incomingInvoice.getType() == null)
+                    return null;
+
+                switch (incomingInvoice.getType()) {
+                case CAPEX:
+                    return Collections.singletonList(ProjectRoleTypeEnum.PROJECT_MANAGER);
+                case PROPERTY_EXPENSES:
+                case SERVICE_CHARGES:
+                    return Arrays.asList(FixedAssetRoleTypeEnum.ASSET_MANAGER);
+                }
+                return null;
+            };
+        }
+
+        @Override
+        public boolean isMatch(
+                final IncomingInvoice domainObject, final ServiceRegistry2 serviceRegistry2) {
+            return true;
+        }
+
+        @Override
+        public boolean isAutoGuardSatisfied(
+                final IncomingInvoice domainObject, final ServiceRegistry2 serviceRegistry2) {
+            return true;
         }
     },
     APPROVE_LOCAL_AS_COUNTRY_DIRECTOR(
@@ -334,7 +407,9 @@ public enum IncomingInvoiceApprovalStateTransitionType
 
     },
     APPROVE_AS_CENTER_MANAGER(
-            IncomingInvoiceApprovalState.COMPLETED,
+            Lists.newArrayList(
+                    IncomingInvoiceApprovalState.COMPLETED,
+                    IncomingInvoiceApprovalState.MONITORED),
             IncomingInvoiceApprovalState.APPROVED_BY_CENTER_MANAGER,
             NextTransitionSearchStrategy.firstMatchingExcluding(REJECT),
             TaskAssignmentStrategy.to(FixedAssetRoleTypeEnum.CENTER_MANAGER),
@@ -350,6 +425,7 @@ public enum IncomingInvoiceApprovalStateTransitionType
 
             if (incomingInvoice.getType() == null || incomingInvoice.getProperty() == null)
                 return false;
+            if (isInvoiceWithMonitoring(incomingInvoice)) return false;
             return incomingInvoice.getType() == IncomingInvoiceType.ITA_RECOVERABLE && hasCenterManager(incomingInvoice.getProperty());
         }
 
@@ -791,10 +867,11 @@ public enum IncomingInvoiceApprovalStateTransitionType
     }
 
     static boolean hasGrossAmountAboveThreshold(final IncomingInvoice incomingInvoice) {
-        return incomingInvoice.getGrossAmount() != null && incomingInvoice.getGrossAmount().compareTo(threshold) > 0;
+        if (IncomingInvoiceApprovalConfigurationUtil.hasHighSingleSignatureThreshold(incomingInvoice)){
+            return incomingInvoice.getGrossAmount() != null && incomingInvoice.getGrossAmount().compareTo(IncomingInvoiceApprovalConfigurationUtil.singleSignatureThresholdHigh) > 0;
+        }
+        return incomingInvoice.getGrossAmount() != null && incomingInvoice.getGrossAmount().compareTo(IncomingInvoiceApprovalConfigurationUtil.singleSignatureThresholdNormal) > 0;
     }
-
-    static BigDecimal threshold = new BigDecimal("100000.00");
 
     static boolean hasPropertyInvoiceManager(final Property property) {
         return !Lists.newArrayList(property.getRoles()).stream()
@@ -814,6 +891,10 @@ public enum IncomingInvoiceApprovalStateTransitionType
                 return true;
         }
         return false;
+    }
+
+    public static boolean isInvoiceWithMonitoring(final IncomingInvoice incomingInvoice){
+        return IncomingInvoiceApprovalConfigurationUtil.hasMonitoring(incomingInvoice);
     }
 
 }

@@ -6,8 +6,8 @@ import org.estatio.module.capex.dom.order.Order;
 import org.estatio.module.capex.dom.order.approval.OrderApprovalState;
 import org.estatio.module.capex.dom.order.approval.OrderApprovalStateTransition;
 import org.estatio.module.capex.dom.order.approval.OrderApprovalStateTransitionType;
-import org.estatio.module.capex.dom.task.Task;
-import org.estatio.module.capex.dom.triggers.DomainObject_triggerAbstract;
+import org.estatio.module.task.dom.task.Task;
+import org.estatio.module.task.dom.triggers.DomainObject_triggerAbstract;
 
 public abstract class Order_triggerAbstract
         extends DomainObject_triggerAbstract<

@@ -18,6 +18,7 @@
  */
 package org.estatio.module.lease.fixtures.lease.builders;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.SortedSet;
@@ -56,6 +57,11 @@ import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.dom.LeaseRoleTypeEnum;
 import org.estatio.module.lease.dom.LeaseType;
 import org.estatio.module.lease.dom.LeaseTypeRepository;
+import org.estatio.module.lease.dom.amendments.LeaseAmendment;
+import org.estatio.module.lease.dom.amendments.LeaseAmendmentItemRepository;
+import org.estatio.module.lease.dom.amendments.LeaseAmendmentState;
+import org.estatio.module.lease.dom.amendments.LeaseAmendmentType;
+import org.estatio.module.lease.dom.amendments.LeaseAmendmentRepository;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
 import org.estatio.module.lease.dom.occupancy.OccupancyRepository;
 import org.estatio.module.lease.dom.occupancy.tags.BrandCoverage;
@@ -97,7 +103,6 @@ public final class LeaseBuilder
     @AllArgsConstructor
     @Data
     public static class OccupancySpec {
-        @Getter @Setter
         Unit unit;
         String brand;
         BrandCoverage brandCoverage;
@@ -106,9 +111,20 @@ public final class LeaseBuilder
         String activity;
         LocalDate startDate;
         LocalDate endDate;
+        BigDecimal salesAreaNonFood;
+        BigDecimal salesAreaFood;
+        BigDecimal foodAndBeveragesArea;
     }
     @Getter @Setter
     List<OccupancySpec> occupancySpecs = Lists.newArrayList();
+
+    @AllArgsConstructor
+    @Data
+    public static class AmendmentSpec {
+        LeaseAmendmentType leaseAmendmentType;
+    }
+    @Getter @Setter
+    List<AmendmentSpec> amendmentSpecs = Lists.newArrayList();
 
     @Getter @Setter
     Party manager;
@@ -175,8 +191,20 @@ public final class LeaseBuilder
             occupancy.setSectorName(spec.sector);
             occupancy.setActivityName(spec.activity);
             occupancy.setReportTurnover(Occupancy.OccupancyReportingType.YES);
+            if (spec.salesAreaFood!=null || spec.salesAreaNonFood!=null || spec.foodAndBeveragesArea!=null) {
+                wrap(occupancy)
+                        .createSalesAreaLicense(spec.salesAreaNonFood, spec.salesAreaFood, spec.foodAndBeveragesArea, occupancy.getStartDate());
+            }
             executionContext.addResult(this, occupancy);
-
+        }
+        for (final AmendmentSpec spec : amendmentSpecs) {
+            final LeaseAmendment leaseAmendment = leaseAmendmentRepository
+                    .create(lease, spec.leaseAmendmentType, LeaseAmendmentState.PROPOSED, spec.leaseAmendmentType.getAmendmentStartDate(), null);
+            leaseAmendmentItemRepository
+                    .create(leaseAmendment, spec.leaseAmendmentType.getDiscountPercentage(), null, spec.leaseAmendmentType.getDiscountAppliesTo(), spec.leaseAmendmentType.getDiscountStartDate(), spec.leaseAmendmentType.getDiscountEndDate());
+            leaseAmendmentItemRepository
+                    .create(leaseAmendment, spec.leaseAmendmentType.getFrequencyChanges().get(0).oldValue, spec.leaseAmendmentType.getFrequencyChanges().get(0).newValue, spec.leaseAmendmentType.getFrequencyChangeAppliesTo(), spec.leaseAmendmentType.getFrequencyChangeStartDate(), spec.leaseAmendmentType.getFrequencyChangeEndDate());
+            executionContext.addResult(this, leaseAmendment);
         }
 
         if(invoiceAddressCreationPolicy == InvoiceAddressCreationPolicy.CREATE) {
@@ -267,6 +295,12 @@ public final class LeaseBuilder
 
     @Inject
     CommunicationChannelRepository communicationChannelRepository;
+
+    @Inject
+    LeaseAmendmentRepository leaseAmendmentRepository;
+
+    @Inject
+    LeaseAmendmentItemRepository leaseAmendmentItemRepository;
 
 
 

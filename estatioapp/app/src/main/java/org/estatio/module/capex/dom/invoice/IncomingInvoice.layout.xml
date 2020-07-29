@@ -192,6 +192,7 @@
                                             <cpt:action id="complete"/>
                                             <cpt:action id="suspend"/>
                                             <cpt:action id="addComment"/>
+                                            <cpt:action id="monitor"/>
                                             <cpt:action id="approve"/>
                                             <cpt:action id="approveAsCenterManager"/>
                                             <cpt:action id="approveAsCountryDirector"/>

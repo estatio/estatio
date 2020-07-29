@@ -64,6 +64,12 @@ public enum Person_enum
             new IPartyRoleType[] { PartyRoleTypeEnum.OFFICE_ADMINISTRATOR },
             new FixedAssetRoleSpec[] {}),
 
+    // corporate administrator
+    KateCorporateAdministratorFr("KGELMAN", "Kate", "Gelman", null, true, FEMALE, Fr, Fr,
+            null, null,
+            new IPartyRoleType[] { PartyRoleTypeEnum.CORPORATE_ADMINISTRATOR },
+            new FixedAssetRoleSpec[] {}),
+
     // incoming invoice manager, property manager
     CarmenIncomingInvoiceManagerIt("CRIGATONI", "Carmen", "Rigatoni", null, true, FEMALE, It, It,
             null, null,
@@ -86,7 +92,6 @@ public enum Person_enum
             new FixedAssetRoleSpec[] {
                     new FixedAssetRoleSpec(FixedAssetRoleTypeEnum.PROPERTY_MANAGER, Property_enum.MacFr)
             }),
-
     FifineLacroixFr("FLACROIX", "Fifine", "Lacroix", null, true, FEMALE, Fr, Fr,
             null, null,
             new IPartyRoleType[] { PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER },

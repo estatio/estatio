@@ -8,7 +8,7 @@ import org.estatio.module.capex.dom.documents.BuyerFinder;
 import org.estatio.module.capex.dom.documents.categorisation.IncomingDocumentCategorisationState;
 import org.estatio.module.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransition;
 import org.estatio.module.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransitionType;
-import org.estatio.module.capex.dom.triggers.DomainObject_triggerAbstract;
+import org.estatio.module.task.dom.triggers.DomainObject_triggerAbstract;
 
 public abstract class Document_triggerAbstract
         extends DomainObject_triggerAbstract<

@@ -41,6 +41,7 @@ import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.asset.fixtures.property.enums.Property_enum;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseRepository;
+import org.estatio.module.lease.dom.LeaseStatus;
 import org.estatio.module.lease.dom.occupancy.tags.Brand;
 import org.estatio.module.lease.dom.occupancy.tags.BrandRepository;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
@@ -75,12 +76,24 @@ public class LeaseRepository_IntegTest extends LeaseModuleIntegTestAbstract {
         @Test
         public void whenLeasesExpiringInRange() {
             // given
+            final Lease topModelLease = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
             final LocalDate startDate = VT.ld(2020, 1, 1);
             final LocalDate endDate = VT.ld(2030, 1, 1);
             // when
-            final List<Lease> matchingLeases = leaseRepository.findExpireInDateRange(startDate, endDate);
+            List<Lease> matchingLeases = leaseRepository.findExpireInDateRange(startDate, endDate);
             // then
             assertThat(matchingLeases.size()).isEqualTo(4);
+            assertThat(matchingLeases).contains(topModelLease);
+
+            // and when (filters preview leases)
+            topModelLease.setStatus(LeaseStatus.PREVIEW);
+            matchingLeases = leaseRepository.findExpireInDateRange(startDate, endDate);
+
+            // then
+            assertThat(matchingLeases.size()).isEqualTo(3);
+            assertThat(matchingLeases).doesNotContain(topModelLease);
+
+
         }
 
     }
@@ -158,6 +171,11 @@ public class LeaseRepository_IntegTest extends LeaseModuleIntegTestAbstract {
 
             // When Then
             assertThat(leaseRepository.matchByReferenceOrName("*ref", true)).contains(lease);
+
+            // and when (filtering preview)
+            lease.setStatus(LeaseStatus.PREVIEW);
+            // then
+            assertThat(leaseRepository.matchByReferenceOrName("*ref", true)).doesNotContain(lease);
         }
 
         @Test
@@ -219,10 +237,20 @@ public class LeaseRepository_IntegTest extends LeaseModuleIntegTestAbstract {
         public void whenValidProperty() {
             // given
             final Property property = Property_enum.OxfGb.findUsing(serviceRegistry);
+            final Lease mediaLease = Lease_enum.OxfMediaX002Gb.findUsing(serviceRegistry);
             // when
-            final List<Lease> matchingLeases = leaseRepository.findLeasesByProperty(property);
+            List<Lease> matchingLeases = leaseRepository.findLeasesByProperty(property);
             // then
             assertThat(matchingLeases.size()).isEqualTo(4);
+            assertThat(matchingLeases).contains(mediaLease);
+
+            // and when (filters preview leases)
+            mediaLease.setStatus(LeaseStatus.PREVIEW);
+            matchingLeases = leaseRepository.findLeasesByProperty(property);
+
+            // then
+            assertThat(matchingLeases.size()).isEqualTo(3);
+            assertThat(matchingLeases).doesNotContain(mediaLease);
         }
 
     }
@@ -259,6 +287,14 @@ public class LeaseRepository_IntegTest extends LeaseModuleIntegTestAbstract {
             assertTrue(matchingLeases2.isEmpty());
             final List<Lease> matchingLeases3 = leaseRepository.findByBrand(brand, true);
             assertThat(matchingLeases3.size()).isEqualTo(1);
+
+            // and when (filtering preview)
+            assertThat(matchingLeases3).contains(oxfTop);
+            oxfTop.setStatus(LeaseStatus.PREVIEW);
+            final List<Lease> matchingLeases4 = leaseRepository.findByBrand(brand, true);
+            // then
+            assertThat(matchingLeases4).isEmpty();
+
         }
     }
 
@@ -292,12 +328,18 @@ public class LeaseRepository_IntegTest extends LeaseModuleIntegTestAbstract {
 
             // then
             assertThat(result.size()).isEqualTo(1);
-            assertThat(result.get(0)).isEqualTo(Lease_enum.OxfPoison003Gb.findUsing(serviceRegistry));
+            final Lease oxfPoisonLease = Lease_enum.OxfPoison003Gb.findUsing(serviceRegistry);
+            assertThat(result.get(0)).isEqualTo(oxfPoisonLease);
 
             // and when
             final List<Lease> results = leaseRepository.matchByTenantName("m*", oxf);
             // then
             assertThat(results.size()).isEqualTo(2);
+
+            // and when (filtering preview)
+            oxfPoisonLease.setStatus(LeaseStatus.PREVIEW);
+            // then
+            assertThat(leaseRepository.matchByTenantName("*oison*", oxf)).doesNotContain(oxfPoisonLease);
             
         }
 
@@ -316,9 +358,6 @@ public class LeaseRepository_IntegTest extends LeaseModuleIntegTestAbstract {
             });
         }
 
-        @Inject
-        PropertyRepository propertyRepository;
-
         @Test
         public void whenValidProperty() {
             // given
@@ -327,6 +366,13 @@ public class LeaseRepository_IntegTest extends LeaseModuleIntegTestAbstract {
             // when
             assertThat(leaseRepository.findByAssetAndActiveOnDate(property, new LocalDate(2010, 7, 14)).size()).isEqualTo(0);
             assertThat(leaseRepository.findByAssetAndActiveOnDate(property, new LocalDate(2010, 7, 15)).size()).isEqualTo(1);
+
+            // and when (filters preview)
+            final Lease topmodelLease = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
+            topmodelLease.setStatus(LeaseStatus.PREVIEW);
+            // then
+            assertThat(leaseRepository.findByAssetAndActiveOnDate(property, new LocalDate(2010, 7, 15)).size()).isEqualTo(0);
+
         }
     }
 
@@ -434,6 +480,11 @@ public class LeaseRepository_IntegTest extends LeaseModuleIntegTestAbstract {
             assertThat(result.size()).isEqualTo(2);
             assertThat(result.get(0)).isEqualTo(lease2);
             assertThat(result.get(1)).isEqualTo(lease1);
+
+            // and when (filters preview)
+            lease1.setStatus(LeaseStatus.PREVIEW);
+            // then
+            assertThat(leaseRepository.matchLeaseByExternalReference(searchString)).hasSize(1);
         }
 
 

@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<bs3:grid xsi:schemaLocation="http://isis.apache.org/applib/layout/component http://isis.apache.org/applib/layout/component/component.xsd http://isis.apache.org/applib/layout/grid/bootstrap3 http://isis.apache.org/applib/layout/grid/bootstrap3/bootstrap3.xsd" xmlns:bs3="http://isis.apache.org/applib/layout/grid/bootstrap3" xmlns:cpt="http://isis.apache.org/applib/layout/component" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <bs3:row>
+        <bs3:col span="6">
+            <bs3:row>
+                <bs3:col span="12" unreferencedActions="true">
+                    <cpt:domainObject/>
+                </bs3:col>
+            </bs3:row>
+            <bs3:tabGroup>
+                <bs3:tab name="General">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:fieldSet name="General">
+                                <cpt:action id="previous"/>
+                                <cpt:action id="next"/>
+                                <cpt:property id="description">
+                                    <cpt:action id="updateDescription">
+                                        <cpt:named>Update</cpt:named>
+                                        <cpt:describedAs>Feel free to use for short notes</cpt:describedAs>
+                                    </cpt:action>
+                                </cpt:property>
+                                <cpt:property id="object">
+
+                                    <!-- document categorisation -->
+                                    <cpt:action id="categoriseDocumentAsOrder">
+                                        <cpt:named>Categorise as order</cpt:named>
+                                    </cpt:action>
+                                    <cpt:action id="categoriseDocumentAsPropertyInvoice">
+                                        <cpt:named>Categorise as property invoice</cpt:named>
+                                    </cpt:action>
+                                    <cpt:action id="categoriseDocumentAsOtherInvoice">
+                                        <cpt:named>Categorise as other invoice</cpt:named>
+                                    </cpt:action>
+                                    <cpt:action id="discardDocument">
+                                        <cpt:named>Discard</cpt:named>
+                                    </cpt:action>
+
+                                    <!-- order -->
+                                    <cpt:action id="completeOrderWithApproval">
+                                        <cpt:named>Complete with Approval</cpt:named>
+                                    </cpt:action>
+                                    <cpt:action id="discardOrder">
+                                        <cpt:named>Discard</cpt:named>
+                                    </cpt:action>
+                                    <cpt:action id="recategorizeOrder">
+                                        <cpt:named>Recategorize</cpt:named>
+                                    </cpt:action>
+
+                                    <!-- incoming invoice -->
+                                    <cpt:action id="completeIncomingInvoice">
+                                        <cpt:named>Complete</cpt:named>
+                                    </cpt:action>
+                                    <cpt:action id="suspend"/>
+                                    <cpt:action id="monitorIncomingInvoice">
+                                        <cpt:named>Monitor</cpt:named>
+                                    </cpt:action>
+                                    <cpt:action id="approveIncomingInvoice">
+                                        <cpt:named>Approve</cpt:named>
+                                    </cpt:action>
+                                    <cpt:action id="approveIncomingInvoiceAsCenterManager">
+                                        <cpt:named>Approve as Center Manager</cpt:named>
+                                    </cpt:action>
+                                    <cpt:action id="advise"/>
+                                    <cpt:action id="adviseToApprove"/>
+                                    <cpt:action id="noAdvise"/>
+                                    <cpt:action id="approveIncomingInvoiceAsCountryDirector">
+                                        <cpt:named>Approve as Country Director</cpt:named>
+                                    </cpt:action>
+                                    <cpt:action id="approveIncomingInvoiceLocalAsCountryDirector">
+                                        <cpt:named>Approve (Local) as Country Director</cpt:named>
+                                    </cpt:action>
+                                    <cpt:action id="approveIncomingInvoiceAsCorporateManager">
+                                        <cpt:named>Approve as Corporate Manager</cpt:named>
+                                    </cpt:action>
+                                    <cpt:action id=" approveIncomingInvoiceWhenApprovedByCenterManager">
+                                        <cpt:named>Approve</cpt:named>
+                                    </cpt:action>
+                                    <cpt:action id="checkPayment" />
+                                    <cpt:action id="discardIncomingInvoice">
+                                        <cpt:named>Discard</cpt:named>
+                                    </cpt:action>
+                                    <cpt:action id="recategorizeIncomingInvoice">
+                                        <cpt:named>Recategorize</cpt:named>
+                                    </cpt:action>
+
+                                    <!-- bank account -->
+                                    <cpt:action id="verifyBankAccount">
+                                        <cpt:named>Verify</cpt:named>
+                                    </cpt:action>
+
+
+                                    <cpt:action id="viewTransition" position="RIGHT"/>
+                                </cpt:property>
+                                <cpt:property id="createdOn">
+<!--                                    <cpt:named>Priority</cpt:named>-->
+                                    <cpt:action id="reprioritizeBringForward">
+                                        <cpt:named>Bring forward</cpt:named>
+                                    </cpt:action>
+                                    <cpt:action id="reprioritizePushback">
+                                        <cpt:named>Push back</cpt:named>
+                                    </cpt:action>
+                                    <cpt:action id="reprioritizeAbsolute">
+                                        <cpt:named>To date</cpt:named>
+                                    </cpt:action>
+                                </cpt:property>
+
+                                <cpt:property id="priority">
+                                </cpt:property>
+
+                                <cpt:property id="note">
+                                    <cpt:action id="editNote"/>
+                                </cpt:property>
+                            </cpt:fieldSet>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+                <bs3:tab name="Application Tenancy">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:fieldSet name="Application Tenancy">
+                                <cpt:property id="applicationTenancy"/>
+                                <cpt:property id="atPath"/>
+                            </cpt:fieldSet>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+                <bs3:tab name="Other">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:fieldSet name="Other" unreferencedProperties="true"/>
+                       </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+                <bs3:tab name="Metadata">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:fieldSet name="Metadata">
+                                <cpt:action id="recentAuditEntries" position="PANEL_DROPDOWN"/>
+                                <cpt:action id="findChangesByDate" position="PANEL_DROPDOWN"/>
+                                <cpt:action id="recentChanges" position="PANEL_DROPDOWN"/>
+                                <cpt:action id="links" position="PANEL_DROPDOWN"/>
+                                <cpt:property id="datanucleusIdLong"/>
+                                <cpt:property id="datanucleusVersionLong"/>
+                                <cpt:property id="datanucleusVersionTimestamp"/>
+                            </cpt:fieldSet>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+            </bs3:tabGroup>
+            <cpt:fieldSet name="Assignment" id="assignedTo">
+                <cpt:action id="checkState"/>
+                <cpt:property id="assignedTo"/>
+                <cpt:property id="personAssignedTo">
+                    <cpt:action id="assignTo"/>
+                </cpt:property>
+                <cpt:property id="transition" hidden="EVERYWHERE"/>
+            </cpt:fieldSet>
+            <cpt:fieldSet name="Completion" id="completion">
+                <cpt:property id="completed"/>
+                <cpt:property id="completedBy"/>
+                <cpt:property id="completedOn">
+                    <cpt:named>completedOn (UTC time)</cpt:named>
+                </cpt:property>
+                <cpt:property id="comment"/>
+            </cpt:fieldSet>
+        </bs3:col>
+        <bs3:col span="6">
+            <bs3:tabGroup>
+                <bs3:tab name="Document">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:fieldSet name="Content" id="content">
+                                <cpt:property id="pdf" hidden="ALL_TABLES"/>
+                            </cpt:fieldSet>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+            </bs3:tabGroup>
+        </bs3:col>
+    </bs3:row>
+    <bs3:row>
+        <bs3:col span="12" unreferencedCollections="true"/>
+    </bs3:row>
+</bs3:grid>

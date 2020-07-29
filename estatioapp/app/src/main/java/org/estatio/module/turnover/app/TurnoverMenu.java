@@ -78,7 +78,6 @@ public class TurnoverMenu  {
         manager.setProperty(property);
         manager.setType(type);
         manager.setDate(turnoverDate);
-        manager.setLines(manager.getLines());
         return manager;
     }
 
@@ -117,7 +116,7 @@ public class TurnoverMenu  {
     }
 
     public LocalDate default3ImportTurnovers(){
-        return new LocalDate(clockService.now().getYear(), clockService.now().getMonthOfYear() - 1, 1);
+        return new LocalDate(clockService.now().getYear(), clockService.now().getMonthOfYear(), 1).minusMonths(1);
     }
 
     public List<Turnover> findTurnoverEntryRequestsFor(final Person reporter){

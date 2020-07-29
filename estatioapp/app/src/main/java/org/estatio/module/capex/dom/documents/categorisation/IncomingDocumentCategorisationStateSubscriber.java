@@ -11,7 +11,7 @@ import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.types.DocumentTypeRepository;
 
 import org.estatio.module.capex.dom.documents.IncomingDocumentRepository;
-import org.estatio.module.capex.dom.state.StateTransitionService;
+import org.estatio.module.task.dom.state.StateTransitionService;
 import org.estatio.module.invoice.dom.DocumentTypeData;
 
 @DomainService(nature = NatureOfService.DOMAIN)

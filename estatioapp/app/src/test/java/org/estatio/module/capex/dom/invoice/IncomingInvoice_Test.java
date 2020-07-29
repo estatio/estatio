@@ -41,14 +41,13 @@ import org.estatio.module.capex.dom.order.OrderItemRepository;
 import org.estatio.module.capex.dom.orderinvoice.OrderItemInvoiceItemLink;
 import org.estatio.module.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
 import org.estatio.module.capex.dom.project.Project;
-import org.estatio.module.capex.dom.state.StateTransitionService;
+import org.estatio.module.task.dom.state.StateTransitionService;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.currency.dom.Currency;
 import org.estatio.module.financial.dom.BankAccount;
 import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.Party;
-import org.estatio.module.party.dom.PartyForTesting;
 import org.estatio.module.party.dom.role.PartyRoleRepository;
 import org.estatio.module.tax.dom.Tax;
 

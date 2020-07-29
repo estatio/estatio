@@ -20,6 +20,7 @@ package org.estatio.module.lease.dom;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -260,6 +261,11 @@ public abstract class LeaseTerm
         return this;
     }
 
+    public boolean hideChangeDates(){
+        if (getLeaseItem().getLease().getStatus()==LeaseStatus.PREVIEW) return true;
+        return false;
+    }
+
     public String disableChangeDates() {
         if (getStatus().isApproved()){
             return "Cannot change dates when term is approved";
@@ -383,6 +389,11 @@ public abstract class LeaseTerm
         return this;
     }
 
+    public boolean hideRemove(){
+        if (getLeaseItem().getLease().getStatus()==LeaseStatus.PREVIEW) return true;
+        return false;
+    }
+
     @Programmatic
     public boolean doRemove() {
         boolean success = true;
@@ -457,7 +468,6 @@ public abstract class LeaseTerm
     public LeaseTerm split(
             final LocalDate splitDate) {
 
-        final LeaseTerm currentPrevous = this.getPrevious();
         final LeaseTerm currentNext = this.getNext();
 
         //decouple current next
@@ -475,6 +485,11 @@ public abstract class LeaseTerm
         this.setEndDate(LocalDateInterval.endDateFromStartDate(splitDate));
 
         return newTerm;
+    }
+
+    public boolean hideSplit(){
+        if (getLeaseItem().getLease().getStatus()==LeaseStatus.PREVIEW) return true;
+        return false;
     }
 
     public LocalDate default0Split(){
@@ -506,6 +521,7 @@ public abstract class LeaseTerm
     }
 
     public boolean hideCreateNext() {
+        if (getLeaseItem().getLease().getStatus()==LeaseStatus.PREVIEW) return true;
         return !getLeaseItem().getType().autoCreateTerms();
     }
 
@@ -540,7 +556,7 @@ public abstract class LeaseTerm
         LeaseTerm previousTerm = getPrevious();
         BigInteger sequence = BigInteger.ONE;
         if (previousTerm != null) {
-            sequence = previousTerm.getSequence().add(BigInteger.ONE);
+            sequence = previousTerm.getSequence()!=null ? previousTerm.getSequence().add(BigInteger.ONE) : BigInteger.ONE; //ECP-1107
             setFrequency(previousTerm.getFrequency());
         }
         setSequence(sequence);
@@ -593,6 +609,9 @@ public abstract class LeaseTerm
         target.setFrequency(getFrequency());
     }
 
+    @Programmatic
+    public abstract void negateAmountsAndApplyPercentage(final BigDecimal discountPercentage);
+
     // //////////////////////////////////////
 
     @Action(semantics = SemanticsOf.IDEMPOTENT, invokeOn = InvokeOn.OBJECT_AND_COLLECTION)
@@ -601,6 +620,11 @@ public abstract class LeaseTerm
             setStatus(LeaseTermStatus.APPROVED);
         }
         return this;
+    }
+
+    public boolean hideApprove(){
+        if (getLeaseItem().getLease().getStatus()==LeaseStatus.PREVIEW) return true;
+        return false;
     }
 
     public String disableApprove() {
@@ -614,6 +638,7 @@ public abstract class LeaseTerm
     }
 
     public boolean hideChangeStatus() {
+        if (getLeaseItem().getLease().getStatus()==LeaseStatus.PREVIEW) return true;
         return !EstatioRole.ADMINISTRATOR.isApplicableFor(getUser());
     }
 
@@ -643,6 +668,12 @@ public abstract class LeaseTerm
 
     // //////////////////////////////////////
 
+    @Programmatic
+    public static BigDecimal applyPercentage(final BigDecimal value, final BigDecimal percentage){
+        return value.multiply(percentage).divide(new BigDecimal("100"), 2, RoundingMode.HALF_UP);
+    }
+
+
     @Override
     public String toString() {
         return getInterval().toString() + " / ";
@@ -655,5 +686,4 @@ public abstract class LeaseTerm
 
     @Inject
     public LeaseTermRepository leaseTermRepository;
-
 }

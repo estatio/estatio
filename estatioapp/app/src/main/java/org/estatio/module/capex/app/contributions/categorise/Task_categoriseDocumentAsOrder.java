@@ -12,7 +12,7 @@ import org.estatio.module.capex.app.document.IncomingDocViewModel;
 import org.estatio.module.capex.dom.documents.categorisation.triggers.Document_categoriseAsOrder;
 import org.estatio.module.capex.dom.documents.categorisation.triggers.Task_mixinDocumentAbstract;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceType;
-import org.estatio.module.capex.dom.task.Task;
+import org.estatio.module.task.dom.task.Task;
 import org.estatio.module.asset.dom.Property;
 
 /**

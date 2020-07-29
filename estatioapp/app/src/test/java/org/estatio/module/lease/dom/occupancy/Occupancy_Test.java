@@ -34,6 +34,7 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
+import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 import org.incode.module.base.dom.with.WithIntervalMutable;
 import org.incode.module.base.dom.with.WithIntervalMutableContractTestAbstract_changeDates;
 import org.incode.module.unittestsupport.dom.bean.AbstractBeanPropertiesTest;
@@ -233,6 +234,117 @@ public class Occupancy_Test {
 
         // when, then
         assertThat(occupancy.validateChangeClassification(null, sector, activity, null)).isNull();
+
+    }
+
+    @Test
+    public void effective_end_date_works() throws Exception {
+
+        // given
+        LocalDate startDate;
+        LocalDate endDate;
+        Occupancy occupancy = new Occupancy();
+        Lease lease = new Lease(){
+            @Override
+            public LocalDateInterval getEffectiveInterval() {
+                return LocalDateInterval.including(null, null);
+            }
+        };
+        occupancy.setLease(lease);
+
+        // when, then
+        assertThat(occupancy.getEffectiveEndDate()).isEqualTo(null);
+
+        // when
+        endDate = new LocalDate(2019,1,2);
+        Lease lease2 = new Lease(){
+            @Override
+            public LocalDateInterval getEffectiveInterval() {
+                return LocalDateInterval.including(null, endDate);
+            }
+        };
+        occupancy.setLease(lease2);
+        // then
+        assertThat(occupancy.getEffectiveEndDate()).isEqualTo(endDate);
+
+        // when
+        startDate = new LocalDate(2018,5,5);
+        Lease lease3 = new Lease(){
+            @Override
+            public LocalDateInterval getEffectiveInterval() {
+                return LocalDateInterval.including(startDate, endDate);
+            }
+        };
+        occupancy.setLease(lease3);
+        // then
+        assertThat(occupancy.getEffectiveEndDate()).isEqualTo(endDate);
+
+        // when
+        final LocalDate occEndDate = new LocalDate(2019, 1, 3);
+        occupancy.setEndDate(occEndDate);
+        // then
+        assertThat(occupancy.getEffectiveEndDate()).isEqualTo(occEndDate);
+
+    }
+
+    @Test
+    public void effective_start_date_works() throws Exception {
+
+        // given
+        LocalDate startDate;
+        LocalDate endDate;
+        Occupancy occupancy = new Occupancy();
+        Lease lease = new Lease(){
+            @Override
+            public LocalDateInterval getEffectiveInterval() {
+                return LocalDateInterval.including(null, null);
+            }
+        };
+        occupancy.setLease(lease);
+
+        // when, then
+        assertThat(occupancy.getEffectiveStartDate()).isEqualTo(null);
+
+        // when
+        startDate = new LocalDate(2018,5,5);
+        Lease lease2 = new Lease(){
+            @Override
+            public LocalDateInterval getEffectiveInterval() {
+                return LocalDateInterval.including(startDate, null);
+            }
+        };
+        occupancy.setLease(lease2);
+        // then
+        assertThat(occupancy.getEffectiveStartDate()).isEqualTo(startDate);
+
+        // when
+        endDate = new LocalDate(2019,1,2);
+        Lease lease3 = new Lease(){
+            @Override
+            public LocalDateInterval getEffectiveInterval() {
+                return LocalDateInterval.including(startDate, endDate);
+            }
+        };
+        occupancy.setLease(lease3);
+        // then
+        assertThat(occupancy.getEffectiveStartDate()).isEqualTo(startDate);
+
+        // when
+        Lease lease4 = new Lease(){
+            @Override
+            public LocalDateInterval getEffectiveInterval() {
+                return LocalDateInterval.including(null, endDate);
+            }
+        };
+        occupancy.setLease(lease4);
+        // then
+        assertThat(occupancy.getEffectiveStartDate()).isEqualTo(null);
+
+        // when
+        final LocalDate occStartDate = new LocalDate(2019, 1, 1);
+        occupancy.setStartDate(occStartDate);
+        // then
+        assertThat(occupancy.getEffectiveStartDate()).isEqualTo(occStartDate);
 
     }
 

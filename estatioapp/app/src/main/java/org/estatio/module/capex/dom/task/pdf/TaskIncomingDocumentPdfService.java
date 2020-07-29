@@ -14,16 +14,16 @@ import org.incode.module.base.dom.MimeTypeData;
 import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.docs.DocumentAbstract;
 
-import org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationStateTransition;
+import org.estatio.module.financial.dom.bankaccount.verification.BankAccountVerificationStateTransition;
 import org.estatio.module.capex.dom.documents.LookupAttachedPdfService;
 import org.estatio.module.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransition;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
 import org.estatio.module.capex.dom.order.Order;
 import org.estatio.module.capex.dom.order.approval.OrderApprovalStateTransition;
-import org.estatio.module.capex.dom.state.StateTransition;
-import org.estatio.module.capex.dom.state.StateTransitionService;
-import org.estatio.module.capex.dom.task.Task;
+import org.estatio.module.task.dom.state.StateTransition;
+import org.estatio.module.task.dom.state.StateTransitionService;
+import org.estatio.module.task.dom.task.Task;
 import org.estatio.module.financial.dom.BankAccount;
 
 @DomainService(nature = NatureOfService.DOMAIN)

@@ -56,12 +56,22 @@
                 </tab>
             </tabGroup>
             <ns2:fieldSet name="Dates" id="dates">
+                <ns2:property id="effectiveStartDate"/>
+                <ns2:property id="effectiveEndDate"/>
                 <ns2:property id="startDate"/>
                 <ns2:property id="endDate">
                     <ns2:action id="changeDates" position="BELOW"/>
                     <ns2:action id="verify" position="BELOW"/>
                     <ns2:action id="terminate" position="BELOW"/>
                 </ns2:property>
+            </ns2:fieldSet>
+            <ns2:fieldSet name="Sales Areas" id="salesareas">
+                <ns2:action id="createSalesAreaLicense"/>
+                <ns2:action id="createNextSalesAreaLicense"/>
+                <ns2:property id="currentSalesAreaLicense" hidden="ALL_TABLES"/>
+                <ns2:property id="salesAreaNonFood" hidden="ALL_TABLES"/>
+                <ns2:property id="salesAreaFood" hidden="ALL_TABLES"/>
+                <ns2:property id="foodAndBeveragesArea" hidden="ALL_TABLES"/>
             </ns2:fieldSet>
         </col>
         <col span="6">
@@ -101,6 +111,7 @@
                 <ns2:action id="createTurnoverReportingConfig"/>
             </ns2:collection>
             <ns2:collection id="turnovers">
+                <ns2:action id="reviewAggregation"/>
                 <ns2:action id="createEmptyTurnovers"/>
                 <ns2:action id="downloadTurnovers"/>
                 <ns2:action id="uploadTurnovers"/>
