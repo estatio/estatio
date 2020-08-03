@@ -99,6 +99,7 @@ public class LeaseAmendmentItemForDiscount extends LeaseAmendmentItem {
                         .applicableToFromString(this.getApplicableTo())
                         .contains(li.getType()))
                 .filter(li->li.getEffectiveInterval().overlaps(this.getInterval()))
+                .filter(li->li.getLeaseAmendmentItem()==null || li.getLeaseAmendmentItem().getType() != LeaseAmendmentItemType.DISCOUNT)  // we do not apply discount on any item that is related to an amendment
                 .collect(Collectors.toList());
         return itemsToIncludeForDiscount;
     }
@@ -111,6 +112,7 @@ public class LeaseAmendmentItemForDiscount extends LeaseAmendmentItem {
                 .filter(li -> LeaseAmendmentItem
                         .applicableToFromString(this.getApplicableTo())
                         .contains(li.getType()))
+                .filter(li->li.getLeaseAmendmentItem()==null || li.getLeaseAmendmentItem().getType() != LeaseAmendmentItemType.DISCOUNT)  // we do not calculate any item that is related to an amendment
                 .map(li -> li.valueForDate(getStartDate().minusDays(1)))
                 .filter(x->x!=null)
                 .reduce(new BigDecimal("0.00"), BigDecimal::add);

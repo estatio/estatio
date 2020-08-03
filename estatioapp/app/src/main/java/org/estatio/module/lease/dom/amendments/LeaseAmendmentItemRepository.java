@@ -85,6 +85,7 @@ public class LeaseAmendmentItemRepository {
                 .newArrayList(leaseAmendment.getItems()).stream()
                 .filter(li -> li.getClass().isAssignableFrom(LeaseAmendmentItemForDiscount.class))
                 .map(LeaseAmendmentItemForDiscount.class::cast)
+                .filter(li->li.getStartDate().equals(startDate))
                 .findFirst().orElse(null);
         if (leaseAmendment.getState()==LeaseAmendmentState.APPLIED) return item;
         if (item==null){

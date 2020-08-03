@@ -16,7 +16,6 @@ import org.apache.isis.applib.annotation.Nature;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.background.BackgroundService2;
-import org.apache.isis.applib.services.wrapper.WrapperFactory;
 
 import org.isisaddons.module.excel.dom.ExcelFixture;
 import org.isisaddons.module.excel.dom.ExcelFixtureRowHandler;
@@ -63,6 +62,24 @@ public class LeaseAmendmentImportLine implements ExcelFixtureRowHandler, Importa
             this.frequencyChangeApplicableTo = freqItem.getApplicableTo();
             this.frequencyChangeStartDate = freqItem.getStartDate();
             this.frequencyChangeEndDate = freqItem.getEndDate();
+        }
+    }
+
+    public LeaseAmendmentImportLine(final LeaseAmendment leaseAmendment, final LeaseAmendmentItemForDiscount item){
+        this();
+        this.leaseAmendmentType = leaseAmendment.getLeaseAmendmentType();
+        this.leaseAmendmentState = leaseAmendment.getState();
+        this.dateSigned = leaseAmendment.getDateSigned();
+        this.leaseReference = leaseAmendment.getLease().getReference();
+        this.startDate = leaseAmendment.getStartDate();
+        this.endDate = leaseAmendment.getEndDate();
+        if (item!=null) {                                               // should not be possible, but still ....
+            this.discountPercentage = item.getDiscountPercentage();
+            this.manualDiscountAmount = item.getManualDiscountAmount();
+            this.discountApplicableTo = item.getApplicableTo();
+            this.discountStartDate = item.getStartDate();
+            this.discountEndDate = item.getEndDate();
+            this.calculatedDiscountAmount = item.getCalculatedDiscountAmount();
         }
     }
 
@@ -184,8 +201,6 @@ public class LeaseAmendmentImportLine implements ExcelFixtureRowHandler, Importa
 
     @Inject
     LeaseAmendmentRepository leaseAmendmentRepository;
-
-    @Inject WrapperFactory wrapperFactory;
 
     @Inject BackgroundService2 backgroundService2;
 

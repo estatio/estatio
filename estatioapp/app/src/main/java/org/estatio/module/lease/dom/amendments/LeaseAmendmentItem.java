@@ -69,7 +69,7 @@ public abstract class LeaseAmendmentItem extends UdoDomainObject2<LeaseAmendment
     }
 
     public LeaseAmendmentItem() {
-        super("leaseAmendment, type");
+        super("leaseAmendment, type, startDate");
     }
 
     @Column(name = "leaseAmendmentId", allowsNull = "false")

@@ -77,9 +77,7 @@ public class LeaseAmendmentManager {
                     .stream()
                     .filter(a -> a.getLease().getProperty() == getProperty())
                     .collect(Collectors.toList());
-            for (LeaseAmendment amendment : amendments){
-                result.add(new LeaseAmendmentImportLine(amendment));
-            }
+            createLinesAndAddToResult(result, amendments);
         } else {
             final List<Lease> leasesByProperty = leaseRepository.findLeasesByProperty(property)
                     .stream()
@@ -88,10 +86,7 @@ public class LeaseAmendmentManager {
                     .collect(Collectors.toList());
             for (Lease lease : leasesByProperty){
                 final List<LeaseAmendment> amendmentsForLeaseOfAllTypes = leaseAmendmentRepository.findByLease(lease);
-                final List<LeaseAmendmentImportLine> lines = amendmentsForLeaseOfAllTypes.stream()
-                      .map(a -> new LeaseAmendmentImportLine(a))
-                      .collect(Collectors.toList());
-                result.addAll(lines);
+                createLinesAndAddToResult(result, amendmentsForLeaseOfAllTypes);
             }
         }
         return result
@@ -100,6 +95,28 @@ public class LeaseAmendmentManager {
                         LeaseAmendmentImportLine::getLeaseReference)
                         .thenComparing(LeaseAmendmentImportLine::getLeaseAmendmentType))
                 .collect(Collectors.toList());
+    }
+
+    private void createLinesAndAddToResult(
+            final List<LeaseAmendmentImportLine> result,
+            final List<LeaseAmendment> amendments) {
+        for (LeaseAmendment amendment : amendments){
+            final List<LeaseAmendmentItem> discountItems = amendment.findItemsOfType(LeaseAmendmentItemType.DISCOUNT);
+            if (discountItems.size()<2) {
+                result.add(new LeaseAmendmentImportLine(amendment));
+            } else {
+                boolean first = true;
+                for (LeaseAmendmentItem item : discountItems) {
+                    if (first) {
+                        result.add(new LeaseAmendmentImportLine(amendment));
+                        first = false;
+                    } else {
+                        LeaseAmendmentItemForDiscount castedItem = (LeaseAmendmentItemForDiscount) item;
+                        result.add(new LeaseAmendmentImportLine(amendment, castedItem));
+                    }
+                }
+            }
+        }
     }
 
     @Action(semantics = SemanticsOf.SAFE)

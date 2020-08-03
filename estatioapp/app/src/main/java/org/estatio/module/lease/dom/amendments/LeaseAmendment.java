@@ -2,6 +2,7 @@ package org.estatio.module.lease.dom.amendments;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.SortedSet;
@@ -246,7 +247,7 @@ public class LeaseAmendment extends Agreement {
 
     @Programmatic
     public List<LeaseAmendmentItem> findItemsOfType(final LeaseAmendmentItemType type){
-        return Lists.newArrayList(getItems()).stream().filter(lai->lai.getType()==type).collect(Collectors.toList());
+        return Lists.newArrayList(getItems()).stream().filter(lai->lai.getType()==type).sorted(Comparator.comparing(LeaseAmendmentItem::getStartDate)).collect(Collectors.toList());
     }
 
     @Programmatic
