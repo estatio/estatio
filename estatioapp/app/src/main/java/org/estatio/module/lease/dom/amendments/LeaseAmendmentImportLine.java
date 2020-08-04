@@ -16,6 +16,7 @@ import org.apache.isis.applib.annotation.Nature;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.background.BackgroundService2;
+import org.apache.isis.applib.services.message.MessageService;
 
 import org.isisaddons.module.excel.dom.ExcelFixture;
 import org.isisaddons.module.excel.dom.ExcelFixtureRowHandler;
@@ -174,7 +175,13 @@ public class LeaseAmendmentImportLine implements ExcelFixtureRowHandler, Importa
         if (amendment.getState()==LeaseAmendmentState.SIGNED && dateSigned!=null) amendment.setDateSigned(dateSigned);
         
         if (discountPercentage!=null && discountApplicableTo!=null && discountStartDate!=null && discountEndDate!=null) {
-            amendment.upsertItem(discountPercentage, manualDiscountAmount, LeaseAmendmentItem.applicableToFromString(discountApplicableTo), discountStartDate, discountEndDate);
+            try {
+                amendment.upsertItem(discountPercentage, manualDiscountAmount,
+                        LeaseAmendmentItem.applicableToFromString(discountApplicableTo), discountStartDate,
+                        discountEndDate);
+            } catch (IllegalArgumentException e){
+                messageService.raiseError(e.getMessage());
+            }
         }
         if (invoicingFrequencyOnLease!=null && amendedInvoicingFrequency !=null && frequencyChangeApplicableTo !=null && frequencyChangeStartDate
                 !=null && frequencyChangeEndDate !=null) {
@@ -202,6 +209,9 @@ public class LeaseAmendmentImportLine implements ExcelFixtureRowHandler, Importa
     @Inject
     LeaseAmendmentRepository leaseAmendmentRepository;
 
-    @Inject BackgroundService2 backgroundService2;
+    @Inject
+    BackgroundService2 backgroundService2;
+
+    @Inject MessageService messageService;
 
 }

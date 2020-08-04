@@ -36,9 +36,9 @@ import org.estatio.module.lease.dom.amendments.LeaseAmendment;
 import org.estatio.module.lease.dom.amendments.LeaseAmendmentItemForDiscount;
 import org.estatio.module.lease.dom.amendments.LeaseAmendmentItemForFrequencyChange;
 import org.estatio.module.lease.dom.amendments.LeaseAmendmentItemRepository;
-import org.estatio.module.lease.dom.amendments.LeaseAmendmentType;
 import org.estatio.module.lease.dom.amendments.LeaseAmendmentRepository;
 import org.estatio.module.lease.dom.amendments.LeaseAmendmentState;
+import org.estatio.module.lease.dom.amendments.LeaseAmendmentType;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 
@@ -87,21 +87,33 @@ public class LeaseAmendmentItemRepository_IntegTest extends LeaseModuleIntegTest
         // and when
         final BigDecimal apdaptedDiscountPercentage = new BigDecimal("51.00");
         final BigDecimal adaptedManualDiscountAmount = new BigDecimal("2345.67");
-        final LocalDate adaptedItemStartDate = new LocalDate(2020, 1, 16);
         final LocalDate adaptedItemEndDate = new LocalDate(2020, 4, 1);
         amendmentItemForDiscount = leaseAmendmentItemRepository.upsert(
                 leaseAmendment,
                 apdaptedDiscountPercentage,
                 adaptedManualDiscountAmount,
                 Arrays.asList(LeaseItemType.RENT, LeaseItemType.SERVICE_CHARGE),
-                adaptedItemStartDate, adaptedItemEndDate);
+                itemStartDate, adaptedItemEndDate);
         // then
         assertThat(amendmentItemForDiscount.getDiscountPercentage()).isEqualTo(apdaptedDiscountPercentage);
         assertThat(amendmentItemForDiscount.getManualDiscountAmount()).isEqualTo(adaptedManualDiscountAmount);
         assertThat(amendmentItemForDiscount.getApplicableTo()).isEqualTo("RENT,SERVICE_CHARGE");
-        assertThat(amendmentItemForDiscount.getStartDate()).isEqualTo(adaptedItemStartDate);
+        assertThat(amendmentItemForDiscount.getStartDate()).isEqualTo(itemStartDate);
         assertThat(amendmentItemForDiscount.getEndDate()).isEqualTo(adaptedItemEndDate);
 
+        // then expected
+        // NOTE THAT SINCE ECP-1224 the startdate is part of the unique identifier for a LeaseAmendmentItemForDiscount
+        expectedExceptions.expect(IllegalArgumentException.class);
+        expectedExceptions.expectMessage("Overlapping item for discount found on amendment OXF-MEDIAX-002-DEM for startdate 2020-01-16 and enddate 2020-04-01");
+
+        // and when
+        final LocalDate adaptedItemStartDate = new LocalDate(2020, 1, 16);
+        leaseAmendmentItemRepository.upsert(
+                leaseAmendment,
+                apdaptedDiscountPercentage,
+                adaptedManualDiscountAmount,
+                Arrays.asList(LeaseItemType.RENT, LeaseItemType.SERVICE_CHARGE),
+                adaptedItemStartDate, adaptedItemEndDate);
 
     }
 

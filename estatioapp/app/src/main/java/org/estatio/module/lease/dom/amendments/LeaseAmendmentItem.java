@@ -130,6 +130,15 @@ public abstract class LeaseAmendmentItem extends UdoDomainObject2<LeaseAmendment
         return getLeaseAmendment().amendmentDataIsImmutable() ? warning : null;
     }
 
+    public String validateChangeDates(final LocalDate startDate, final LocalDate endDate){
+        if (endDate.isBefore(startDate)) return "The enddate should be after the startdate";
+        if (this.getType()==LeaseAmendmentItemType.DISCOUNT) {
+            LeaseAmendmentItemForDiscount castedItem = (LeaseAmendmentItemForDiscount) this;
+            return leaseAmendmentItemRepository.validateUpsertItemForDiscount(castedItem, castedItem.getDiscountPercentage(), castedItem.getManualDiscountAmount(), castedItem.getApplicableToAsList(), startDate, endDate);
+        }
+        return null;
+    }
+
     @Action(semantics = SemanticsOf.SAFE)
     public LeaseAmendmentItemType getType(){
         return this.getClass().isAssignableFrom(LeaseAmendmentItemForFrequencyChange.class) ? LeaseAmendmentItemType.INVOICING_FREQUENCY_CHANGE : LeaseAmendmentItemType.DISCOUNT;
@@ -186,5 +195,8 @@ public abstract class LeaseAmendmentItem extends UdoDomainObject2<LeaseAmendment
 
     @Inject
     RepositoryService repositoryService;
+
+    @Inject
+    LeaseAmendmentItemRepository leaseAmendmentItemRepository;
 
 }
