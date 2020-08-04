@@ -68,6 +68,8 @@ import org.estatio.module.capex.app.SupplierCreationService;
 import org.estatio.module.capex.app.invoice.IncomingInvoiceTemplateViewModel;
 import org.estatio.module.capex.dom.documents.BudgetItemChooser;
 import org.estatio.module.capex.dom.documents.LookupAttachedPdfService;
+import org.estatio.module.capex.dom.invoice.accountingaudit.IncomingInvoiceAccountingState;
+import org.estatio.module.capex.dom.invoice.accountingaudit.IncomingInvoiceAccountingStateTransition;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
 import org.estatio.module.capex.dom.order.Order;
@@ -284,6 +286,7 @@ import lombok.Setter;
 @Indices({
         @Index(name = "IncomingInvoice_bankAccount_IDX", members = { "bankAccount" }),
         @Index(name = "IncomingInvoice_approvalState_IDX", members = { "approvalState" }),
+        @Index(name = "IncomingInvoice_accountingState_IDX", members = { "accountingState" }),
         @Index(name = "IncomingInvoice_atPath_approvalState_IDX", members = { "applicationTenancyPath", "approvalState" }),
         @Index(name = "IncomingInvoice_approvalState_atPath_IDX", members = { "approvalState", "applicationTenancyPath" }),
         @Index(name = "IncomingInvoice_barcode_IDX", members = { "barcode" }),
@@ -1983,6 +1986,10 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
 
     @Getter @Setter
     @javax.jdo.annotations.Column(allowsNull = "false")
+    private IncomingInvoiceAccountingState accountingState;
+
+    @Getter @Setter
+    @javax.jdo.annotations.Column(allowsNull = "false")
     private IncomingInvoiceApprovalState approvalState;
 
     /**
@@ -2006,6 +2013,9 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
         if (stateTransitionClass == IncomingInvoiceApprovalStateTransition.class) {
             return (S) approvalState;
         }
+        if (stateTransitionClass == IncomingInvoiceAccountingStateTransition.class) {
+            return (S) accountingState;
+        }
         return null;
     }
 
@@ -2019,6 +2029,9 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
             final Class<ST> stateTransitionClass, final S newState) {
         if (stateTransitionClass == IncomingInvoiceApprovalStateTransition.class) {
             setApprovalState((IncomingInvoiceApprovalState) newState);
+        }
+        if (stateTransitionClass == IncomingInvoiceAccountingStateTransition.class) {
+            setAccountingState((IncomingInvoiceAccountingState) newState);
         }
     }
 
