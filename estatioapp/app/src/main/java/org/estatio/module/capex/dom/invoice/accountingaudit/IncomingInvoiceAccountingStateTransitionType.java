@@ -13,6 +13,7 @@ import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.role.IPartyRoleType;
+import org.estatio.module.party.dom.role.PartyRoleTypeEnum;
 import org.estatio.module.task.dom.state.AdvancePolicy;
 import org.estatio.module.task.dom.state.NextTransitionSearchStrategy;
 import org.estatio.module.task.dom.state.StateTransitionEvent;
@@ -31,7 +32,6 @@ public enum IncomingInvoiceAccountingStateTransitionType
         IncomingInvoiceAccountingStateTransitionType,
         IncomingInvoiceAccountingState> {
 
-    // a "pseudo" transition type; won't ever see this persisted as a state transition
     INSTANTIATE(
             (IncomingInvoiceAccountingState) null,
             IncomingInvoiceAccountingState.NEW,
@@ -48,8 +48,17 @@ public enum IncomingInvoiceAccountingStateTransitionType
             Arrays.asList(IncomingInvoiceAccountingState.AUDITABLE, IncomingInvoiceAccountingState.ESCALATED),
             IncomingInvoiceAccountingState.AUDITED,
             NextTransitionSearchStrategy.firstMatching(),
-            TaskAssignmentStrategy.none(),
-            AdvancePolicy.MANUAL),
+            null,
+            AdvancePolicy.MANUAL){
+        @Override
+        public TaskAssignmentStrategy getTaskAssignmentStrategy() {
+            return (TaskAssignmentStrategy<
+                    IncomingInvoice,
+                    IncomingInvoiceAccountingStateTransition,
+                    IncomingInvoiceAccountingStateTransitionType,
+                    IncomingInvoiceAccountingState>) (incomingInvoice, serviceRegistry2) -> Arrays.asList(PartyRoleTypeEnum.AUDITOR_ACCOUNTANT);
+        }
+    },
     ESCALATE(
             IncomingInvoiceAccountingState.AUDITABLE,
             IncomingInvoiceAccountingState.ESCALATED,
