@@ -771,7 +771,17 @@ public class Lease_IntegTest extends LeaseModuleIntegTestAbstract {
 
             // then
             assertThat(renewal.getItems().first().getTerms()).hasSize(1);
+            final LeaseTerm term = renewal.getItems().first().getTerms().first();
+            assertThat(term.getEndDate()).isLessThan(renewal.getStartDate());
+            assertThat(term.getEffectiveInterval()).isNull();
 
+            // .. and a verify will produce a term within the effective interval of the lease
+            // when
+            renewal.verifyUntil(renewal.getStartDate().plusDays(1));
+            transactionService.nextTransaction();
+            assertThat(renewal.getItems().first().getTerms()).hasSize(2);
+            assertThat(renewal.getItems().first().getTerms().last().getEffectiveInterval()).isNotNull();
+            assertThat(renewal.getItems().first().getTerms().last().getPrevious()).isEqualTo(term);
         }
 
         @Test
