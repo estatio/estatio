@@ -1120,24 +1120,26 @@ public class Lease
 
     void copyItemsAndTerms(final Lease newLease, final LocalDate startDate, boolean copyEpochDate) {
         for (LeaseItem item : getItems()) {
-            LeaseItem newItem = newLease.newItem(
-                    item.getType(),
-                    item.getInvoicedBy(),
-                    item.getCharge(),
-                    item.getInvoicingFrequency(),
-                    item.getPaymentMethod(),
-                    item.getStartDate()
-            );
-            if (copyEpochDate && item.getEpochDate()!=null){
-                newItem.setEpochDate(item.getEpochDate());
-            }
-            if (startDate==null){
-                item.copyTerms(startDate, newItem);
-            } else {
-                // ECP-1222 in some edge cases terms that were ending on the tenancy enddate and therefore were not followed by new terms by means of a verify action
-                // could result in a new item with no terms copied over when renewing and thus losing indexation information for example
-                // using copyAllTermsStartingFrom with startDate.minusDays(1) solves this issue
-                item.copyAllTermsStartingFrom(startDate.minusDays(1), newItem);
+            if (item.getEndDate()==null || item.getEndDate().isAfter(startDate)) {
+                LeaseItem newItem = newLease.newItem(
+                        item.getType(),
+                        item.getInvoicedBy(),
+                        item.getCharge(),
+                        item.getInvoicingFrequency(),
+                        item.getPaymentMethod(),
+                        item.getStartDate()
+                );
+                if (copyEpochDate && item.getEpochDate() != null) {
+                    newItem.setEpochDate(item.getEpochDate());
+                }
+                if (startDate == null) {
+                    item.copyTerms(startDate, newItem);
+                } else {
+                    // ECP-1222 in some edge cases terms that were ending on the tenancy enddate and therefore were not followed by new terms by means of a verify action
+                    // could result in a new item with no terms copied over when renewing and thus losing indexation information for example
+                    // using copyAllTermsStartingFrom with startDate.minusDays(1) solves this issue
+                    item.copyAllTermsStartingFrom(startDate.minusDays(1), newItem);
+                }
             }
         }
     }

@@ -1176,6 +1176,47 @@ public class Lease_Test {
 
         }
 
+        @Test
+        public void items_closed_before_or_on_start_date_are_not_copied() throws Exception {
+
+            // given
+            LocalDate startDate = new LocalDate(2020,1,1);
+            Lease lease = new Lease();
+            LeaseItem itemEndingBeforeStartDate = new LeaseItem();
+            itemEndingBeforeStartDate.setType(LeaseItemType.RENT);
+            itemEndingBeforeStartDate.setEndDate(startDate.minusDays(1));
+            lease.getItems().add(itemEndingBeforeStartDate);
+
+            // expect nothing
+            // when
+            lease.copyItemsAndTerms(mockLease, startDate, false);
+
+            // and when
+            LeaseItem itemEndingOnStartDate = new LeaseItem();
+            itemEndingOnStartDate.setEndDate(startDate);
+            itemEndingOnStartDate.setType(LeaseItemType.RENT_DISCOUNT);
+            lease.getItems().add(itemEndingOnStartDate);
+
+            // still expect nothing
+            // when
+            lease.copyItemsAndTerms(mockLease, startDate, false);
+
+            // and when
+            LeaseItem itemEndingAfterStartDate = new LeaseItem();
+            itemEndingAfterStartDate.setEndDate(startDate.plusDays(1));
+            itemEndingAfterStartDate.setType(LeaseItemType.SERVICE_CHARGE);
+            lease.getItems().add(itemEndingAfterStartDate);
+
+            // and expect
+            context.checking(new Expectations(){{
+                oneOf(mockLease).newItem(LeaseItemType.SERVICE_CHARGE, null, null, null, null, null);
+            }});
+
+            // when
+            lease.copyItemsAndTerms(mockLease, startDate, false);
+
+        }
+
     }
 
     public static class Finders extends Lease_Test {
