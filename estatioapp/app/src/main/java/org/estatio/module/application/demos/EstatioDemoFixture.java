@@ -151,7 +151,9 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
                 Person_enum.RosaireEvrardFr,
                 Person_enum.GabrielCountryDirectorFr,
                 Person_enum.BrunoTreasurerFr,
-                Person_enum.JohnTurnover);
+                Person_enum.JohnTurnover,
+                Person_enum.AudreyExternalFr,
+                Person_enum.FelixExternalFr);
 
         ec.executeChildren(this,
                 PropertyAndUnitsAndOwnerAndManager_enum.GraIt,

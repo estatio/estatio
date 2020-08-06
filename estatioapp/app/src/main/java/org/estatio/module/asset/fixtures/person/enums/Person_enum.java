@@ -203,7 +203,16 @@ public enum Person_enum
             new IPartyRoleType[] { PartyRoleTypeEnum.TREASURER },
             new FixedAssetRoleSpec[] {}),
 
+    // accountant
+    AudreyExternalFr("AEXTERNAL", "Audrey", "External", null, true, FEMALE, Fr, Fr,
+            null, null,
+            new IPartyRoleType[] { PartyRoleTypeEnum.AUDITOR_ACCOUNTANT },
+            new FixedAssetRoleSpec[] {}),
 
+    FelixExternalFr("FEXTERNAL", "Felix", "External", null, true, MALE, Fr, Fr,
+            null, null,
+            new IPartyRoleType[] { PartyRoleTypeEnum.AUDITOR_ACCOUNTANT },
+            new FixedAssetRoleSpec[] {}),
 
     AgnethaFaltskogSe("AFALTSKOG", "Agnetha", "Faltskog", "A", false, FEMALE, Se, Se,
             CONTACT, YoukeaSe,
