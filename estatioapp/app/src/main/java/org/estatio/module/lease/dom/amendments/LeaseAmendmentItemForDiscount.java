@@ -124,6 +124,12 @@ public class LeaseAmendmentItemForDiscount extends LeaseAmendmentItem {
                 .reduce(new BigDecimal("0.00"), BigDecimal::add);
     }
 
+    @Programmatic
+    public LeaseAmendmentItemForDiscount reCalculateAmortisationEndDate(){
+        setAmortisationEndDate(leaseAmendmentService.getAmortisationEndDateFor(this));
+        return this;
+    }
+
     @Action(semantics = SemanticsOf.SAFE)
     @Override
     public LeaseAmendmentItemType getType(){
@@ -132,4 +138,7 @@ public class LeaseAmendmentItemForDiscount extends LeaseAmendmentItem {
 
     @Inject
     PersistedCalculationResultRepository persistedCalculationResultRepository;
+
+    @Inject
+    LeaseAmendmentService leaseAmendmentService;
 }
