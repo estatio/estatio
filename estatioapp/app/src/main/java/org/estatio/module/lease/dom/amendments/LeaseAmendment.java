@@ -124,6 +124,10 @@ public class LeaseAmendment extends Agreement {
     public LeaseAmendment sign(final LocalDate dateSigned){
         setState(LeaseAmendmentState.SIGNED);
         setDateSigned(dateSigned);
+        findItemsOfType(LeaseAmendmentItemType.DISCOUNT).forEach(lai->{
+            LeaseAmendmentItemForDiscount castedItem = (LeaseAmendmentItemForDiscount) lai;
+            castedItem.setAmortisationEndDate(leaseAmendmentService.getAmortisationEndDateFor(castedItem));
+        });
         return this;
     }
 

@@ -12,6 +12,8 @@ import javax.validation.constraints.Digits;
 
 import com.google.common.collect.Lists;
 
+import org.joda.time.LocalDate;
+
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.SemanticsOf;
@@ -73,6 +75,10 @@ public class LeaseAmendmentItemForDiscount extends LeaseAmendmentItem {
     @Column(allowsNull = "true", scale = 2)
     @Getter @Setter
     private BigDecimal totalValueForDateBeforeDiscount;
+
+    @Column(allowsNull = "true")
+    @Getter @Setter
+    private LocalDate amortisationEndDate;
 
     @Programmatic
     public BigDecimal calculateDiscountAmountUsingLeasePreview(){

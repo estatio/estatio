@@ -28,6 +28,7 @@ import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.module.invoice.dom.InvoiceRunType;
 import org.estatio.module.invoice.dom.PaymentMethod;
+import org.estatio.module.lease.businessdefinitions.ILeaseEvaluationDateDefinition;
 import org.estatio.module.lease.contributions.Lease_calculate;
 import org.estatio.module.lease.dom.InvoicingFrequency;
 import org.estatio.module.lease.dom.Lease;
@@ -403,6 +404,34 @@ public class LeaseAmendmentService {
                 .stream()
                 .filter(t -> t.oldValue == i.getInvoicingFrequency())
                 .findFirst().orElse(null);
+    }
+
+    public LocalDate getAmortisationEndDateFor(final LeaseAmendmentItemForDiscount amendmentItem) {
+        final LeaseAmendment leaseAmendment = amendmentItem.getLeaseAmendment();
+        final LocalDate minimalAmortisationReferenceDate = leaseAmendment.getLeaseAmendmentType()
+                .getMinimalAmortisationReferenceDate();
+        final LocalDate dateSigned = leaseAmendment.getDateSigned();
+        if (minimalAmortisationReferenceDate==null) return null; // shoud not be possible but types are not enforced ...
+
+        if (dateSigned!=null && dateSigned.isAfter(minimalAmortisationReferenceDate)){
+            return getLeaseEvaluationDateOnReferenceDate(leaseAmendment.getLease(), dateSigned);
+        } else {
+            return getLeaseEvaluationDateOnReferenceDate(leaseAmendment.getLease(), minimalAmortisationReferenceDate);
+        }
+    }
+
+    public LocalDate getLeaseEvaluationDateOnReferenceDate(final Lease lease, final LocalDate referenceDate){
+        //TODO: find a better pattern to bring in services with company specific data
+        final Object leaseEvaluationDateService = serviceRegistry2.getRegisteredServices().stream()
+                .filter(s -> s.getClass().getSimpleName().equals("LeaseEvaluationDateService"))
+                .findFirst().orElse(null);
+        if (leaseEvaluationDateService!=null){
+            ILeaseEvaluationDateDefinition leaseEvaluationDateDefinition = (ILeaseEvaluationDateDefinition) leaseEvaluationDateService;
+            return leaseEvaluationDateDefinition.leaseEvaluationDateFor(lease, referenceDate);
+        } else {
+            messageService.warnUser("LeaseEvaluationDateService could not be found; please contact support");
+            return null;
+        }
     }
 
     @Inject MessageService messageService;
