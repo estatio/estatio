@@ -239,6 +239,7 @@
                                         <cpt:property id="pendingAccountingTask"  hidden="ALL_TABLES">
                                             <cpt:named>Current task</cpt:named>
                                             <cpt:action id="audit"/>
+                                            <cpt:action id="reAudit"/>
                                         </cpt:property>
                                     </cpt:fieldSet>
                                 </bs3:col>

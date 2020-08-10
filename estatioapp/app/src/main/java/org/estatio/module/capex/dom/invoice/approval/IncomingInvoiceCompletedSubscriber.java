@@ -25,6 +25,8 @@ public class IncomingInvoiceCompletedSubscriber extends AbstractSubscriber {
         switch (transitionType) {
         case COMPLETE:
             stateTransitionService.trigger(ev.getDomainObject(), IncomingInvoiceAccountingStateTransitionType.INVOICE_COMPLETED, null, null);
+            // in case of a complete transition after a reject
+            stateTransitionService.trigger(ev.getDomainObject(), IncomingInvoiceAccountingStateTransitionType.MARK_CHANGED, null, null);
             break;
         }
     }

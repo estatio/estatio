@@ -8,7 +8,8 @@ public enum IncomingInvoiceAccountingState implements State<IncomingInvoiceAccou
     NEW                          (false),
     AUDITABLE                    (false),
     ESCALATED                    (false),
-    AUDITED                      (true) ;
+    AUDITED                      (true),
+    CHANGED                      (false);
 
     @Getter
     private final boolean finalState;

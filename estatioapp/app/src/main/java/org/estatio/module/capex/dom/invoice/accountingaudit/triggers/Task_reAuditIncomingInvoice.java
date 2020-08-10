@@ -9,18 +9,18 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.estatio.module.task.dom.task.Task;
 
 @Mixin(method = "act")
-public class Task_auditIncomingInvoice
-        extends Task_mixinIncomingInvoiceAbstract<IncomingInvoice_audit> {
+public class Task_reAuditIncomingInvoice
+        extends Task_mixinIncomingInvoiceAbstract<IncomingInvoice_reAudit> {
 
     protected final Task task;
 
-    public Task_auditIncomingInvoice(final Task task) {
-        super(task, IncomingInvoice_audit.class);
+    public Task_reAuditIncomingInvoice(final Task task) {
+        super(task, IncomingInvoice_reAudit.class);
         this.task = task;
     }
 
     public static class ActionDomainEvent
-            extends Task_mixinIncomingInvoiceAbstract.ActionDomainEvent<Task_auditIncomingInvoice> { }
+            extends Task_mixinIncomingInvoiceAbstract.ActionDomainEvent<Task_reAuditIncomingInvoice> { }
 
     @Action(
             domainEvent = ActionDomainEvent.class,

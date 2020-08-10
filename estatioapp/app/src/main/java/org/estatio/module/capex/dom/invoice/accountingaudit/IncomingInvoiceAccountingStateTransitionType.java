@@ -47,7 +47,28 @@ public enum IncomingInvoiceAccountingStateTransitionType
     AUDIT(
             Arrays.asList(IncomingInvoiceAccountingState.AUDITABLE, IncomingInvoiceAccountingState.ESCALATED),
             IncomingInvoiceAccountingState.AUDITED,
+            NextTransitionSearchStrategy.none(),
+            null,
+            AdvancePolicy.MANUAL){
+        @Override
+        public TaskAssignmentStrategy getTaskAssignmentStrategy() {
+            return (TaskAssignmentStrategy<
+                    IncomingInvoice,
+                    IncomingInvoiceAccountingStateTransition,
+                    IncomingInvoiceAccountingStateTransitionType,
+                    IncomingInvoiceAccountingState>) (incomingInvoice, serviceRegistry2) -> Arrays.asList(PartyRoleTypeEnum.AUDITOR_ACCOUNTANT);
+        }
+    },
+    MARK_CHANGED(
+            Arrays.asList(IncomingInvoiceAccountingState.AUDITED),
+            IncomingInvoiceAccountingState.CHANGED,
             NextTransitionSearchStrategy.firstMatching(),
+            TaskAssignmentStrategy.none(),
+            AdvancePolicy.MANUAL),
+    RE_AUDIT(
+            Arrays.asList(IncomingInvoiceAccountingState.CHANGED),
+            IncomingInvoiceAccountingState.AUDITED,
+            NextTransitionSearchStrategy.none(),
             null,
             AdvancePolicy.MANUAL){
         @Override

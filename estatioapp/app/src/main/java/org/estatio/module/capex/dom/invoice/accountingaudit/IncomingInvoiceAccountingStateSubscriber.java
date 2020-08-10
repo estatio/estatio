@@ -1,14 +1,11 @@
 package org.estatio.module.capex.dom.invoice.accountingaudit;
 
-import javax.inject.Inject;
-
 import org.apache.isis.applib.AbstractSubscriber;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
-import org.estatio.module.task.dom.state.StateTransitionService;
 
 @DomainService(nature = NatureOfService.DOMAIN)
 public class IncomingInvoiceAccountingStateSubscriber extends AbstractSubscriber {
@@ -22,7 +19,5 @@ public class IncomingInvoiceAccountingStateSubscriber extends AbstractSubscriber
             incomingInvoice.setAccountingState(IncomingInvoiceAccountingStateTransitionType.INSTANTIATE.getToState());
         }
     }
-
-    @Inject StateTransitionService stateTransitionService;
 
 }
