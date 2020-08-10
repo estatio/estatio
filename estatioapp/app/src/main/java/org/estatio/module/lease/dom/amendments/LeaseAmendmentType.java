@@ -25,6 +25,7 @@ public enum LeaseAmendmentType {
             Arrays.asList(
                     new Tuple<>(null, "FR2052") // DEFAULT
             ),
+            new LocalDate(2020,7,1),
             null,
             null,
             null,
@@ -46,6 +47,7 @@ public enum LeaseAmendmentType {
             Arrays.asList(
                     new Tuple<>(null, "FR2052") // DEFAULT
             ),
+            new LocalDate(2020,7,1),
             Arrays.asList(
                     new Tuple<>(InvoicingFrequency.QUARTERLY_IN_ADVANCE, InvoicingFrequency.MONTHLY_IN_ADVANCE),
                     new Tuple<>(InvoicingFrequency.QUARTERLY_IN_ARREARS, InvoicingFrequency.MONTHLY_IN_ARREARS)
@@ -76,6 +78,7 @@ public enum LeaseAmendmentType {
             Arrays.asList(
                     new Tuple<>(null, "FR2052") // DEFAULT
             ),
+            new LocalDate(2020,7,1),
             Arrays.asList(
                     new Tuple<>(InvoicingFrequency.QUARTERLY_IN_ADVANCE, InvoicingFrequency.MONTHLY_IN_ADVANCE),
                     new Tuple<>(InvoicingFrequency.QUARTERLY_IN_ARREARS, InvoicingFrequency.MONTHLY_IN_ARREARS)
@@ -109,6 +112,7 @@ public enum LeaseAmendmentType {
                     new Tuple<>("6032", "6015"), // current discount charge on any discount item
                     new Tuple<>(null, "6015") // TODO: check DEFAULT with users?
             ),
+            new LocalDate(2020,7,1),
             null,
             null,
             null,
@@ -133,6 +137,7 @@ public enum LeaseAmendmentType {
                     new Tuple<>("6032", "6015"), // current discount charge on any discount item
                     new Tuple<>(null, "6015") // TODO: check DEFAULT with users?
             ),
+            new LocalDate(2020,7,1),
             null,
             null,
             null,
@@ -143,6 +148,7 @@ public enum LeaseAmendmentType {
             false),
     COVID_ITA_FREQ_CHANGE_ONLY(
             new LocalDate(2020,7,1),
+            null,
             null,
             null,
             null,
@@ -176,6 +182,7 @@ public enum LeaseAmendmentType {
             Arrays.asList(
                     new Tuple<>(null, "GBR_DISCOUNT")
             ),
+            new LocalDate(2020,7,1),
             Arrays.asList(
                     new Tuple<>(InvoicingFrequency.QUARTERLY_IN_ADVANCE, InvoicingFrequency.MONTHLY_IN_ARREARS)
             ),
@@ -195,6 +202,7 @@ public enum LeaseAmendmentType {
             Arrays.asList(
                     new Tuple<>(null, "GBR_DISCOUNT")
             ),
+            new LocalDate(2020,7,1),
             Arrays.asList(
                     new Tuple<>(InvoicingFrequency.QUARTERLY_IN_ADVANCE, InvoicingFrequency.MONTHLY_IN_ADVANCE)
             ),
@@ -224,6 +232,9 @@ public enum LeaseAmendmentType {
 
     @Getter
     private final List<Tuple<String, String>> chargeReferenceForDiscountItem;
+
+    @Getter
+    private final LocalDate minimalAmortisationReferenceDate;
 
     @Getter
     private final List<Tuple<InvoicingFrequency, InvoicingFrequency>> frequencyChanges;
@@ -256,6 +267,7 @@ public enum LeaseAmendmentType {
             final LocalDate discountStartDate,
             final LocalDate discountEndDate,
             final List<Tuple<String, String>> chargeReferenceForDiscountItem,
+            final LocalDate minimalAmortisationReferenceDate,
             final List<Tuple<InvoicingFrequency, InvoicingFrequency>> frequencyChanges,
             final List<LeaseItemType> frequencyChangeAppliesTo,
             final LocalDate frequencyChangeStartDate,
@@ -270,6 +282,7 @@ public enum LeaseAmendmentType {
         this.discountStartDate = discountStartDate;
         this.discountEndDate = discountEndDate;
         this.chargeReferenceForDiscountItem = chargeReferenceForDiscountItem;
+        this.minimalAmortisationReferenceDate = minimalAmortisationReferenceDate;
         this.frequencyChanges = frequencyChanges;
         this.frequencyChangeAppliesTo = frequencyChangeAppliesTo;
         this.frequencyChangeStartDate = frequencyChangeStartDate;

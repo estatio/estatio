@@ -28,6 +28,7 @@ import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.module.invoice.dom.InvoiceRunType;
 import org.estatio.module.invoice.dom.PaymentMethod;
+import org.estatio.module.lease.businessdefinitions.LeaseBusinessDefinitionsService;
 import org.estatio.module.lease.contributions.Lease_calculate;
 import org.estatio.module.lease.dom.InvoicingFrequency;
 import org.estatio.module.lease.dom.Lease;
@@ -405,6 +406,20 @@ public class LeaseAmendmentService {
                 .findFirst().orElse(null);
     }
 
+    public LocalDate getAmortisationEndDateFor(final LeaseAmendmentItemForDiscount amendmentItem) {
+        final LeaseAmendment leaseAmendment = amendmentItem.getLeaseAmendment();
+        final LocalDate minimalAmortisationReferenceDate = leaseAmendment.getLeaseAmendmentType()
+                .getMinimalAmortisationReferenceDate();
+        final LocalDate dateSigned = leaseAmendment.getDateSigned();
+        if (minimalAmortisationReferenceDate==null) return null; // shoud not be possible but types are not enforced ...
+
+        if (dateSigned!=null && dateSigned.isAfter(minimalAmortisationReferenceDate)){
+            return leaseBusinessDefinitionsService.getLeaseEvaluationDateOnReferenceDate(leaseAmendment.getLease(), dateSigned);
+        } else {
+            return leaseBusinessDefinitionsService.getLeaseEvaluationDateOnReferenceDate(leaseAmendment.getLease(), minimalAmortisationReferenceDate);
+        }
+    }
+
     @Inject MessageService messageService;
 
     @Inject ServiceRegistry2 serviceRegistry2;
@@ -416,5 +431,7 @@ public class LeaseAmendmentService {
     @Inject LeaseItemSourceRepository leaseItemSourceRepository;
 
     @Inject FactoryService factoryService;
+
+    @Inject LeaseBusinessDefinitionsService leaseBusinessDefinitionsService;
 
 }

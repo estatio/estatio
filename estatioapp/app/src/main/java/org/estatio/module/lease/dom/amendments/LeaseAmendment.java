@@ -31,6 +31,7 @@ import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.services.eventbus.AbstractDomainEvent;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
@@ -112,9 +113,25 @@ public class LeaseAmendment extends Agreement {
     @Getter @Setter
     private LeaseAmendmentState state;
 
+    public abstract static class ActionDomainEvent<S>
+            extends org.apache.isis.applib.services.eventbus.ActionDomainEvent<LeaseAmendment> { }
+
+    public static class DateSignedSetEvent extends LeaseAmendment.ActionDomainEvent<LeaseAmendment> {};
+
     @Column(allowsNull = "true")
-    @Getter @Setter
     private LocalDate dateSigned;
+
+    public LocalDate getDateSigned() {
+        return dateSigned;
+    }
+
+    public void setDateSigned(final LocalDate dateSigned) {
+        this.dateSigned = dateSigned;
+        final DateSignedSetEvent event = new DateSignedSetEvent();
+        event.setSource(this);
+        event.setEventPhase(AbstractDomainEvent.Phase.EXECUTED);
+        getEventBusService().post(event);
+    }
 
     @Column(allowsNull = "true")
     @Getter @Setter
@@ -124,6 +141,10 @@ public class LeaseAmendment extends Agreement {
     public LeaseAmendment sign(final LocalDate dateSigned){
         setState(LeaseAmendmentState.SIGNED);
         setDateSigned(dateSigned);
+//        findItemsOfType(LeaseAmendmentItemType.DISCOUNT).forEach(lai->{
+//            LeaseAmendmentItemForDiscount castedItem = (LeaseAmendmentItemForDiscount) lai;
+//            castedItem.setAmortisationEndDate(leaseAmendmentService.getAmortisationEndDateFor(castedItem));
+//        });
         return this;
     }
 

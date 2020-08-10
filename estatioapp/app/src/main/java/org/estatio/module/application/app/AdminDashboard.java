@@ -87,6 +87,8 @@ import org.estatio.module.lease.dom.LeaseItemRepository;
 import org.estatio.module.lease.dom.LeaseItemType;
 import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.dom.LeaseTerm;
+import org.estatio.module.lease.dom.amendments.LeaseAmendmentItemForDiscount;
+import org.estatio.module.lease.dom.amendments.LeaseAmendmentItemType;
 import org.estatio.module.lease.dom.amendments.LeaseAmendmentRepository;
 import org.estatio.module.lease.dom.amendments.LeaseAmendmentState;
 import org.estatio.module.lease.dom.amendments.Lease_closeOldAndOpenNewLeaseItem;
@@ -674,6 +676,16 @@ public class AdminDashboard implements ViewModel {
     public void recreateLeasePreviewsForAllLeaseAmendmentsNotApplied(){
         leaseAmendmentRepository.listAll().stream().filter(la->la.getState()!=LeaseAmendmentState.APPLIED).forEach(la->{
             backgroundService2.execute(la).createOrRenewLeasePreview();
+        });
+    }
+
+    @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
+    public void recalculateAmortisationEndDateOnAllAmendmentItemsForDiscount(){
+        leaseAmendmentRepository.listAll().forEach(la->{
+            la.findItemsOfType(LeaseAmendmentItemType.DISCOUNT).forEach(lai->{
+                LeaseAmendmentItemForDiscount castedItem = (LeaseAmendmentItemForDiscount) lai;
+                castedItem.reCalculateAmortisationEndDate();
+            });
         });
     }
 
