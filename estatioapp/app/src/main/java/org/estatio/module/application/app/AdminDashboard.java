@@ -680,7 +680,7 @@ public class AdminDashboard implements ViewModel {
     }
 
     @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
-    public void setAmortisationEndDateOnAllAmendmentItemsForDiscount(){
+    public void recalculateAmortisationEndDateOnAllAmendmentItemsForDiscount(){
         leaseAmendmentRepository.listAll().forEach(la->{
             la.findItemsOfType(LeaseAmendmentItemType.DISCOUNT).forEach(lai->{
                 LeaseAmendmentItemForDiscount castedItem = (LeaseAmendmentItemForDiscount) lai;

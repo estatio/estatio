@@ -18,15 +18,15 @@ import org.estatio.module.lease.dom.Lease;
 public class LeaseBusinessDefinitionsService {
 
     public LocalDate getLeaseEvaluationDateOnReferenceDate(final Lease lease, final LocalDate referenceDate){
-        //TODO: find a better pattern to bring in services with company specific data
+        //TODO: find a better pattern to bring in services with company specific data ... ?
         final Object leaseEvaluationDateService = serviceRegistry2.getRegisteredServices().stream()
-                .filter(s -> s.getClass().getSimpleName().equals("LeaseEvaluationDateService"))
+                .filter(s -> s instanceof ILeaseEvaluationDateDefinition)
                 .findFirst().orElse(null);
         if (leaseEvaluationDateService!=null){
             ILeaseEvaluationDateDefinition leaseEvaluationDateDefinition = (ILeaseEvaluationDateDefinition) leaseEvaluationDateService;
             return leaseEvaluationDateDefinition.leaseEvaluationDateFor(lease, referenceDate);
         } else {
-            messageService.warnUser("LeaseEvaluationDateService could not be found; please contact support");
+            messageService.warnUser("LeaseEvaluationDateDefinition could not be found; please contact support");
             return null;
         }
     }
