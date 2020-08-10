@@ -133,6 +133,9 @@ public class LeaseAmendmentManager {
                     final LeaseAmendment amendment = leaseAmendmentRepository
                             .findUnique(lease, line.getLeaseAmendmentType());
                     if (amendment != null && amendment.getState() != LeaseAmendmentState.APPLIED) {
+                        if (amendment.getDateSigned()==null){
+                            amendment.sign(clockService.now());
+                        }
                         backgroundService2.execute(amendment)
                                 .apply();
                     }
