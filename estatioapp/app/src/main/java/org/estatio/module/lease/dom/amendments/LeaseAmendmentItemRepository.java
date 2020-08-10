@@ -103,6 +103,7 @@ public class LeaseAmendmentItemRepository {
             item.setApplicableTo(LeaseAmendmentItem.applicableToToString(applicableToTypes));
             item.setStartDate(startDate);
             item.setEndDate(endDate);
+            item.setAmortisationEndDate(leaseAmendmentService.getAmortisationEndDateFor(item));
             return item;
         }
     }
@@ -147,6 +148,7 @@ public class LeaseAmendmentItemRepository {
         amendmentItem.setApplicableTo(LeaseAmendmentItem.applicableToToString(applicableToTypes));
         amendmentItem.setStartDate(startDate);
         amendmentItem.setEndDate(endDate);
+        amendmentItem.setAmortisationEndDate(leaseAmendmentService.getAmortisationEndDateFor(amendmentItem));
         serviceRegistry2.injectServicesInto(amendmentItem);
         repositoryService.persistAndFlush(amendmentItem);
         return amendmentItem;
@@ -176,5 +178,8 @@ public class LeaseAmendmentItemRepository {
 
     @Inject
     ServiceRegistry2 serviceRegistry2;
+
+    @Inject
+    LeaseAmendmentService leaseAmendmentService;
 
 }

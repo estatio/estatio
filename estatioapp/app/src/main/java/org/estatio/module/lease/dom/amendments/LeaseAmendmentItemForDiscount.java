@@ -12,6 +12,8 @@ import javax.validation.constraints.Digits;
 
 import com.google.common.collect.Lists;
 
+import org.joda.time.LocalDate;
+
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.SemanticsOf;
@@ -74,6 +76,10 @@ public class LeaseAmendmentItemForDiscount extends LeaseAmendmentItem {
     @Getter @Setter
     private BigDecimal totalValueForDateBeforeDiscount;
 
+    @Column(allowsNull = "true")
+    @Getter @Setter
+    private LocalDate amortisationEndDate;
+
     @Programmatic
     public BigDecimal calculateDiscountAmountUsingLeasePreview(){
         final Lease leasePreview = getLeaseAmendment().getLeasePreview();
@@ -118,6 +124,12 @@ public class LeaseAmendmentItemForDiscount extends LeaseAmendmentItem {
                 .reduce(new BigDecimal("0.00"), BigDecimal::add);
     }
 
+    @Programmatic
+    public LeaseAmendmentItemForDiscount reCalculateAmortisationEndDate(){
+        setAmortisationEndDate(leaseAmendmentService.getAmortisationEndDateFor(this));
+        return this;
+    }
+
     @Action(semantics = SemanticsOf.SAFE)
     @Override
     public LeaseAmendmentItemType getType(){
@@ -126,4 +138,7 @@ public class LeaseAmendmentItemForDiscount extends LeaseAmendmentItem {
 
     @Inject
     PersistedCalculationResultRepository persistedCalculationResultRepository;
+
+    @Inject
+    LeaseAmendmentService leaseAmendmentService;
 }
