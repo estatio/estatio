@@ -87,6 +87,7 @@
                                     <!-- incoming invoice accounting audit-->
                                     <cpt:action id="auditIncomingInvoice" />
                                     <cpt:action id="reAuditIncomingInvoice" />
+                                    <cpt:action id="ecalateIncomingInvoice" />
 
                                     <!-- bank account -->
                                     <cpt:action id="verifyBankAccount">

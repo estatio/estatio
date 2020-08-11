@@ -240,6 +240,7 @@
                                             <cpt:named>Current task</cpt:named>
                                             <cpt:action id="audit"/>
                                             <cpt:action id="reAudit"/>
+                                            <cpt:action id="escalate"/>
                                         </cpt:property>
                                     </cpt:fieldSet>
                                 </bs3:col>

@@ -16,7 +16,8 @@ public enum PartyRoleTypeEnum implements IPartyRoleType {
     PREFERRED_DIRECTOR,
     ADVISOR,
     TECHNICIAN,
-    AUDITOR_ACCOUNTANT;
+    AUDITOR_ACCOUNTANT,
+    ESCALATOR;
 
 
     @Override
