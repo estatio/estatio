@@ -40,6 +40,7 @@ import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 import org.estatio.module.asset.dom.FixedAsset;
 import org.estatio.module.base.platform.applib.ReasonBuffer2;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
+import org.estatio.module.capex.dom.coda.CodaElement;
 import org.estatio.module.capex.dom.documents.BudgetItemChooser;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.module.capex.dom.items.FinancialItem;
@@ -357,6 +358,15 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoice,IncomingInv
     @Getter @Setter
     private IncomingInvoiceItem reversalOf;
 
+    @javax.jdo.annotations.Column(allowsNull = "true")
+    @Property
+    @Getter @Setter
+    private CodaElement codeElement4Override;
+
+    @javax.jdo.annotations.Column(allowsNull = "true")
+    @Property
+    @Getter @Setter
+    private CodaElement codeElement5Override;
 
     void appendReasonIfReversalOrReported(final ReasonBuffer2 buf) {
         buf.append(() -> getReversalOf() != null, "item is a reversal");

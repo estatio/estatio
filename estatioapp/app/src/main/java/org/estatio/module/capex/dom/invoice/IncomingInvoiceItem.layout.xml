@@ -56,6 +56,10 @@
                 </cpt:property>
                 <cpt:property id="reportedDate"/>
             </cpt:fieldSet>
+            <cpt:fieldSet name="Accounting" id="accounting">
+                <cpt:property id="codeElement5Override"/>
+                <cpt:property id="codeElement4Override"/>
+            </cpt:fieldSet>
         </bs3:col>
         <bs3:col span="4">
             <bs3:tabGroup collapseIfOne="false">

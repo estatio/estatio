@@ -1,6 +1,7 @@
 package org.estatio.module.capex.dom.coda;
 
 public enum CodaTransactionType {
-    COMM,
-    STAT;
+    COMM, // commercial
+    STAT, // statutair
+    CONS; // consolidated
 }
