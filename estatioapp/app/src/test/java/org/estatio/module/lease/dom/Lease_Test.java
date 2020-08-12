@@ -1473,6 +1473,59 @@ public class Lease_Test {
 
         }
 
+        @Mock
+        ClockService mockClockService;
+
+        @Test
+        public void recent_And_Future_Items_works() throws Exception {
+
+            // given
+            Lease lease = new Lease();
+            lease.clockService = mockClockService;
+            LocalDate now = new LocalDate(2020,1,2);
+
+            // when, then
+            assertThat(lease.getRecentAndFutureItems()).isEmpty();
+
+            // expect
+            context.checking(new Expectations(){{
+                allowing(mockClockService).now();
+                will(returnValue(now));
+            }});
+
+            // when
+            LeaseItem itemWithoutDates = new LeaseItem();
+            itemWithoutDates.setSequence(BigInteger.valueOf(1));
+            lease.getItems().add(itemWithoutDates);
+            // then
+            assertThat(lease.getRecentAndFutureItems()).contains(itemWithoutDates);
+
+            // when
+            LeaseItem futureItem = new LeaseItem();
+            futureItem.setStartDate(now.plusYears(1));
+            lease.getItems().add(futureItem);
+            // then
+            assertThat(lease.getRecentAndFutureItems()).contains(futureItem);
+            assertThat(lease.getRecentAndFutureItems()).hasSize(2);
+
+            // when
+            LeaseItem pastItemLessOneYearAgo = new LeaseItem();
+            pastItemLessOneYearAgo.setEndDate(now.minusYears(1));
+            lease.getItems().add(pastItemLessOneYearAgo);
+            // then
+            assertThat(lease.getRecentAndFutureItems()).contains(pastItemLessOneYearAgo);
+            assertThat(lease.getRecentAndFutureItems()).hasSize(3);
+
+            // when
+            LeaseItem pastItemMoreThanOneYearAgo = new LeaseItem();
+            pastItemMoreThanOneYearAgo.setEndDate(now.minusYears(1).minusDays(1));
+            lease.getItems().add(pastItemMoreThanOneYearAgo);
+            // then
+            assertThat(lease.getRecentAndFutureItems()).doesNotContain(pastItemMoreThanOneYearAgo);
+            assertThat(lease.getRecentAndFutureItems()).hasSize(3);
+
+        }
+
     }
 
 }
