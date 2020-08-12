@@ -106,6 +106,7 @@
                 <ns2:property id="tenancyDuration">
                     <ns2:action id="changeTenancyDates" position="BELOW"/>
                 </ns2:property>
+                <ns2:property id="leaseEvaluationDate"/>
             </ns2:fieldSet>
             <ns2:fieldSet name="Financials" id="financials">
                 <ns2:property id="paidBy">
