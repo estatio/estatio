@@ -1129,6 +1129,7 @@ public class Lease
                         item.getPaymentMethod(),
                         item.getStartDate()
                 );
+                newItem.setEndDate(item.getEndDate()); // ECP-1229: now also original item's end date is copied over
                 if (copyEpochDate && item.getEpochDate() != null) {
                     newItem.setEpochDate(item.getEpochDate());
                 }

@@ -1217,6 +1217,25 @@ public class Lease_Test {
 
         }
 
+
+        @Test
+        public void end_date_is_copied() throws Exception {
+
+            // given
+            Lease lease = new Lease();
+            LeaseItem leaseItem = new LeaseItem();
+            final LocalDate originalItemEndDate = new LocalDate(2020, 1, 1);
+            leaseItem.setEndDate(originalItemEndDate);
+            lease.getItems().add(leaseItem);
+
+            // when
+            lease.copyItemsAndTerms(newLease, originalItemEndDate.minusDays(1), false);
+
+            // then
+            assertThat(newLease.getItems().first().getEndDate()).isEqualTo(originalItemEndDate);
+
+        }
+
     }
 
     public static class Finders extends Lease_Test {
