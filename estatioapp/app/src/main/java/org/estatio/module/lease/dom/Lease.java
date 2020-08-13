@@ -560,9 +560,7 @@ public class Lease
         SortedSet<LeaseItem> result = new TreeSet<>();
         final List<LeaseItem> activeAndFutureItems = Lists.newArrayList(getItems())
                 .stream()
-                .filter(li->li.getInterval()!=null)
-                .filter(li -> li.getInterval().overlaps(LocalDateInterval.including(clockService.now().minusYears(1), clockService.now())) || (li.getStartDate() != null && li.getStartDate()
-                        .isAfter(clockService.now())))
+                .filter(li -> li.getInterval().overlaps(LocalDateInterval.including(clockService.now().minusYears(1), null)))
                 .collect(Collectors.toList());
         result.addAll(activeAndFutureItems);
         return result;
