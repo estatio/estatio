@@ -560,9 +560,7 @@ public class Lease
         SortedSet<LeaseItem> result = new TreeSet<>();
         final List<LeaseItem> activeAndFutureItems = Lists.newArrayList(getItems())
                 .stream()
-                .filter(li->li.getEffectiveInterval()!=null)
-                .filter(li -> li.getEffectiveInterval().overlaps(LocalDateInterval.including(clockService.now().minusYears(1), clockService.now())) || (li.getStartDate() != null && li.getStartDate()
-                        .isAfter(clockService.now())))
+                .filter(li -> li.getInterval().overlaps(LocalDateInterval.including(clockService.now().minusYears(1), null)))
                 .collect(Collectors.toList());
         result.addAll(activeAndFutureItems);
         return result;
@@ -1120,18 +1118,28 @@ public class Lease
 
     void copyItemsAndTerms(final Lease newLease, final LocalDate startDate, boolean copyEpochDate) {
         for (LeaseItem item : getItems()) {
-            LeaseItem newItem = newLease.newItem(
-                    item.getType(),
-                    item.getInvoicedBy(),
-                    item.getCharge(),
-                    item.getInvoicingFrequency(),
-                    item.getPaymentMethod(),
-                    item.getStartDate()
-            );
-            if (copyEpochDate && item.getEpochDate()!=null){
-                newItem.setEpochDate(item.getEpochDate());
+            if (item.getEndDate()==null || item.getEndDate().isAfter(startDate)) {
+                LeaseItem newItem = newLease.newItem(
+                        item.getType(),
+                        item.getInvoicedBy(),
+                        item.getCharge(),
+                        item.getInvoicingFrequency(),
+                        item.getPaymentMethod(),
+                        item.getStartDate()
+                );
+                newItem.setEndDate(item.getEndDate()); // ECP-1229: now also original item's end date is copied over
+                if (copyEpochDate && item.getEpochDate() != null) {
+                    newItem.setEpochDate(item.getEpochDate());
+                }
+                if (startDate == null) {
+                    item.copyTerms(startDate, newItem);
+                } else {
+                    // ECP-1222 in some edge cases terms that were ending on the tenancy enddate and therefore were not followed by new terms by means of a verify action
+                    // could result in a new item with no terms copied over when renewing and thus losing indexation information for example
+                    // using copyAllTermsStartingFrom with startDate.minusDays(1) solves this issue
+                    item.copyAllTermsStartingFrom(startDate.minusDays(1), newItem);
+                }
             }
-            item.copyTerms(startDate, newItem);
         }
     }
 

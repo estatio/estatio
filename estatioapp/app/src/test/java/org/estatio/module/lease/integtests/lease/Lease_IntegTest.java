@@ -40,6 +40,9 @@ import org.apache.isis.applib.services.xactn.TransactionService;
 
 import org.incode.module.base.integtests.VT;
 
+import org.estatio.module.agreement.dom.AgreementRoleRepository;
+import org.estatio.module.agreement.dom.role.AgreementRoleTypeRepository;
+import org.estatio.module.agreement.dom.type.AgreementTypeRepository;
 import org.estatio.module.base.dom.EstatioRole;
 import org.estatio.module.base.fixtures.security.users.personas.EstatioAdmin;
 import org.estatio.module.charge.dom.Charge;
@@ -49,6 +52,7 @@ import org.estatio.module.lease.app.LeaseMenu;
 import org.estatio.module.lease.dom.InvoicingFrequency;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
+import org.estatio.module.lease.dom.LeaseAgreementTypeEnum;
 import org.estatio.module.lease.dom.LeaseItem;
 import org.estatio.module.lease.dom.LeaseItemType;
 import org.estatio.module.lease.dom.LeaseRepository;
@@ -669,6 +673,148 @@ public class Lease_IntegTest extends LeaseModuleIntegTestAbstract {
         }
 
 
+
+    }
+
+    public static class Renew extends Lease_IntegTest {
+
+        @Before
+        public void setupData() {
+            runFixtureScript(new FixtureScript() {
+                @Override
+                protected void execute(ExecutionContext executionContext) {
+
+                    executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.builder());
+                }
+            });
+        }
+
+        @Inject
+        private AgreementRoleRepository agreementRoles;
+
+        @Inject
+        private AgreementRoleTypeRepository agreementRoleTypeRepository;
+
+        @Inject AgreementTypeRepository agreementTypeRepository;
+
+        @Test
+        public void renew() {
+            // Given
+            Lease lease = leaseRepository.allLeases().get(0);
+            String newReference = lease.default0Renew() + "-2";
+            String newName = lease.default1Renew() + "-2";
+            LocalDate newStartDate = lease.default2Renew().plusDays(5); // +5 is to ensure that the change in tenancy end date is detected by the test
+            LocalDate newEndDate = new LocalDate(2030, 12, 31);
+            lease.setComments("Some comments");
+
+            // When
+            Lease newLease = lease.renew(newReference, newName, newStartDate, newEndDate);
+
+            // Then
+
+            // the lease is terminated
+            assertThat(lease.getTenancyEndDate()).isEqualTo(newStartDate.minusDays(1));
+            assertThat(lease.getOccupancies().first().getEndDate()).isEqualTo(newStartDate.minusDays(1));
+
+            assertThat(newLease.getOccupancies().size()).isEqualTo(1);
+            assertThat(newLease.getStartDate()).isEqualTo(newStartDate);
+            assertThat(newLease.getEndDate()).isEqualTo(newEndDate);
+            assertThat(newLease.getTenancyStartDate()).isEqualTo(newStartDate);
+            assertThat(newLease.getTenancyEndDate()).isEqualTo(newEndDate);
+            assertThat(newLease.getComments()).isEqualTo("Some comments");
+
+            // Then
+            assertThat(agreementRoles.findByAgreementAndPartyAndTypeAndContainsDate(newLease, newLease.getSecondaryParty(), agreementRoleTypeRepository
+                    .findByAgreementTypeAndTitle(agreementTypeRepository.find(LeaseAgreementTypeEnum.LEASE), "Tenant"), newLease.getStartDate()).getCommunicationChannels().size()).isEqualTo(2);
+            assertThat(newLease.getOccupancies().size()).isEqualTo(1);
+        }
+
+        @Test
+        public void reneWithTerminatedOccupancies() {
+            // Given
+            Lease lease = leaseRepository.allLeases().get(0);
+            String newReference = lease.default0Renew() + "-2";
+            String newName = lease.default1Renew() + "-2";
+            LocalDate newStartDate = lease.default2Renew();
+            LocalDate newEndDate = new LocalDate(2030, 12, 31);
+
+            // When
+            lease.primaryOccupancy().get().setEndDate(lease.getTenancyEndDate());
+            Lease newLease = lease.renew(newReference, newName, newStartDate, newEndDate);
+
+            // Then
+            assertThat(newLease.getOccupancies().size()).isEqualTo(1);
+        }
+
+        @Test
+        public void renew_with_terms_ending_on_tenancy_end_date() throws Exception {
+
+            // Given
+            Lease oxfTopmodelLease = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
+            final LeaseItem rentItem = oxfTopmodelLease
+                    .newItem(LeaseItemType.RENT, LeaseAgreementRoleTypeEnum.LANDLORD,
+                            Charge_enum.GbRent.findUsing(serviceRegistry), InvoicingFrequency.QUARTERLY_IN_ADVANCE,
+                            PaymentMethod.DIRECT_DEBIT, oxfTopmodelLease.getStartDate());
+            rentItem.newTerm(rentItem.getStartDate(), rentItem.getStartDate().withMonthOfYear(12).withDayOfMonth(31));
+            oxfTopmodelLease.setTenancyEndDate(rentItem.getStartDate().withMonthOfYear(12).withDayOfMonth(31));
+
+            assertThat(rentItem.getTerms()).hasSize(1);
+            // ECP-1222: to state the case ...
+            oxfTopmodelLease.verifyUntil(oxfTopmodelLease.getTenancyEndDate().plusMonths(1));
+            transactionService.nextTransaction();
+            // still ...
+            assertThat(rentItem.getTerms()).hasSize(1);
+
+            // when
+            final Lease renewal = oxfTopmodelLease
+                    .renew("Topmodel-2", "Topmodel-2", oxfTopmodelLease.getTenancyEndDate().plusDays(1), null);
+
+            // then
+            assertThat(renewal.getItems().first().getTerms()).hasSize(1);
+            final LeaseTerm term = renewal.getItems().first().getTerms().first();
+            assertThat(term.getEndDate()).isLessThan(renewal.getStartDate());
+            assertThat(term.getEffectiveInterval()).isNull();
+
+            // .. and a verify will produce a term within the effective interval of the lease
+            // when
+            renewal.verifyUntil(renewal.getStartDate().plusDays(1));
+            transactionService.nextTransaction();
+            assertThat(renewal.getItems().first().getTerms()).hasSize(2);
+            assertThat(renewal.getItems().first().getTerms().last().getEffectiveInterval()).isNotNull();
+            assertThat(renewal.getItems().first().getTerms().last().getPrevious()).isEqualTo(term);
+        }
+
+        @Test
+        public void renew_copies_future_terms_also() throws Exception {
+
+            // Given
+            Lease oxfTopmodelLease = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
+            final LeaseItem rentItem = oxfTopmodelLease
+                    .newItem(LeaseItemType.RENT, LeaseAgreementRoleTypeEnum.LANDLORD,
+                            Charge_enum.GbRent.findUsing(serviceRegistry), InvoicingFrequency.QUARTERLY_IN_ADVANCE,
+                            PaymentMethod.DIRECT_DEBIT, oxfTopmodelLease.getStartDate());
+            final LeaseTerm firstRentTerm = rentItem
+                    .newTerm(rentItem.getStartDate(), rentItem.getStartDate().withMonthOfYear(12).withDayOfMonth(31));
+
+            assertThat(rentItem.getTerms()).hasSize(1);
+            oxfTopmodelLease.verifyUntil(firstRentTerm.getEndDate().plusDays(2).plusYears(1));
+            transactionService.nextTransaction();
+            assertThat(rentItem.getTerms()).hasSize(3);
+
+            // when
+            final Lease renewal = oxfTopmodelLease
+                    .renew("Topmodel-2", "Topmodel-2", firstRentTerm.getEndDate().plusDays(1), null);
+            renewal.setTenancyEndDate(firstRentTerm.getEndDate().plusMonths(1));
+
+            // then
+            assertThat(renewal.getItems().first().getTerms()).hasSize(3);
+
+            // which - when after tenancy enddate of the lease - can be removed with another verify
+            renewal.verifyUntil(renewal.getStartDate().plusDays(1));
+            transactionService.nextTransaction();
+            assertThat(renewal.getItems().first().getTerms()).hasSize(2);
+
+        }
 
     }
 }
