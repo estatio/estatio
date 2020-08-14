@@ -57,7 +57,7 @@ import org.estatio.module.asset.dom.FixedAsset;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.base.platform.applib.ReasonBuffer2;
-import org.estatio.module.capex.dom.coda.CodaMappingRepository;
+import org.estatio.module.coda.dom.elements.CodaMappingRepository;
 import org.estatio.module.capex.dom.documents.LookupAttachedPdfService;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceItem;

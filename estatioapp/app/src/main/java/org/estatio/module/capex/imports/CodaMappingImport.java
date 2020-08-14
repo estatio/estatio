@@ -15,13 +15,13 @@ import org.isisaddons.module.excel.dom.FixtureAwareRowHandler;
 
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
-import org.estatio.module.capex.dom.coda.CodaElement;
-import org.estatio.module.capex.dom.coda.CodaElementLevel;
-import org.estatio.module.capex.dom.coda.CodaElementRepository;
-import org.estatio.module.capex.dom.coda.CodaMapping;
-import org.estatio.module.capex.dom.coda.CodaMappingRepository;
-import org.estatio.module.capex.dom.coda.CodaTransactionType;
-import org.estatio.module.capex.dom.coda.DocumentType;
+import org.estatio.module.coda.dom.elements.CodaElement;
+import org.estatio.module.coda.dom.elements.CodaElementLevel;
+import org.estatio.module.coda.dom.elements.CodaElementRepository;
+import org.estatio.module.coda.dom.elements.CodaMapping;
+import org.estatio.module.coda.dom.elements.CodaMappingRepository;
+import org.estatio.module.coda.dom.elements.CodaTransactionType;
+import org.estatio.module.coda.dom.elements.DocumentType;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceType;
 import org.estatio.module.capex.dom.util.PeriodUtil;
 import org.estatio.module.charge.dom.Applicability;

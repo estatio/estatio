@@ -57,8 +57,12 @@
                 <cpt:property id="reportedDate"/>
             </cpt:fieldSet>
             <cpt:fieldSet name="Accounting" id="accounting">
-                <cpt:property id="codeElement5Override"/>
-                <cpt:property id="codeElement4Override"/>
+                <cpt:property id="codaElement5">
+                    <cpt:action id="changeCodaElement5"/>
+                </cpt:property>
+                <cpt:property id="codaElement4">
+                    <cpt:action id="changeCodaElement4"/>
+                </cpt:property>
             </cpt:fieldSet>
         </bs3:col>
         <bs3:col span="4">

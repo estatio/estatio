@@ -1,4 +1,4 @@
-package org.estatio.module.capex.dom.coda;
+package org.estatio.module.coda.dom.elements;
 
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdGeneratorStrategy;
@@ -13,7 +13,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @DomainObject(
-        objectType = "org.estatio.capex.dom.coda.CodaElement",
+        objectType = "elements.CodaElement",
         autoCompleteRepository = CodaElementRepository.class)
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE, schema = "dbo")
 @javax.jdo.annotations.DatastoreIdentity(strategy = IdGeneratorStrategy.NATIVE, column = "id")
@@ -21,7 +21,7 @@ import lombok.Setter;
 @Queries({
         @Query(
                 name="searchByCodeOrName",
-                value = "SELECT FROM org.estatio.module.capex.dom.coda.CodaElement "
+                value = "SELECT FROM org.estatio.module.coda.dom.elements.CodaElement "
                         + "WHERE code.matches(:regex) || name.matches(:regex)")
 })
 public class CodaElement {

@@ -1,4 +1,4 @@
-package org.estatio.module.capex.dom.coda.contributions;
+package org.estatio.module.coda.dom.elements.contributions;
 
 import java.util.List;
 
@@ -10,9 +10,9 @@ import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.estatio.module.capex.dom.coda.CodaElement;
-import org.estatio.module.capex.dom.coda.CodaMapping;
-import org.estatio.module.capex.dom.coda.CodaMappingRepository;
+import org.estatio.module.coda.dom.elements.CodaElement;
+import org.estatio.module.coda.dom.elements.CodaMapping;
+import org.estatio.module.coda.dom.elements.CodaMappingRepository;
 
 /**
  * TODO: this should be inlined

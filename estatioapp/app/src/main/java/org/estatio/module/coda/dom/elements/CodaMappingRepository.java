@@ -1,4 +1,4 @@
-package org.estatio.module.capex.dom.coda;
+package org.estatio.module.coda.dom.elements;
 
 import java.util.List;
 import java.util.stream.Collectors;

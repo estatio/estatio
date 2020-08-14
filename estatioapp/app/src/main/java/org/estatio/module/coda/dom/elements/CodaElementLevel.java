@@ -1,4 +1,4 @@
-package org.estatio.module.capex.dom.coda;
+package org.estatio.module.coda.dom.elements;
 
 public enum CodaElementLevel {
     LEVEL_1, // company code

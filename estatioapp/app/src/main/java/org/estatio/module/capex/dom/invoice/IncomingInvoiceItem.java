@@ -33,6 +33,7 @@ import org.apache.isis.applib.annotation.PromptStyle;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.services.eventbus.AbstractDomainEvent;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
@@ -40,7 +41,6 @@ import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 import org.estatio.module.asset.dom.FixedAsset;
 import org.estatio.module.base.platform.applib.ReasonBuffer2;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
-import org.estatio.module.capex.dom.coda.CodaElement;
 import org.estatio.module.capex.dom.documents.BudgetItemChooser;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.module.capex.dom.items.FinancialItem;
@@ -268,9 +268,15 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoice,IncomingInv
     @Column(allowsNull = "true")
     private LocalDate chargeEndDate;
 
+    public static class ChargeSetEvent extends org.apache.isis.applib.services.eventbus.ActionDomainEvent<IncomingInvoiceItem>{}
     @Override
     public void setCharge(final Charge charge) {
         super.setCharge(invalidateApprovalIfDiffer(getCharge(), charge));
+        // TODO: find out the "isis" way ... could not make integ test working
+        final ChargeSetEvent event = new ChargeSetEvent();
+        event.setSource(this);
+        event.setEventPhase(AbstractDomainEvent.Phase.EXECUTED);
+        getEventBusService().post(event);
     }
 
     @Override
@@ -357,16 +363,6 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoice,IncomingInv
     @Property
     @Getter @Setter
     private IncomingInvoiceItem reversalOf;
-
-    @javax.jdo.annotations.Column(allowsNull = "true")
-    @Property
-    @Getter @Setter
-    private CodaElement codeElement4Override;
-
-    @javax.jdo.annotations.Column(allowsNull = "true")
-    @Property
-    @Getter @Setter
-    private CodaElement codeElement5Override;
 
     void appendReasonIfReversalOrReported(final ReasonBuffer2 buf) {
         buf.append(() -> getReversalOf() != null, "item is a reversal");

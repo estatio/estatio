@@ -1,4 +1,4 @@
-package org.estatio.module.capex.integtests.coda;
+package org.estatio.module.coda.integtests;
 
 import javax.inject.Inject;
 
@@ -7,13 +7,12 @@ import org.junit.Test;
 
 import org.incode.module.base.dom.utils.StringUtils;
 
-import org.estatio.module.capex.dom.coda.CodaElementLevel;
-import org.estatio.module.capex.dom.coda.CodaElementRepository;
-import org.estatio.module.capex.integtests.CapexModuleIntegTestAbstract;
+import org.estatio.module.coda.dom.elements.CodaElementLevel;
+import org.estatio.module.coda.dom.elements.CodaElementRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class CodaElementRepository_searchByCode_IntegTest extends CapexModuleIntegTestAbstract {
+public class CodaElementRepository_searchByCode_IntegTest extends CodaModuleIntegTestAbstract {
 
     @Before
     public void setUp() throws Exception {

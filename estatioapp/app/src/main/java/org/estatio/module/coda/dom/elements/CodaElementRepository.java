@@ -1,4 +1,4 @@
-package org.estatio.module.capex.dom.coda;
+package org.estatio.module.coda.dom.elements;
 
 import java.util.List;
 import java.util.Optional;
@@ -58,6 +58,13 @@ public class CodaElementRepository extends UdoDomainRepositoryAndFactory<CodaEle
         return allMatches(
                 "searchByCodeOrName",
                 "regex", regex);
+    }
+
+    @Programmatic
+    public List<CodaElement> findByLevel(final CodaElementLevel codaElementLevel) {
+        final QCodaElement q = QCodaElement.candidate();
+        return isisJdoSupport.executeQuery(CodaElement.class,
+                q.level.eq(codaElementLevel));
     }
 
     @Programmatic

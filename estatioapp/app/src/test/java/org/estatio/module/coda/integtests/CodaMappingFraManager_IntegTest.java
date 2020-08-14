@@ -1,4 +1,4 @@
-package org.estatio.module.capex.integtests.coda;
+package org.estatio.module.coda.integtests;
 
 import javax.inject.Inject;
 
@@ -11,13 +11,12 @@ import org.apache.isis.applib.value.Blob;
 
 import org.incode.module.base.dom.MimeTypeData;
 
-import org.estatio.module.capex.dom.coda.CodaMappingRepository;
 import org.estatio.module.capex.imports.CodaMappingFraManager;
-import org.estatio.module.capex.integtests.CapexModuleIntegTestAbstract;
+import org.estatio.module.coda.dom.elements.CodaMappingRepository;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
 
-public class CodaMappingFraManager_IntegTest extends CapexModuleIntegTestAbstract {
+public class CodaMappingFraManager_IntegTest extends CodaModuleIntegTestAbstract {
 
     @Before
     public void setupData() {

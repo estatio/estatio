@@ -1,4 +1,4 @@
-package org.estatio.module.capex.dom.coda;
+package org.estatio.module.coda.dom.elements;
 
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdGeneratorStrategy;
@@ -18,13 +18,13 @@ import org.estatio.module.charge.dom.Charge;
 import lombok.Getter;
 import lombok.Setter;
 
-@DomainObject(objectType = "org.estatio.capex.dom.coda.CodaMapping")
+@DomainObject(objectType = "elements.CodaMapping")
 @PersistenceCapable(identityType = IdentityType.DATASTORE, schema = "dbo")
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
                 name = "findByAll", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.module.capex.dom.coda.CodaMapping "
+                        + "FROM org.estatio.module.coda.dom.elements.CodaMapping "
                         + "WHERE "
                         + "atPath == :atPath && "
                         + "documentType == :documentType && "

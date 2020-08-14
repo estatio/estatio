@@ -1,4 +1,4 @@
-package org.estatio.module.capex.dom.coda.contributions;
+package org.estatio.module.coda.dom.elements.contributions;
 
 import javax.inject.Inject;
 
@@ -7,14 +7,14 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.estatio.module.capex.dom.coda.CodaElement;
-import org.estatio.module.capex.dom.coda.CodaMappingRepository;
-import org.estatio.module.capex.dom.coda.CodaTransactionType;
-import org.estatio.module.capex.dom.coda.DocumentType;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.module.asset.dom.FixedAsset;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.charge.dom.Charge;
+import org.estatio.module.coda.dom.elements.CodaElement;
+import org.estatio.module.coda.dom.elements.CodaMappingRepository;
+import org.estatio.module.coda.dom.elements.CodaTransactionType;
+import org.estatio.module.coda.dom.elements.DocumentType;
 
 /**
  * TODO: this could be inlined, however we'll probably split out coda as a separate module, in which will be a regular contribution again

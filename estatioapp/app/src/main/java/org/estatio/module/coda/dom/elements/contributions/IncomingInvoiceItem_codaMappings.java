@@ -1,4 +1,4 @@
-package org.estatio.module.capex.dom.coda.contributions;
+package org.estatio.module.coda.dom.elements.contributions;
 
 import java.util.List;
 
@@ -10,9 +10,9 @@ import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.estatio.module.capex.dom.coda.CodaMapping;
-import org.estatio.module.capex.dom.coda.CodaMappingRepository;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceItem;
+import org.estatio.module.coda.dom.elements.CodaMapping;
+import org.estatio.module.coda.dom.elements.CodaMappingRepository;
 
 /**
  * TODO: this could be inlined, however we'll probably split out coda as a separate module, in which will be a regular contribution again

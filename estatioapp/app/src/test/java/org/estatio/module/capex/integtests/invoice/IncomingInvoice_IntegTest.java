@@ -94,6 +94,14 @@ public class IncomingInvoice_IntegTest extends CapexModuleIntegTestAbstract {
 
     }
 
+    @Test
+    public void charge_set_sunbscriber_test() throws Exception {
+
+        // given
+        incomingInvoiceSetup();
+
+    }
+
     private void incomingInvoiceSetup() {
         propertyForViv = Property_enum.VivFr.findUsing(serviceRegistry);
 

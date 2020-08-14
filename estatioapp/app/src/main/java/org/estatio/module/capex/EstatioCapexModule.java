@@ -16,8 +16,6 @@ import org.incode.module.document.DocumentModule;
 import org.estatio.canonical.EstatioCanonicalModule;
 import org.estatio.module.assetfinancial.EstatioAssetFinancialModule;
 import org.estatio.module.budget.EstatioBudgetModule;
-import org.estatio.module.capex.dom.coda.CodaElement;
-import org.estatio.module.capex.dom.coda.CodaMapping;
 import org.estatio.module.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransition;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceItem;
@@ -89,9 +87,6 @@ public class EstatioCapexModule extends ModuleAbstract {
                 deleteFrom(OrderApprovalStateTransition.class);
                 deleteFrom(BankAccountVerificationStateTransition.class);
                 deleteFrom(IncomingDocumentCategorisationStateTransition.class);
-
-                deleteFrom(CodaMapping.class);
-                deleteFrom(CodaElement.class);
 
                 // OrderItemInvoiceItemLink
                 sql = String.format(

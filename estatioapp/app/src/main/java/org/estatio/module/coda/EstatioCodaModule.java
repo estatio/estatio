@@ -33,6 +33,9 @@ import org.estatio.module.capex.EstatioCapexModule;
 import org.estatio.module.coda.dom.costcentre.CostCentre;
 import org.estatio.module.coda.dom.doc.CodaDocHead;
 import org.estatio.module.coda.dom.doc.CodaDocLine;
+import org.estatio.module.coda.dom.elements.CodaElement;
+import org.estatio.module.coda.dom.elements.CodaMapping;
+import org.estatio.module.coda.dom.elements.InvoiceItemCodaElementsLink;
 import org.estatio.module.coda.dom.supplier.CodaAddress;
 import org.estatio.module.coda.dom.supplier.CodaBankAccount;
 import org.estatio.module.coda.dom.supplier.CodaSupplier;
@@ -66,6 +69,10 @@ public final class EstatioCodaModule extends ModuleAbstract {
 
             @Override
             protected void execute(final FixtureScript.ExecutionContext executionContext) {
+                deleteFrom(InvoiceItemCodaElementsLink.class);
+                deleteFrom(CodaMapping.class);
+                deleteFrom(CodaElement.class);
+
                 deleteFrom(CodaDocLine.class);
                 deleteFrom(CodaDocHead.class);
                 deleteFrom(CostCentre.class);
