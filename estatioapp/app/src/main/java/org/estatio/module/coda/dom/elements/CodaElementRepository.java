@@ -30,7 +30,7 @@ public class CodaElementRepository extends UdoDomainRepositoryAndFactory<CodaEle
     }
 
     @Programmatic
-    public Optional<CodaElement> findByLevelAndCode(
+    public CodaElement findByLevelAndCode(
             final CodaElementLevel level,
             final String code
     ) {
@@ -38,7 +38,7 @@ public class CodaElementRepository extends UdoDomainRepositoryAndFactory<CodaEle
         return isisJdoSupport.executeQuery(CodaElement.class,
                 q.level.eq(level)
                         .and(q.code.eq(code)))
-                .stream().findFirst();
+                .stream().findFirst().orElse(null);
     }
 
     @Programmatic
@@ -85,13 +85,11 @@ public class CodaElementRepository extends UdoDomainRepositoryAndFactory<CodaEle
             final CodaElementLevel level,
             final String code,
             final String name) {
-        Optional<CodaElement> codaElement = findByLevelAndCode(level, code);
-
-        if (!codaElement.isPresent()) {
+       CodaElement codaElement = findByLevelAndCode(level, code);
+        if (codaElement==null) {
             return create(level, code, name);
-
         } else {
-            return codaElement.get();
+            return codaElement;
         }
     }
 
