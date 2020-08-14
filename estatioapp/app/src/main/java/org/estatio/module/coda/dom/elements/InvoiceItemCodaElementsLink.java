@@ -23,7 +23,7 @@ import lombok.Setter;
 @Queries({
         @Query(
                 name="findUnique",
-                value = "SELECT FROM org.estatio.module.coda.dom.elements.CodaElement "
+                value = "SELECT FROM org.estatio.module.coda.dom.elements.InvoiceItemCodaElementsLink "
                         + "WHERE incomingInvoiceItem == :incomingInvoiceItem ")
 })
 @javax.jdo.annotations.Uniques({
