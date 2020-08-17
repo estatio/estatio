@@ -63,8 +63,10 @@ import org.estatio.module.application.contributions.Organisation_syncToCoda;
 import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.capex.app.taskreminder.TaskReminderService;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
+import org.estatio.module.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceRepository;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceRoleTypeEnum;
+import org.estatio.module.capex.dom.invoice.accountingaudit.IncomingInvoiceAccountingState;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
 import org.estatio.module.charge.dom.Charge;
@@ -803,6 +805,21 @@ public class AdminDashboard implements ViewModel {
     public LocalDate default1ClosePropertyTaxItemsInvoicedByManager(){
         return new LocalDate(2020,6,30);
     }
+
+    public void triggerCodamappingsForInvoicesStartingWithInvoiceDate(final LocalDate invoiceDate){
+        incomingInvoiceRepository.findByInvoiceDateBetween(invoiceDate, clockService.now().plusYears(1))
+                .stream()
+                .filter(i->i.getAtPath()!=null && !i.getAtPath().startsWith("/ITA"))
+                .filter(i->i.getAccountingState()!= IncomingInvoiceAccountingState.AUDITED)
+                .forEach(i->{
+                    i.getItems()
+                            .stream()
+                            .filter(ii->ii.getClass().isAssignableFrom(IncomingInvoiceItem.class))
+                            .map(IncomingInvoiceItem.class::cast)
+                            .forEach(ii->ii.setCharge(ii.getCharge()));
+                });
+    }
+
 
     @Inject PropertyRepository propertyRepository;
 
