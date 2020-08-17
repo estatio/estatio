@@ -28,13 +28,11 @@ import org.apache.isis.applib.Module;
 import org.apache.isis.applib.ModuleAbstract;
 
 import org.estatio.module.budgetassignment.EstatioBudgetAssignmentModule;
-import org.estatio.module.capex.EstatioCapexModule;
 import org.estatio.module.coda.EstatioCodaModule;
 import org.estatio.module.docflow.EstatioDocFlowModule;
 import org.estatio.module.guarantee.EstatioGuaranteeModule;
 import org.estatio.module.link.EstatioLinkModule;
 import org.estatio.module.registration.EstatioRegistrationModule;
-import org.estatio.module.turnover.EstatioTurnoverModule;
 import org.estatio.module.turnoveraggregate.EstatioTurnoverAggregateModule;
 
 /**
@@ -50,10 +48,10 @@ public final class EstatioApplicationModule extends ModuleAbstract {
         return Sets.newHashSet(
                 new EstatioGuaranteeModule(),
                 new EstatioBudgetAssignmentModule(),
-                new EstatioCapexModule(),
+                new EstatioCodaModule(),
+//                new EstatioCapexModule(),
                 new EstatioRegistrationModule(),
                 new EstatioLinkModule(),
-                new EstatioCodaModule(),
                 new EstatioDocFlowModule(),
 //                new EstatioTurnoverModule(),
                 new EstatioTurnoverAggregateModule()

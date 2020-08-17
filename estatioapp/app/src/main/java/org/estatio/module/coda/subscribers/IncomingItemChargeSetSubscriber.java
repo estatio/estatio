@@ -12,6 +12,8 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.clock.ClockService;
 
+import org.incode.module.base.dom.valuetypes.LocalDateInterval;
+
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.module.coda.dom.elements.CodaElement;
 import org.estatio.module.coda.dom.elements.CodaElementLevel;
@@ -36,12 +38,12 @@ public class IncomingItemChargeSetSubscriber extends AbstractSubscriber {
         final List<CodaMapping> mappings = codaMappingRepository
                 .findMatching(incomingInvoiceItem.getIncomingInvoiceType(), incomingInvoiceItem.getCharge());
         final CodaElement firstEl4OrElseNull = mappings.stream()
-                .filter(m -> m.getInterval().contains(referenceDate))
+                .filter(m -> LocalDateInterval.including(m.getStartDate(), m.getEndDate()).contains(referenceDate))
                 .filter(m -> m.getCodaElement().getLevel() == CodaElementLevel.LEVEL_4).findFirst()
                 .map(m->m.getCodaElement())
                 .orElse(null);
         final CodaElement firstEl5OrElseNull = mappings.stream()
-                .filter(m -> m.getInterval().contains(referenceDate))
+                .filter(m -> LocalDateInterval.including(m.getStartDate(), m.getEndDate()).contains(referenceDate))
                 .filter(m -> m.getCodaElement().getLevel() == CodaElementLevel.LEVEL_5).findFirst()
                 .map(m->m.getCodaElement())
                 .orElse(null);
