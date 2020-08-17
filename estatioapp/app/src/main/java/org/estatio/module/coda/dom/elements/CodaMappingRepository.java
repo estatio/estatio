@@ -11,6 +11,8 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
+import org.apache.isis.applib.services.registry.ServiceRegistry2;
+import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceType;
 import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
@@ -109,7 +111,7 @@ public class CodaMappingRepository extends UdoDomainRepositoryAndFactory<CodaMap
             final LocalDate endDate,
             final CodaElement codaElement
     ) {
-        CodaMapping codaMapping = newTransientInstance();
+        CodaMapping codaMapping = new CodaMapping();
         codaMapping.setAtPath(atPath);
         codaMapping.setDocumentType(documentType);
         codaMapping.setIncomingInvoiceType(incomingInvoiceType);
@@ -121,8 +123,9 @@ public class CodaMappingRepository extends UdoDomainRepositoryAndFactory<CodaMap
         codaMapping.setCodaElement(codaElement);
         codaMapping.setStartDate(startDate);
         codaMapping.setEndDate(endDate);
-        persistIfNotAlready(codaMapping);
-        return null;
+        serviceRegistry2.injectServicesInto(codaMapping);
+        repositoryService.persistAndFlush(codaMapping);
+        return codaMapping;
     }
 
     public List<CodaMapping> findByCharge(final Charge charge) {
@@ -153,9 +156,13 @@ public class CodaMappingRepository extends UdoDomainRepositoryAndFactory<CodaMap
         ).stream().collect(Collectors.toList());
     }
 
-    @Inject IsisJdoSupport isisJdoSupport;
-
     public List<CodaMapping> all() {
         return allInstances();
     }
+
+    @Inject IsisJdoSupport isisJdoSupport;
+
+    @Inject ServiceRegistry2 serviceRegistry2;
+
+    @Inject RepositoryService repositoryService;
 }

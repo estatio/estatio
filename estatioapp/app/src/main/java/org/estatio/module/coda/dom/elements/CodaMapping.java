@@ -8,9 +8,15 @@ import javax.jdo.annotations.VersionStrategy;
 
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Property;
+import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.annotation.Where;
+
+import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceType;
 import org.estatio.module.charge.dom.Charge;
@@ -83,5 +89,11 @@ public class CodaMapping {
     @Column(allowsNull = "true")
     @Property(optionality = Optionality.OPTIONAL)
     private LocalDate endDate;
+
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(hidden = Where.EVERYWHERE)
+    public LocalDateInterval getInterval(){
+        return LocalDateInterval.including(getStartDate(), getEndDate());
+    };
 
 }

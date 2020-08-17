@@ -24,6 +24,7 @@
                                 <cpt:property id="periodEndDate"/>
                                 <cpt:property id="startDate" hidden="ALL_TABLES"/>
                                 <cpt:property id="endDate" hidden="ALL_TABLES"/>
+                                <cpt:property id="interval" hidden="EVERYWHERE"/>
                             </cpt:fieldSet>
                         </bs3:col>
                     </bs3:row>

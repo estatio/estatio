@@ -10,7 +10,9 @@ import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
+import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceItem;
+import org.estatio.module.capex.dom.invoice.accountingaudit.IncomingInvoiceAccountingState;
 import org.estatio.module.coda.dom.elements.CodaElement;
 import org.estatio.module.coda.dom.elements.CodaElementLevel;
 import org.estatio.module.coda.dom.elements.CodaElementRepository;
@@ -36,6 +38,14 @@ public class IncomingInvoiceItem_changeCodaElement5 {
 
     public List<CodaElement> choices0$$(){
         return codaElementRepository.findByLevel(CodaElementLevel.LEVEL_5);
+    }
+
+    public String disable$$(){
+        final IncomingInvoice invoice = (IncomingInvoice) item.getInvoice();
+        if (invoice.getAccountingState()== IncomingInvoiceAccountingState.AUDITED){
+            return "The invoice is audited";
+        }
+        return null;
     }
 
     @Inject InvoiceItemCodaElementsLinkRepository repository;

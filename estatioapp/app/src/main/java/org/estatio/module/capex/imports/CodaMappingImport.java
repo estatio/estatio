@@ -124,12 +124,12 @@ public class CodaMappingImport implements FixtureAwareRowHandler<CodaMappingImpo
             String.format("");
         }
 
-        if ((documentType != null || incomingInvoiceType != null) && chargeName != null) {
+        if ((documentType != null || incomingInvoiceType != null) && chargeReference != null) {
             IncomingInvoiceType incomingInvoiceTypeEnum = IncomingInvoiceType.valueOf(incomingInvoiceType);
             DocumentType documentTypeEnum = incomingInvoiceTypeEnum == null ? DocumentType.valueOf(documentType) : DocumentType.INVOICE_IN;
             CodaElementLevel codaElementLevelEnum = CodaElementLevel.valueOf(codaElementLevel);
             CodaElement codaElement = codaElementRepository.findOrCreate(codaElementLevelEnum, codaElementCode, codaElementName);
-            Charge charge = chargeRepository.findOrCreate(atPath, chargeReference != null ? chargeReference : chargeNameToReference(chargeName), chargeName, "", Applicability.INCOMING);
+            Charge charge = chargeRepository.findOrCreate(atPath, chargeReference, chargeName != null ? chargeName : chargeReferenceToName(chargeReference),"", Applicability.INCOMING);
 
             final LocalDateInterval interval = period == null ? new LocalDateInterval() : PeriodUtil.yearFromPeriod(period);
 
@@ -145,11 +145,12 @@ public class CodaMappingImport implements FixtureAwareRowHandler<CodaMappingImpo
                     interval.startDate(),
                     interval.endDate(),
                     startDate,
-                    endDate, codaElement);
+                    endDate,
+                    codaElement);
         }
     }
 
-    private static boolean propertyFullyOwned(final String propertyOwnershipType) {
+    private static boolean  propertyFullyOwned(final String propertyOwnershipType) {
         return propertyOwnershipType != null && propertyOwnershipType.equals("PARTIAL") ? false : true;
     }
 
@@ -157,8 +158,8 @@ public class CodaMappingImport implements FixtureAwareRowHandler<CodaMappingImpo
         return stringValue == null ? (E) defaultValue :  Enum.valueOf(defaultValue.getDeclaringClass(), stringValue) ;
     }
 
-    private String chargeNameToReference(final String chargeName) {
-        return chargeName.toUpperCase();
+    private String chargeReferenceToName(final String chargeReference) {
+        return chargeReference;
     }
 
     @Inject
