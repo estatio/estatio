@@ -9,12 +9,18 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Nature;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
+import org.apache.isis.applib.services.message.MessageService;
 
 import org.isisaddons.module.excel.dom.ExcelFixture2;
 import org.isisaddons.module.excel.dom.FixtureAwareRowHandler;
 
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
+import org.estatio.module.capex.dom.invoice.IncomingInvoiceType;
+import org.estatio.module.capex.dom.util.PeriodUtil;
+import org.estatio.module.charge.dom.Applicability;
+import org.estatio.module.charge.dom.Charge;
+import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.module.coda.dom.elements.CodaElement;
 import org.estatio.module.coda.dom.elements.CodaElementLevel;
 import org.estatio.module.coda.dom.elements.CodaElementRepository;
@@ -22,11 +28,6 @@ import org.estatio.module.coda.dom.elements.CodaMapping;
 import org.estatio.module.coda.dom.elements.CodaMappingRepository;
 import org.estatio.module.coda.dom.elements.CodaTransactionType;
 import org.estatio.module.coda.dom.elements.DocumentType;
-import org.estatio.module.capex.dom.invoice.IncomingInvoiceType;
-import org.estatio.module.capex.dom.util.PeriodUtil;
-import org.estatio.module.charge.dom.Applicability;
-import org.estatio.module.charge.dom.Charge;
-import org.estatio.module.charge.dom.ChargeRepository;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -87,6 +88,10 @@ public class CodaMappingImport implements FixtureAwareRowHandler<CodaMappingImpo
     @Column(allowsNull = "true")
     private LocalDate endDate;
 
+    @Getter @Setter @Nullable
+    @Column(allowsNull = "true")
+    private String createCharge;
+
     /**
      * To allow for usage within fixture scripts also.
      */
@@ -129,7 +134,17 @@ public class CodaMappingImport implements FixtureAwareRowHandler<CodaMappingImpo
             DocumentType documentTypeEnum = incomingInvoiceTypeEnum == null ? DocumentType.valueOf(documentType) : DocumentType.INVOICE_IN;
             CodaElementLevel codaElementLevelEnum = CodaElementLevel.valueOf(codaElementLevel);
             CodaElement codaElement = codaElementRepository.findOrCreate(codaElementLevelEnum, codaElementCode, codaElementName);
-            Charge charge = chargeRepository.findOrCreate(atPath, chargeReference, chargeName != null ? chargeName : chargeReferenceToName(chargeReference),"", Applicability.INCOMING);
+            Charge charge;
+            if (getCreateCharge()!=null && getCreateCharge().equals("y")) {
+                charge = chargeRepository.findOrCreate(atPath, chargeReference,
+                        chargeName != null ? chargeName : chargeReferenceToName(chargeReference), "",
+                        Applicability.INCOMING);
+            } else {
+                charge = chargeRepository.findByReference(chargeReference);
+                if (charge == null){
+                    messageService.raiseError(String.format("Charge with reference %s not found", getChargeReference()));
+                }
+            }
 
             final LocalDateInterval interval = period == null ? new LocalDateInterval() : PeriodUtil.yearFromPeriod(period);
 
@@ -171,5 +186,6 @@ public class CodaMappingImport implements FixtureAwareRowHandler<CodaMappingImpo
     @Inject
     CodaMappingRepository codaMappingRepository;
 
+    @Inject MessageService messageService;
 
 }
