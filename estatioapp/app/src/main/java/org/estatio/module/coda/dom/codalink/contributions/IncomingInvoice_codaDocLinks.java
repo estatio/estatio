@@ -1,4 +1,4 @@
-package org.estatio.module.capex.dom.codalink.contributions;
+package org.estatio.module.coda.dom.codalink.contributions;
 
 import java.util.List;
 
@@ -10,8 +10,8 @@ import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.estatio.module.capex.dom.codalink.CodaDocLink;
-import org.estatio.module.capex.dom.codalink.CodaDocLinkRepository;
+import org.estatio.module.coda.dom.codalink.CodaDocLink;
+import org.estatio.module.coda.dom.codalink.CodaDocLinkRepository;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 
 @Mixin(method = "coll")

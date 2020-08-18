@@ -24,7 +24,7 @@ import org.estatio.module.asset.dom.FixedAsset;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.base.platform.applib.DtoFactoryAbstract;
 import org.estatio.module.capex.app.DocumentBarcodeService;
-import org.estatio.module.capex.dom.codalink.CodaDocLinkRepository;
+import org.estatio.module.coda.dom.codalink.CodaDocLinkRepository;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceType;

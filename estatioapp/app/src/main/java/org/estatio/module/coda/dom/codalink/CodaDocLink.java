@@ -1,4 +1,4 @@
-package org.estatio.module.capex.dom.codalink;
+package org.estatio.module.coda.dom.codalink;
 
 import java.util.List;
 
@@ -21,7 +21,6 @@ import org.incode.module.document.dom.impl.paperclips.Paperclip;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 
 import org.estatio.module.capex.app.DocumentBarcodeService;
-import org.estatio.module.capex.dom.coda.CodaElementRepository;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.invoice.dom.Invoice;
 
@@ -29,8 +28,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @DomainObject(
-        objectType = "codalink.InvoiceCodaDocLink",
-        autoCompleteRepository = CodaElementRepository.class)
+        objectType = "codalink.InvoiceCodaDocLink")
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE, schema = "dbo")
 @javax.jdo.annotations.DatastoreIdentity(strategy = IdGeneratorStrategy.NATIVE, column = "id")
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "version")
@@ -38,14 +36,14 @@ import lombok.Setter;
         @Query(
                 name = "findByCmpCodeAndDocCodeAndDocNum", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.module.capex.dom.codalink.CodaDocLink "
+                        + "FROM org.estatio.module.coda.dom.codalink.CodaDocLink "
                         + "WHERE cmpCode == :cmpCode "
                         + "   && docCode == :docCode "
                         + "   && docNum  == :docNum "),
         @Query(
                 name = "findByInvoice", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.module.capex.dom.codalink.CodaDocLink "
+                        + "FROM org.estatio.module.coda.dom.codalink.CodaDocLink "
                         + "WHERE invoice == :invoice "
                         + "ORDER BY createdAt DESC "),
 })

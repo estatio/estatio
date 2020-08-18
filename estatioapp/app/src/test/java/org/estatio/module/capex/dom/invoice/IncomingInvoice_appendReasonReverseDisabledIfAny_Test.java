@@ -14,8 +14,8 @@ import org.junit.Test;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
 import org.estatio.module.base.platform.applib.ReasonBuffer2;
-import org.estatio.module.capex.dom.codalink.CodaDocLink;
-import org.estatio.module.capex.dom.codalink.CodaDocLinkRepository;
+import org.estatio.module.coda.dom.codalink.CodaDocLink;
+import org.estatio.module.coda.dom.codalink.CodaDocLinkRepository;
 import org.estatio.module.invoice.dom.InvoiceItem;
 
 public class IncomingInvoice_appendReasonReverseDisabledIfAny_Test {

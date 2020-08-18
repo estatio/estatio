@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.module.capex.restapi;
+package org.estatio.module.coda.dom.restapi;
 
 import javax.inject.Inject;
 
@@ -28,8 +28,8 @@ import org.apache.isis.applib.services.bookmark.Bookmark;
 import org.apache.isis.applib.services.bookmark.BookmarkService2;
 
 import org.estatio.module.base.dom.UdoDomainService;
-import org.estatio.module.capex.dom.codalink.CodaDocLink;
-import org.estatio.module.capex.dom.codalink.CodaDocLinkRepository;
+import org.estatio.module.coda.dom.codalink.CodaDocLink;
+import org.estatio.module.coda.dom.codalink.CodaDocLinkRepository;
 import org.estatio.module.invoice.dom.Invoice;
 
 @DomainService(

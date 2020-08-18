@@ -1,4 +1,4 @@
-package org.estatio.module.capex.dom.codalink;
+package org.estatio.module.coda.dom.codalink;
 
 import java.util.List;
 import java.util.Optional;
