@@ -63,8 +63,10 @@ import org.estatio.module.application.contributions.Organisation_syncToCoda;
 import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.capex.app.taskreminder.TaskReminderService;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
+import org.estatio.module.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceRepository;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceRoleTypeEnum;
+import org.estatio.module.capex.dom.invoice.accountingaudit.IncomingInvoiceAccountingState;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
 import org.estatio.module.charge.dom.Charge;
@@ -87,6 +89,8 @@ import org.estatio.module.lease.dom.LeaseItemRepository;
 import org.estatio.module.lease.dom.LeaseItemType;
 import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.dom.LeaseTerm;
+import org.estatio.module.lease.dom.amendments.LeaseAmendmentItemForDiscount;
+import org.estatio.module.lease.dom.amendments.LeaseAmendmentItemType;
 import org.estatio.module.lease.dom.amendments.LeaseAmendmentRepository;
 import org.estatio.module.lease.dom.amendments.LeaseAmendmentState;
 import org.estatio.module.lease.dom.amendments.Lease_closeOldAndOpenNewLeaseItem;
@@ -678,6 +682,16 @@ public class AdminDashboard implements ViewModel {
     }
 
     @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
+    public void recalculateAmortisationEndDateOnAllAmendmentItemsForDiscount(){
+        leaseAmendmentRepository.listAll().forEach(la->{
+            la.findItemsOfType(LeaseAmendmentItemType.DISCOUNT).forEach(lai->{
+                LeaseAmendmentItemForDiscount castedItem = (LeaseAmendmentItemForDiscount) lai;
+                castedItem.reCalculateAmortisationEndDate();
+            });
+        });
+    }
+
+    @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
     public void assignUUIDToAllIncomingInvoicesThatHaveNone(){
         incomingInvoiceRepository.listAll().forEach(i->{
             if (i.getUuid()==null){
@@ -791,6 +805,21 @@ public class AdminDashboard implements ViewModel {
     public LocalDate default1ClosePropertyTaxItemsInvoicedByManager(){
         return new LocalDate(2020,6,30);
     }
+
+    public void triggerCodamappingsForInvoicesStartingWithInvoiceDate(final LocalDate invoiceDate){
+        incomingInvoiceRepository.findByInvoiceDateBetween(invoiceDate, clockService.now().plusYears(1))
+                .stream()
+                .filter(i->i.getAtPath()!=null && !i.getAtPath().startsWith("/ITA"))
+                .filter(i->i.getAccountingState()!= IncomingInvoiceAccountingState.AUDITED)
+                .forEach(i->{
+                    i.getItems()
+                            .stream()
+                            .filter(ii->ii.getClass().isAssignableFrom(IncomingInvoiceItem.class))
+                            .map(IncomingInvoiceItem.class::cast)
+                            .forEach(ii->ii.setCharge(ii.getCharge()));
+                });
+    }
+
 
     @Inject PropertyRepository propertyRepository;
 

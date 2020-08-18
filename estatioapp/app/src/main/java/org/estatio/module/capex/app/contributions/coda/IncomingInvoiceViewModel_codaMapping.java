@@ -10,7 +10,7 @@ import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.estatio.module.capex.dom.coda.CodaMappingRepository;
+import org.estatio.module.coda.dom.elements.CodaMappingRepository;
 import org.estatio.module.capex.app.invoice.IncomingDocAsInvoiceViewModel;
 
 /**

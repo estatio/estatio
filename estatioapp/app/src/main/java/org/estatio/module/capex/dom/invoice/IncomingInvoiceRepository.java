@@ -27,6 +27,8 @@ import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.estatio.module.asset.dom.Property;
+import org.estatio.module.capex.dom.invoice.accountingaudit.IncomingInvoiceAccountingState;
+import org.estatio.module.capex.dom.invoice.accountingaudit.IncomingInvoiceAccountingStateTransitionType;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionType;
 import org.estatio.module.task.dom.state.StateTransitionService;
@@ -456,6 +458,12 @@ public class IncomingInvoiceRepository {
                 }
             }
             stateTransitionService.trigger(invoice, transitionType, null, null);
+        }
+        final IncomingInvoiceAccountingState accountingStateAfterPersisting = invoice.getAccountingState();
+        if (accountingStateAfterPersisting == IncomingInvoiceAccountingStateTransitionType.INSTANTIATE.getToState()){
+            if (!CountryUtil.isItalian(invoice)){
+                stateTransitionService.trigger(invoice, IncomingInvoiceAccountingStateTransitionType.INSTANTIATE, null, null);
+            }
         }
 
         return invoice;

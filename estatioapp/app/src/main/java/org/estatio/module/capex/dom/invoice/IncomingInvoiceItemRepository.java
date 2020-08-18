@@ -71,6 +71,7 @@ public class IncomingInvoiceItemRepository {
         serviceRegistry2.injectServicesInto(invoiceItem);
         repositoryService.persistAndFlush(invoiceItem);
 
+        invoiceItem.setCharge(charge);  // ECP-1188: explicit set of charge in order to raise the IncomingInvoiceItem.ChargeSetEvent
         invoice.invalidateApproval();
 
         return invoiceItem;

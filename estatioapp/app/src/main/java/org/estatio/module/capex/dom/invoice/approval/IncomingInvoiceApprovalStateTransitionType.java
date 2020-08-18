@@ -46,8 +46,7 @@ public enum IncomingInvoiceApprovalStateTransitionType
         IncomingInvoiceApprovalStateTransition,
         IncomingInvoiceApprovalStateTransitionType,
         IncomingInvoiceApprovalState> {
-
-    // a "pseudo" transition type; won't ever see this persisted as a state transition
+    
     INSTANTIATE(
             (IncomingInvoiceApprovalState) null,
             IncomingInvoiceApprovalState.NEW,

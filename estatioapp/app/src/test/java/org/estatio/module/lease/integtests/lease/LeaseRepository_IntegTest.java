@@ -33,8 +33,6 @@ import org.isisaddons.module.fakedata.dom.FakeDataService;
 
 import org.incode.module.base.integtests.VT;
 
-import org.estatio.module.agreement.dom.AgreementRoleRepository;
-import org.estatio.module.agreement.dom.role.AgreementRoleTypeRepository;
 import org.estatio.module.asset.app.PropertyMenu;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
@@ -374,76 +372,6 @@ public class LeaseRepository_IntegTest extends LeaseModuleIntegTestAbstract {
             assertThat(leaseRepository.findByAssetAndActiveOnDate(property, new LocalDate(2010, 7, 15)).size()).isEqualTo(0);
 
         }
-    }
-
-    public static class Renew extends LeaseRepository_IntegTest {
-
-        @Before
-        public void setupData() {
-            runFixtureScript(new FixtureScript() {
-                @Override
-                protected void execute(ExecutionContext executionContext) {
-
-                    executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.builder());
-                }
-            });
-        }
-
-        @Inject
-        private AgreementRoleRepository agreementRoles;
-
-        @Inject
-        private AgreementRoleTypeRepository agreementRoleTypeRepository;
-
-        @Test
-        public void renew() {
-            // Given
-            Lease lease = leaseRepository.allLeases().get(0);
-            String newReference = lease.default0Renew() + "-2";
-            String newName = lease.default1Renew() + "-2";
-            LocalDate newStartDate = lease.default2Renew().plusDays(5); // +5 is to ensure that the change in tenancy end date is detected by the test
-            LocalDate newEndDate = new LocalDate(2030, 12, 31);
-            lease.setComments("Some comments");
-
-            // When
-            Lease newLease = lease.renew(newReference, newName, newStartDate, newEndDate);
-
-            // Then
-
-            // the lease is terminated
-            assertThat(lease.getTenancyEndDate()).isEqualTo(newStartDate.minusDays(1));
-            assertThat(lease.getOccupancies().first().getEndDate()).isEqualTo(newStartDate.minusDays(1));
-
-            assertThat(newLease.getOccupancies().size()).isEqualTo(1);
-            assertThat(newLease.getStartDate()).isEqualTo(newStartDate);
-            assertThat(newLease.getEndDate()).isEqualTo(newEndDate);
-            assertThat(newLease.getTenancyStartDate()).isEqualTo(newStartDate);
-            assertThat(newLease.getTenancyEndDate()).isEqualTo(newEndDate);
-            assertThat(newLease.getComments()).isEqualTo("Some comments");
-
-            // Then
-            assertThat(agreementRoles.findByAgreementAndPartyAndTypeAndContainsDate(newLease, newLease.getSecondaryParty(), agreementRoleTypeRepository
-                    .findByTitle("Tenant"), newLease.getStartDate()).getCommunicationChannels().size()).isEqualTo(2);
-            assertThat(newLease.getOccupancies().size()).isEqualTo(1);
-        }
-
-        @Test
-        public void reneWithTerminatedOccupancies() {
-            // Given
-            Lease lease = leaseRepository.allLeases().get(0);
-            String newReference = lease.default0Renew() + "-2";
-            String newName = lease.default1Renew() + "-2";
-            LocalDate newStartDate = lease.default2Renew();
-            LocalDate newEndDate = new LocalDate(2030, 12, 31);
-
-            // When
-            lease.primaryOccupancy().get().setEndDate(lease.getTenancyEndDate());
-            Lease newLease = lease.renew(newReference, newName, newStartDate, newEndDate);
-
-            // Then
-            assertThat(newLease.getOccupancies().size()).isEqualTo(1);
-        }
-
     }
 
     public static class MatchByExternalReference extends LeaseRepository_IntegTest {

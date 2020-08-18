@@ -16,12 +16,10 @@ import org.incode.module.document.DocumentModule;
 import org.estatio.canonical.EstatioCanonicalModule;
 import org.estatio.module.assetfinancial.EstatioAssetFinancialModule;
 import org.estatio.module.budget.EstatioBudgetModule;
-import org.estatio.module.financial.dom.bankaccount.verification.BankAccountVerificationStateTransition;
-import org.estatio.module.capex.dom.coda.CodaElement;
-import org.estatio.module.capex.dom.coda.CodaMapping;
 import org.estatio.module.capex.dom.documents.categorisation.IncomingDocumentCategorisationStateTransition;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceItem;
+import org.estatio.module.capex.dom.invoice.accountingaudit.IncomingInvoiceAccountingStateTransition;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
 import org.estatio.module.capex.dom.order.Order;
 import org.estatio.module.capex.dom.order.OrderItem;
@@ -37,6 +35,7 @@ import org.estatio.module.capex.dom.project.ProjectItemTerm;
 import org.estatio.module.capex.dom.project.ProjectRole;
 import org.estatio.module.capex.seed.DocumentTypeFSForIbanProof;
 import org.estatio.module.capex.seed.DocumentTypeFSForIncoming;
+import org.estatio.module.financial.dom.bankaccount.verification.BankAccountVerificationStateTransition;
 import org.estatio.module.invoice.EstatioInvoiceModule;
 import org.estatio.module.invoice.dom.Invoice;
 import org.estatio.module.invoice.dom.InvoiceItem;
@@ -84,12 +83,10 @@ public class EstatioCapexModule extends ModuleAbstract {
 
                 deleteFrom(PaymentBatchApprovalStateTransition.class);
                 deleteFrom(IncomingInvoiceApprovalStateTransition.class);
+                deleteFrom(IncomingInvoiceAccountingStateTransition.class);
                 deleteFrom(OrderApprovalStateTransition.class);
                 deleteFrom(BankAccountVerificationStateTransition.class);
                 deleteFrom(IncomingDocumentCategorisationStateTransition.class);
-
-                deleteFrom(CodaMapping.class);
-                deleteFrom(CodaElement.class);
 
                 // OrderItemInvoiceItemLink
                 sql = String.format(

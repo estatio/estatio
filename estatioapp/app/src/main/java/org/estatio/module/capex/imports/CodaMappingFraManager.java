@@ -21,8 +21,8 @@ import org.isisaddons.module.excel.dom.ExcelService;
 import org.isisaddons.module.excel.dom.WorksheetContent;
 import org.isisaddons.module.excel.dom.WorksheetSpec;
 
-import org.estatio.module.capex.dom.coda.CodaMapping;
-import org.estatio.module.capex.dom.coda.CodaMappingRepository;
+import org.estatio.module.coda.dom.elements.CodaMapping;
+import org.estatio.module.coda.dom.elements.CodaMappingRepository;
 
 @DomainObject(
         nature = Nature.VIEW_MODEL,

@@ -33,6 +33,7 @@ import org.apache.isis.applib.annotation.PromptStyle;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.services.eventbus.AbstractDomainEvent;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
@@ -267,9 +268,15 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoice,IncomingInv
     @Column(allowsNull = "true")
     private LocalDate chargeEndDate;
 
+    public static class ChargeSetEvent extends org.apache.isis.applib.services.eventbus.ActionDomainEvent<IncomingInvoiceItem>{}
     @Override
     public void setCharge(final Charge charge) {
         super.setCharge(invalidateApprovalIfDiffer(getCharge(), charge));
+        // TODO: find out the "isis" way ... could not make integ test working
+        final ChargeSetEvent event = new ChargeSetEvent();
+        event.setSource(this);
+        event.setEventPhase(AbstractDomainEvent.Phase.EXECUTED);
+        getEventBusService().post(event);
     }
 
     @Override
@@ -356,7 +363,6 @@ public class IncomingInvoiceItem extends InvoiceItem<IncomingInvoice,IncomingInv
     @Property
     @Getter @Setter
     private IncomingInvoiceItem reversalOf;
-
 
     void appendReasonIfReversalOrReported(final ReasonBuffer2 buf) {
         buf.append(() -> getReversalOf() != null, "item is a reversal");

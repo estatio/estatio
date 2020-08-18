@@ -84,6 +84,11 @@
                                         <cpt:named>Recategorize</cpt:named>
                                     </cpt:action>
 
+                                    <!-- incoming invoice accounting audit-->
+                                    <cpt:action id="auditIncomingInvoice" />
+                                    <cpt:action id="reAuditIncomingInvoice" />
+                                    <cpt:action id="ecalateIncomingInvoice" />
+
                                     <!-- bank account -->
                                     <cpt:action id="verifyBankAccount">
                                         <cpt:named>Verify</cpt:named>
