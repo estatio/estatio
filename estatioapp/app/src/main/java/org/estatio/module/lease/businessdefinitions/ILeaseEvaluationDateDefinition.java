@@ -8,4 +8,11 @@ public interface ILeaseEvaluationDateDefinition {
 
     LocalDate leaseEvaluationDateFor(final Lease lease, final LocalDate date);
 
+    ILeaseEvaluationDateDefinition NOOP = new ILeaseEvaluationDateDefinition() {
+        @Override
+        public LocalDate leaseEvaluationDateFor(final Lease lease, final LocalDate date) {
+            return null;
+        }
+    };
+
 }
