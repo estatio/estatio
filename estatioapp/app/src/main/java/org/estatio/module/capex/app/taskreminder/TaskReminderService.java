@@ -1,11 +1,13 @@
 package org.estatio.module.capex.app.taskreminder;
 
+import java.net.URI;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
+import javax.jdo.JDOHelper;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,10 +28,10 @@ import org.incode.module.communications.dom.impl.commchannel.EmailAddress;
 import org.estatio.module.application.spiimpl.email.EmailService2;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionType;
+import org.estatio.module.party.dom.Person;
 import org.estatio.module.task.dom.state.StateTransitionService;
 import org.estatio.module.task.dom.task.Task;
 import org.estatio.module.task.dom.task.TaskRepository;
-import org.estatio.module.party.dom.Person;
 
 @DomainService(
         nature = NatureOfService.DOMAIN,
@@ -97,7 +99,7 @@ public class TaskReminderService {
             if (disableSendReminderToApprover(approver, taskList)==null) {
                 try {
                     LOG.info(String.format("Trying to send reminder to %s", approver.getUsername()));
-                    sendReminderToApprover(approver, taskList);
+                    sendReminderToApproverCircumventingDeeplinkServiceToEnableQuartzSimpleSessionUsage(approver, taskList);
                 } catch (Exception e){
                     // email service will do a re-try
                     LOG.warn(String.format("Exception caught when sending reminders to Italian approvers: %s", e.getMessage()));
@@ -109,14 +111,33 @@ public class TaskReminderService {
     }
 
     @Programmatic
-    public void sendReminderToApprover(final Person person, final List<Task> approvalTasks) {
-        doSendReminder(
-                person,
-                approvalTasks,
-                "You have %d approval task in Estatio",
-                "You have %d approval tasks in Estatio",
-                "Dear %s,\n\nThis is a friendly reminder that you have %d approval task(s) in Estatio:"
-        );
+    public void sendReminderToApproverCircumventingDeeplinkServiceToEnableQuartzSimpleSessionUsage(final Person person, final List<Task> approvalTasks) {
+
+        final String subjectStringSingle = "You have %d approval task in Estatio";
+        final String subjectStringPlural = "You have %d approval tasks in Estatio";
+        final String bodyString = "Dear %s,\n\nThis is a friendly reminder that you have %d approval task(s) in Estatio:";
+        final EmailAddress address = (EmailAddress) communicationChannelRepository.findByOwnerAndType(person, CommunicationChannelType.EMAIL_ADDRESS).first();
+        final String subject = approvalTasks.size() == 1 ? String.format(subjectStringSingle, approvalTasks.size()) : String.format(subjectStringPlural, approvalTasks.size());
+
+        final String body = String.format(bodyString + "\n<ul>", person.getName(), approvalTasks.size())
+                + approvalTasks.stream()
+                .map(task -> String.format("<li>%s</li>", deepLinkFor(task)))
+                .collect(Collectors.joining())
+                + "</ul>";
+
+        LOG.info(String.format("Sending reminder to %s ", person.getReference()));
+        LOG.info(body);
+        emailService.send(Collections.singletonList(address.getEmailAddress()), Collections.emptyList(), Collections.emptyList(), FROM_EMAIL_ADDRESS, subject, body);
+
+        approvalTasks.forEach(task -> task.setRemindedOn(clockService.now()));
+    }
+
+    //ECP-1175: quartz cannot use deeplink service because it lives in Wicket UI; therefore we create this (fragile) hack ...
+    public URI deepLinkFor(Task task){
+        final String objectId = JDOHelper.getObjectId(task).toString().split("\\[OID\\]")[0];
+        final String urlString = String.format("https://estatio.int.ecpnv.com/wicket/entity/task.Task:%s", objectId);
+        URI uri = URI.create(urlString);
+        return uri;
     }
 
     @Programmatic
