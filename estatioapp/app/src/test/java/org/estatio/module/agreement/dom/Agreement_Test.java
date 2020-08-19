@@ -139,21 +139,22 @@ public class Agreement_Test {
             tenantArt.setTitle("Tenant");
 
             agreement = new AgreementForTesting();
+            agreement.clockService = mockClockService;
 
             arLandlord = new AgreementRole();
+            arLandlord.setAgreement(agreement);
             arLandlord.setType(landlordArt);
             arLandlord.setParty(landlord);
-            arLandlord.clockService = mockClockService;
 
             arTenant1 = new AgreementRole();
+            arTenant1.setAgreement(agreement);
             arTenant1.setType(tenantArt);
             arTenant1.setParty(tenant1);
-            arTenant1.clockService = mockClockService;
 
             arTenant2 = new AgreementRole();
+            arTenant2.setAgreement(agreement);
             arTenant2.setType(tenantArt);
             arTenant2.setParty(tenant2);
-            arTenant2.clockService = mockClockService;
 
             // tenant 1 superceded by tenant 2
             arTenant1.setEndDate(clockDate.minusMonths(1));
@@ -187,9 +188,24 @@ public class Agreement_Test {
         @Test
         public void whenTerminated() {
             addAllRoles();
-            agreement.setEndDate(clockDate.minusDays(2));
+            arLandlord.setEndDate(clockDate.minusDays(2));
             assertThat(agreement.findCurrentOrMostRecentParty(landlordArt)).isEqualTo(landlord);
             assertThat(agreement.findCurrentOrMostRecentParty(tenantArt)).isEqualTo(tenant2);
+        }
+
+        @Test
+        public void getMostRecentlyEndedAgreementRoleIfAny() {
+            addAllRoles();
+            arTenant1.setEndDate(clockDate.minusDays(2));
+            arTenant2.setEndDate(clockDate.minusDays(1));
+            List<AgreementRole> agreementRoles = Lists.newArrayList(agreement.getRoles());
+            assertThat(agreement.getMostRecentlyEndedAgreementRoleIfAny(agreementRoles)).isEqualTo(arTenant2);
+
+            arTenant2.setEndDate(null);
+            assertThat(agreement.getMostRecentlyEndedAgreementRoleIfAny(agreementRoles)).isEqualTo(arTenant1);
+
+            arTenant1.setEndDate(null);
+            assertThat(agreement.getMostRecentlyEndedAgreementRoleIfAny(agreementRoles)).isEqualTo(null);
         }
 
         private void addAllRoles() {
@@ -198,6 +214,7 @@ public class Agreement_Test {
             agreement.getRoles().add(arTenant2);
         }
     }
+
 
     public static class FindParty extends Agreement_Test {
 
@@ -288,6 +305,7 @@ public class Agreement_Test {
 
             agreement = new AgreementForSubtypeTesting();
             agreement.agreementRoleTypeRepository = mockAgreementRoleTypeRepository;
+            agreement.clockService = mockClockService;
         }
 
         @Test
@@ -426,7 +444,7 @@ public class Agreement_Test {
 
             @Mock
             private FactoryService mockFactoryService;
-//
+
             @Mock
             private RepositoryService mockRepositoryService;
 
@@ -573,6 +591,8 @@ public class Agreement_Test {
             private LocalDate startDate;
             private LocalDate endDate;
 
+            private final LocalDate clockDate = new LocalDate(2013, 4, 1);
+
             @Before
             public void setUp() throws Exception {
                 art = new AgreementRoleType();
@@ -588,6 +608,14 @@ public class Agreement_Test {
                 endDate = new LocalDate(2023, 3, 30);
 
                 agreement = new AgreementForTesting();
+                agreement.clockService = mockClockService;
+
+                context.checking(new Expectations() {
+                    {
+                        allowing(mockClockService).now();
+                        will(returnValue(clockDate));
+                    }
+                });
             }
 
             @Test

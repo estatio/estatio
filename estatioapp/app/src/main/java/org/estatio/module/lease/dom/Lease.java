@@ -57,7 +57,6 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
-import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.eventbus.ActionDomainEvent;
 import org.apache.isis.applib.services.factory.FactoryService;
 import org.apache.isis.applib.services.message.MessageService;
@@ -1188,7 +1187,12 @@ public class Lease
             final LocalDate endDate
     ) {
         Party tenant = secondaryPartyAsOfElseCurrent(startDate);
-        final Lease newLease = copyToNewLease(reference, name, tenant, startDate, endDate, startDate, endDate, false);
+        LocalDate endDateTenancy = endDate;
+        if (applicationTenancyPath.startsWith("/SWE")) {
+            endDateTenancy = null;
+        }
+        final Lease newLease = copyToNewLease(reference, name, tenant, startDate, endDate, startDate, endDateTenancy, false);
+
         if (newLease != null){
             wrapperFactory.wrapSkipRules(this).terminate(startDate.minusDays(1));
         }
@@ -1337,9 +1341,6 @@ public class Lease
 
     @Inject
     ChargeRepository chargeRepository;
-
-    @Inject
-    ClockService clockService;
 
     @Inject
     private WrapperFactory wrapperFactory;

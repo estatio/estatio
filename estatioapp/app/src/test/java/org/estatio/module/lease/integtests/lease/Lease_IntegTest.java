@@ -683,38 +683,51 @@ public class Lease_IntegTest extends LeaseModuleIntegTestAbstract {
             runFixtureScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-
+                    executionContext.executeChild(this, Lease_enum.HanTopModel002Se.builder());
                     executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.builder());
                 }
             });
         }
 
-        @Inject
-        private AgreementRoleRepository agreementRoles;
 
-        @Inject
-        private AgreementRoleTypeRepository agreementRoleTypeRepository;
+        @Test
+        public void tenancyEndDateNotSetSweden() throws Exception {
+            // given
+            Lease leaseSe = Lease_enum.HanTopModel002Se.findUsing(serviceRegistry);
+            Lease leaseGb = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
+            LocalDate startDate = ld(2022, 7, 15);
+            LocalDate endDate = ld(2032, 7, 14);
 
-        @Inject AgreementTypeRepository agreementTypeRepository;
+            // when
+            Lease leaseSe2 = leaseSe.renew("HAN-TOPMODEL-003", "Lease2", startDate, endDate);
+            Lease leaseGb2 = leaseGb.renew("OXF-TOPMODEL-002", "Lease2", startDate, endDate);
+
+            // then
+            assertThat(leaseSe2.getTenancyEndDate()).isNull();
+            assertThat(leaseGb2.getTenancyEndDate()).isEqualTo(endDate);
+
+
+        }
+
 
         @Test
         public void renew() {
             // Given
-            Lease lease = leaseRepository.allLeases().get(0);
-            String newReference = lease.default0Renew() + "-2";
-            String newName = lease.default1Renew() + "-2";
-            LocalDate newStartDate = lease.default2Renew().plusDays(5); // +5 is to ensure that the change in tenancy end date is detected by the test
+            Lease oxfTopmodelLease = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
+            String newReference = oxfTopmodelLease.default0Renew() + "-2";
+            String newName = oxfTopmodelLease.default1Renew() + "-2";
+            LocalDate newStartDate = oxfTopmodelLease.default2Renew().plusDays(5); // +5 is to ensure that the change in tenancy end date is detected by the test
             LocalDate newEndDate = new LocalDate(2030, 12, 31);
-            lease.setComments("Some comments");
+            oxfTopmodelLease.setComments("Some comments");
 
             // When
-            Lease newLease = lease.renew(newReference, newName, newStartDate, newEndDate);
+            Lease newLease = oxfTopmodelLease.renew(newReference, newName, newStartDate, newEndDate);
 
             // Then
 
             // the lease is terminated
-            assertThat(lease.getTenancyEndDate()).isEqualTo(newStartDate.minusDays(1));
-            assertThat(lease.getOccupancies().first().getEndDate()).isEqualTo(newStartDate.minusDays(1));
+            assertThat(oxfTopmodelLease.getTenancyEndDate()).isEqualTo(newStartDate.minusDays(1));
+            assertThat(oxfTopmodelLease.getOccupancies().first().getEndDate()).isEqualTo(newStartDate.minusDays(1));
 
             assertThat(newLease.getOccupancies().size()).isEqualTo(1);
             assertThat(newLease.getStartDate()).isEqualTo(newStartDate);
@@ -815,6 +828,14 @@ public class Lease_IntegTest extends LeaseModuleIntegTestAbstract {
             assertThat(renewal.getItems().first().getTerms()).hasSize(2);
 
         }
+
+        @Inject
+        private AgreementRoleRepository agreementRoles;
+
+        @Inject
+        private AgreementRoleTypeRepository agreementRoleTypeRepository;
+
+        @Inject AgreementTypeRepository agreementTypeRepository;
 
     }
 }
