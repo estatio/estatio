@@ -433,6 +433,55 @@ public class TurnoverAggregationService_Test {
 
     }
 
+    @Test
+    public void getTurnoversForAggregationPeriod_works_when_Covid() throws Exception {
+
+        // given
+        TurnoverAggregationService service = new TurnoverAggregationService();
+        final LocalDate aggregationDate = new LocalDate(2020, 6, 1);
+        final AggregationPeriod aggregationPeriod = AggregationPeriod.P_12M_COVID;
+        List<Turnover> turnovers = new ArrayList<>();
+
+        // when
+        final Turnover turnoverJuly2020 = new Turnover(null, aggregationDate.plusMonths(1), null, null, null, null);
+        final Turnover turnoverJune2020 = new Turnover(null, aggregationDate, null, null, null, null);
+        final Turnover turnoverMay2020 = new Turnover(null, aggregationDate.minusMonths(1), null, null, null, null);
+        final Turnover turnoverApril2020 = new Turnover(null, aggregationDate.minusMonths(2), null, null, null, null);
+        final Turnover turnoverMarch2020 = new Turnover(null, aggregationDate.minusMonths(3), null, null, null, null);
+        final Turnover turnoverFeb2020 = new Turnover(null, aggregationDate.minusMonths(4), null, null, null, null);
+        turnovers.addAll(Arrays.asList(turnoverJuly2020, turnoverJune2020, turnoverMay2020, turnoverApril2020, turnoverMarch2020, turnoverFeb2020));
+
+        // then
+        Assertions.assertThat(turnovers).hasSize(6);
+        Assertions.assertThat(service.getTurnoversForAggregationPeriod(aggregationPeriod, aggregationDate, turnovers, false)).hasSize(2);
+        Assertions.assertThat(service.getTurnoversForAggregationPeriod(aggregationPeriod, aggregationDate, turnovers, false)).doesNotContain(turnoverJuly2020);
+        Assertions.assertThat(service.getTurnoversForAggregationPeriod(aggregationPeriod, aggregationDate, turnovers, false)).contains(turnoverJune2020);
+        Assertions.assertThat(service.getTurnoversForAggregationPeriod(aggregationPeriod, aggregationDate, turnovers, false)).contains(turnoverFeb2020);
+        Assertions.assertThat(service.getTurnoversForAggregationPeriod(aggregationPeriod, aggregationDate, turnovers, false)).doesNotContain(turnoverMay2020);
+        Assertions.assertThat(service.getTurnoversForAggregationPeriod(aggregationPeriod, aggregationDate, turnovers, false)).doesNotContain(turnoverApril2020);
+        Assertions.assertThat(service.getTurnoversForAggregationPeriod(aggregationPeriod, aggregationDate, turnovers, false)).doesNotContain(turnoverMarch2020);
+        Assertions.assertThat(service.getTurnoversForAggregationPeriod(aggregationPeriod, aggregationDate, turnovers, true)).isEmpty();
+
+        // and when
+        final Turnover turnoverJuly2019 = new Turnover(null, aggregationDate.minusYears(1).plusMonths(1), null, null, null, null);
+        final Turnover turnoverJune2019 = new Turnover(null, aggregationDate.minusYears(1), null, null, null, null);
+        final Turnover turnoverMay2019 = new Turnover(null, aggregationDate.minusYears(1).minusMonths(1), null, null, null, null);
+        final Turnover turnoverApril2019 = new Turnover(null, aggregationDate.minusYears(1).minusMonths(2), null, null, null, null);
+        final Turnover turnoverMarch2019 = new Turnover(null, aggregationDate.minusYears(1).minusMonths(3), null, null, null, null);
+        final Turnover turnoverFeb2019 = new Turnover(null, aggregationDate.minusYears(1).minusMonths(4), null, null, null, null);
+        turnovers.addAll(Arrays.asList(turnoverJuly2019, turnoverJune2019, turnoverMay2019, turnoverApril2019, turnoverMarch2019, turnoverFeb2019));
+
+        // then
+        Assertions.assertThat(turnovers).hasSize(12);
+        Assertions.assertThat(service.getTurnoversForAggregationPeriod(aggregationPeriod, aggregationDate, turnovers, true)).hasSize(5);
+        Assertions.assertThat(service.getTurnoversForAggregationPeriod(aggregationPeriod, aggregationDate, turnovers, true)).doesNotContain(turnoverJuly2019);
+        Assertions.assertThat(service.getTurnoversForAggregationPeriod(aggregationPeriod, aggregationDate, turnovers, true)).contains(turnoverMay2019);
+        Assertions.assertThat(service.getTurnoversForAggregationPeriod(aggregationPeriod, aggregationDate, turnovers, true)).contains(turnoverApril2019);
+        Assertions.assertThat(service.getTurnoversForAggregationPeriod(aggregationPeriod, aggregationDate, turnovers, true)).contains(turnoverMarch2019);
+
+
+    }
+
 
     @Test
     public void calculatePurchaseCountAggregateForPeriod_works() throws Exception {

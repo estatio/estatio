@@ -18,6 +18,7 @@
  */
 package org.estatio.module.lease.dom.occupancy;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.annotation.Nullable;
@@ -32,6 +33,7 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
+import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
@@ -55,6 +57,8 @@ import org.estatio.module.base.dom.EstatioRole;
 import org.estatio.module.base.dom.UdoDomainObject2;
 import org.estatio.module.base.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.module.lease.dom.Lease;
+import org.estatio.module.lease.dom.occupancy.salesarea.SalesAreaLicense;
+import org.estatio.module.lease.dom.occupancy.salesarea.SalesAreaLicenseRepository;
 import org.estatio.module.lease.dom.occupancy.tags.Activity;
 import org.estatio.module.lease.dom.occupancy.tags.ActivityRepository;
 import org.estatio.module.lease.dom.occupancy.tags.Brand;
@@ -227,6 +231,10 @@ public class Occupancy
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE, domainEvent = Occupancy.RemoveEvent.class)
     public Object remove() {
         Lease lease = getLease();
+        final SalesAreaLicense currentSalesAreaLicense = getCurrentSalesAreaLicense();
+        if (currentSalesAreaLicense !=null){
+            currentSalesAreaLicense.remove();
+        }
         remove(this);
         return lease;
     }
@@ -412,6 +420,107 @@ public class Occupancy
         return this;
     }
 
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
+    public SalesAreaLicense getCurrentSalesAreaLicense(){
+        return salesAreaLicenseRepository.findMostRecentForOccupancy(this);
+    }
+
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
+    public BigDecimal getSalesAreaNonFood(){
+        return getCurrentSalesAreaLicense() !=null ? getCurrentSalesAreaLicense().getSalesAreaNonFood() : null;
+    }
+
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
+    public BigDecimal getSalesAreaFood(){
+        return getCurrentSalesAreaLicense() !=null ? getCurrentSalesAreaLicense().getSalesAreaFood() : null;
+    }
+
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
+    public BigDecimal getFoodAndBeveragesArea(){
+        return getCurrentSalesAreaLicense() !=null ? getCurrentSalesAreaLicense().getFoodAndBeveragesArea() : null;
+    }
+
+    @Action
+    @ActionLayout(contributed = Contributed.AS_ACTION)
+    public Occupancy createSalesAreaLicense(
+            @Nullable
+            final BigDecimal salesAreaNonFood,
+            @Nullable
+            final BigDecimal salesAreaFood,
+            @Nullable
+            final BigDecimal foodAndBeveragesArea,
+            final LocalDate startDate
+    ){
+        final SalesAreaLicense salesAreaLicense = salesAreaLicenseRepository.newSalesAreaLicense(
+                this,
+                getLease().getReference(),
+                getLease().getReference().concat("-SAL"),
+                startDate,
+                lease.getSecondaryParty(),
+                lease.getPrimaryParty(),
+                salesAreaNonFood,
+                salesAreaFood,
+                foodAndBeveragesArea);
+        return this;
+    }
+
+    public LocalDate default3CreateSalesAreaLicense(){
+        return getEffectiveStartDate();
+    }
+
+    public boolean hideCreateSalesAreaLicense(){
+        return getCurrentSalesAreaLicense()!=null ? true : false;
+    }
+
+    public String validateCreateSalesAreaLicense(
+            @Nullable
+            final BigDecimal salesAreaNonFood,
+            @Nullable
+            final BigDecimal salesAreaFood,
+            @Nullable
+            final BigDecimal foodAndBeveragesArea,
+            @Nullable
+            final LocalDate startDate){
+        return SalesAreaLicense.validate(this, null, startDate, salesAreaFood, salesAreaNonFood, foodAndBeveragesArea);
+    }
+
+    @Action
+    @ActionLayout(contributed = Contributed.AS_ACTION)
+    public Occupancy createNextSalesAreaLicense(
+            LocalDate startDate,
+            @Nullable
+            final BigDecimal salesAreaNonFood,
+            @Nullable
+            final BigDecimal salesAreaFood,
+            @Nullable
+            final BigDecimal foodAndBeveragesArea){
+        getCurrentSalesAreaLicense().createNext(startDate, salesAreaNonFood, salesAreaFood, foodAndBeveragesArea);
+        return this;
+    }
+
+    public boolean hideCreateNextSalesAreaLicense(){
+        return getCurrentSalesAreaLicense()==null ? true : false;
+    }
+
+    public String validateCreateNextSalesAreaLicense(
+            LocalDate startDate,
+            @Nullable
+            final BigDecimal salesAreaNonFood,
+            @Nullable
+            final BigDecimal salesAreaFood,
+            @Nullable
+            final BigDecimal foodAndBeveragesArea){
+        return getCurrentSalesAreaLicense().validateCreateNext(startDate, salesAreaNonFood, salesAreaFood, foodAndBeveragesArea);
+    }
+
+    public LocalDate default0CreateNextSalesAreaLicense(){
+        return getCurrentSalesAreaLicense().default0CreateNext();
+    }
+
     @Inject
     BrandRepository brandRepository;
 
@@ -423,4 +532,7 @@ public class Occupancy
 
     @Inject
     UnitSizeRepository unitSizeRepository;
+
+    @Inject
+    SalesAreaLicenseRepository salesAreaLicenseRepository;
 }

@@ -41,6 +41,7 @@ import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.PersonGenderType;
 import org.estatio.module.party.dom.PersonRepository;
+import org.estatio.module.party.dom.role.PartyRoleType;
 
 @DomainService(
         nature = NatureOfService.VIEW_MENU_ONLY,
@@ -93,6 +94,11 @@ public class PersonMenu {
         return person;
     }
 
+    @Action(semantics = SemanticsOf.SAFE)
+    @MemberOrder(sequence = "3")
+    public List<Person> findPersonsByRole(PartyRoleType partyRoleType) {
+        return personRepository.findByRoleType(partyRoleType);
+    }
 
 
     @Action(semantics = SemanticsOf.SAFE, restrictTo = RestrictTo.PROTOTYPING)

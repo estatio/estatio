@@ -5,6 +5,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -59,12 +60,15 @@ import org.incode.module.country.dom.impl.Country;
 import org.incode.module.slack.impl.SlackService;
 
 import org.estatio.module.application.contributions.Organisation_syncToCoda;
+import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.capex.app.taskreminder.TaskReminderService;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceRepository;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceRoleTypeEnum;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
+import org.estatio.module.charge.dom.Charge;
+import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.module.coda.EstatioCodaModule;
 import org.estatio.module.coda.app.CodaCmpCodeService;
 import org.estatio.module.coda.app.CodaDocCodeService;
@@ -73,14 +77,24 @@ import org.estatio.module.coda.dom.hwm.CodaHwm;
 import org.estatio.module.coda.dom.hwm.CodaHwmRepository;
 import org.estatio.module.countryapptenancy.dom.CountryServiceForCurrentUser;
 import org.estatio.module.countryapptenancy.dom.EstatioApplicationTenancyRepositoryForCountry;
+import org.estatio.module.invoice.dom.InvoiceItem;
+import org.estatio.module.invoice.dom.InvoiceStatus;
 import org.estatio.module.lease.dom.InvoicingFrequency;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
+import org.estatio.module.lease.dom.LeaseItem;
+import org.estatio.module.lease.dom.LeaseItemRepository;
 import org.estatio.module.lease.dom.LeaseItemType;
 import org.estatio.module.lease.dom.LeaseRepository;
+import org.estatio.module.lease.dom.LeaseTerm;
+import org.estatio.module.lease.dom.amendments.LeaseAmendmentItemForDiscount;
+import org.estatio.module.lease.dom.amendments.LeaseAmendmentItemType;
 import org.estatio.module.lease.dom.amendments.LeaseAmendmentRepository;
 import org.estatio.module.lease.dom.amendments.LeaseAmendmentState;
 import org.estatio.module.lease.dom.amendments.Lease_closeOldAndOpenNewLeaseItem;
+import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
+import org.estatio.module.lease.dom.invoicing.InvoiceForLeaseRepository;
+import org.estatio.module.lease.dom.invoicing.InvoiceItemForLease;
 import org.estatio.module.lease.dom.settings.LeaseInvoicingSettingsService;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.OrganisationRepository;
@@ -666,6 +680,16 @@ public class AdminDashboard implements ViewModel {
     }
 
     @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
+    public void recalculateAmortisationEndDateOnAllAmendmentItemsForDiscount(){
+        leaseAmendmentRepository.listAll().forEach(la->{
+            la.findItemsOfType(LeaseAmendmentItemType.DISCOUNT).forEach(lai->{
+                LeaseAmendmentItemForDiscount castedItem = (LeaseAmendmentItemForDiscount) lai;
+                castedItem.reCalculateAmortisationEndDate();
+            });
+        });
+    }
+
+    @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
     public void assignUUIDToAllIncomingInvoicesThatHaveNone(){
         incomingInvoiceRepository.listAll().forEach(i->{
             if (i.getUuid()==null){
@@ -673,7 +697,122 @@ public class AdminDashboard implements ViewModel {
             }
         });
     }
-    
+
+    @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
+    public void linkManualInvoicesToTerms(final org.estatio.module.asset.dom.Property property, final LeaseItemType leaseItemType, final Charge charge){
+        List<LeaseItem> itemsForPropertyTypeAndCharge = new ArrayList<>();
+        leaseRepository.findLeasesByProperty(property).forEach(l->{
+            final List<LeaseItem> leaseItemsByTypeAndChargedInvoicedByLandlord = leaseItemRepository.findLeaseItemsByType(l, leaseItemType)
+                    .stream()
+                    .filter(li->li.getInvoicedBy()==LeaseAgreementRoleTypeEnum.LANDLORD)
+                    .filter(li->li.getCharge().equals(charge))
+                    .collect(Collectors.toList());
+            itemsForPropertyTypeAndCharge.addAll(leaseItemsByTypeAndChargedInvoicedByLandlord);
+        });
+
+        List<InvoiceItemForLease> unlinkedInvoiceItem = findUnlinkedInvoiceItemsForPropertyAndCharge(property, charge);
+
+        for (LeaseItem leaseItem : itemsForPropertyTypeAndCharge){
+            for (LeaseTerm lt : leaseItem.getTerms()){
+                unlinkedInvoiceItem.stream()
+                        .filter(ii->ii.getLease()==leaseItem.getLease())
+                        .filter(ii->lt.getInterval().contains(ii.getDueDate()))
+                        .forEach(ii->{
+                            LOG.info(String.format("Linking item for invoice %s to term %s of item of type %s of lease %s",ii.getInvoice().getInvoiceNumber(), lt.getSequence(), lt.getLeaseItem().getType(), lt.getLeaseItem().getLease().getReference()));
+                            ii.setLeaseTerm(lt);
+                        });
+
+            }
+        }
+    }
+
+    public List<LeaseItemType> choices1LinkManualInvoicesToTerms(){
+        return Arrays.asList(LeaseItemType.PROPERTY_TAX, LeaseItemType.OFFICE_TAX, LeaseItemType.RETAIL_TAX);
+    }
+
+    public List<Charge> choices2LinkManualInvoicesToTerms(){
+        List<Charge> result = new ArrayList<>();
+        // property tax all except ..
+        result.add(chargeRepository.findByReference("FR4560"));
+        // prop tax SL
+        result.add(chargeRepository.findByReference("FR4561"));
+
+        // office tax all except
+        result.add(chargeRepository.findByReference("FR4580"));
+        // prop tax SL
+        result.add(chargeRepository.findByReference("FR4583"));
+
+        // retail tax
+        result.add(chargeRepository.findByReference("FR4570"));
+        return result;
+    }
+
+    private List<InvoiceItemForLease> findUnlinkedInvoiceItemsForPropertyAndCharge(final org.estatio.module.asset.dom.Property property, final Charge charge){
+        final List<InvoiceForLease> invoices = invoiceForLeaseRepository
+                .findByFixedAssetAndStatus(property, InvoiceStatus.INVOICED);
+        List<InvoiceItemForLease> result = new ArrayList<>();
+        for (InvoiceForLease invoice : invoices){
+            for (InvoiceItem invoiceItem : invoice.getItems()){
+                InvoiceItemForLease castedItem = (InvoiceItemForLease) invoiceItem;
+                if (castedItem.getLeaseTerm()==null && castedItem.getCharge()==charge){
+                    result.add(castedItem);
+                }
+            }
+        }
+        return result;
+    }
+
+    @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
+    public void closePropertyTaxItemsInvoicedByManager(final org.estatio.module.asset.dom.Property property, final LocalDate currentEndDate){
+        final LocalDate end2019 = new LocalDate(2019, 12, 31);
+        final List<Lease> leasesForProperty = leaseRepository.findLeasesByProperty(property);
+        for (Lease lease : leasesForProperty){
+            for (LeaseItem leaseItem : lease.getItems()){
+                if (leaseItem.getType()==LeaseItemType.PROPERTY_TAX && leaseItem.getInvoicedBy()==LeaseAgreementRoleTypeEnum.MANAGER && (leaseItem.getEndDate()==null || leaseItem.getEndDate().equals(currentEndDate))){
+                    LOG.info(String.format("Closing property tax item invoiced by manager for %s with endDate %s on %s", leaseItem.getLease().getReference(), leaseItem.getEndDate(), end2019));
+                    leaseItem.setEndDate(end2019);
+                }
+            }
+        }
+    }
+
+    public List<org.estatio.module.asset.dom.Property> choices0ClosePropertyTaxItemsInvoicedByManager(){
+        List<org.estatio.module.asset.dom.Property> result = new ArrayList<>();
+        result.add(propertyRepository.findPropertyByReference("AM"));
+        result.add(propertyRepository.findPropertyByReference("AT"));
+        result.add(propertyRepository.findPropertyByReference("AZ"));
+        result.add(propertyRepository.findPropertyByReference("BP"));
+        result.add(propertyRepository.findPropertyByReference("BT"));
+        result.add(propertyRepository.findPropertyByReference("CH"));
+        result.add(propertyRepository.findPropertyByReference("HA"));
+        result.add(propertyRepository.findPropertyByReference("MO"));
+        result.add(propertyRepository.findPropertyByReference("PH"));
+        result.add(propertyRepository.findPropertyByReference("PT"));
+        result.add(propertyRepository.findPropertyByReference("RC"));
+        result.add(propertyRepository.findPropertyByReference("SL"));
+        result.add(propertyRepository.findPropertyByReference("TD"));
+        result.add(propertyRepository.findPropertyByReference("VT"));
+        return result.stream().sorted(Comparator.comparing(org.estatio.module.asset.dom.Property::getReference)).collect(
+                Collectors.toList());
+    }
+
+    public List<LocalDate> choices1ClosePropertyTaxItemsInvoicedByManager(){
+        return Arrays.asList(new LocalDate(2020,6,30));
+    }
+
+    public LocalDate default1ClosePropertyTaxItemsInvoicedByManager(){
+        return new LocalDate(2020,6,30);
+    }
+
+    @Inject PropertyRepository propertyRepository;
+
+    @Inject LeaseItemRepository leaseItemRepository;
+
+    @Inject InvoiceForLeaseRepository invoiceForLeaseRepository;
+
+    @Inject
+    ChargeRepository chargeRepository;
+
     @Inject
     CodaCmpCodeService codaCmpCodeService;
 

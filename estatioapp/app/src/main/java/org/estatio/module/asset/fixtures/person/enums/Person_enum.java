@@ -92,7 +92,6 @@ public enum Person_enum
             new FixedAssetRoleSpec[] {
                     new FixedAssetRoleSpec(FixedAssetRoleTypeEnum.PROPERTY_MANAGER, Property_enum.MacFr)
             }),
-
     FifineLacroixFr("FLACROIX", "Fifine", "Lacroix", null, true, FEMALE, Fr, Fr,
             null, null,
             new IPartyRoleType[] { PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER },

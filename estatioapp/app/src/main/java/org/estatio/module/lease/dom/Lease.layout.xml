@@ -106,6 +106,7 @@
                 <ns2:property id="tenancyDuration">
                     <ns2:action id="changeTenancyDates" position="BELOW"/>
                 </ns2:property>
+                <ns2:property id="leaseEvaluationDate"/>
             </ns2:fieldSet>
             <ns2:fieldSet name="Financials" id="financials">
                 <ns2:property id="paidBy">
@@ -121,8 +122,8 @@
                     <ns2:action id="resumeAll" position="BELOW"/>
                     <ns2:action id="renew" position="BELOW"/>
                 </ns2:property>
-                <ns2:property id="originalLease"/>
-                <ns2:property id="amendment"/>
+                <ns2:property id="originalLease" hidden="ALL_TABLES"/>
+                <ns2:property id="amendment" hidden="ALL_TABLES"/>
             </ns2:fieldSet>
         </col>
         <col span="6">

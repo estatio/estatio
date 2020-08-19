@@ -38,7 +38,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 import org.apache.commons.lang3.ObjectUtils;
-import org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum;
 import org.joda.time.LocalDate;
 import org.joda.time.Period;
 import org.joda.time.PeriodType;
@@ -58,7 +57,6 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
-import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.eventbus.ActionDomainEvent;
 import org.apache.isis.applib.services.factory.FactoryService;
 import org.apache.isis.applib.services.message.MessageService;
@@ -561,9 +559,7 @@ public class Lease
         SortedSet<LeaseItem> result = new TreeSet<>();
         final List<LeaseItem> activeAndFutureItems = Lists.newArrayList(getItems())
                 .stream()
-                .filter(li->li.getEffectiveInterval()!=null)
-                .filter(li -> li.getEffectiveInterval().overlaps(LocalDateInterval.including(clockService.now().minusYears(1), clockService.now())) || (li.getStartDate() != null && li.getStartDate()
-                        .isAfter(clockService.now())))
+                .filter(li -> li.getInterval().overlaps(LocalDateInterval.including(clockService.now().minusYears(1), null)))
                 .collect(Collectors.toList());
         result.addAll(activeAndFutureItems);
         return result;
@@ -1121,18 +1117,28 @@ public class Lease
 
     void copyItemsAndTerms(final Lease newLease, final LocalDate startDate, boolean copyEpochDate) {
         for (LeaseItem item : getItems()) {
-            LeaseItem newItem = newLease.newItem(
-                    item.getType(),
-                    item.getInvoicedBy(),
-                    item.getCharge(),
-                    item.getInvoicingFrequency(),
-                    item.getPaymentMethod(),
-                    item.getStartDate()
-            );
-            if (copyEpochDate && item.getEpochDate()!=null){
-                newItem.setEpochDate(item.getEpochDate());
+            if (item.getEndDate()==null || item.getEndDate().isAfter(startDate)) {
+                LeaseItem newItem = newLease.newItem(
+                        item.getType(),
+                        item.getInvoicedBy(),
+                        item.getCharge(),
+                        item.getInvoicingFrequency(),
+                        item.getPaymentMethod(),
+                        item.getStartDate()
+                );
+                newItem.setEndDate(item.getEndDate()); // ECP-1229: now also original item's end date is copied over
+                if (copyEpochDate && item.getEpochDate() != null) {
+                    newItem.setEpochDate(item.getEpochDate());
+                }
+                if (startDate == null) {
+                    item.copyTerms(startDate, newItem);
+                } else {
+                    // ECP-1222 in some edge cases terms that were ending on the tenancy enddate and therefore were not followed by new terms by means of a verify action
+                    // could result in a new item with no terms copied over when renewing and thus losing indexation information for example
+                    // using copyAllTermsStartingFrom with startDate.minusDays(1) solves this issue
+                    item.copyAllTermsStartingFrom(startDate.minusDays(1), newItem);
+                }
             }
-            item.copyTerms(startDate, newItem);
         }
     }
 
@@ -1335,9 +1341,6 @@ public class Lease
 
     @Inject
     ChargeRepository chargeRepository;
-
-    @Inject
-    ClockService clockService;
 
     @Inject
     private WrapperFactory wrapperFactory;

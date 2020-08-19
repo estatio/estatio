@@ -2,6 +2,7 @@ package org.estatio.module.lease.dom.amendments;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,6 +28,7 @@ import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.module.invoice.dom.InvoiceRunType;
 import org.estatio.module.invoice.dom.PaymentMethod;
+import org.estatio.module.lease.businessdefinitions.LeaseBusinessDefinitionsService;
 import org.estatio.module.lease.contributions.Lease_calculate;
 import org.estatio.module.lease.dom.InvoicingFrequency;
 import org.estatio.module.lease.dom.Lease;
@@ -38,6 +40,7 @@ import org.estatio.module.lease.dom.LeaseItemType;
 import org.estatio.module.lease.dom.LeaseStatus;
 import org.estatio.module.lease.dom.LeaseTerm;
 import org.estatio.module.lease.dom.LeaseTermForFixed;
+import org.estatio.module.lease.dom.LeaseTermForIndexable;
 import org.estatio.module.party.dom.Party;
 
 @DomainService(
@@ -54,6 +57,7 @@ public class LeaseAmendmentService {
 
         // Extra guard for supported types
         if (!Arrays.asList(
+                LeaseAmendmentType.COVID_BEL,
                 LeaseAmendmentType.COVID_FRA_50_PERC,
                 LeaseAmendmentType.COVID_FRA_100_PERC,
                 LeaseAmendmentType.COVID_ITA_100_PERC_1M,
@@ -75,11 +79,12 @@ public class LeaseAmendmentService {
 
         final Lease lease = preview ? leaseAmendment.getLeasePreview() : leaseAmendment.getLease();
 
-        final LeaseAmendmentItemForDiscount leaseAmendmentItemForDiscount = Lists
+        final List<LeaseAmendmentItemForDiscount> leaseAmendmentItemsForDiscount = Lists
                 .newArrayList(leaseAmendment.getItems()).stream()
                 .filter(lai -> lai.getClass().isAssignableFrom(LeaseAmendmentItemForDiscount.class))
                 .map(LeaseAmendmentItemForDiscount.class::cast)
-                .findFirst().orElse(null);
+                .sorted(Comparator.comparing(LeaseAmendmentItemForDiscount::getStartDate))
+                .collect(Collectors.toList());
 
         final LeaseAmendmentItemForFrequencyChange leaseAmendmentItemForFrequencyChange = Lists
                 .newArrayList(leaseAmendment.getItems()).stream()
@@ -95,10 +100,15 @@ public class LeaseAmendmentService {
             LOG.info(message2);
             applyFrequencyChange(lease, leaseAmendmentItemForFrequencyChange);
         }
-        if (leaseAmendmentItemForDiscount!=null){
-            final String message1 = String.format("Applying amendment item for discount for lease %s", preview ? leaseAmendment.getLeasePreview().getReference() : leaseAmendment.getLease().getReference());
-            LOG.info(message1);
-            applyDiscount(lease, leaseAmendmentItemForDiscount);
+        if (leaseAmendmentItemsForDiscount.size()>0){
+            for (LeaseAmendmentItemForDiscount itemForDiscount : leaseAmendmentItemsForDiscount) {
+                final String message1 = String
+                        .format("Applying amendment item for discount for lease %s and start date %s", preview ?
+                                leaseAmendment.getLeasePreview().getReference() :
+                                leaseAmendment.getLease().getReference(), itemForDiscount.getStartDate());
+                LOG.info(message1);
+                applyDiscount(lease, itemForDiscount);
+            }
         }
         if (!preview) {
             final String message3 = String.format("Amendment %s for lease %s applied", leaseAmendment.getReference(), leaseAmendment.getLease().getReference());
@@ -108,13 +118,16 @@ public class LeaseAmendmentService {
         if (preview && leaseAmendment.getLeaseAmendmentType().getPreviewInvoicingStartDate()!=null && leaseAmendment.getLeaseAmendmentType().getPreviewInvoicingEndDate()!=null){
             List<LeaseItemType> typesForCalculation = Arrays.asList(LeaseItemType.RENT, LeaseItemType.RENT_DISCOUNT, LeaseItemType.RENT_DISCOUNT_FIXED, LeaseItemType.SERVICE_CHARGE, LeaseItemType.MARKETING, LeaseItemType.SERVICE_CHARGE_INDEXABLE, LeaseItemType.SERVICE_CHARGE_DISCOUNT_FIXED);
             factoryService.mixin(Lease_calculate.class, lease).exec(InvoiceRunType.NORMAL_RUN, typesForCalculation, leaseAmendment.getLeaseAmendmentType().getPreviewInvoicingStartDate(), leaseAmendment.getLeaseAmendmentType().getPreviewInvoicingStartDate(), leaseAmendment.getLeaseAmendmentType().getPreviewInvoicingEndDate().plusDays(1));
-            if (leaseAmendmentItemForDiscount!=null){
-                final BigDecimal calculatedValue = leaseAmendmentItemForDiscount.calculateDiscountAmountUsingLeasePreview();
-                // at this stage of the process always replace
-                leaseAmendmentItemForDiscount.setCalculatedDiscountAmount(calculatedValue);
-                final BigDecimal totalValueForDate = leaseAmendmentItemForDiscount
-                        .calculateValueForDateBeforeDiscountUsingLeasePreview();
-                leaseAmendmentItemForDiscount.setTotalValueForDateBeforeDiscount(totalValueForDate);
+            if (leaseAmendmentItemsForDiscount.size()>0){
+                for (LeaseAmendmentItemForDiscount itemForDiscount : leaseAmendmentItemsForDiscount) {
+                    final BigDecimal calculatedValue = itemForDiscount
+                            .calculateDiscountAmountUsingLeasePreview();
+                    // at this stage of the process always replace
+                    itemForDiscount.setCalculatedDiscountAmount(calculatedValue);
+                    final BigDecimal totalValueForDate = itemForDiscount
+                            .calculateValueForDateBeforeDiscountUsingLeasePreview();
+                    itemForDiscount.setTotalValueForDateBeforeDiscount(totalValueForDate);
+                }
             }
         }
     }
@@ -310,7 +323,7 @@ public class LeaseAmendmentService {
                         originalItem.getStartDate()
                 );
                 newItem.setEndDate(originalItem.getEndDate());
-                originalItem.copyTerms(referenceDate, newItem);
+                originalItem.copyAllTermsStartingFrom(referenceDate, newItem);
                 //TODO: NOTE THAT WE COPY ALL ITEM TYPES BUT NOT THEIR SOURCES; this adds complications and may not be needed for reporting / forecasting
                 // ANOTHER APPROACH would be to not copy these itemtypes at all ...
             }
@@ -321,7 +334,7 @@ public class LeaseAmendmentService {
     public LeaseItem closeOriginalAndOpenNewLeaseItem(final LocalDate startDateNewItem, final LeaseItem originalItem, final InvoicingFrequency invoicingFrequency){
         final Lease lease = originalItem.getLease();
         originalItem.verifyUntil(startDateNewItem.plusYears(1).plusDays(1)); // for some reason rent items were not verified correctly when verifying until startDateNewItem.plusDays(1)
-        final LeaseTerm currentTerm = originalItem.currentTerm(startDateNewItem);
+        LeaseTerm currentTerm = originalItem.currentTerm(startDateNewItem);
         if (currentTerm == null){
             LOG.warn(String.format("No current rent term found for lease %s, type %s, starting on %s", lease.getReference(), originalItem.getType(), startDateNewItem.toString()));
             return null;
@@ -341,8 +354,17 @@ public class LeaseAmendmentService {
             LOG.info(message1);
         }
 
-        final LeaseTerm newTerm = newItem.newTerm(startDateNewItem, null);
+        LeaseTerm newTerm = newItem.newTerm(startDateNewItem, null);
         currentTerm.copyValuesTo(newTerm);
+        // we need to copy future terms for leaseterms for indexable as well, because if indexation information
+        if (currentTerm.getClass().isAssignableFrom(LeaseTermForIndexable.class)) {
+            while (currentTerm.getNext() != null) {
+                currentTerm = currentTerm.getNext();
+                newTerm = newTerm.createNext(currentTerm.getStartDate(), null);
+                currentTerm.copyValuesTo(newTerm);
+            }
+        }
+
         // link new item to items that had old item as source
         final List<LeaseItemSource> sourceItems = leaseItemSourceRepository.findBySourceItem(originalItem);
         sourceItems.stream()
@@ -384,6 +406,20 @@ public class LeaseAmendmentService {
                 .findFirst().orElse(null);
     }
 
+    public LocalDate getAmortisationEndDateFor(final LeaseAmendmentItemForDiscount amendmentItem) {
+        final LeaseAmendment leaseAmendment = amendmentItem.getLeaseAmendment();
+        final LocalDate minimalAmortisationReferenceDate = leaseAmendment.getLeaseAmendmentType()
+                .getMinimalAmortisationReferenceDate();
+        final LocalDate dateSigned = leaseAmendment.getDateSigned();
+        if (minimalAmortisationReferenceDate==null) return null; // shoud not be possible but types are not enforced ...
+
+        if (dateSigned!=null && dateSigned.isAfter(minimalAmortisationReferenceDate)){
+            return leaseBusinessDefinitionsService.getLeaseEvaluationDateOnReferenceDate(leaseAmendment.getLease(), dateSigned);
+        } else {
+            return leaseBusinessDefinitionsService.getLeaseEvaluationDateOnReferenceDate(leaseAmendment.getLease(), minimalAmortisationReferenceDate);
+        }
+    }
+
     @Inject MessageService messageService;
 
     @Inject ServiceRegistry2 serviceRegistry2;
@@ -395,5 +431,7 @@ public class LeaseAmendmentService {
     @Inject LeaseItemSourceRepository leaseItemSourceRepository;
 
     @Inject FactoryService factoryService;
+
+    @Inject LeaseBusinessDefinitionsService leaseBusinessDefinitionsService;
 
 }

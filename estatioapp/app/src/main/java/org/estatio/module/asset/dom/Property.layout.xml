@@ -135,6 +135,17 @@
                                 </col>
                             </row>
                         </tab>
+                        <tab name="SalesAreaLicenses">
+                            <row>
+                                <col span="12">
+                                    <ns2:fieldSet name="" id="licenses">
+                                        <ns2:property id="salesAreaNonFoodTotal" hidden="ALL_TABLES"/>
+                                        <ns2:property id="salesAreaFoodTotal" hidden="ALL_TABLES"/>
+                                        <ns2:property id="salesAreaFoodAndBeveragesTotal" hidden="ALL_TABLES"/>
+                                    </ns2:fieldSet>
+                                </col>
+                            </row>
+                        </tab>
                         <tab name="Display ordering">
                             <row>
                                 <col span="12">

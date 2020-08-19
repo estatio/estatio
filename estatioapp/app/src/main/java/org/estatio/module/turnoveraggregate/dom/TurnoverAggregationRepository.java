@@ -71,6 +71,7 @@ public class TurnoverAggregationRepository {
         if (turnoverAggregation.getAggregate6Month()==null) turnoverAggregation.setAggregate6Month(turnoverAggregateForPeriodRepository.create(AggregationPeriod.P_6M));
         if (turnoverAggregation.getAggregate9Month()==null) turnoverAggregation.setAggregate9Month(turnoverAggregateForPeriodRepository.create(AggregationPeriod.P_9M));
         if (turnoverAggregation.getAggregate12Month()==null) turnoverAggregation.setAggregate12Month(turnoverAggregateForPeriodRepository.create(AggregationPeriod.P_12M));
+        if (turnoverAggregation.getAggregate12MonthCovid()==null) turnoverAggregation.setAggregate12MonthCovid(turnoverAggregateForPeriodRepository.create(AggregationPeriod.P_12M_COVID));
         if (turnoverAggregation.getAggregateToDate()==null) turnoverAggregation.setAggregateToDate(turnoverAggregateToDateRepository.create());
         if (turnoverAggregation.getPurchaseCountAggregate1Month()==null) turnoverAggregation.setPurchaseCountAggregate1Month(purchaseCountAggregateForPeriodRepository.create(AggregationPeriod.P_1M));
         if (turnoverAggregation.getPurchaseCountAggregate3Month()==null) turnoverAggregation.setPurchaseCountAggregate3Month(purchaseCountAggregateForPeriodRepository.create(AggregationPeriod.P_3M));

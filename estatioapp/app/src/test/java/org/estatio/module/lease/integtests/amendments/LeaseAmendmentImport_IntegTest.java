@@ -19,7 +19,9 @@
 package org.estatio.module.lease.integtests.amendments;
 
 import java.math.BigDecimal;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -37,8 +39,10 @@ import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.fixtures.property.enums.Property_enum;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.amendments.LeaseAmendment;
+import org.estatio.module.lease.dom.amendments.LeaseAmendmentItem;
 import org.estatio.module.lease.dom.amendments.LeaseAmendmentItemForDiscount;
 import org.estatio.module.lease.dom.amendments.LeaseAmendmentItemForFrequencyChange;
+import org.estatio.module.lease.dom.amendments.LeaseAmendmentItemType;
 import org.estatio.module.lease.dom.amendments.LeaseAmendmentManager;
 import org.estatio.module.lease.dom.amendments.LeaseAmendmentRepository;
 import org.estatio.module.lease.dom.amendments.LeaseAmendmentState;
@@ -114,11 +118,30 @@ public class LeaseAmendmentImport_IntegTest extends LeaseModuleIntegTestAbstract
         Assertions.assertThat(amendmentForPoison.getState()).isEqualTo(LeaseAmendmentState.SIGNED);
         Assertions.assertThat(amendmentForPoison.getStartDate()).isEqualTo(new LocalDate(2020,7,1));
         Assertions.assertThat(amendmentForPoison.getDateSigned()).isEqualTo(new LocalDate(2020,6, 20));
-        Assertions.assertThat(amendmentForPoison.getItems()).hasSize(2);
-        final LeaseAmendmentItemForDiscount firsPoisonAmendmentItem = (LeaseAmendmentItemForDiscount) amendmentForPoison.getItems().first();
+        Assertions.assertThat(amendmentForPoison.getItems()).hasSize(4);
+        final LeaseAmendmentItemForDiscount firstPoisonAmendmentItem = (LeaseAmendmentItemForDiscount) amendmentForPoison.findItemsOfType(
+                LeaseAmendmentItemType.DISCOUNT).stream().sorted(Comparator.comparing(LeaseAmendmentItem::getStartDate)).collect(
+                Collectors.toList()).get(0);
+        final LeaseAmendmentItemForDiscount secondPoisonAmendmentItem = (LeaseAmendmentItemForDiscount) amendmentForPoison.findItemsOfType(
+                LeaseAmendmentItemType.DISCOUNT).stream().sorted(Comparator.comparing(LeaseAmendmentItem::getStartDate)).collect(
+                Collectors.toList()).get(1);
+        final LeaseAmendmentItemForDiscount thirdPoisonAmendmentItem = (LeaseAmendmentItemForDiscount) amendmentForPoison.findItemsOfType(
+                LeaseAmendmentItemType.DISCOUNT).stream().sorted(Comparator.comparing(LeaseAmendmentItem::getStartDate)).collect(
+                Collectors.toList()).get(2);
         final LeaseAmendmentItemForFrequencyChange lastPoisonAmendmentItem = (LeaseAmendmentItemForFrequencyChange) amendmentForPoison.getItems().last();
-        Assertions.assertThat(firsPoisonAmendmentItem.getManualDiscountAmount()).isNull();
-        Assertions.assertThat(firsPoisonAmendmentItem.getDiscountPercentage()).isEqualTo(new BigDecimal("100.0"));
+        Assertions.assertThat(firstPoisonAmendmentItem.getManualDiscountAmount()).isNull();
+        Assertions.assertThat(firstPoisonAmendmentItem.getDiscountPercentage()).isEqualTo(new BigDecimal("100.0"));
+        Assertions.assertThat(firstPoisonAmendmentItem.getStartDate()).isEqualTo(new LocalDate(2020,7,1));
+        Assertions.assertThat(firstPoisonAmendmentItem.getEndDate()).isEqualTo(new LocalDate(2020,8,31));
+        Assertions.assertThat(secondPoisonAmendmentItem.getManualDiscountAmount()).isNull();
+        Assertions.assertThat(secondPoisonAmendmentItem.getDiscountPercentage()).isEqualTo(new BigDecimal("50.0"));
+        Assertions.assertThat(secondPoisonAmendmentItem.getStartDate()).isEqualTo(new LocalDate(2020,9,1));
+        Assertions.assertThat(secondPoisonAmendmentItem.getEndDate()).isEqualTo(new LocalDate(2020,9,30));
+        Assertions.assertThat(thirdPoisonAmendmentItem.getManualDiscountAmount()).isNull();
+        Assertions.assertThat(thirdPoisonAmendmentItem.getDiscountPercentage()).isEqualTo(new BigDecimal("25.0"));
+        Assertions.assertThat(thirdPoisonAmendmentItem.getStartDate()).isEqualTo(new LocalDate(2020,10,1));
+        Assertions.assertThat(thirdPoisonAmendmentItem.getEndDate()).isEqualTo(new LocalDate(2020,10,31));
+
         Assertions.assertThat(lastPoisonAmendmentItem.getAmendedInvoicingFrequency()).isEqualTo(MONTHLY_IN_ADVANCE);
         Assertions.assertThat(lastPoisonAmendmentItem.getInvoicingFrequencyOnLease()).isEqualTo(QUARTERLY_IN_ADVANCE);
         Assertions.assertThat(lastPoisonAmendmentItem.getStartDate()).isEqualTo(new LocalDate(2020,7,1));

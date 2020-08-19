@@ -202,6 +202,8 @@ public class TurnoverAggregationService {
                 .filter(t -> aggregation.calculationPeriod().contains(t.getDate()))
                 .collect(Collectors.toList());
 
+        // ECP-1211 adds aggregate12MonthCovid which can be null for aggregations already present at the time
+        if (aggregation.getAggregate12MonthCovid()==null) aggregation.setAggregate12MonthCovid(turnoverAggregateForPeriodRepository.create(AggregationPeriod.P_12M_COVID));
         aggregation.getTurnovers().clear();
         aggregation.getTurnovers().addAll(toSelection);
 
@@ -213,6 +215,7 @@ public class TurnoverAggregationService {
         aggregation.getAggregate6Month().calculate(aggregation, toSelection);
         aggregation.getAggregate9Month().calculate(aggregation, toSelection);
         aggregation.getAggregate12Month().calculate(aggregation, toSelection);
+        aggregation.getAggregate12MonthCovid().calculate(aggregation, toSelection);
 
         aggregation.getAggregateToDate().calculate(aggregation, toSelection);
 
@@ -485,8 +488,16 @@ public class TurnoverAggregationService {
             final boolean previousYear){
         final LocalDate periodStartDate = aggregationPeriod.periodStartDateFor(aggregationDate);
         final LocalDate periodEndDate = aggregationDate;
-        if (periodStartDate.isAfter(periodEndDate)) Arrays.asList();
+        if (periodStartDate.isAfter(periodEndDate)) return Arrays.asList();
         final LocalDateInterval interval = LocalDateInterval.including(previousYear ? periodStartDate.minusYears(1) : periodStartDate, previousYear ? periodEndDate.minusYears(1) : periodEndDate);
+        // ECP-1211: in case AggregationPeriod P_12M_COVID take out turnovers during covid period
+        if (aggregationPeriod == AggregationPeriod.P_12M_COVID){
+            LocalDateInterval covidInterval = LocalDateInterval.including(new LocalDate(2020,3,1), new LocalDate(2020,5,31));
+            return turnovers.stream()
+                    .filter(t->interval.contains(t.getDate()))
+                    .filter(t->!covidInterval.contains(t.getDate()))
+                    .collect(Collectors.toList());
+        }
         return turnovers.stream().filter(t->interval.contains(t.getDate())).collect(Collectors.toList());
     }
 
@@ -608,6 +619,8 @@ public class TurnoverAggregationService {
     @Inject TurnoverReportingConfigRepository turnoverReportingConfigRepository;
 
     @Inject TurnoverAggregationRepository turnoverAggregationRepository;
+
+    @Inject TurnoverAggregateForPeriodRepository turnoverAggregateForPeriodRepository;
 
     @Inject ClockService clockService;
 
