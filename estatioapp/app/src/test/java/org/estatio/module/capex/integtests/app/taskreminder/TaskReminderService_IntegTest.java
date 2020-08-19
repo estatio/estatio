@@ -53,7 +53,10 @@ public class TaskReminderService_IntegTest extends CapexModuleIntegTestAbstract 
         final URI uri = taskReminderService.deepLinkFor(task);
 
         // then
-        assertThat(uri.toString()).isEqualTo("https://estatio.int.ecpnv.com/wicket/entity/task.Task:0");
+        assertThat(uri.toString()).startsWith("https://estatio.int.ecpnv.com/wicket/entity/task.Task:");
+        final String oidString = uri.toString().replace("https://estatio.int.ecpnv.com/wicket/entity/task.Task:", "");
+        assertThat(oidString.length()).isGreaterThanOrEqualTo(1);
+        assertThat(oidString.matches("\\d*"));
 
     }
 
