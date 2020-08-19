@@ -69,7 +69,7 @@ public abstract class LeaseAmendmentItem extends UdoDomainObject2<LeaseAmendment
     }
 
     public LeaseAmendmentItem() {
-        super("leaseAmendment, type");
+        super("leaseAmendment, type, startDate");
     }
 
     @Column(name = "leaseAmendmentId", allowsNull = "false")
@@ -91,6 +91,7 @@ public abstract class LeaseAmendmentItem extends UdoDomainObject2<LeaseAmendment
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     public LeaseAmendmentItem changeApplicableTo(final List<LeaseItemType> leaseItemTypes){
         setApplicableTo(LeaseAmendmentItem.applicableToToString(leaseItemTypes));
+        this.getLeaseAmendment().createOrRenewLeasePreview();
         return this;
     }
 
@@ -112,6 +113,7 @@ public abstract class LeaseAmendmentItem extends UdoDomainObject2<LeaseAmendment
     public LeaseAmendmentItem changeDates(final LocalDate startDate, final LocalDate endDate){
         setStartDate(startDate);
         setEndDate(endDate);
+        this.getLeaseAmendment().createOrRenewLeasePreview();
         return this;
     }
 
@@ -126,6 +128,15 @@ public abstract class LeaseAmendmentItem extends UdoDomainObject2<LeaseAmendment
     public String disableChangeDates(){
         final String warning = String.format("Amendment in state of %s cannot be changed", getLeaseAmendment().getState());
         return getLeaseAmendment().amendmentDataIsImmutable() ? warning : null;
+    }
+
+    public String validateChangeDates(final LocalDate startDate, final LocalDate endDate){
+        if (endDate.isBefore(startDate)) return "The enddate should be after the startdate";
+        if (this.getType()==LeaseAmendmentItemType.DISCOUNT) {
+            LeaseAmendmentItemForDiscount castedItem = (LeaseAmendmentItemForDiscount) this;
+            return leaseAmendmentItemRepository.validateUpsertItemForDiscount(castedItem, castedItem.getDiscountPercentage(), castedItem.getManualDiscountAmount(), castedItem.getApplicableToAsList(), startDate, endDate);
+        }
+        return null;
     }
 
     @Action(semantics = SemanticsOf.SAFE)
@@ -184,5 +195,8 @@ public abstract class LeaseAmendmentItem extends UdoDomainObject2<LeaseAmendment
 
     @Inject
     RepositoryService repositoryService;
+
+    @Inject
+    LeaseAmendmentItemRepository leaseAmendmentItemRepository;
 
 }

@@ -13,6 +13,27 @@ import lombok.Getter;
 
 public enum LeaseAmendmentType {
 
+    COVID_BEL(
+            new LocalDate(2020,3,18), // min date because of lease selection
+            new BigDecimal("50.00"),
+            Arrays.asList(
+                    LeaseItemType.RENT,
+                    LeaseItemType.RENT_DISCOUNT
+            ),
+            new LocalDate(2020,3,18),
+            new LocalDate(2020,5,10),
+            Arrays.asList(
+                    new Tuple<>(null, "FR2052") // DEFAULT
+            ),
+            new LocalDate(2020,7,1),
+            null,
+            null,
+            null,
+            null,
+            "-A",
+            new LocalDate(2020,1,1),
+            new LocalDate(2020,12,31),
+            false),
     COVID_FRA_50_PERC(
             new LocalDate(2020,3,16), // min date because of lease selection
             new BigDecimal("50.00"),
@@ -26,6 +47,7 @@ public enum LeaseAmendmentType {
             Arrays.asList(
                     new Tuple<>(null, "FR2052") // DEFAULT
             ),
+            new LocalDate(2020,7,1),
             Arrays.asList(
                     new Tuple<>(InvoicingFrequency.QUARTERLY_IN_ADVANCE, InvoicingFrequency.MONTHLY_IN_ADVANCE),
                     new Tuple<>(InvoicingFrequency.QUARTERLY_IN_ARREARS, InvoicingFrequency.MONTHLY_IN_ARREARS)
@@ -56,6 +78,7 @@ public enum LeaseAmendmentType {
             Arrays.asList(
                     new Tuple<>(null, "FR2052") // DEFAULT
             ),
+            new LocalDate(2020,7,1),
             Arrays.asList(
                     new Tuple<>(InvoicingFrequency.QUARTERLY_IN_ADVANCE, InvoicingFrequency.MONTHLY_IN_ADVANCE),
                     new Tuple<>(InvoicingFrequency.QUARTERLY_IN_ARREARS, InvoicingFrequency.MONTHLY_IN_ARREARS)
@@ -78,33 +101,22 @@ public enum LeaseAmendmentType {
             new BigDecimal("100.00"),
             Arrays.asList(
                     LeaseItemType.RENT,
-                    LeaseItemType.RENT_DISCOUNT,
-                    LeaseItemType.RENT_DISCOUNT_FIXED
+                    LeaseItemType.RENT_DISCOUNT
             ),
             new LocalDate(2020,7,1),
             new LocalDate(2020,7,31),
             Arrays.asList(
-                    new Tuple<>("6001", "6031"),
-                    new Tuple<>("6002", "6032"),
-                    new Tuple<>("6031", "6031"), // current discount charge on any discount item
-                    new Tuple<>("6032", "6032"), // current discount charge on any discount item
-                    new Tuple<>(null, "6032") // TODO: check DEFAULT with users?
-            ),
-            Arrays.asList(
-                    new Tuple<>(InvoicingFrequency.QUARTERLY_IN_ADVANCE, InvoicingFrequency.MONTHLY_IN_ADVANCE),
-                    new Tuple<>(InvoicingFrequency.QUARTERLY_IN_ARREARS, InvoicingFrequency.MONTHLY_IN_ADVANCE),
-                    new Tuple<>(InvoicingFrequency.QUARTERLY_IN_ADVANCE_PLUS1M, InvoicingFrequency.MONTHLY_IN_ADVANCE),
-                    new Tuple<>(InvoicingFrequency.QUARTERLY_IN_ADVANCE_PLUS2M, InvoicingFrequency.MONTHLY_IN_ADVANCE)
-            ),
-            Arrays.asList(
-                    LeaseItemType.RENT,
-                    LeaseItemType.RENT_DISCOUNT,
-                    LeaseItemType.RENT_DISCOUNT_FIXED,
-                    LeaseItemType.SERVICE_CHARGE,
-                    LeaseItemType.MARKETING
+                    new Tuple<>("6001", "6014"),
+                    new Tuple<>("6002", "6015"),
+                    new Tuple<>("6031", "6014"), // current discount charge on any discount item
+                    new Tuple<>("6032", "6015"), // current discount charge on any discount item
+                    new Tuple<>(null, "6015") // TODO: check DEFAULT with users?
             ),
             new LocalDate(2020,7,1),
-            new LocalDate(2020,12,31),
+            null,
+            null,
+            null,
+            null,
             "-A1M",
             new LocalDate(2020,4,1), // because of _PLUSM1 / _PLUSM2 calcs
             new LocalDate(2020,12,31),
@@ -114,37 +126,29 @@ public enum LeaseAmendmentType {
             new BigDecimal("100.00"),
             Arrays.asList(
                     LeaseItemType.RENT,
-                    LeaseItemType.RENT_DISCOUNT,
-                    LeaseItemType.RENT_DISCOUNT_FIXED
+                    LeaseItemType.RENT_DISCOUNT
             ),
             new LocalDate(2020,7,1),
             new LocalDate(2020,8,31),
             Arrays.asList(
-                    new Tuple<>("6001", "6031"),
-                    new Tuple<>("6002", "6032"),
-                    new Tuple<>(null, "6032") // TODO: check DEFAULT with users?
-            ),
-            Arrays.asList(
-                    new Tuple<>(InvoicingFrequency.QUARTERLY_IN_ADVANCE, InvoicingFrequency.MONTHLY_IN_ADVANCE),
-                    new Tuple<>(InvoicingFrequency.QUARTERLY_IN_ARREARS, InvoicingFrequency.MONTHLY_IN_ADVANCE),
-                    new Tuple<>(InvoicingFrequency.QUARTERLY_IN_ADVANCE_PLUS1M, InvoicingFrequency.MONTHLY_IN_ADVANCE),
-                    new Tuple<>(InvoicingFrequency.QUARTERLY_IN_ADVANCE_PLUS2M, InvoicingFrequency.MONTHLY_IN_ADVANCE)
-            ),
-            Arrays.asList(
-                    LeaseItemType.RENT,
-                    LeaseItemType.RENT_DISCOUNT,
-                    LeaseItemType.RENT_DISCOUNT_FIXED,
-                    LeaseItemType.SERVICE_CHARGE,
-                    LeaseItemType.MARKETING
+                    new Tuple<>("6001", "6014"),
+                    new Tuple<>("6002", "6015"),
+                    new Tuple<>("6031", "6014"), // current discount charge on any discount item
+                    new Tuple<>("6032", "6015"), // current discount charge on any discount item
+                    new Tuple<>(null, "6015") // TODO: check DEFAULT with users?
             ),
             new LocalDate(2020,7,1),
-            new LocalDate(2020,12,31),
+            null,
+            null,
+            null,
+            null,
             "-A2M",
             new LocalDate(2020,4,1), // because of _PLUSM1 / _PLUSM2 calcs
             new LocalDate(2020,12,31),
             false),
     COVID_ITA_FREQ_CHANGE_ONLY(
             new LocalDate(2020,7,1),
+            null,
             null,
             null,
             null,
@@ -178,6 +182,7 @@ public enum LeaseAmendmentType {
             Arrays.asList(
                     new Tuple<>(null, "GBR_DISCOUNT")
             ),
+            new LocalDate(2020,7,1),
             Arrays.asList(
                     new Tuple<>(InvoicingFrequency.QUARTERLY_IN_ADVANCE, InvoicingFrequency.MONTHLY_IN_ARREARS)
             ),
@@ -197,6 +202,7 @@ public enum LeaseAmendmentType {
             Arrays.asList(
                     new Tuple<>(null, "GBR_DISCOUNT")
             ),
+            new LocalDate(2020,7,1),
             Arrays.asList(
                     new Tuple<>(InvoicingFrequency.QUARTERLY_IN_ADVANCE, InvoicingFrequency.MONTHLY_IN_ADVANCE)
             ),
@@ -226,6 +232,9 @@ public enum LeaseAmendmentType {
 
     @Getter
     private final List<Tuple<String, String>> chargeReferenceForDiscountItem;
+
+    @Getter
+    private final LocalDate minimalAmortisationReferenceDate;
 
     @Getter
     private final List<Tuple<InvoicingFrequency, InvoicingFrequency>> frequencyChanges;
@@ -258,6 +267,7 @@ public enum LeaseAmendmentType {
             final LocalDate discountStartDate,
             final LocalDate discountEndDate,
             final List<Tuple<String, String>> chargeReferenceForDiscountItem,
+            final LocalDate minimalAmortisationReferenceDate,
             final List<Tuple<InvoicingFrequency, InvoicingFrequency>> frequencyChanges,
             final List<LeaseItemType> frequencyChangeAppliesTo,
             final LocalDate frequencyChangeStartDate,
@@ -272,6 +282,7 @@ public enum LeaseAmendmentType {
         this.discountStartDate = discountStartDate;
         this.discountEndDate = discountEndDate;
         this.chargeReferenceForDiscountItem = chargeReferenceForDiscountItem;
+        this.minimalAmortisationReferenceDate = minimalAmortisationReferenceDate;
         this.frequencyChanges = frequencyChanges;
         this.frequencyChangeAppliesTo = frequencyChangeAppliesTo;
         this.frequencyChangeStartDate = frequencyChangeStartDate;

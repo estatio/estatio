@@ -70,6 +70,7 @@
                 <ns2:property id="endDate">
                     <ns2:action id="changeDates" position="BELOW"/>
                 </ns2:property>
+                <ns2:property id="amortisationEndDate"/>
             </ns2:fieldSet>
         </col>
         <col span="3" unreferencedCollections="true">

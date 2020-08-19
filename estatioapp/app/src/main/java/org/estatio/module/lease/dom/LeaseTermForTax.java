@@ -263,7 +263,7 @@ public class LeaseTermForTax extends LeaseTerm {
 
     public boolean hideChangeRegistration() {
         if (getLeaseItem().getLease().getStatus()==LeaseStatus.PREVIEW) return true;
-        return !isInvoicingDisabled();
+        return false;
     }
 
     public LocalDate default0ChangeRegistration() {

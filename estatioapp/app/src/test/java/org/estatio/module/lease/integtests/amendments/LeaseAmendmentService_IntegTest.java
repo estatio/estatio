@@ -18,6 +18,7 @@
  */
 package org.estatio.module.lease.integtests.amendments;
 
+import java.math.BigDecimal;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
@@ -28,13 +29,18 @@ import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
+import org.estatio.module.charge.fixtures.charges.enums.Charge_enum;
+import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.lease.dom.InvoicingFrequency;
 import org.estatio.module.lease.dom.Lease;
+import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
 import org.estatio.module.lease.dom.LeaseItem;
 import org.estatio.module.lease.dom.LeaseItemSourceRepository;
 import org.estatio.module.lease.dom.LeaseItemType;
 import org.estatio.module.lease.dom.LeaseStatus;
+import org.estatio.module.lease.dom.LeaseTermForIndexable;
 import org.estatio.module.lease.dom.amendments.LeaseAmendmentService;
+import org.estatio.module.lease.dom.indexation.IndexationMethod;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForDeposit_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForDiscount_enum;
@@ -68,6 +74,8 @@ public class LeaseAmendmentService_IntegTest extends LeaseModuleIntegTestAbstrac
         // given
         Lease oxfLease = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
         final LeaseItem originalRentItem = LeaseItemForRent_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
+        final LeaseTermForIndexable lastRentTerm = (LeaseTermForIndexable) originalRentItem.getTerms().last();
+        lastRentTerm.setIndexationMethod(IndexationMethod.BASE_INDEX_ALLOW_DECREASE);
         final LeaseItem depositItem = LeaseItemForDeposit_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
 
         endDateOriginalItem = originalRentItem.getEndDate();
@@ -101,6 +109,10 @@ public class LeaseAmendmentService_IntegTest extends LeaseModuleIntegTestAbstrac
                 Collectors.toList())).contains(firstNewItem);
         assertThat(leaseItemSourceRepository.findByItem(depositItem).stream().map(s->s.getSourceItem()).collect(
                 Collectors.toList())).contains(originalRentItem);
+        firstNewItem.getTerms().forEach(lt->{
+            LeaseTermForIndexable lfi = (LeaseTermForIndexable) lt;
+            assertThat(lfi.getIndexationMethod()).isEqualTo(IndexationMethod.BASE_INDEX_ALLOW_DECREASE);
+        });
 
         // and when
         final LeaseItem secondNewItem = leaseAmendmentService
@@ -119,6 +131,10 @@ public class LeaseAmendmentService_IntegTest extends LeaseModuleIntegTestAbstrac
         assertThat(leaseItemSourceRepository.findByItem(depositItem)).hasSize(3);
         assertThat(leaseItemSourceRepository.findByItem(depositItem).stream().map(s->s.getSourceItem()).collect(
                 Collectors.toList())).contains(secondNewItem);
+        secondNewItem.getTerms().forEach(lt->{
+            LeaseTermForIndexable lfi = (LeaseTermForIndexable) lt;
+            assertThat(lfi.getIndexationMethod()).isEqualTo(IndexationMethod.BASE_INDEX_ALLOW_DECREASE);
+        });
 
     }
 
@@ -175,7 +191,7 @@ public class LeaseAmendmentService_IntegTest extends LeaseModuleIntegTestAbstrac
         final LeaseItem rentPreviewItem = previewLease.findItemsOfType(LeaseItemType.RENT).get(0);
         assertThat(rentPreviewItem.getStartDate()).isEqualTo(originalRentItem.getStartDate());
         assertThat(rentPreviewItem.getEndDate()).isEqualTo(originalRentItem.getEndDate());
-        assertThat(rentPreviewItem.getTerms()).hasSize(1);
+        assertThat(rentPreviewItem.getTerms()).hasSize(2);
 
         final LeaseItem depositPreviewItem = previewLease.findItemsOfType(LeaseItemType.DEPOSIT).get(0);
         assertThat(depositPreviewItem.getStartDate()).isEqualTo(originalDepositItem.getStartDate());
@@ -186,6 +202,53 @@ public class LeaseAmendmentService_IntegTest extends LeaseModuleIntegTestAbstrac
 //        assertThat(leaseItemSourceRepository.findByItem(depositPreviewItem).stream().map(s->s.getSourceItem()).collect(
 //                Collectors.toList())).contains(rentPreviewItem);
         assertThat(depositPreviewItem.getTerms()).hasSize(1);
+
+    }
+
+    @Test
+    public void createTermsIfNeededForTheItemInterval_works() throws Exception {
+
+        LocalDate startDate = new LocalDate(2020,1,1);
+        LocalDate endDate = new LocalDate(2020,12,31);
+
+        // given
+        LeaseAmendmentService service = new LeaseAmendmentService();
+        Lease oxfLease = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
+        final LeaseItem leaseItem = oxfLease.newItem(
+                LeaseItemType.RENT_DISCOUNT,
+                LeaseAgreementRoleTypeEnum.LANDLORD,
+                Charge_enum.GbDiscount.findUsing(serviceRegistry),
+                InvoicingFrequency.MONTHLY_IN_ADVANCE,
+                PaymentMethod.DIRECT_DEBIT,
+                startDate);
+        leaseItem.setEndDate(endDate);
+        assertThat(leaseItem.getTerms()).isEmpty();
+
+        // when no terms
+        service.createTermsIfNeededForTheItemInterval(leaseItem);
+        // then
+        assertThat(leaseItem.getTerms()).isEmpty();
+
+        // when
+        final LeaseTermForIndexable term1 = (LeaseTermForIndexable) leaseItem.newTerm(startDate, new LocalDate(2020, 2, 15));
+        final BigDecimal baseValue = new BigDecimal("2000.00");
+        term1.setBaseValue(baseValue);
+        final LeaseTermForIndexable term2 = (LeaseTermForIndexable) term1.createNext(term1.getEndDate().plusDays(1), new LocalDate(2020, 5, 22));
+        assertThat(leaseItem.getTerms()).hasSize(2);
+        assertThat(term1.getBaseValue()).isEqualTo(baseValue);
+        assertThat(term2.getBaseValue()).isEqualTo(baseValue);
+        assertThat(term1.getNext()).isEqualTo(term2);
+
+        service.createTermsIfNeededForTheItemInterval(leaseItem);
+
+        // then
+        assertThat(leaseItem.getTerms()).hasSize(3);
+        final LeaseTermForIndexable lastTerm = (LeaseTermForIndexable) leaseItem.getTerms().last();
+        assertThat(lastTerm.getBaseValue()).isEqualTo(baseValue);
+        assertThat(lastTerm.getStartDate()).isEqualTo(term2.getEndDate().plusDays(1));
+        assertThat(lastTerm.getEndDate()).isNull();
+        assertThat(lastTerm.getPrevious()).isEqualTo(term2);
+        assertThat(term2.getNext()).isEqualTo(lastTerm);
 
     }
 

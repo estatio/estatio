@@ -205,6 +205,17 @@ public class TurnoverAggregation {
     @Column(name = "turnoverAggregate12MonthId", allowsNull = "false")
     private TurnoverAggregateForPeriod aggregate12Month;
 
+
+    /* COVID
+     * TurnoverGrossAmount12MCYCOVID
+     * TurnoverNetAmount12MCYCOVID
+     * TurnoverNonComparableFlag12MCYCOVID
+     */
+
+    @Getter @Setter
+    @Column(name = "turnoverAggregate12MonthCovidId", allowsNull = "true")
+    private TurnoverAggregateForPeriod aggregate12MonthCovid;
+
     /*
      * TurnoverGrossAmountYTDCY
      * TurnoverNetAmountYTDCY
@@ -323,6 +334,7 @@ public class TurnoverAggregation {
         TurnoverAggregateForPeriod p4 = getAggregate6Month();
         TurnoverAggregateForPeriod p5 = getAggregate9Month();
         TurnoverAggregateForPeriod p6 = getAggregate12Month();
+        TurnoverAggregateForPeriod p7 = getAggregate12MonthCovid();
 
         TurnoverAggregateToDate td = getAggregateToDate();
 
@@ -340,6 +352,7 @@ public class TurnoverAggregation {
         if (p4!=null) p4.remove();
         if (p5!=null) p5.remove();
         if (p6!=null) p6.remove();
+        if (p7!=null) p7.remove();
 
         if (td!=null) td.remove();
 

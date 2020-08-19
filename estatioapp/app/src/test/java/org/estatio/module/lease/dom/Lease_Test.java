@@ -1176,6 +1176,66 @@ public class Lease_Test {
 
         }
 
+        @Test
+        public void items_closed_before_or_on_start_date_are_not_copied() throws Exception {
+
+            // given
+            LocalDate startDate = new LocalDate(2020,1,1);
+            Lease lease = new Lease();
+            LeaseItem itemEndingBeforeStartDate = new LeaseItem();
+            itemEndingBeforeStartDate.setType(LeaseItemType.RENT);
+            itemEndingBeforeStartDate.setEndDate(startDate.minusDays(1));
+            lease.getItems().add(itemEndingBeforeStartDate);
+
+            // expect nothing
+            // when
+            lease.copyItemsAndTerms(mockLease, startDate, false);
+
+            // and when
+            LeaseItem itemEndingOnStartDate = new LeaseItem();
+            itemEndingOnStartDate.setEndDate(startDate);
+            itemEndingOnStartDate.setType(LeaseItemType.RENT_DISCOUNT);
+            lease.getItems().add(itemEndingOnStartDate);
+
+            // still expect nothing
+            // when
+            lease.copyItemsAndTerms(mockLease, startDate, false);
+
+            // and when
+            LeaseItem itemEndingAfterStartDate = new LeaseItem();
+            itemEndingAfterStartDate.setEndDate(startDate.plusDays(1));
+            itemEndingAfterStartDate.setType(LeaseItemType.SERVICE_CHARGE);
+            lease.getItems().add(itemEndingAfterStartDate);
+
+            // and expect
+            context.checking(new Expectations(){{
+                oneOf(mockLease).newItem(LeaseItemType.SERVICE_CHARGE, null, null, null, null, null);
+            }});
+
+            // when
+            lease.copyItemsAndTerms(mockLease, startDate, false);
+
+        }
+
+
+        @Test
+        public void end_date_is_copied() throws Exception {
+
+            // given
+            Lease lease = new Lease();
+            LeaseItem leaseItem = new LeaseItem();
+            final LocalDate originalItemEndDate = new LocalDate(2020, 1, 1);
+            leaseItem.setEndDate(originalItemEndDate);
+            lease.getItems().add(leaseItem);
+
+            // when
+            lease.copyItemsAndTerms(newLease, originalItemEndDate.minusDays(1), false);
+
+            // then
+            assertThat(newLease.getItems().first().getEndDate()).isEqualTo(originalItemEndDate);
+
+        }
+
     }
 
     public static class Finders extends Lease_Test {
@@ -1410,6 +1470,59 @@ public class Lease_Test {
 
             // then
             assertThat(lease.hasOverlappingOccupancies()).isFalse();
+
+        }
+
+        @Mock
+        ClockService mockClockService;
+
+        @Test
+        public void recent_And_Future_Items_works() throws Exception {
+
+            // given
+            Lease lease = new Lease();
+            lease.clockService = mockClockService;
+            LocalDate now = new LocalDate(2020,1,2);
+
+            // when, then
+            assertThat(lease.getRecentAndFutureItems()).isEmpty();
+
+            // expect
+            context.checking(new Expectations(){{
+                allowing(mockClockService).now();
+                will(returnValue(now));
+            }});
+
+            // when
+            LeaseItem itemWithoutDates = new LeaseItem();
+            itemWithoutDates.setSequence(BigInteger.valueOf(1));
+            lease.getItems().add(itemWithoutDates);
+            // then
+            assertThat(lease.getRecentAndFutureItems()).contains(itemWithoutDates);
+
+            // when
+            LeaseItem futureItem = new LeaseItem();
+            futureItem.setStartDate(now.plusYears(1));
+            lease.getItems().add(futureItem);
+            // then
+            assertThat(lease.getRecentAndFutureItems()).contains(futureItem);
+            assertThat(lease.getRecentAndFutureItems()).hasSize(2);
+
+            // when
+            LeaseItem pastItemLessOneYearAgo = new LeaseItem();
+            pastItemLessOneYearAgo.setEndDate(now.minusYears(1));
+            lease.getItems().add(pastItemLessOneYearAgo);
+            // then
+            assertThat(lease.getRecentAndFutureItems()).contains(pastItemLessOneYearAgo);
+            assertThat(lease.getRecentAndFutureItems()).hasSize(3);
+
+            // when
+            LeaseItem pastItemMoreThanOneYearAgo = new LeaseItem();
+            pastItemMoreThanOneYearAgo.setEndDate(now.minusYears(1).minusDays(1));
+            lease.getItems().add(pastItemMoreThanOneYearAgo);
+            // then
+            assertThat(lease.getRecentAndFutureItems()).doesNotContain(pastItemMoreThanOneYearAgo);
+            assertThat(lease.getRecentAndFutureItems()).hasSize(3);
 
         }
 

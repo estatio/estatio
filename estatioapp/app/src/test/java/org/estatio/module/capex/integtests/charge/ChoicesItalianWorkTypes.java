@@ -10,13 +10,13 @@ import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.module.capex.fixtures.charge.builders.IncomingChargesItaXlsxFixture;
+import org.estatio.module.capex.integtests.CapexModuleIntegTestAbstract;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
-import org.estatio.module.charge.integtests.ChargeRepository_IntegTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class ChoicesItalianWorkTypes extends ChargeRepository_IntegTest {
+public class ChoicesItalianWorkTypes extends CapexModuleIntegTestAbstract {
 
     @Inject
     private ChargeRepository chargeRepository;

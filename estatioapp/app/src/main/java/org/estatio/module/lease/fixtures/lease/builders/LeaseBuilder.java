@@ -18,6 +18,7 @@
  */
 package org.estatio.module.lease.fixtures.lease.builders;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.SortedSet;
@@ -110,6 +111,9 @@ public final class LeaseBuilder
         String activity;
         LocalDate startDate;
         LocalDate endDate;
+        BigDecimal salesAreaNonFood;
+        BigDecimal salesAreaFood;
+        BigDecimal foodAndBeveragesArea;
     }
     @Getter @Setter
     List<OccupancySpec> occupancySpecs = Lists.newArrayList();
@@ -187,14 +191,17 @@ public final class LeaseBuilder
             occupancy.setSectorName(spec.sector);
             occupancy.setActivityName(spec.activity);
             occupancy.setReportTurnover(Occupancy.OccupancyReportingType.YES);
+            if (spec.salesAreaFood!=null || spec.salesAreaNonFood!=null || spec.foodAndBeveragesArea!=null) {
+                wrap(occupancy)
+                        .createSalesAreaLicense(spec.salesAreaNonFood, spec.salesAreaFood, spec.foodAndBeveragesArea, occupancy.getStartDate());
+            }
             executionContext.addResult(this, occupancy);
-
         }
         for (final AmendmentSpec spec : amendmentSpecs) {
             final LeaseAmendment leaseAmendment = leaseAmendmentRepository
                     .create(lease, spec.leaseAmendmentType, LeaseAmendmentState.PROPOSED, spec.leaseAmendmentType.getAmendmentStartDate(), null);
             leaseAmendmentItemRepository
-                    .create(leaseAmendment, spec.leaseAmendmentType.getDiscountPercentage(), spec.leaseAmendmentType.getDiscountAppliesTo(), spec.leaseAmendmentType.getDiscountStartDate(), spec.leaseAmendmentType.getDiscountEndDate());
+                    .create(leaseAmendment, spec.leaseAmendmentType.getDiscountPercentage(), null, spec.leaseAmendmentType.getDiscountAppliesTo(), spec.leaseAmendmentType.getDiscountStartDate(), spec.leaseAmendmentType.getDiscountEndDate());
             leaseAmendmentItemRepository
                     .create(leaseAmendment, spec.leaseAmendmentType.getFrequencyChanges().get(0).oldValue, spec.leaseAmendmentType.getFrequencyChanges().get(0).newValue, spec.leaseAmendmentType.getFrequencyChangeAppliesTo(), spec.leaseAmendmentType.getFrequencyChangeStartDate(), spec.leaseAmendmentType.getFrequencyChangeEndDate());
             executionContext.addResult(this, leaseAmendment);

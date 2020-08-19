@@ -1,6 +1,8 @@
 package org.estatio.module.lease.dom.amendments;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.SortedSet;
@@ -29,6 +31,7 @@ import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.services.eventbus.AbstractDomainEvent;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
@@ -110,23 +113,62 @@ public class LeaseAmendment extends Agreement {
     @Getter @Setter
     private LeaseAmendmentState state;
 
+    public abstract static class ActionDomainEvent<S>
+            extends org.apache.isis.applib.services.eventbus.ActionDomainEvent<LeaseAmendment> { }
+
+    public static class DateSignedSetEvent extends LeaseAmendment.ActionDomainEvent<LeaseAmendment> {};
+
     @Column(allowsNull = "true")
-    @Getter @Setter
     private LocalDate dateSigned;
+
+    public LocalDate getDateSigned() {
+        return dateSigned;
+    }
+
+    public void setDateSigned(final LocalDate dateSigned) {
+        this.dateSigned = dateSigned;
+        final DateSignedSetEvent event = new DateSignedSetEvent();
+        event.setSource(this);
+        event.setEventPhase(AbstractDomainEvent.Phase.EXECUTED);
+        getEventBusService().post(event);
+    }
 
     @Column(allowsNull = "true")
     @Getter @Setter
     private LocalDate dateApplied;
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
-    public LeaseAmendment sign(){
+    public LeaseAmendment sign(final LocalDate dateSigned){
         setState(LeaseAmendmentState.SIGNED);
-        setDateSigned(clockService.now());
+        setDateSigned(dateSigned);
+//        findItemsOfType(LeaseAmendmentItemType.DISCOUNT).forEach(lai->{
+//            LeaseAmendmentItemForDiscount castedItem = (LeaseAmendmentItemForDiscount) lai;
+//            castedItem.setAmortisationEndDate(leaseAmendmentService.getAmortisationEndDateFor(castedItem));
+//        });
         return this;
     }
 
     public boolean hideSign(){
         return getState()!=LeaseAmendmentState.PROPOSED;
+    }
+
+    public LocalDate default0Sign(){
+        return clockService.now();
+    }
+
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    public LeaseAmendment changeDateSigned(final LocalDate dateSigned){
+        setDateSigned(dateSigned);
+        return this;
+    }
+
+    public LocalDate default0ChangeDateSigned(){
+        return getDateSigned();
+    }
+
+    public String disableChangeDateSigned(){
+        if (getState()!=LeaseAmendmentState.SIGNED) return "Only on signed amendments the date signed can be changed";
+        return null;
     }
 
     @Column(name = "leasePreviewId", allowsNull = "true")
@@ -178,7 +220,7 @@ public class LeaseAmendment extends Agreement {
     }
 
     public boolean hideApply(){
-        return getState()!=LeaseAmendmentState.SIGNED;
+        return !Arrays.asList(LeaseAmendmentState.SIGNED, LeaseAmendmentState.APPLY).contains(getState());
     }
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
@@ -226,12 +268,17 @@ public class LeaseAmendment extends Agreement {
 
     @Programmatic
     public List<LeaseAmendmentItem> findItemsOfType(final LeaseAmendmentItemType type){
-        return Lists.newArrayList(getItems()).stream().filter(lai->lai.getType()==type).collect(Collectors.toList());
+        return Lists.newArrayList(getItems()).stream().filter(lai->lai.getType()==type).sorted(Comparator.comparing(LeaseAmendmentItem::getStartDate)).collect(Collectors.toList());
     }
 
     @Programmatic
-    public LeaseAmendment upsertItem(final BigDecimal discountPercentage, final List<LeaseItemType> discountAppliesTo, final LocalDate discountStartDate, final LocalDate discountEndDate) {
-        leaseAmendmentItemRepository.upsert(this, discountPercentage, discountAppliesTo, discountStartDate, discountEndDate);
+    public LeaseAmendment upsertItem(
+            final BigDecimal discountPercentage,
+            final BigDecimal manualDiscountAmount,
+            final List<LeaseItemType> discountAppliesTo,
+            final LocalDate discountStartDate,
+            final LocalDate discountEndDate) {
+        leaseAmendmentItemRepository.upsert(this, discountPercentage, manualDiscountAmount, discountAppliesTo, discountStartDate, discountEndDate);
         return this;
     }
 
@@ -262,5 +309,6 @@ public class LeaseAmendment extends Agreement {
     @Inject
     LeaseAmendmentService leaseAmendmentService;
 
-    @Inject LeaseAmendmentItemRepository leaseAmendmentItemRepository;
+    @Inject
+    LeaseAmendmentItemRepository leaseAmendmentItemRepository;
 }

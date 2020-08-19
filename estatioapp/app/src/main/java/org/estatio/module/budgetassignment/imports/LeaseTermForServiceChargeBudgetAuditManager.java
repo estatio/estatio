@@ -105,7 +105,7 @@ public class LeaseTermForServiceChargeBudgetAuditManager  {
     public List<LeaseTermForServiceChargeBudgetAuditLineItem> getServiceCharges() {
         final List<LeaseTermForServiceCharge> terms = leaseTermRepository.findServiceChargeByPropertyAndItemTypeWithStartDateInPeriod(getProperty(), typesFromString(getLeaseItemTypes()), invoicedByFromString(getInvoicedBy()), getStartDate(), getEndDate())
                 .stream()
-                .filter(t->!factoryService.mixin(LeaseTermForServiceCharge_controlledByBudget.class, t).$$()) //ECP-1023: filters out terms controlled by a budget
+//                .filter(t->!factoryService.mixin(LeaseTermForServiceCharge_controlledByBudget.class, t).$$()) //ECP-1023: filters out terms controlled by a budget
                 .collect(Collectors.toList());
         return Lists.transform(terms, newLeaseTermForServiceChargeAuditBulkUpdate());
     }
@@ -143,8 +143,9 @@ public class LeaseTermForServiceChargeBudgetAuditManager  {
         for (LeaseTermForServiceChargeBudgetAuditLineItem lineItem : lineItems) {
             final LeaseTermForServiceCharge leaseTerm = lineItem.getLeaseTerm();
             leaseTerm.setAuditedValue(lineItem.getAuditedValue());
-            leaseTerm.setBudgetedValue(lineItem.getBudgetedValue());
-
+            if (!factoryService.mixin(LeaseTermForServiceCharge_controlledByBudget.class, leaseTerm).$$()) {
+                leaseTerm.setBudgetedValue(lineItem.getBudgetedValue());
+            }
             final LeaseTermForServiceCharge nextLeaseTerm = (LeaseTermForServiceCharge) leaseTerm.getNext();
             final LeaseTermForServiceCharge nextLeaseTermUploaded = lineItem.getNextLeaseTerm();
             if (nextLeaseTerm != null && nextLeaseTerm == nextLeaseTermUploaded) {

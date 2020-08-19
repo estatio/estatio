@@ -61,6 +61,7 @@ import org.estatio.module.lease.dom.breaks.EventSourceLinkForBreakOption;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
 import org.estatio.module.lease.dom.invoicing.InvoiceItemForLease;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
+import org.estatio.module.lease.dom.occupancy.salesarea.SalesAreaLicense;
 import org.estatio.module.lease.dom.occupancy.tags.Activity;
 import org.estatio.module.lease.dom.occupancy.tags.Brand;
 import org.estatio.module.lease.dom.occupancy.tags.Sector;
@@ -144,6 +145,7 @@ public final class EstatioLeaseModule extends ModuleAbstract {
                 deleteFrom(LeaseTerm.class);
                 deleteFrom(LeaseItemSource.class);
                 deleteFrom(LeaseItem.class);
+                deleteFrom(SalesAreaLicense.class);
                 deleteFrom(Occupancy.class);
 
                 deleteFrom(Activity.class);
