@@ -18,7 +18,9 @@
                             <cpt:fieldSet name="Configuration" id="config">
                                 <cpt:property id="type"/>
                                 <cpt:property id="frequency"/>
-                                <cpt:property id="startDate"/>
+                                <cpt:property id="startDate">
+                                    <cpt:action id="changeStartDate" position="BELOW"/>
+                                </cpt:property>
                                 <cpt:property id="endDate"/>
                                 <cpt:property id="currency"/>
                             </cpt:fieldSet>

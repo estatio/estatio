@@ -13,6 +13,9 @@ import javax.jdo.annotations.Indices;
 import javax.jdo.annotations.VersionStrategy;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+import org.apache.isis.applib.services.factory.FactoryService;
+import org.apache.isis.applib.services.repository.RepositoryService;
+import org.estatio.module.turnover.contributions.Occupancy_createEmptyTurnovers;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
@@ -181,10 +184,27 @@ public class TurnoverReportingConfig extends UdoDomainObject2<Turnover> {
         return getOccupancy().getApplicationTenancy();
     }
 
-    public void produceEmptyTurnover(final LocalDate date) {
+    public TurnoverReportingConfig produceEmptyTurnover(final LocalDate date) {
         if (isActiveOnDate(date) && !getOccupancy().getReportTurnover().equals(Occupancy.OccupancyReportingType.NO)) {
             if (frequency.hasStartDate(date)) turnoverRepository.createNewEmpty(this, date, getType(), getFrequency(), getCurrency());
         }
+        return this;
+    }
+
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    public TurnoverReportingConfig changeStartDate(final LocalDate date) {
+        List<Turnover> newTurnovers = turnoverRepository.findByConfigWithStatusNew(this);
+        newTurnovers.stream().forEach(turnover -> repositoryService.remove(turnover));
+        setStartDate(date);
+        factoryService.mixin(Occupancy_createEmptyTurnovers.class, occupancy).$$(date, clockService.now());
+        return this;
+    }
+
+    public String disableChangeStartDate() {
+        if (getTurnovers().stream().anyMatch(turnover -> turnover.getStatus()== Status.APPROVED)) {
+            return "Cannot change start date when there are already turnovers reported";
+        }
+        return null;
     }
 
     @Programmatic
@@ -252,5 +272,11 @@ public class TurnoverReportingConfig extends UdoDomainObject2<Turnover> {
     TurnoverRepository turnoverRepository;
 
     @Inject FixedAssetRoleRepository fixedAssetRoleRepository;
+
+    @Inject
+    RepositoryService repositoryService;
+
+    @Inject
+    FactoryService factoryService;
 
 }
