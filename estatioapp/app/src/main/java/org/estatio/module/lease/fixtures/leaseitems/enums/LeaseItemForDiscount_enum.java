@@ -55,7 +55,7 @@ public enum LeaseItemForDiscount_enum implements PersonaWithFinder<LeaseItem>, P
         }),
     OxfTopModel001Gb(Lease_enum.OxfTopModel001Gb, bi(1), LeaseItemForRent_enum.OxfTopModel001Gb,
         new TermSpec[]{
-            new TermSpec(Lease_enum.OxfTopModel001Gb.getStartDate(), Lease_enum.OxfTopModel001Gb.getStartDate().plusYears(5), null, bd(-2000))
+            new TermSpec(Lease_enum.OxfTopModel001Gb.getStartDate(), Lease_enum.OxfTopModel001Gb.getStartDate().plusYears(11), null, bd(-2000))
         })
     ;
 

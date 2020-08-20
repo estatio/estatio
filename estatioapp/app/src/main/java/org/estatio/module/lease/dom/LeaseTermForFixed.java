@@ -52,6 +52,11 @@ public class LeaseTermForFixed extends LeaseTerm {
         return this;
     }
 
+    public boolean hideChangeValue(){
+        if (getLeaseItem().getLease().getStatus()==LeaseStatus.PREVIEW) return true;
+        return false;
+    }
+
     public String validateChangeValue(final BigDecimal value) {
         if (LeaseItemType.RENT_DISCOUNT_FIXED.equals(getLeaseItem().getType()) && isPositive(value)) {
             return "Discount should be negative or zero";
@@ -61,6 +66,15 @@ public class LeaseTermForFixed extends LeaseTerm {
 
     private static boolean isPositive(final BigDecimal value) {
         return value != null && value.compareTo(BigDecimal.ZERO) > 0;
+    }
+
+    @Override
+    @Programmatic
+    public void negateAmountsAndApplyPercentage(final BigDecimal discountPercentage){
+        // TODO: check if this makes sense as there is no override on copyValuesTo
+        if (getValue()!=null){
+            setValue(applyPercentage(getValue(), discountPercentage).negate());
+        }
     }
 
     // //////////////////////////////////////
@@ -83,6 +97,13 @@ public class LeaseTermForFixed extends LeaseTerm {
     @Override
     public LeaseTermValueType valueType() {
         return LeaseTermValueType.FIXED;
+    }
+
+    @Override
+    public void copyValuesTo(final LeaseTerm target) {
+        LeaseTermForFixed t = (LeaseTermForFixed) target;
+        super.copyValuesTo(t);
+        t.setValue(getValue());
     }
 
 }

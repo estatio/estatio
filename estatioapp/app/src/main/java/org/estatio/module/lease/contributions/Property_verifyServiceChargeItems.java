@@ -35,7 +35,10 @@ public class Property_verifyServiceChargeItems {
                                 final List<LeaseItemType> typesForServiceCharges = Arrays.asList(
                                         LeaseItemType.SERVICE_CHARGE,
                                         LeaseItemType.MARKETING,
-                                        LeaseItemType.PROPERTY_TAX
+                                        LeaseItemType.PROPERTY_TAX,
+                                        LeaseItemType.OFFICE_TAX,
+                                        LeaseItemType.RETAIL_TAX,
+                                        LeaseItemType.MARKETING
                                 );
                                 if (typesForServiceCharges.contains(item.getType())) {
                                     item.verifyUntil(verificationDate);

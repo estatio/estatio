@@ -29,15 +29,8 @@ import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
 import org.estatio.module.currency.dom.Currency;
 import org.estatio.module.currency.fixtures.enums.Currency_enum;
-import org.estatio.module.lease.dom.occupancy.Occupancy;
-import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
-import org.estatio.module.turnover.dom.Frequency;
 import org.estatio.module.turnover.dom.TurnoverReportingConfig;
-import org.estatio.module.turnover.dom.Type;
 import org.estatio.module.turnover.fixtures.data.TurnoverReportingConfig_enum;
-import org.estatio.module.turnover.integtests.TurnoverModuleIntegTestAbstract;
-import org.estatio.module.turnoveraggregate.dom.AggregationPeriod;
-import org.estatio.module.turnoveraggregate.dom.TurnoverAggregateForPeriod;
 import org.estatio.module.turnoveraggregate.dom.TurnoverAggregateForPeriodRepository;
 import org.estatio.module.turnoveraggregate.dom.TurnoverAggregation;
 import org.estatio.module.turnoveraggregate.dom.TurnoverAggregationRepository;
@@ -125,7 +118,7 @@ public class TurnoverAggregationRepository_IntegTest extends TurnoverAggregateMo
                 .findOrCreate(config, date, euro);
         transactionService.nextTransaction();
         assertThat(turnoverAggregationRepository.listAll()).hasSize(1);
-        assertThat(turnoverAggregateForPeriodRepository.listAll()).hasSize(6);
+        assertThat(turnoverAggregateForPeriodRepository.listAll()).hasSize(7);
 
         // when
         agg.remove();

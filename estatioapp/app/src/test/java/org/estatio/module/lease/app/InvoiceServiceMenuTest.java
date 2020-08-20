@@ -71,7 +71,7 @@ public class InvoiceServiceMenuTest {
         // when
         List<LeaseItemType> defaultTypes = menu.default2CalculateInvoicesForProperty();
         // then
-        Assertions.assertThat(defaultTypes).hasSize(11);
+        Assertions.assertThat(defaultTypes).hasSize(13);
 
     }
 
@@ -95,7 +95,7 @@ public class InvoiceServiceMenuTest {
         // when
         List<LeaseItemType> defaultTypes = menu.default2CalculateInvoicesForProperty();
         // then
-        Assertions.assertThat(defaultTypes).hasSize(11);
+        Assertions.assertThat(defaultTypes).hasSize(13);
 
     }
 

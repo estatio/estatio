@@ -28,6 +28,7 @@ import org.estatio.module.invoice.dom.PaymentMethod;
 public class CodaDocHeadRepository {
 
     static final String STAT_PAY_PAID = "paid";
+    static final String STAT_PAY_AVAILABLE = "available";
 
     @Programmatic
     public java.util.List<CodaDocHead> listAll() {
@@ -108,6 +109,16 @@ public class CodaDocHeadRepository {
                         "findByHandlingAndStatPayNotEqualToAndNotValid",
                         "statPay", STAT_PAY_PAID,
                         "handling", Handling.INCLUDED
+                ));
+    }
+
+    @Programmatic
+    public List<CodaDocHead> findAvailable() {
+        return repositoryService.allMatches(
+                new QueryDefault<>(
+                        CodaDocHead.class,
+                        "findByStatPay",
+                        "statPay", STAT_PAY_AVAILABLE
                 ));
     }
 

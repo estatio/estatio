@@ -38,6 +38,12 @@ public enum AggregationPeriod {
             final LocalDate dateMinus11Months = periodEndDate.minusMonths(11);
             return firstDayOfMonthFor(dateMinus11Months);
         }
+    },
+    P_12M_COVID("12M_COVID", 9) {
+        @Override public LocalDate periodStartDateFor(final LocalDate periodEndDate) {
+            final LocalDate dateMinus11Months = periodEndDate.minusMonths(11);
+            return firstDayOfMonthFor(dateMinus11Months);
+        }
     };
 
     private static LocalDate firstDayOfMonthFor(final LocalDate date) {

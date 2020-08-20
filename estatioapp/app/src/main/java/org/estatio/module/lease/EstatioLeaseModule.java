@@ -51,12 +51,17 @@ import org.estatio.module.lease.dom.LeaseItem;
 import org.estatio.module.lease.dom.LeaseItemSource;
 import org.estatio.module.lease.dom.LeaseTerm;
 import org.estatio.module.lease.dom.LeaseType;
+import org.estatio.module.lease.dom.amendments.LeaseAmendment;
+import org.estatio.module.lease.dom.amendments.LeaseAmendmentItemForDiscount;
+import org.estatio.module.lease.dom.amendments.LeaseAmendmentItemForFrequencyChange;
+import org.estatio.module.lease.dom.amendments.PersistedCalculationResult;
 import org.estatio.module.lease.dom.breaks.BreakOption;
 import org.estatio.module.lease.dom.breaks.BreakOptionRepository;
 import org.estatio.module.lease.dom.breaks.EventSourceLinkForBreakOption;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
 import org.estatio.module.lease.dom.invoicing.InvoiceItemForLease;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
+import org.estatio.module.lease.dom.occupancy.salesarea.SalesAreaLicense;
 import org.estatio.module.lease.dom.occupancy.tags.Activity;
 import org.estatio.module.lease.dom.occupancy.tags.Brand;
 import org.estatio.module.lease.dom.occupancy.tags.Sector;
@@ -130,6 +135,8 @@ public final class EstatioLeaseModule extends ModuleAbstract {
                 );
                 this.isisJdoSupport.executeUpdate(sql);
 
+                deleteFrom(PersistedCalculationResult.class);
+
                 deleteFrom(InvoiceItemForLease.class);
                 deleteFrom(InvoiceForLease.class);
 
@@ -138,12 +145,17 @@ public final class EstatioLeaseModule extends ModuleAbstract {
                 deleteFrom(LeaseTerm.class);
                 deleteFrom(LeaseItemSource.class);
                 deleteFrom(LeaseItem.class);
+                deleteFrom(SalesAreaLicense.class);
                 deleteFrom(Occupancy.class);
 
                 deleteFrom(Activity.class);
                 deleteFrom(Brand.class);
                 deleteFrom(Sector.class);
                 deleteFrom(UnitSize.class);
+
+                deleteFrom(LeaseAmendmentItemForDiscount.class);
+                deleteFrom(LeaseAmendmentItemForFrequencyChange.class);
+                deleteFrom(LeaseAmendment.class);
 
                 deleteFrom(Lease.class);
                 deleteFrom(LeaseType.class);

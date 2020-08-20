@@ -72,9 +72,9 @@ The clone is approx 400Mb, and takes approximately 5 minutes to build.
 
 === Configure Estatio (JDBC URL)
 
-Before Estatio can be run, you must configure its JDBC URL; typically this lives in the `webapp/src/main/webapp/WEB-INF/persistor.properties` properties file.
+Before Estatio can be run, you must configure its JDBC URL; typically this lives in the `estatioapp/webapp/src/main/webapp/WEB-INF/persistor.properties` properties file.
 
-You can do this most easily by copying a set of property entries from `webapp/src/main/webapp/WEB-INF/persistor-SAMPLE.properties`.
+You can do this most easily by copying a set of property entries from `estatioapp/webapp/src/main/webapp/WEB-INF/persistor.properties.SAMPLE`.
 
 For example, to run against an in-memory HSQLDB, the `persistor.properties` file should consist of:
 

@@ -18,10 +18,8 @@
  */
 package org.estatio.module.agreement.dom;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.jdo.annotations.DiscriminatorStrategy;
@@ -37,8 +35,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Ordering;
 import com.google.common.collect.Sets;
 
-import org.apache.isis.applib.services.factory.FactoryService;
-import org.apache.isis.applib.services.repository.RepositoryService;
+import org.apache.isis.applib.services.clock.ClockService;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
@@ -56,6 +53,8 @@ import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.services.factory.FactoryService;
+import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.incode.module.base.dom.Chained;
 import org.incode.module.base.dom.types.NameType;
@@ -272,22 +271,21 @@ public abstract class Agreement
 
     protected AgreementRole findCurrentOrMostRecentAgreementRole(final AgreementRoleType agreementRoleType) {
         // all available roles
-        final Iterable<AgreementRole> rolesOfType =
-                Iterables.filter(getRoles(), AgreementRole.Predicates.whetherTypeIs(agreementRoleType));
+        List<AgreementRole> rolesOfType = Lists.newArrayList(getRoles()).stream().filter(role -> role.getType() == agreementRoleType).collect(Collectors.toList());
 
         // try to find the one that is current...
-        Iterable<AgreementRole> roles =
-                Iterables.filter(rolesOfType, WithInterval.Predicates.<AgreementRole>whetherCurrentIs(true));
-
-        // ... else the most recently ended one
-        if (Iterables.isEmpty(roles)) {
-            final List<AgreementRole> rolesInList = Lists.newArrayList(rolesOfType);
-            roles = orderRolesByEffectiveEndDateReverseNullsFirst().leastOf(rolesInList, 1);
+        LocalDate now = clockService.now();
+        AgreementRole currentAgreementRole = rolesOfType.stream().filter(role -> role.getInterval().contains(now)).findFirst().orElse(null);
+        if(currentAgreementRole!=null) {
+            return currentAgreementRole;
         }
 
-        // and return the party
-        final AgreementRole currentOrMostRecentRole = firstElseNull(roles);
-        return currentOrMostRecentRole;
+        // ... else the most recently ended one (if any)
+        return getMostRecentlyEndedAgreementRoleIfAny(rolesOfType);
+    }
+
+    AgreementRole getMostRecentlyEndedAgreementRoleIfAny(List<AgreementRole> rolesOfType) {
+        return rolesOfType.stream().filter(role -> role.getEndDate()!=null).sorted(Comparator.comparing(AgreementRole::getEndDate).reversed()).findFirst().orElse(null);
     }
 
     protected AgreementRole findAgreementRoleAsOf(final AgreementRoleType agreementRoleType, final LocalDate date) {
@@ -297,17 +295,8 @@ public abstract class Agreement
                         .findFirst().orElse(null);
     }
 
-    private static <T> T firstElseNull(final Iterable<T> iterable) {
-        Iterator<T> iterator = iterable.iterator();
-        return iterator.hasNext() ? iterator.next() : null;
-    }
-
     protected Party partyOf(final AgreementRole agreementRole) {
         return AgreementRole.Functions.partyOf().apply(agreementRole);
-    }
-
-    private static Ordering<AgreementRole> orderRolesByEffectiveEndDateReverseNullsFirst() {
-        return Ordering.natural().onResultOf(AgreementRole.Functions.effectiveEndDateOf()).reverse().nullsFirst();
     }
 
     // //////////////////////////////////////
@@ -363,6 +352,10 @@ public abstract class Agreement
 
     public String disableChangeDates() {
         return null;
+    }
+
+    public boolean hideChangeDates() {
+        return false;
     }
 
     @Override
@@ -426,6 +419,10 @@ public abstract class Agreement
         return this;
     }
 
+    public boolean hideNewRole(){
+        return true;
+    }
+
     public String validateNewRole(
             final AgreementRoleType art,
             final Party newParty,
@@ -451,6 +448,10 @@ public abstract class Agreement
         if (!Sets.filter(getRoles(), AgreementRole.Predicates.matchingRoleAndPeriod(art, startDate, endDate)).isEmpty()) {
             return "There is already a role for this type and period";
         }
+
+//        if (endDate == null && getRoles().first().getEndDate().isBefore(getEndDate())) {
+//            return "End date cannot be empty when end date of last role is before end date of lease";
+//        }
         return null;
     }
 

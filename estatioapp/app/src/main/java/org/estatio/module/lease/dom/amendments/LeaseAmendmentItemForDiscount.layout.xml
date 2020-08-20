@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<grid xsi:schemaLocation="http://isis.apache.org/applib/layout/component http://isis.apache.org/applib/layout/component/component.xsd http://isis.apache.org/applib/layout/grid/bootstrap3 http://isis.apache.org/applib/layout/grid/bootstrap3/bootstrap3.xsd" xmlns="http://isis.apache.org/applib/layout/grid/bootstrap3" xmlns:ns2="http://isis.apache.org/applib/layout/component" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <row>
+        <col span="12" unreferencedActions="true">
+            <ns2:domainObject/>
+            <ns2:action id="links"/>
+        </col>
+    </row>
+    <row>
+        <col span="6">
+            <row>
+                <col span="12">
+                    <tabGroup>
+                        <tab name="General">
+                            <row>
+                                <col span="12">
+                                    <ns2:fieldSet name="General" id="general">
+                                        <ns2:property id="leaseAmendment"/>
+                                        <ns2:property id="type"/>
+                                        <ns2:property id="applicableTo">
+                                            <ns2:action id="changeApplicableTo" position="PANEL"/>
+                                        </ns2:property>
+                                    </ns2:fieldSet>
+                                    <ns2:fieldSet name="Discount" id="discount">
+                                        <ns2:property id="discountPercentage">
+                                            <ns2:action id="changeDiscountPercentage" position="PANEL"/>
+                                        </ns2:property>
+                                        <ns2:property id="manualDiscountAmount">
+                                            <ns2:action id="changeManualDiscountAmount" position="PANEL"/>
+                                        </ns2:property>
+                                        <ns2:property id="calculatedDiscountAmount"/>
+                                        <ns2:property id="totalValueForDateBeforeDiscount"/>
+                                    </ns2:fieldSet>
+                                </col>
+                            </row>
+                        </tab>
+                        <tab name="Other">
+                            <row>
+                                <col span="12">
+                                    <ns2:fieldSet name="Other" id="other" unreferencedProperties="true">
+                                    </ns2:fieldSet>
+                                </col>
+                            </row>
+                        </tab>
+                        <tab name="Metadata">
+                            <row>
+                                <col span="12">
+                                    <ns2:fieldSet name="Metadata" id="metadata">
+                                        <ns2:action id="sync" position="PANEL"/>
+                                        <ns2:action id="recentChanges" position="PANEL_DROPDOWN"/>
+                                        <ns2:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
+                                        <ns2:action id="downloadJdoMetadata" position="PANEL_DROPDOWN"/>
+                                        <ns2:property id="id"/>
+                                        <ns2:property id="versionSequence"/>
+                                        <ns2:property id="datanucleusId"/>
+                                        <ns2:property id="datanucleusVersionLong"/>
+                                        <ns2:property id="datanucleusVersionTimestamp"/>
+                                        <ns2:property id="atPath" hidden="EVERYWHERE"/>
+                                    </ns2:fieldSet>
+                                </col>
+                            </row>
+                        </tab>
+                    </tabGroup>
+                </col>
+            </row>
+        </col>
+        <col span="3">
+            <ns2:fieldSet name="Dates" id="dates">
+                <ns2:property id="startDate"/>
+                <ns2:property id="endDate">
+                    <ns2:action id="changeDates" position="BELOW"/>
+                </ns2:property>
+                <ns2:property id="amortisationEndDate"/>
+            </ns2:fieldSet>
+        </col>
+        <col span="3" unreferencedCollections="true">
+        </col>
+    </row>
+</grid>

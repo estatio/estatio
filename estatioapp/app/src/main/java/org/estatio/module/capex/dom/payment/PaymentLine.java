@@ -2,10 +2,7 @@ package org.estatio.module.capex.dom.payment;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
-import java.util.Arrays;
 import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.jdo.annotations.Column;

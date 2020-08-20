@@ -153,7 +153,7 @@ public class TurnoverAggregationService {
         });
         List<TurnoverAggregation> aggregationsToCalculate = selectAggregationsToCalculate(analysisReports, calculationPeriod);
         aggregationsToCalculate.forEach(a->{
-            // dirty checking
+            // dirty checking -- NOTE: ECP-1201 when importing turnovers we now always replace Turnover#createdAt by the timestamp of the upload, so this may be of no effect at all in practice when the selection of aggregations to calculate is tight
             if (a.getCalculatedOn()==null || changedAt==null || changedAt.isAfter(a.getCalculatedOn())) {
                 calculateAggregation(a, turnoverSelectionForCalculations, analysisReports);
             }
@@ -202,6 +202,8 @@ public class TurnoverAggregationService {
                 .filter(t -> aggregation.calculationPeriod().contains(t.getDate()))
                 .collect(Collectors.toList());
 
+        // ECP-1211 adds aggregate12MonthCovid which can be null for aggregations already present at the time
+        if (aggregation.getAggregate12MonthCovid()==null) aggregation.setAggregate12MonthCovid(turnoverAggregateForPeriodRepository.create(AggregationPeriod.P_12M_COVID));
         aggregation.getTurnovers().clear();
         aggregation.getTurnovers().addAll(toSelection);
 
@@ -213,6 +215,7 @@ public class TurnoverAggregationService {
         aggregation.getAggregate6Month().calculate(aggregation, toSelection);
         aggregation.getAggregate9Month().calculate(aggregation, toSelection);
         aggregation.getAggregate12Month().calculate(aggregation, toSelection);
+        aggregation.getAggregate12MonthCovid().calculate(aggregation, toSelection);
 
         aggregation.getAggregateToDate().calculate(aggregation, toSelection);
 
@@ -485,8 +488,16 @@ public class TurnoverAggregationService {
             final boolean previousYear){
         final LocalDate periodStartDate = aggregationPeriod.periodStartDateFor(aggregationDate);
         final LocalDate periodEndDate = aggregationDate;
-        if (periodStartDate.isAfter(periodEndDate)) Arrays.asList();
+        if (periodStartDate.isAfter(periodEndDate)) return Arrays.asList();
         final LocalDateInterval interval = LocalDateInterval.including(previousYear ? periodStartDate.minusYears(1) : periodStartDate, previousYear ? periodEndDate.minusYears(1) : periodEndDate);
+        // ECP-1211: in case AggregationPeriod P_12M_COVID take out turnovers during covid period
+        if (aggregationPeriod == AggregationPeriod.P_12M_COVID){
+            LocalDateInterval covidInterval = LocalDateInterval.including(new LocalDate(2020,3,1), new LocalDate(2020,5,31));
+            return turnovers.stream()
+                    .filter(t->interval.contains(t.getDate()))
+                    .filter(t->!covidInterval.contains(t.getDate()))
+                    .collect(Collectors.toList());
+        }
         return turnovers.stream().filter(t->interval.contains(t.getDate())).collect(Collectors.toList());
     }
 
@@ -585,15 +596,22 @@ public class TurnoverAggregationService {
     }
 
     public List<TurnoverReportingConfig> choicesForChildConfig(final TurnoverReportingConfig config) {
-        Lease lease = config.getOccupancy().getLease();
+        Lease parentLease = config.getOccupancy().getLease();
         List<TurnoverReportingConfig> result = new ArrayList<>();
-        if (lease.getPrevious()!=null) {
-            lease = (Lease) lease.getPrevious();
-            Lists.newArrayList(lease.getOccupancies()).stream()
+        if (parentLease.getPrevious()!=null) {
+            Lease childLease = (Lease) parentLease.getPrevious();
+            Lists.newArrayList(childLease.getOccupancies()).stream()
                     .forEach(o->{
                         result.addAll(turnoverReportingConfigRepository.findByOccupancyAndTypeAndFrequency(o, Type.PRELIMINARY, Frequency.MONTHLY));
                     });
         }
+        // ECP-1205: also add configs of occs on the same lease that are terminated before the config starts
+        final List<Occupancy> closedOccupanciesOnSameLeaseWithEndDateBeforeStartDateConfig = Lists.newArrayList(parentLease.getOccupancies()).stream()
+                .filter(o -> o.getEndDate() != null && o.getEndDate().isBefore(config.getStartDate()))
+                .collect(Collectors.toList());
+        closedOccupanciesOnSameLeaseWithEndDateBeforeStartDateConfig.forEach(o->{
+            result.addAll(turnoverReportingConfigRepository.findByOccupancyAndTypeAndFrequency(o,Type.PRELIMINARY, Frequency.MONTHLY));
+        });
         return result;
     }
 
@@ -601,6 +619,8 @@ public class TurnoverAggregationService {
     @Inject TurnoverReportingConfigRepository turnoverReportingConfigRepository;
 
     @Inject TurnoverAggregationRepository turnoverAggregationRepository;
+
+    @Inject TurnoverAggregateForPeriodRepository turnoverAggregateForPeriodRepository;
 
     @Inject ClockService clockService;
 
