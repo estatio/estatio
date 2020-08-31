@@ -22,7 +22,19 @@ public class Organisation_syncToCoda {
     }
 
     public boolean hideAct() {
-        return (!organisation.getAtPath().startsWith("/BEL") && !organisation.getAtPath().startsWith("/FRA")) || !organisation.hasPartyRoleType(IncomingInvoiceRoleTypeEnum.SUPPLIER);
+        return !isFrenchOrBelgiumSupplier();
+    }
+
+    protected boolean isFrenchOrBelgiumSupplier() {
+        return isFranceOrBelgium() && orgIsSupplier();
+    }
+
+    protected boolean orgIsSupplier() {
+        return organisation.hasPartyRoleType(IncomingInvoiceRoleTypeEnum.SUPPLIER);
+    }
+
+    protected boolean isFranceOrBelgium() {
+        return organisation.getAtPath().startsWith("/BEL") || organisation.getAtPath().startsWith("/FRA");
     }
 
 }
