@@ -26,8 +26,9 @@ import org.apache.isis.applib.annotation.Editing;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.module.base.dom.UdoDomainObject2;
+import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.lease.dom.Frequency;
-import org.estatio.module.lease.dom.LeaseItem;
+import org.estatio.module.lease.dom.Lease;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -45,12 +46,12 @@ import lombok.Setter;
         column = "version")
 @Queries({
         @Query(
-                name = "findByLeaseItem", language = "JDOQL",
+                name = "findByLease", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.module.lease.dom.amortisation.AmortisationSchedule "
-                        + "WHERE leaseItem == :leaseItem "),
+                        + "WHERE lease == :lease "),
 })
-@Unique(name = "AmortisationSchedule_leaseItem_UNQ", members = { "leaseItem" })
+@Unique(name = "AmortisationSchedule_lease_charge_startDate_UNQ", members = { "lease", "charge", "startDate" })
 @DomainObject(
         editing = Editing.DISABLED,
         objectType = "amortisation.AmortisationSchedule"
@@ -61,16 +62,16 @@ import lombok.Setter;
 public class AmortisationSchedule extends UdoDomainObject2<AmortisationSchedule> {
 
     public AmortisationSchedule() {
-        super("leaseItem");
+        super("lease, charge, startDate");
     }
 
-//    TODO: this will only be possible when we refer the creation of a schedule to when an amendment is applied and the
-//    (Discount) leaseItem created
-//    Another approach would be to store the amendment item when the amendment state moves to Signed and store leaseItem when moving to applied
-//    CON: this could lead to changes in the scheduled amount and correction of transactions ....
     @Getter @Setter
-    @Column(name = "leaseItemId", allowsNull = "false")
-    private LeaseItem leaseItem;
+    @Column(name = "leaseId", allowsNull = "false")
+    private Lease lease;
+
+    @Getter @Setter
+    @Column(name = "chargeId", allowsNull = "false")
+    private Charge charge;
 
     @Getter @Setter
     @Column(allowsNull = "false", scale = 2)
@@ -94,6 +95,6 @@ public class AmortisationSchedule extends UdoDomainObject2<AmortisationSchedule>
 
     @Override
     public ApplicationTenancy getApplicationTenancy() {
-        return leaseItem.getApplicationTenancy();
+        return getLease().getApplicationTenancy();
     }
 }
