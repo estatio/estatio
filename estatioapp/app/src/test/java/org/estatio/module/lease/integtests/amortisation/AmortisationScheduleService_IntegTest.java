@@ -97,6 +97,54 @@ public class AmortisationScheduleService_IntegTest extends LeaseModuleIntegTestA
     }
 
     @Test
+    public void createAndDistributeEntries_works_when_freq_quarterly() throws Exception {
+
+        // given
+        assertThat(schedule).isNotNull();
+        final BigDecimal scheduledAmount = new BigDecimal("123.45");
+        schedule.setScheduledAmount(scheduledAmount);
+        schedule.setFrequency(Frequency.QUARTERLY);
+        final LocalDate startDate = new LocalDate(2020, 8, 15);
+        schedule.setStartDate(startDate);
+        final LocalDate endDate = startDate.plusYears(1);
+        schedule.setEndDate(endDate);
+
+        // when
+        amortisationScheduleService.createAndDistributeEntries(schedule);
+
+        // then
+        assertThat(schedule.getEntries()).hasSize(5);
+        assertThat(schedule.getEntries().first().getEntryDate()).isEqualTo(startDate);
+        assertThat(schedule.getEntries().first().getEntryAmount()).isEqualTo(new BigDecimal("24.69"));
+        assertThat(schedule.getEntries().last().getEntryDate()).isEqualTo(endDate.withDayOfMonth(1).withMonthOfYear(7));
+        assertThat(schedule.getEntries().last().getEntryAmount()).isEqualTo(new BigDecimal("24.69"));
+
+        BigDecimal sumOfEntries = BigDecimal.ZERO;
+        for (AmortisationEntry e : schedule.getEntries()){
+            sumOfEntries = sumOfEntries.add(e.getEntryAmount());
+        }
+        assertThat(sumOfEntries).isEqualTo(scheduledAmount);
+
+    }
+
+    @Test
+    public void freq_yearly_not_supported_yet() throws Exception {
+
+        // given
+        assertThat(schedule).isNotNull();
+        final BigDecimal scheduledAmount = new BigDecimal("123.45");
+        schedule.setScheduledAmount(scheduledAmount);
+        schedule.setFrequency(Frequency.YEARLY);
+
+        // when
+        amortisationScheduleService.createAndDistributeEntries(schedule);
+
+        // then
+        assertThat(schedule.getEntries()).isEmpty();
+
+    }
+
+    @Test
     public void no_entries_created_when_has_already_entries() throws Exception {
 
         // given
