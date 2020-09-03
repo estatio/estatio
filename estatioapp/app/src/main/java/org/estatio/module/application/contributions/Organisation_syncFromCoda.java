@@ -29,6 +29,7 @@ public class Organisation_syncFromCoda {
     }
 
     public boolean hideAct() {
+        if (!organisation.getAtPath().startsWith("/ITA")) return true;
         return ! organisation.hasPartyRoleType(IncomingInvoiceRoleTypeEnum.SUPPLIER);
     }
 
