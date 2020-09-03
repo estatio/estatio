@@ -82,7 +82,12 @@ import lombok.Setter;
                 name = "findByState", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.module.lease.dom.amendments.LeaseAmendment "
-                        + "WHERE state == :state ")
+                        + "WHERE state == :state "),
+        @Query(
+                name = "findByReference", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.module.lease.dom.amendments.LeaseAmendment "
+                        + "WHERE reference == :reference ")
 })
 @Unique(name = "LeaseAmendment_lease_leaseAmendmentType_UNQ", members = {"lease", "leaseAmendmentType"})
 @DomainObject(editing = Editing.DISABLED)
