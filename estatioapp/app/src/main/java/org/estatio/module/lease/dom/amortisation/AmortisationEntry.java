@@ -19,10 +19,12 @@ import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.Programmatic;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.module.base.dom.UdoDomainObject2;
+import org.estatio.module.base.dom.distribution.Distributable;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -59,7 +61,7 @@ import lombok.Setter;
 @DomainObjectLayout(
         bookmarking = BookmarkPolicy.AS_CHILD
 )
-public class AmortisationEntry extends UdoDomainObject2<AmortisationSchedule> {
+public class AmortisationEntry extends UdoDomainObject2<AmortisationSchedule> implements Distributable {
 
     public AmortisationEntry(){
         super("schedule, entryDate");
@@ -89,5 +91,23 @@ public class AmortisationEntry extends UdoDomainObject2<AmortisationSchedule> {
 
     @Override public ApplicationTenancy getApplicationTenancy() {
         return schedule.getApplicationTenancy();
+    }
+
+    @Override
+    @Programmatic
+    public BigDecimal getSourceValue() {
+        return schedule.getScheduledAmount();
+    }
+
+    @Override
+    @Programmatic
+    public BigDecimal getValue() {
+        return getEntryAmount();
+    }
+
+    @Override
+    @Programmatic
+    public void setValue(final BigDecimal value) {
+        this.setEntryAmount(value);
     }
 }

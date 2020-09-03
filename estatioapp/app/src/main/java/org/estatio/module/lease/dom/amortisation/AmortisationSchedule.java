@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import javax.inject.Inject;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.DatastoreIdentity;
 import javax.jdo.annotations.IdGeneratorStrategy;
@@ -18,10 +19,12 @@ import javax.jdo.annotations.VersionStrategy;
 
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
@@ -116,8 +119,21 @@ public class AmortisationSchedule extends UdoDomainObject2<AmortisationSchedule>
     @Getter @Setter
     private SortedSet<AmortisationEntry> entries = new TreeSet<>();
 
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
+    public AmortisationSchedule createAndDistributeEntries(){
+        amortisationScheduleService.createAndDistributeEntries(this);
+        return this;
+    }
+
+    public boolean hideCreateAndDistributeEntries(){
+        return !getEntries().isEmpty();
+    }
+
     @Override
     public ApplicationTenancy getApplicationTenancy() {
         return getLease().getApplicationTenancy();
     }
+
+    @Inject
+    AmortisationScheduleService amortisationScheduleService;
 }

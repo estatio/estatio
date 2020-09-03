@@ -1,10 +1,16 @@
-package org.estatio.module.budget.dom;
+package org.estatio.module.base.dom.distribution;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.NatureOfService;
+
+@DomainService(
+        nature = NatureOfService.DOMAIN
+)
 public class DistributionService {
 
     /**
@@ -38,12 +44,6 @@ public class DistributionService {
             return input;
         }
 
-            /*debug*/
-//        System.out.println("***************************");
-//        System.out.println("denominator: ");
-//        System.out.println(denominator);
-            /*debug*/
-
         List<OutputHelper> outputHelperList = new ArrayList<>();
         for (Distributable distributable : input) {
 
@@ -65,12 +65,6 @@ public class DistributionService {
         BigDecimal sumOfCalculatedRoundedValues = BigDecimal.ZERO;
         for (OutputHelper helper : outputHelperList) {
             sumOfCalculatedRoundedValues = sumOfCalculatedRoundedValues.add(helper.distributable.getValue(), MathContext.DECIMAL64);
-                    /*debug*/
-//            System.out.println("***************************");
-//            System.out.println(helper.distributable.getValue());
-//            System.out.print("sumOfCalculatedRoundedValues: ");
-//            System.out.println(sumOfCalculatedRoundedValues);
-                    /*debug*/
         }
 
         BigDecimal deltaOfSum = BigDecimal.ZERO;
@@ -80,20 +74,10 @@ public class DistributionService {
         if (sumOfCalculatedRoundedValues.compareTo(validTotal) > 0) {
             deltaSignOfSum = Delta.DELTA_POSITIVE;
             deltaOfSum = deltaOfSum.add(sumOfCalculatedRoundedValues.subtract(validTotal, MathContext.DECIMAL64));
-                    /*debug*/
-//            System.out.println("***************************");
-//            System.out.print("positive delta: ");
-//            System.out.println(deltaOfSum);
-                    /*debug*/
         }
         if (sumOfCalculatedRoundedValues.compareTo(validTotal) < 0) {
             deltaSignOfSum = Delta.DELTA_NEGATIVE;
             deltaOfSum = deltaOfSum.add(sumOfCalculatedRoundedValues.subtract(validTotal, MathContext.DECIMAL64));
-                    /*debug*/
-//            System.out.println("***************************");
-//            System.out.print("negative delta: ");
-//            System.out.println(deltaOfSum);
-                    /*debug*/
         }
 
         // 2. in case of rounding needed: iterate over sorted array until fixed
@@ -126,15 +110,6 @@ public class DistributionService {
                 deltaOfSum = deltaOfSum.add(increment(precision)).setScale(precision +3, BigDecimal.ROUND_HALF_UP);
                 helperToRoundUp.setCorrected(true);
 
-                        /*debug*/
-//                System.out.print("Identifier: ");
-//                System.out.println(helperToRoundUp.distributable.getSourceValue());
-//                System.out.print("New keyRoundedValue: ");
-//                System.out.println(helperToRoundUp.distributable.getValue());
-//                System.out.print("New deltaOfSum: ");
-//                System.out.println(deltaOfSum);
-                        /*debug*/
-
             } else {
 
                 //find largest negative delta in output Object and round down
@@ -159,15 +134,6 @@ public class DistributionService {
                 );
                 deltaOfSum = deltaOfSum.subtract(increment(precision)).setScale(precision +3, BigDecimal.ROUND_HALF_UP);
                 helperToRoundDown.setCorrected(true);
-
-                        /*debug*/
-//                System.out.print("Identifier: ");
-//                System.out.println(helperToRoundDown.distributable.getSourceValue());
-//                System.out.print("New keyRoundedValue: ");
-//                System.out.println(helperToRoundDown.distributable.getValue());
-//                System.out.print("New deltaOfSum: ");
-//                System.out.println(deltaOfSum);
-                        /*debug*/
 
             }
 

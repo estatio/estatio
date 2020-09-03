@@ -39,7 +39,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.base.dom.utils.TitleBuilder;
 
-import org.estatio.module.budget.dom.Distributable;
+import org.estatio.module.base.dom.distribution.Distributable;
 import org.estatio.module.budget.dom.keytable.FoundationValueType;
 import org.estatio.module.budget.dom.keytable.KeyTable;
 

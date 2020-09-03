@@ -39,6 +39,7 @@ import org.incode.module.docrendering.stringinterpolator.StringInterpolatorDocRe
 import org.incode.module.docrendering.xdocreport.XDocReportDocRenderingModule;
 
 import org.estatio.module.assetfinancial.EstatioAssetFinancialModule;
+import org.estatio.module.base.EstatioBaseModule;
 import org.estatio.module.event.EstatioEventModule;
 import org.estatio.module.index.EstatioIndexModule;
 import org.estatio.module.invoice.EstatioInvoiceModule;
@@ -86,6 +87,7 @@ public final class EstatioLeaseModule extends ModuleAbstract {
                 new EstatioIndexModule(),
                 new EstatioEventModule(),
                 new EstatioSettingsModule(),
+                new EstatioBaseModule(),
 
                 // stuff from incode platform, but which we're going to inline back into Estatio
                 new CommunicationsModule(),

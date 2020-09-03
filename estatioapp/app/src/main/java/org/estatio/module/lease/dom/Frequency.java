@@ -20,6 +20,10 @@ package org.estatio.module.lease.dom;
 
 import java.math.BigDecimal;
 
+import org.joda.time.LocalDate;
+
+import org.estatio.module.lease.dom.util.CalendarUtils;
+
 public enum Frequency {
 
     WEEKLY(
@@ -74,5 +78,9 @@ public enum Frequency {
 
     public String getRrule() {
         return rrule;
+    }
+
+    public LocalDate nextDate(final LocalDate date) {
+        return CalendarUtils.nextDate(date, this.rrule);
     }
 }

@@ -31,6 +31,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
 
 import org.estatio.module.asset.EstatioAssetModule;
+import org.estatio.module.base.EstatioBaseModule;
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculation;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
@@ -48,7 +49,7 @@ public final class EstatioBudgetModule extends ModuleAbstract {
 
     @Override
     public Set<Module> getDependencies(){
-        return Sets.newHashSet(new EstatioAssetModule(), new EstatioChargeModule());
+        return Sets.newHashSet(new EstatioAssetModule(), new EstatioChargeModule(), new EstatioBaseModule());
     }
 
 
