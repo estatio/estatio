@@ -50,6 +50,13 @@ import lombok.Setter;
                 value = "SELECT "
                         + "FROM org.estatio.module.lease.dom.amortisation.AmortisationSchedule "
                         + "WHERE lease == :lease "),
+        @Query(
+                name = "findUnique", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.module.lease.dom.amortisation.AmortisationSchedule "
+                        + "WHERE lease == :lease "
+                        + "&& charge == :charge "
+                        + "&& startDate == :startDate "),
 })
 @Unique(name = "AmortisationSchedule_lease_charge_startDate_UNQ", members = { "lease", "charge", "startDate" })
 @DomainObject(
@@ -63,6 +70,22 @@ public class AmortisationSchedule extends UdoDomainObject2<AmortisationSchedule>
 
     public AmortisationSchedule() {
         super("lease, charge, startDate");
+    }
+
+    public AmortisationSchedule(
+            final Lease lease,
+            final Charge charge,
+            final BigDecimal scheduledAmount,
+            final Frequency frequency,
+            final LocalDate startDate,
+            final LocalDate endDate){
+        this();
+        this.lease = lease;
+        this.charge = charge;
+        this.scheduledAmount = scheduledAmount;
+        this.frequency = frequency;
+        this.startDate = startDate;
+        this.endDate = endDate;
     }
 
     @Getter @Setter

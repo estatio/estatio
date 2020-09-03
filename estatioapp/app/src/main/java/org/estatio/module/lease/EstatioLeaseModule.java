@@ -55,6 +55,10 @@ import org.estatio.module.lease.dom.amendments.LeaseAmendment;
 import org.estatio.module.lease.dom.amendments.LeaseAmendmentItemForDiscount;
 import org.estatio.module.lease.dom.amendments.LeaseAmendmentItemForFrequencyChange;
 import org.estatio.module.lease.dom.amendments.PersistedCalculationResult;
+import org.estatio.module.lease.dom.amortisation.AmortisationEntry;
+import org.estatio.module.lease.dom.amortisation.AmortisationSchedule;
+import org.estatio.module.lease.dom.amortisation.AmortisationScheduleAmendmentItemLink;
+import org.estatio.module.lease.dom.amortisation.AmortisationScheduleLeaseItemLink;
 import org.estatio.module.lease.dom.breaks.BreakOption;
 import org.estatio.module.lease.dom.breaks.BreakOptionRepository;
 import org.estatio.module.lease.dom.breaks.EventSourceLinkForBreakOption;
@@ -139,6 +143,11 @@ public final class EstatioLeaseModule extends ModuleAbstract {
 
                 deleteFrom(InvoiceItemForLease.class);
                 deleteFrom(InvoiceForLease.class);
+
+                deleteFrom(AmortisationScheduleAmendmentItemLink.class);
+                deleteFrom(AmortisationScheduleLeaseItemLink.class);
+                deleteFrom(AmortisationEntry.class);
+                deleteFrom(AmortisationSchedule.class);
 
                 deleteFrom(BreakOption.class); // superclass handles the subclasses
                 deleteFrom(LeaseItemSource.class);
