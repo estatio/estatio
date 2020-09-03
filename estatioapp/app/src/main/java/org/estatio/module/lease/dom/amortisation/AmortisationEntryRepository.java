@@ -36,7 +36,7 @@ public class AmortisationEntryRepository {
     }
 
     @Programmatic
-    public List<AmortisationEntry> findBySchedule(AmortisationSchedule schedule) {
+    public List<AmortisationEntry> findBySchedule(final AmortisationSchedule schedule) {
         return repositoryService.allMatches(
                 new QueryDefault<>(
                         AmortisationEntry.class,
@@ -49,7 +49,7 @@ public class AmortisationEntryRepository {
             final AmortisationSchedule schedule,
             final LocalDate entryDate,
             final BigDecimal entryAmount){
-        AmortisationEntry result = findUnique(schedule, entryDate);
+        final AmortisationEntry result = findUnique(schedule, entryDate);
         if (result == null) return create(schedule, entryDate, entryAmount);
         return result;
     }
@@ -58,7 +58,7 @@ public class AmortisationEntryRepository {
             final AmortisationSchedule schedule,
             final LocalDate entryDate,
             final BigDecimal entryAmount){
-        AmortisationEntry newEntry = new AmortisationEntry(schedule, entryDate, entryAmount);
+        final AmortisationEntry newEntry = new AmortisationEntry(schedule, entryDate, entryAmount);
         serviceRegistry2.injectServicesInto(newEntry);
         repositoryService.persistAndFlush(newEntry);
         return newEntry;

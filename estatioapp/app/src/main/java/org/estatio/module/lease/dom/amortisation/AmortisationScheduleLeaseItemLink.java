@@ -32,7 +32,12 @@ import lombok.Setter;
                 value = "SELECT " +
                         "FROM org.estatio.module.lease.dom.amortisation.AmortisationScheduleLeaseItemLink " +
                         "WHERE amortisationSchedule == :amortisationSchedule && "
-                        + "leaseItem == :leaseItem")
+                        + "leaseItem == :leaseItem"),
+        @Query(
+                name = "findBySchedule", language = "JDOQL",
+                value = "SELECT " +
+                        "FROM org.estatio.module.lease.dom.amortisation.AmortisationScheduleLeaseItemLink " +
+                        "WHERE amortisationSchedule == :amortisationSchedule ")
 })
 @Uniques({
     @Unique(name = "AmortisationScheduleLeaseItemLink_UNQ", members = { "amortisationSchedule", "leaseItem" })
@@ -41,6 +46,13 @@ import lombok.Setter;
         objectType = "amortisation.AmortisationScheduleLeaseItemLink"
 )
 public class AmortisationScheduleLeaseItemLink {
+
+    public AmortisationScheduleLeaseItemLink(){}
+
+    public AmortisationScheduleLeaseItemLink(final AmortisationSchedule schedule, final LeaseItem leaseItem){
+        this.amortisationSchedule = schedule;
+        this.leaseItem = leaseItem;
+    }
 
     @Getter @Setter
     @Column(allowsNull = "false", name = "amortisationScheduleId")

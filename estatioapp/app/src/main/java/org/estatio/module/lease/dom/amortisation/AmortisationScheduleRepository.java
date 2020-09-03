@@ -57,7 +57,7 @@ public class AmortisationScheduleRepository {
             final Frequency frequency,
             final LocalDate startDate,
             final LocalDate endDate){
-        AmortisationSchedule result = findUnique(lease, charge, startDate);
+        final AmortisationSchedule result = findUnique(lease, charge, startDate);
         if (result == null) return create(lease, charge, scheduledAmount, frequency, startDate, endDate);
         return result;
     }
@@ -69,7 +69,7 @@ public class AmortisationScheduleRepository {
             final Frequency frequency,
             final LocalDate startDate,
             final LocalDate endDate){
-        AmortisationSchedule newSchedule = new AmortisationSchedule(lease, charge, scheduledAmount, frequency, startDate, endDate);
+        final AmortisationSchedule newSchedule = new AmortisationSchedule(lease, charge, scheduledAmount, frequency, startDate, endDate);
         serviceRegistry2.injectServicesInto(newSchedule);
         repositoryService.persistAndFlush(newSchedule);
         return newSchedule;
