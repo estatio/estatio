@@ -32,6 +32,8 @@ import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.lease.dom.Frequency;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseItem;
+import org.estatio.module.lease.dom.amortisation.AmortisationEntry;
+import org.estatio.module.lease.dom.amortisation.AmortisationEntryRepository;
 import org.estatio.module.lease.dom.amortisation.AmortisationSchedule;
 import org.estatio.module.lease.dom.amortisation.AmortisationScheduleRepository;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
@@ -40,7 +42,7 @@ import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class AmortisationScheduleRepository_IntegTest extends LeaseModuleIntegTestAbstract {
+public class AmortisationEntryRepository_IntegTest extends LeaseModuleIntegTestAbstract {
 
     @Before
     public void setupData() {
@@ -53,7 +55,7 @@ public class AmortisationScheduleRepository_IntegTest extends LeaseModuleIntegTe
     }
 
     @Test
-    public void upsert_amortisation_schedule_and_find_by_lease_works() throws Exception {
+    public void upsert_amortisation_entry_and_find_by_schedule_works() throws Exception {
 
         // given
         final Lease lease = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
@@ -63,35 +65,37 @@ public class AmortisationScheduleRepository_IntegTest extends LeaseModuleIntegTe
         final Frequency freq = Frequency.MONTHLY;
         final LocalDate startDate = discountItem.getStartDate();
         final LocalDate endDate = startDate.plusYears(1);
-        assertThat(amortisationScheduleRepository.listAll()).isEmpty();
-
-        // when
         final AmortisationSchedule schedule = amortisationScheduleRepository
                 .findOrCreate(lease, charge, scheduledAmount, freq,
                         startDate, endDate);
+        assertThat(amortisationEntryRepository.listAll()).isEmpty();
+        assertThat(schedule).isNotNull();
+
+        // when
+        final AmortisationEntry entry = amortisationEntryRepository
+                .findOrCreate(schedule, startDate, scheduledAmount);
 
         // then
-        assertThat(schedule.getLease()).isEqualTo(lease);
-        assertThat(schedule.getCharge()).isEqualTo(charge);
-        assertThat(schedule.getScheduledAmount()).isEqualTo(scheduledAmount);
-        assertThat(schedule.getFrequency()).isEqualTo(freq);
-        assertThat(schedule.getStartDate()).isEqualTo(startDate);
-        assertThat(schedule.getEndDate()).isEqualTo(endDate);
+        assertThat(entry.getSchedule()).isEqualTo(schedule);
+        assertThat(entry.getEntryDate()).isEqualTo(startDate);
+        assertThat(entry.getEntryAmount()).isEqualTo(scheduledAmount);
 
-        assertThat(amortisationScheduleRepository.listAll()).hasSize(1);
-        assertThat(amortisationScheduleRepository.findUnique(lease, charge, startDate)).isEqualTo(schedule);
-        assertThat(amortisationScheduleRepository.findByLease(lease)).hasSize(1);
+        assertThat(amortisationEntryRepository.listAll()).hasSize(1);
+        assertThat(amortisationEntryRepository.findUnique(schedule, startDate)).isEqualTo(entry);
+        assertThat(amortisationEntryRepository.findBySchedule(schedule)).hasSize(1);
 
         // and when
         transactionService.nextTransaction();
-        final AmortisationSchedule schedule2 = amortisationScheduleRepository
-                .findOrCreate(lease, charge, scheduledAmount, freq,
-                        startDate, endDate);
+        final AmortisationEntry entry2 = amortisationEntryRepository
+                .findOrCreate(schedule, startDate, scheduledAmount);
         // then is idempotent
-        assertThat(schedule2).isEqualTo(schedule);
+        assertThat(entry2).isEqualTo(entry);
+
     }
 
     @Inject AmortisationScheduleRepository amortisationScheduleRepository;
+
+    @Inject AmortisationEntryRepository amortisationEntryRepository;
 
 
 }

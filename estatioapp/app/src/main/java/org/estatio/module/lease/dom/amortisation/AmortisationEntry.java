@@ -20,6 +20,10 @@ import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
 
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
+import org.estatio.module.base.dom.UdoDomainObject2;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -36,6 +40,12 @@ import lombok.Setter;
         column = "version")
 @Queries({
         @Query(
+                name = "findUnique", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.module.lease.dom.amortisation.AmortisationEntry "
+                        + "WHERE schedule == :schedule "
+                        + "&& entryDate == :entryDate "),
+        @Query(
                 name = "findBySchedule", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.module.lease.dom.amortisation.AmortisationEntry "
@@ -49,7 +59,21 @@ import lombok.Setter;
 @DomainObjectLayout(
         bookmarking = BookmarkPolicy.AS_CHILD
 )
-public class AmortisationEntry {
+public class AmortisationEntry extends UdoDomainObject2<AmortisationSchedule> {
+
+    public AmortisationEntry(){
+        super("schedule, entryDate");
+    }
+
+    public AmortisationEntry(
+            final AmortisationSchedule schedule,
+            final LocalDate entryDate,
+            final BigDecimal entryAmount) {
+        this();
+        this.schedule = schedule;
+        this.entryDate = entryDate;
+        this.entryAmount = entryAmount;
+    }
 
     @Getter @Setter
     @Column(name = "scheduleId", allowsNull = "false")
@@ -63,4 +87,7 @@ public class AmortisationEntry {
     @Column(allowsNull = "false", scale = 2)
     private BigDecimal entryAmount;
 
+    @Override public ApplicationTenancy getApplicationTenancy() {
+        return schedule.getApplicationTenancy();
+    }
 }
