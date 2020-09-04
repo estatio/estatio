@@ -936,7 +936,7 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
 
         GroupHeader32 grpHdr = new GroupHeader32();
         cstmrCdtTrfInitn.setGrpHdr(grpHdr);
-        grpHdr.setMsgId(msgId());
+        grpHdr.setMsgId(truncateFieldToMaxLength(msgId(), 35));
         grpHdr.setCreDtTm(newDateTime(getCreatedOn()));
         grpHdr.setNbOfTxs("" + transfers.size());
         grpHdr.setCtrlSum(ctrlSum());
@@ -959,6 +959,11 @@ public class PaymentBatch extends UdoDomainObject2<PaymentBatch> implements Stat
         cdtTrfTxInfList.addAll(transfers.stream().map(CreditTransfer::asXml).collect(Collectors.toList()));
 
         return document;
+    }
+
+    @Programmatic
+    private String truncateFieldToMaxLength(String field, Integer maxLength) {
+        return field.substring(0, Math.min(field.length(), maxLength));
     }
 
     static CashAccount16 cashAccountFor(final BankAccount bankAccount) {
