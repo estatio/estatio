@@ -24,9 +24,13 @@ import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
+import org.incode.module.base.dom.types.NotesType;
 
 import org.estatio.module.base.dom.UdoDomainObject2;
 import org.estatio.module.charge.dom.Charge;
@@ -114,6 +118,11 @@ public class AmortisationSchedule extends UdoDomainObject2<AmortisationSchedule>
     @Getter @Setter
     @Column(allowsNull = "false")
     private LocalDate endDate;
+
+    @Column(allowsNull = "true", length = NotesType.Meta.MAX_LEN)
+    @PropertyLayout(multiLine = 5, hidden = Where.ALL_TABLES)
+    @Getter @Setter
+    private String note;
 
     @Persistent(mappedBy = "schedule", dependentElement = "true")
     @Getter @Setter

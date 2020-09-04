@@ -37,7 +37,12 @@ import lombok.Setter;
                 name = "findBySchedule", language = "JDOQL",
                 value = "SELECT " +
                         "FROM org.estatio.module.lease.dom.amortisation.AmortisationScheduleLeaseItemLink " +
-                        "WHERE amortisationSchedule == :amortisationSchedule ")
+                        "WHERE amortisationSchedule == :amortisationSchedule "),
+        @Query(
+                name = "findByLeaseItem", language = "JDOQL",
+                value = "SELECT " +
+                        "FROM org.estatio.module.lease.dom.amortisation.AmortisationScheduleLeaseItemLink " +
+                        "WHERE leaseItem == :leaseItem ")
 })
 @Uniques({
     @Unique(name = "AmortisationScheduleLeaseItemLink_UNQ", members = { "amortisationSchedule", "leaseItem" })

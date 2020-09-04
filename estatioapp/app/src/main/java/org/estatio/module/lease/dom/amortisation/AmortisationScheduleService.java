@@ -1,7 +1,10 @@
 package org.estatio.module.lease.dom.amortisation;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -21,6 +24,10 @@ import org.estatio.module.base.dom.distribution.DistributionService;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.lease.dom.Frequency;
 import org.estatio.module.lease.dom.Lease;
+import org.estatio.module.lease.dom.LeaseItem;
+import org.estatio.module.lease.dom.LeaseTerm;
+import org.estatio.module.lease.dom.amendments.LeaseAmendmentItemForDiscount;
+import org.estatio.module.lease.dom.invoicing.InvoiceCalculationService;
 
 @DomainService(
         nature = NatureOfService.DOMAIN
@@ -30,7 +37,7 @@ public class AmortisationScheduleService {
     public static Logger LOG = LoggerFactory.getLogger(AmortisationScheduleService.class);
 
     @Programmatic
-    public void createAmortisationScheduleForLeaseAndCharge(
+    public AmortisationSchedule createAmortisationScheduleForLeaseAndCharge(
             final Lease lease,
             final Charge charge,
             final Frequency frequency,
@@ -40,23 +47,72 @@ public class AmortisationScheduleService {
         if (!LocalDateInterval.including(startDate, endDate).isValid()){
             String msg = String.format("Cannot create schedule for lease %s and charge %s : startDate %s and endDate %s are not a valid interval" , lease.getReference(), charge.getReference(), startDate, endDate);
             LOG.warn(msg);
-            return;
+            return null;
         }
 
         if (amortisationScheduleRepository.findUnique(lease, charge, startDate)!=null) {
             String msg = String.format("There is already a schedule for lease %s, charge %s and startDate %s", lease.getReference(), charge.getReference(), startDate);
             LOG.warn(msg);
-            return;
+            return null;
         }
 
-        BigDecimal scheduledAmount = BigDecimal.ZERO; // TODO: calculate
-        // TODO: in order to make this generic, we have to take all items with the charge on the lease, that are not already linked to another amortisation schedule
-        // Then for each we have to calculate the total value that will be invoiced; the sum of which is the scheduled amount.
+        final List<LeaseItem> itemsToCalculateAndLink = Lists.newArrayList(lease.getItems()).stream()
+                .filter(li -> li.getCharge().equals(charge))
+                .filter(li -> amortisationScheduleLeaseItemLinkRepository.findByLeaseItem(li).isEmpty()) // we filter items that are linked to an amortisation schedule already
+                .collect(Collectors.toList());
+
+        if (itemsToCalculateAndLink.isEmpty()){
+            String msg = String.format("No lease items could be found for a schedule for lease %s, charge %s and startDate %s", lease.getReference(), charge.getReference(), startDate);
+            LOG.warn(msg);
+            return null;
+        }
+
+        List<InvoiceCalculationService.CalculationResult> calculationResults = new ArrayList<>();
+        for (LeaseItem item : itemsToCalculateAndLink){
+            for (LeaseTerm term : item.getTerms()){
+                calculationResults.addAll(term.calculationResults(item.getEffectiveInterval()));
+            }
+        }
+
+        final BigDecimal scheduledAmount = calculationResults.stream()
+                .map(r -> r.value())
+                .reduce(BigDecimal.ZERO, BigDecimal::add)
+                .negate();
+
+        if (scheduledAmount.compareTo(BigDecimal.ZERO)<1){
+            String msg = String.format("The scheduled amount %s should be larger than 0. Could not create a schedule for lease %s, charge %s and startDate %s", scheduledAmount, lease.getReference(), charge.getReference(), startDate);
+            LOG.warn(msg);
+            return null;
+        }
 
         final AmortisationSchedule amortisationSchedule = amortisationScheduleRepository
                 .findOrCreate(lease, charge, scheduledAmount, frequency, startDate, endDate);
 
+        for (LeaseItem item : itemsToCalculateAndLink){
+            amortisationScheduleLeaseItemLinkRepository.findOrCreate(amortisationSchedule, item);
+            if (item.getLeaseAmendmentItem()!=null && item.getLeaseAmendmentItem().getClass().isAssignableFrom(LeaseAmendmentItemForDiscount.class)){
+                amortisationScheduleAmendmentItemLinkRepository.findOrCreate(amortisationSchedule,
+                        (LeaseAmendmentItemForDiscount) item.getLeaseAmendmentItem());
+            }
+        }
+
+        final List<AmortisationScheduleAmendmentItemLink> linksToAmendmentItems = amortisationScheduleAmendmentItemLinkRepository
+                .findBySchedule(amortisationSchedule);
+        if (!linksToAmendmentItems.isEmpty()) {
+            final BigDecimal amountDerivedFromLinkedAmendmentItems = linksToAmendmentItems
+                    .stream()
+                    .map(l -> l.getLeaseAmendmentItemForDiscount().getCalculatedDiscountAmount().negate())
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+            if (amountDerivedFromLinkedAmendmentItems.compareTo(scheduledAmount) != 0) {
+                String note = String.format("The amount derived from the linked amendment item(s) %s does not match the scheduled amount derived from the linked lease item(s)!", amountDerivedFromLinkedAmendmentItems);
+                amortisationSchedule.setNote(note);
+            }
+        }
+
         amortisationSchedule.createAndDistributeEntries();
+
+        return amortisationSchedule;
 
     }
 
@@ -128,6 +184,10 @@ public class AmortisationScheduleService {
         return result;
 
     }
+
+    @Inject AmortisationScheduleLeaseItemLinkRepository amortisationScheduleLeaseItemLinkRepository;
+
+    @Inject AmortisationScheduleAmendmentItemLinkRepository amortisationScheduleAmendmentItemLinkRepository;
 
     @Inject AmortisationScheduleRepository amortisationScheduleRepository;
 

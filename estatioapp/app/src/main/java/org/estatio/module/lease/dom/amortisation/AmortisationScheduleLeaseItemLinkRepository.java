@@ -43,6 +43,15 @@ public class AmortisationScheduleLeaseItemLinkRepository {
     }
 
     @Programmatic
+    public List<AmortisationScheduleLeaseItemLink> findByLeaseItem(final LeaseItem leaseItem) {
+        return repositoryService.allMatches(
+                new QueryDefault<>(
+                        AmortisationScheduleLeaseItemLink.class,
+                        "findByLeaseItem",
+                        "leaseItem", leaseItem));
+    }
+
+    @Programmatic
     public AmortisationScheduleLeaseItemLink findOrCreate(
             final AmortisationSchedule schedule,
             final LeaseItem leaseItem){

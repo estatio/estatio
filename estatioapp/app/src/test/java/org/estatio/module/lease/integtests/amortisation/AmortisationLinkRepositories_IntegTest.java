@@ -61,7 +61,7 @@ public class AmortisationLinkRepositories_IntegTest extends LeaseModuleIntegTest
     }
 
     @Test
-    public void upsert_link_to_lease_item_and_find_by_schedule_works() throws Exception {
+    public void upsert_link_to_lease_item_and_finders_work() throws Exception {
 
         // given
         final Lease lease = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
@@ -96,6 +96,8 @@ public class AmortisationLinkRepositories_IntegTest extends LeaseModuleIntegTest
                 .findOrCreate(schedule, discountItem);
         // then is idempotent
         assertThat(link2).isEqualTo(link);
+
+        assertThat(amortisationScheduleLeaseItemLinkRepo.findByLeaseItem(discountItem)).hasSize(1);
 
     }
 
