@@ -46,7 +46,7 @@ import lombok.Setter;
                                 ", FA.\"reference\" as \"invoiceItemFixedAssetReference\"" +
                                 ", II.\"incomingInvoiceType\" as \"invoiceItemType\"" +
                                 ", P.\"atPath\" as \"invoiceBuyerAtPath\"" +
-//                                ", CONVERT(CASE WHEN II.\"reversalOfInvoiceItemId\" is null THEN 0 ELSE 1 END, SQL_BOOLEAN) as \"invoiceItemIsReversal\"" +
+                                ", CONVERT(CASE WHEN II.\"reversalOfInvoiceItemId\" is null THEN 0 ELSE 1 END, SQL_BOOLEAN) as \"invoiceItemIsReversal\"" +
                                 ", II.\"sequence\" as \"invoiceItemSequence\" " +
                                 " FROM \"dbo\".\"InvoiceItem\" II " +
                                 " INNER JOIN \"dbo\".\"Invoice\" I on II.\"invoiceId\" = I.\"id\" " +
