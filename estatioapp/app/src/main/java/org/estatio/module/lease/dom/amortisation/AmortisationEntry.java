@@ -13,6 +13,7 @@ import javax.jdo.annotations.Unique;
 import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
 
+import org.incode.module.base.dom.utils.TitleBuilder;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.BookmarkPolicy;
@@ -75,6 +76,13 @@ public class AmortisationEntry extends UdoDomainObject2<AmortisationSchedule> im
         this.schedule = schedule;
         this.entryDate = entryDate;
         this.entryAmount = entryAmount;
+    }
+
+    public String title() {
+        return TitleBuilder.start()
+                .withParent(getSchedule())
+                .withName(getEntryDate())
+                .toString();
     }
 
     @Getter @Setter

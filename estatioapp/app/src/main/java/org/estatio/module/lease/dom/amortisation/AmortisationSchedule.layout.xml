@@ -17,17 +17,14 @@
                                     <ns2:fieldSet name="General" id="general">
                                         <ns2:property id="reference"/>
                                         <ns2:property id="name"/>
-                                        <ns2:property id="leaseId"/>
+                                        <ns2:property id="lease"/>
                                     </ns2:fieldSet>
                                     <ns2:fieldSet name="Schedule" id="schedule">
-                                        <ns2:property id="chargeId"/>
+                                        <ns2:property id="charge"/>
                                         <ns2:property id="scheduledAmount"/>
                                         <ns2:property id="frequency"/>
                                         <ns2:property id="startDate"/>
                                         <ns2:property id="endDate"/>
-                                    </ns2:fieldSet>
-                                    <ns2:fieldSet name="Amortisation schedule" id="scheduleId">
-                                        <ns2:property id="scheduleId"/>
                                     </ns2:fieldSet>
                                 </col>
                             </row>
@@ -70,24 +67,27 @@
                     </tabGroup>
                 </col>
             </row>
-            <row>
-                <col span="12">
-                    <ns2:fieldSet name="Note" id="note">
-                        <ns2:property id="note"/>
-                    </ns2:fieldSet>
-                </col>
-            </row>
+<!--            <row>-->
+<!--                <col span="12">-->
+<!--                    <ns2:fieldSet name="Note" id="note">-->
+<!--                        <ns2:property id="note"/>-->
+<!--                    </ns2:fieldSet>-->
+<!--                </col>-->
+<!--            </row>-->
+        </col>
+        <col span="12">
+            <ns2:fieldSet name="Note" id="note">
+                <ns2:property id="note"/>
+            </ns2:fieldSet>
+        </col>
+        <col span="6">
+            <ns2:collection id="entries">
+                <ns2:action id="createAndDistributeEntries"/>
+            </ns2:collection>
         </col>
     </row>
     <row>
-    <col span="6">
-        <ns2:collection id="entries">
-            <ns2:action id="createAndDistributeEntries"/>
-        </ns2:collection>
-    </col>
-    </row>
-    <row>
-        <col span="5" unreferencedCollections="true">
+        <col span="12" unreferencedCollections="true">
         </col>
     </row>
 </grid>
