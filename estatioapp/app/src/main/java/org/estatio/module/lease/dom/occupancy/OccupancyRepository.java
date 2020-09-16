@@ -30,14 +30,17 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.clock.ClockService;
+import org.apache.isis.applib.services.eventbus.AbstractDomainEvent;
+import org.apache.isis.applib.services.eventbus.ActionDomainEvent;
+import org.apache.isis.applib.services.eventbus.EventBusService;
 import org.apache.isis.applib.services.scratchpad.Scratchpad;
 
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
-import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.asset.dom.UnitRepository;
+import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.dom.occupancy.tags.Brand;
@@ -51,6 +54,9 @@ public class OccupancyRepository extends UdoDomainRepositoryAndFactory<Occupancy
 
     // //////////////////////////////////////
 
+    public static class OccupancyCreatedEvent
+            extends ActionDomainEvent<Occupancy> {}
+
     @Programmatic
     public Occupancy newOccupancy(
             final Lease lease,
@@ -61,6 +67,28 @@ public class OccupancyRepository extends UdoDomainRepositoryAndFactory<Occupancy
         occupancy.setUnit(unit);
         occupancy.setStartDate(startDate);
         persistIfNotAlready(occupancy);
+        return occupancy;
+    }
+
+    @Programmatic
+    public Occupancy newOccupancy(
+            final Lease lease,
+            final Unit unit,
+            final LocalDate startDate,
+            final Occupancy.OccupancyReportingType turnoverReportingType) {
+        Occupancy occupancy = newTransientInstance(Occupancy.class);
+        occupancy.setLease(lease);
+        occupancy.setUnit(unit);
+        occupancy.setStartDate(startDate);
+        occupancy.setReportTurnover(turnoverReportingType);
+        persistIfNotAlready(occupancy);
+
+        // fire event
+        final OccupancyRepository.OccupancyCreatedEvent event = new OccupancyRepository.OccupancyCreatedEvent();
+        event.setEventPhase(AbstractDomainEvent.Phase.EXECUTED);
+        event.setSource(occupancy);
+        eventBusService.post(event);
+
         return occupancy;
     }
 
@@ -219,5 +247,8 @@ public class OccupancyRepository extends UdoDomainRepositoryAndFactory<Occupancy
 
     @Inject
     private UnitRepository unitRepository;
+
+    @Inject
+    private EventBusService eventBusService;
 
 }
