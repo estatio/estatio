@@ -144,7 +144,7 @@ public class KeyItemImportExportLineItem
 
             case DELETED:
                 String message = "KeyItem for unit " + getKeyItem().getUnit().getReference() + " deleted";
-                getKeyItem().deleteBudgetKeyItem();
+                getKeyItem().deleteKeyItem();
                 messageService.informUser(message);
                 return null;
 
