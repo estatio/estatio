@@ -23,7 +23,7 @@ public enum LeaseAmendmentType {
             new LocalDate(2020,3,18),
             new LocalDate(2020,5,10),
             Arrays.asList(
-                    new Tuple<>(null, "FR2054") // DEFAULT
+                    new Tuple<>(null, "BE2053") // DEFAULT
             ),
             new LocalDate(2020,7,1),
             null,
