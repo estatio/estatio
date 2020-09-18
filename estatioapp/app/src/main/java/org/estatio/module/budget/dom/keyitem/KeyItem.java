@@ -31,7 +31,6 @@ import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.PropertyLayout;
-import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 
@@ -40,6 +39,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.incode.module.base.dom.utils.TitleBuilder;
 
 import org.estatio.module.base.dom.distribution.Distributable;
+import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.module.budget.dom.keytable.FoundationValueType;
 import org.estatio.module.budget.dom.keytable.KeyTable;
 
@@ -147,9 +147,17 @@ public class KeyItem extends PartitioningTableItem
     }
     //endregion
 
-    @Action(restrictTo = RestrictTo.PROTOTYPING, semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
-    public void deleteBudgetKeyItem() {
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
+    public KeyTable deleteKeyItem() {
+        KeyTable keyTable = (KeyTable) this.getPartitioningTable();
+        this.getPartitioningTable().getBudget().removeNewCalculationsOfType(BudgetCalculationType.BUDGETED);
         removeIfNotAlready(this);
+        return keyTable;
+    }
+
+    public String disableDeleteKeyItem(){
+        KeyTable keyTable = (KeyTable) this.getPartitioningTable();
+        return keyTable.isAssignedReason();
     }
 
     @Override

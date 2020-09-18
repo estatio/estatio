@@ -296,9 +296,8 @@ public class KeyTable extends PartitioningTable {
     @Action(restrictTo = RestrictTo.PROTOTYPING, semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     public KeyTable deleteItems() {
         for (KeyItem keyItem : getItems()) {
-            repositoryService.removeAndFlush(keyItem);
+            keyItem.deleteKeyItem();
         }
-
         return this;
     }
 
@@ -329,7 +328,8 @@ public class KeyTable extends PartitioningTable {
         return null;
     }
 
-    private String isAssignedReason(){
+    @Programmatic
+    public String isAssignedReason(){
         if (isAssignedForTypeReason(BudgetCalculationType.AUDITED)!=null){
             return isAssignedForTypeReason(BudgetCalculationType.AUDITED);
         }
@@ -377,5 +377,5 @@ public class KeyTable extends PartitioningTable {
 
     @Inject
     DistributionService distributionService;
-
+    
 }

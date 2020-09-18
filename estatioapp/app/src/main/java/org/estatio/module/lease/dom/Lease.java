@@ -531,6 +531,16 @@ public class Lease
     }
 
     @Programmatic
+    public Occupancy newOccupancy(
+            final LocalDate startDate,
+            final Unit unit,
+            final Occupancy.OccupancyReportingType turnoverReportingType) {
+        Occupancy occupancy = occupancyRepository.newOccupancy(this, unit, startDate, turnoverReportingType);
+        occupancies.add(occupancy);
+        return occupancy;
+    }
+
+    @Programmatic
     public Optional<Occupancy> primaryOccupancy() {
         Comparator<Occupancy> byStartDateDescendingNullsFirst = (e1, e2) -> ObjectUtils.compare(e2.getStartDate(), e1.getStartDate(), true);
         Comparator<Occupancy> byUnitAreaDescendingNullsLast = (e1, e2) -> ObjectUtils.compare(e2.getUnit().getArea(), e1.getUnit().getArea(), false);
@@ -1145,14 +1155,15 @@ public class Lease
     private void copyOccupancies(final Lease newLease, final LocalDate startDate) {
         for (Occupancy occupancy : this.getOccupancies()) {
             if (occupancy.getInterval().contains(startDate) || occupancy.getInterval().endDateExcluding().equals(startDate)) {
-                Occupancy newOccupancy = newLease.newOccupancy(startDate, occupancy.getUnit());
+                Occupancy newOccupancy = newLease.newOccupancy(startDate, occupancy.getUnit(), occupancy.getReportTurnover());
                 newOccupancy.setActivity(occupancy.getActivity());
                 newOccupancy.setBrand(occupancy.getBrand());
                 newOccupancy.setSector(occupancy.getSector());
                 newOccupancy.setUnitSize(occupancy.getUnitSize());
                 newOccupancy.setReportOCR(occupancy.getReportOCR());
                 newOccupancy.setReportRent(occupancy.getReportRent());
-                newOccupancy.setReportTurnover(occupancy.getReportTurnover());
+                // ECP-1246: we now copy using the LEASE#newOccupancy programmatic action in order to trigger the occupancy created event with the correct param
+//                newOccupancy.setReportTurnover(occupancy.getReportTurnover());
             }
         }
     }
