@@ -37,7 +37,7 @@ public class Lease_createAmortisationSchedule {
             final LocalDate startDate,
             final LocalDate endDate
     ) {
-        amortisationScheduleService.createAmortisationScheduleForLeaseAndCharge(lease, charge, frequency, startDate, endDate);
+        amortisationScheduleService.findOrCreateAmortisationScheduleForLeaseAndCharge(lease, charge, frequency, startDate, endDate);
         return lease;
     }
 

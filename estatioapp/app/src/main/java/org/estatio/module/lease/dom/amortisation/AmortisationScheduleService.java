@@ -22,6 +22,7 @@ import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import org.estatio.module.base.dom.distribution.DistributionService;
 import org.estatio.module.charge.dom.Charge;
+import org.estatio.module.invoice.dom.InvoiceStatus;
 import org.estatio.module.lease.dom.Frequency;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseItem;
@@ -36,8 +37,20 @@ public class AmortisationScheduleService {
 
     public static Logger LOG = LoggerFactory.getLogger(AmortisationScheduleService.class);
 
+    public LocalDate firstInvoiceDateForLeaseItem(final LeaseItem leaseItem){
+        List<LocalDate> invoiceDates = new ArrayList<>();
+        for (LeaseTerm leaseTerm : leaseItem.getTerms()){
+            final List<LocalDate> datesForTerm = Lists.newArrayList(leaseTerm.getInvoiceItems()).stream()
+                    .filter(ii -> ii.getInvoice().getStatus() == InvoiceStatus.INVOICED)
+                    .map(ii -> ii.getInvoice().getInvoiceDate())
+                    .collect(Collectors.toList());
+            if (!datesForTerm.isEmpty()) invoiceDates.addAll(datesForTerm);
+        }
+        return invoiceDates.stream().min(LocalDate::compareTo).orElse(null);
+    }
+
     @Programmatic
-    public AmortisationSchedule createAmortisationScheduleForLeaseAndCharge(
+    public AmortisationSchedule findOrCreateAmortisationScheduleForLeaseAndCharge(
             final Lease lease,
             final Charge charge,
             final Frequency frequency,
@@ -51,9 +64,7 @@ public class AmortisationScheduleService {
         }
 
         if (amortisationScheduleRepository.findUnique(lease, charge, startDate)!=null) {
-            String msg = String.format("There is already a schedule for lease %s, charge %s and startDate %s", lease.getReference(), charge.getReference(), startDate);
-            LOG.warn(msg);
-            return null;
+            return amortisationScheduleRepository.findUnique(lease, charge, startDate);
         }
 
         final List<LeaseItem> itemsToCalculateAndLink = Lists.newArrayList(lease.getItems()).stream()

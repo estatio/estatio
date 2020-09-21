@@ -79,7 +79,7 @@ public class AmortisationScheduleScenario_IntegTest extends LeaseModuleIntegTest
                 .orElse(null);
         // when
         final AmortisationSchedule schedule = amortisationScheduleService
-                .createAmortisationScheduleForLeaseAndCharge(
+                .findOrCreateAmortisationScheduleForLeaseAndCharge(
                         topmodelLease,
                         discountItem.getCharge(),
                         Frequency.MONTHLY,
