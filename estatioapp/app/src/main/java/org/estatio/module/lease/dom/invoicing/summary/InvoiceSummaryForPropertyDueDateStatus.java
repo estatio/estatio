@@ -192,6 +192,7 @@ public class InvoiceSummaryForPropertyDueDateStatus extends InvoiceSummaryAbstra
             final Numerator numerator = numeratorRepository
                     .findInvoiceNumberNumerator(firstInvoice.getProperty(), getSeller()
                     );
+            if (numerator==null) return null;
             return numerator.lastIncrementStr();
         } else {
             return null;
