@@ -23,7 +23,7 @@
                                         <ns2:property id="entryAmount"/>
                                     </ns2:fieldSet>
                                     <ns2:fieldSet name="Amortisation schedule" id="schedule">
-                                        <ns2:property id="schedule"/>
+                                        <ns2:property id="schedule" hidden="PARENTED_TABLES"/>
                                     </ns2:fieldSet>
                                     <ns2:fieldSet name="Reporting" id="reporting">
                                         <ns2:property id="dateReported"/>
@@ -35,8 +35,8 @@
                             <row>
                                 <col span="12">
                                     <ns2:fieldSet name="Application Level" id="applicationLevel">
-                                        <ns2:property id="applicationTenancy"/>
-                                        <ns2:property id="atPath"/>
+                                        <ns2:property id="applicationTenancy" hidden="ALL_TABLES"/>
+                                        <ns2:property id="atPath" hidden="ALL_TABLES"/>
                                     </ns2:fieldSet>
                                 </col>
                             </row>

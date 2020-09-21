@@ -17,7 +17,7 @@
                                     <ns2:fieldSet name="General" id="general">
                                         <ns2:property id="reference"/>
                                         <ns2:property id="name"/>
-                                        <ns2:property id="lease"/>
+                                        <ns2:property id="lease" hidden="PARENTED_TABLES"/>
                                     </ns2:fieldSet>
                                     <ns2:fieldSet name="Preview" id="preview">
                                         <ns2:action id="createOrRenewLeasePreview" position="PANEL"/>
