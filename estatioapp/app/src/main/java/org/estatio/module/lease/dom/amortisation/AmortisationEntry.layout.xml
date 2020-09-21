@@ -25,6 +25,9 @@
                                     <ns2:fieldSet name="Amortisation schedule" id="schedule">
                                         <ns2:property id="schedule"/>
                                     </ns2:fieldSet>
+                                    <ns2:fieldSet name="Reporting" id="reporting">
+                                        <ns2:property id="dateReported"/>
+                                    </ns2:fieldSet>
                                 </col>
                             </row>
                         </tab>

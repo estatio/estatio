@@ -13,7 +13,6 @@ import javax.jdo.annotations.Unique;
 import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
 
-import org.incode.module.base.dom.utils.TitleBuilder;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.BookmarkPolicy;
@@ -23,6 +22,8 @@ import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Programmatic;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
+import org.incode.module.base.dom.utils.TitleBuilder;
 
 import org.estatio.module.base.dom.UdoDomainObject2;
 import org.estatio.module.base.dom.distribution.Distributable;
@@ -96,6 +97,10 @@ public class AmortisationEntry extends UdoDomainObject2<AmortisationSchedule> im
     @Getter @Setter
     @Column(allowsNull = "false", scale = 2)
     private BigDecimal entryAmount;
+
+    @Getter @Setter
+    @Column(allowsNull = "true")
+    private LocalDate dateReported;
 
     @Override public ApplicationTenancy getApplicationTenancy() {
         return schedule.getApplicationTenancy();
