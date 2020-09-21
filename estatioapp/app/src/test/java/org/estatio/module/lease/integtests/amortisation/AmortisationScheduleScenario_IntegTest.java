@@ -39,6 +39,7 @@ import org.estatio.module.lease.dom.amendments.LeaseAmendmentRepository;
 import org.estatio.module.lease.dom.amortisation.AmortisationSchedule;
 import org.estatio.module.lease.dom.amortisation.AmortisationScheduleService;
 import org.estatio.module.lease.dom.amortisation.AmortisationSchedule_leaseAmendmentItems;
+import org.estatio.module.lease.dom.amortisation.AmortisationSchedule_leaseItems;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForRent_enum;
 import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
@@ -62,7 +63,7 @@ public class AmortisationScheduleScenario_IntegTest extends LeaseModuleIntegTest
     }
 
     @Test
-    public void full_happy_case_scenario_using_service_create_schedule_for_lease_item() throws Exception {
+    public void full_happy_case_scenario_using_service_create_schedule_for_lease_and_charge() throws Exception {
 
         // given an applied amendment
         Lease topmodelLease = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
@@ -78,15 +79,17 @@ public class AmortisationScheduleScenario_IntegTest extends LeaseModuleIntegTest
                 .orElse(null);
         // when
         final AmortisationSchedule schedule = amortisationScheduleService
-                .findOrCreateAmortisationScheduleForLeaseItem(
-                        discountItem,
+                .findOrCreateAmortisationScheduleForLeaseAndCharge(
+                        topmodelLease,
+                        discountItem.getCharge(),
                         Frequency.MONTHLY,
                         topModelAmendment.getDateSigned(),
                         topModelAmendment.getDateSigned().plusYears(1)
                 );
 
         // then
-        assertThat(schedule.getLeaseItem()).isEqualTo(discountItem);
+        assertThat(schedule.getLease()).isEqualTo(topmodelLease);
+        assertThat(schedule.getCharge()).isEqualTo(discountItem.getCharge());
         assertThat(schedule.getScheduledAmount()).isEqualTo(new BigDecimal("1638.85"));
         assertThat(schedule.getFrequency()).isEqualTo(Frequency.MONTHLY);
         assertThat(schedule.getStartDate()).isEqualTo(topModelAmendment.getDateSigned());
@@ -95,6 +98,7 @@ public class AmortisationScheduleScenario_IntegTest extends LeaseModuleIntegTest
 
         final List<LeaseAmendmentItemForDiscount> amendmentItems = mixin(AmortisationSchedule_leaseAmendmentItems.class, schedule).$$();
         assertThat(amendmentItems).hasSize(1);
+        assertThat(mixin(AmortisationSchedule_leaseItems.class, schedule).$$()).hasSize(1);
 
         assertThat(schedule.getScheduledAmount()).isEqualTo(amendmentItems.get(0).getCalculatedDiscountAmount().negate());
         assertThat(schedule.getEntries()).hasSize(13);

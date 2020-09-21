@@ -39,6 +39,8 @@ import org.estatio.module.lease.dom.amendments.Lease_amendments;
 import org.estatio.module.lease.dom.amortisation.AmortisationSchedule;
 import org.estatio.module.lease.dom.amortisation.AmortisationScheduleAmendmentItemLink;
 import org.estatio.module.lease.dom.amortisation.AmortisationScheduleAmendmentItemLinkRepository;
+import org.estatio.module.lease.dom.amortisation.AmortisationScheduleLeaseItemLink;
+import org.estatio.module.lease.dom.amortisation.AmortisationScheduleLeaseItemLinkRepository;
 import org.estatio.module.lease.dom.amortisation.AmortisationScheduleRepository;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForDiscount_enum;
@@ -59,6 +61,47 @@ public class AmortisationLinkRepositories_IntegTest extends LeaseModuleIntegTest
     }
 
     @Test
+    public void upsert_link_to_lease_item_and_finders_work() throws Exception {
+
+        // given
+        final Lease lease = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
+        final LeaseItem discountItem = LeaseItemForDiscount_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
+        final Charge charge = discountItem.getCharge();
+        final BigDecimal scheduledAmount = new BigDecimal("123.45");
+        final Frequency freq = Frequency.MONTHLY;
+        final LocalDate startDate = discountItem.getStartDate();
+        final LocalDate endDate = startDate.plusYears(1);
+        final AmortisationSchedule schedule = amortisationScheduleRepository
+                .findOrCreate(lease, charge, scheduledAmount, freq,
+                        startDate, endDate);
+        assertThat(amortisationScheduleLeaseItemLinkRepo.listAll()).isEmpty();
+        assertThat(schedule).isNotNull();
+
+        // when
+        final AmortisationScheduleLeaseItemLink link = amortisationScheduleLeaseItemLinkRepo
+                .findOrCreate(schedule, discountItem);
+
+        // then
+        assertThat(link.getAmortisationSchedule()).isEqualTo(schedule);
+        assertThat(link.getLeaseItem()).isEqualTo(discountItem);
+
+
+        assertThat(amortisationScheduleLeaseItemLinkRepo.listAll()).hasSize(1);
+        assertThat(amortisationScheduleLeaseItemLinkRepo.findUnique(schedule, discountItem)).isEqualTo(link);
+        assertThat(amortisationScheduleLeaseItemLinkRepo.findBySchedule(schedule)).hasSize(1);
+
+        // and when
+        transactionService.nextTransaction();
+        final AmortisationScheduleLeaseItemLink link2 = amortisationScheduleLeaseItemLinkRepo
+                .findOrCreate(schedule, discountItem);
+        // then is idempotent
+        assertThat(link2).isEqualTo(link);
+
+        assertThat(amortisationScheduleLeaseItemLinkRepo.findByLeaseItem(discountItem)).hasSize(1);
+
+    }
+
+    @Test
     public void upsert_link_to_amendment_item_and_find_by_schedule_works() throws Exception {
 
         // given
@@ -70,7 +113,7 @@ public class AmortisationLinkRepositories_IntegTest extends LeaseModuleIntegTest
         final LocalDate startDate = discountItem.getStartDate();
         final LocalDate endDate = startDate.plusYears(1);
         final AmortisationSchedule schedule = amortisationScheduleRepository
-                .findOrCreate(discountItem, scheduledAmount, freq,
+                .findOrCreate(lease, charge, scheduledAmount, freq,
                         startDate, endDate);
         assertThat(amortisationScheduleAmendmentItemLinkRepo.listAll()).isEmpty();
         assertThat(schedule).isNotNull();
@@ -102,6 +145,8 @@ public class AmortisationLinkRepositories_IntegTest extends LeaseModuleIntegTest
     }
 
     @Inject AmortisationScheduleRepository amortisationScheduleRepository;
+
+    @Inject AmortisationScheduleLeaseItemLinkRepository amortisationScheduleLeaseItemLinkRepo;
 
     @Inject AmortisationScheduleAmendmentItemLinkRepository amortisationScheduleAmendmentItemLinkRepo;
 

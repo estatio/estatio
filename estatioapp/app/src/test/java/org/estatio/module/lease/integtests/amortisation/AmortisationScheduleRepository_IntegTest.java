@@ -67,24 +67,25 @@ public class AmortisationScheduleRepository_IntegTest extends LeaseModuleIntegTe
 
         // when
         final AmortisationSchedule schedule = amortisationScheduleRepository
-                .findOrCreate(discountItem, scheduledAmount, freq,
+                .findOrCreate(lease, charge, scheduledAmount, freq,
                         startDate, endDate);
 
         // then
-        assertThat(schedule.getLeaseItem()).isEqualTo(discountItem);
+        assertThat(schedule.getLease()).isEqualTo(lease);
+        assertThat(schedule.getCharge()).isEqualTo(charge);
         assertThat(schedule.getScheduledAmount()).isEqualTo(scheduledAmount);
         assertThat(schedule.getFrequency()).isEqualTo(freq);
         assertThat(schedule.getStartDate()).isEqualTo(startDate);
         assertThat(schedule.getEndDate()).isEqualTo(endDate);
 
         assertThat(amortisationScheduleRepository.listAll()).hasSize(1);
-        assertThat(amortisationScheduleRepository.findUnique(discountItem, startDate)).isEqualTo(schedule);
+        assertThat(amortisationScheduleRepository.findUnique(lease, charge, startDate)).isEqualTo(schedule);
         assertThat(amortisationScheduleRepository.findByLease(lease)).hasSize(1);
 
         // and when
         transactionService.nextTransaction();
         final AmortisationSchedule schedule2 = amortisationScheduleRepository
-                .findOrCreate(discountItem, scheduledAmount, freq,
+                .findOrCreate(lease, charge, scheduledAmount, freq,
                         startDate, endDate);
         // then is idempotent
         assertThat(schedule2).isEqualTo(schedule);

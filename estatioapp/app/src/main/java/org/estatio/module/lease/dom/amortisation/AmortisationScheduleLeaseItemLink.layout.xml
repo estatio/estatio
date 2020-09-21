@@ -7,7 +7,7 @@
         </col>
     </row>
     <row>
-        <col span="5">
+        <col span="4">
             <row>
                 <col span="12">
                     <tabGroup>
@@ -17,17 +17,8 @@
                                     <ns2:fieldSet name="General" id="general">
                                         <ns2:property id="reference"/>
                                         <ns2:property id="name"/>
-                                        <ns2:property id="lease" hidden="PARENTED_TABLES"/>
-                                    </ns2:fieldSet>
-                                    <ns2:fieldSet name="Schedule" id="schedule">
-                                        <ns2:property id="charge"/>
-                                        <ns2:property id="scheduledAmount"/>
-                                        <ns2:property id="frequency"/>
-                                        <ns2:property id="startDate"/>
-                                        <ns2:property id="endDate"/>
-                                    </ns2:fieldSet>
-                                    <ns2:fieldSet name="Note" id="note">
-                                        <ns2:property id="note"/>
+                                        <ns2:property id="amortisationScheduleId"/>
+                                        <ns2:property id="leaseItemId"/>
                                     </ns2:fieldSet>
                                 </col>
                             </row>
@@ -36,8 +27,8 @@
                             <row>
                                 <col span="12">
                                     <ns2:fieldSet name="Application Level" id="applicationLevel">
-                                        <ns2:property id="applicationTenancy" hidden="ALL_TABLES"/>
-                                        <ns2:property id="atPath" hidden="ALL_TABLES"/>
+                                        <ns2:property id="applicationTenancy"/>
+                                        <ns2:property id="atPath"/>
                                     </ns2:fieldSet>
                                 </col>
                             </row>
@@ -71,14 +62,7 @@
                 </col>
             </row>
         </col>
-        <col span="7">
-            <ns2:collection id="entries">
-                <ns2:action id="createAndDistributeEntries"/>
-            </ns2:collection>
-        </col>
-    </row>
-    <row>
-        <col span="12" unreferencedCollections="true">
+        <col span="5" unreferencedCollections="true">
         </col>
     </row>
 </grid>
