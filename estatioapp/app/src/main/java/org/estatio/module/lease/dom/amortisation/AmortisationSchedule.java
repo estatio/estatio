@@ -17,19 +17,27 @@ import javax.jdo.annotations.Unique;
 import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
 
-import org.apache.isis.applib.annotation.*;
-import org.incode.module.base.dom.utils.TitleBuilder;
-import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 import org.joda.time.LocalDate;
+
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.BookmarkPolicy;
+import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.DomainObjectLayout;
+import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.Property;
+import org.apache.isis.applib.annotation.PropertyLayout;
+import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.base.dom.types.NotesType;
+import org.incode.module.base.dom.utils.TitleBuilder;
+import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import org.estatio.module.base.dom.UdoDomainObject2;
-import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.lease.dom.Frequency;
-import org.estatio.module.lease.dom.Lease;
+import org.estatio.module.lease.dom.LeaseItem;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -47,19 +55,18 @@ import lombok.Setter;
         column = "version")
 @Queries({
         @Query(
-                name = "findByLease", language = "JDOQL",
+                name = "findByLeaseItem", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.module.lease.dom.amortisation.AmortisationSchedule "
-                        + "WHERE lease == :lease "),
+                        + "WHERE leaseItem == :leaseItem "),
         @Query(
                 name = "findUnique", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.module.lease.dom.amortisation.AmortisationSchedule "
-                        + "WHERE lease == :lease "
-                        + "&& charge == :charge "
+                        + "WHERE leaseItem == :leaseItem "
                         + "&& startDate == :startDate "),
 })
-@Unique(name = "AmortisationSchedule_lease_charge_startDate_UNQ", members = { "lease", "charge", "startDate" })
+@Unique(name = "AmortisationSchedule_leaseItem_startDate_UNQ", members = { "leaseItem", "startDate" })
 @DomainObject(
         editing = Editing.DISABLED,
         objectType = "amortisation.AmortisationSchedule"
@@ -70,19 +77,17 @@ import lombok.Setter;
 public class AmortisationSchedule extends UdoDomainObject2<AmortisationSchedule> {
 
     public AmortisationSchedule() {
-        super("lease, charge, startDate");
+        super("leaseItem, startDate");
     }
 
     public AmortisationSchedule(
-            final Lease lease,
-            final Charge charge,
+            final LeaseItem leaseItem,
             final BigDecimal scheduledAmount,
             final Frequency frequency,
             final LocalDate startDate,
             final LocalDate endDate){
         this();
-        this.lease = lease;
-        this.charge = charge;
+        this.leaseItem = leaseItem;
         this.scheduledAmount = scheduledAmount;
         this.frequency = frequency;
         this.startDate = startDate;
@@ -91,19 +96,15 @@ public class AmortisationSchedule extends UdoDomainObject2<AmortisationSchedule>
 
     public String title() {
         return TitleBuilder.start()
-                .withParent(getLease())
+                .withParent(getLeaseItem())
                 .withName("Schedule")
                 .withName(getInterval())
                 .toString();
     }
 
     @Getter @Setter
-    @Column(name = "leaseId", allowsNull = "false")
-    private Lease lease;
-
-    @Getter @Setter
-    @Column(name = "chargeId", allowsNull = "false")
-    private Charge charge;
+    @Column(name = "leaseItemId", allowsNull = "false")
+    private LeaseItem leaseItem;
 
     @Getter @Setter
     @Column(allowsNull = "false", scale = 2)
@@ -147,7 +148,7 @@ public class AmortisationSchedule extends UdoDomainObject2<AmortisationSchedule>
 
     @Override
     public ApplicationTenancy getApplicationTenancy() {
-        return getLease().getApplicationTenancy();
+        return getLeaseItem().getLease().getApplicationTenancy();
     }
 
     @Inject

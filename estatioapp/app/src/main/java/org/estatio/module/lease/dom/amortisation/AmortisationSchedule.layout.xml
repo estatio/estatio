@@ -15,12 +15,9 @@
                             <row>
                                 <col span="12">
                                     <ns2:fieldSet name="General" id="general">
-                                        <ns2:property id="reference"/>
-                                        <ns2:property id="name"/>
-                                        <ns2:property id="lease" hidden="PARENTED_TABLES"/>
+                                        <ns2:property id="leaseItem" hidden="PARENTED_TABLES"/>
                                     </ns2:fieldSet>
                                     <ns2:fieldSet name="Schedule" id="schedule">
-                                        <ns2:property id="charge"/>
                                         <ns2:property id="scheduledAmount"/>
                                         <ns2:property id="frequency"/>
                                         <ns2:property id="startDate"/>

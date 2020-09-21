@@ -66,7 +66,7 @@ public class AmortisationEntryRepository_IntegTest extends LeaseModuleIntegTestA
         final LocalDate startDate = discountItem.getStartDate();
         final LocalDate endDate = startDate.plusYears(1);
         final AmortisationSchedule schedule = amortisationScheduleRepository
-                .findOrCreate(lease, charge, scheduledAmount, freq,
+                .findOrCreate(discountItem, scheduledAmount, freq,
                         startDate, endDate);
         assertThat(amortisationEntryRepository.listAll()).isEmpty();
         assertThat(schedule).isNotNull();

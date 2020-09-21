@@ -2,11 +2,8 @@ package org.estatio.module.lease.dom.amortisation;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.inject.Inject;
-
-import com.google.common.collect.Lists;
 
 import org.joda.time.LocalDate;
 
@@ -15,43 +12,35 @@ import org.apache.isis.applib.annotation.Mixin;
 
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
-import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.lease.dom.Frequency;
-import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseItem;
 import org.estatio.module.lease.dom.LeaseStatus;
 
 @Mixin
-public class Lease_createAmortisationSchedule {
+public class LeaseItem_createAmortisationSchedule {
 
-    private final Lease lease;
+    private final LeaseItem leaseItem;
 
-    public Lease_createAmortisationSchedule(Lease lease) {
-        this.lease = lease;
+    public LeaseItem_createAmortisationSchedule(LeaseItem leaseItem) {
+        this.leaseItem = leaseItem;
     }
 
     @Action()
-    public Lease $$(
-            final Charge charge,
+    public LeaseItem $$(
             final Frequency frequency,
             final LocalDate startDate,
             final LocalDate endDate
     ) {
-        amortisationScheduleService.findOrCreateAmortisationScheduleForLeaseAndCharge(lease, charge, frequency, startDate, endDate);
-        return lease;
+        amortisationScheduleService.findOrCreateAmortisationScheduleForLeaseItem(leaseItem, frequency, startDate, endDate);
+        return leaseItem;
     }
 
-    public List<Charge> choices0$$(){
-        return Lists.newArrayList(lease.getItems()).stream().filter(li->li.getCharge()!=null).map(LeaseItem::getCharge).distinct().collect(Collectors.toList());
-    }
-
-    public List<Frequency> choices1$$(){
+    public List<Frequency> choices0$$(){
         // currently the only frequencies supported
         return Arrays.asList(Frequency.MONTHLY, Frequency.QUARTERLY);
     }
 
     public String validate$$(
-            final Charge charge,
             final Frequency frequency,
             final LocalDate startDate,
             final LocalDate endDate){
@@ -60,7 +49,7 @@ public class Lease_createAmortisationSchedule {
     }
 
     public boolean hide$$(){
-        return lease.getStatus()== LeaseStatus.PREVIEW;
+        return leaseItem.getLease().getStatus()== LeaseStatus.PREVIEW;
     }
 
     @Inject
