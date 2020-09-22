@@ -7,6 +7,8 @@ import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 
+import org.estatio.module.coda.dom.LineType;
+
 public class CodaDocHead_summaryLine_Test {
 
     private CodaDocHead codaDocHead;

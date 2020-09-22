@@ -7,6 +7,8 @@ import com.google.common.collect.Sets;
 import org.junit.Before;
 import org.junit.Test;
 
+import org.estatio.module.coda.dom.LineType;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class CodaDocHead_isLegacy_Test {

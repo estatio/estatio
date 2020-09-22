@@ -1,4 +1,4 @@
-package org.estatio.module.coda.dom.doc;
+package org.estatio.module.coda.dom;
 
 public enum LineType {
     SUMMARY,

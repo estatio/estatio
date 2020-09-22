@@ -11,6 +11,7 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
+import org.estatio.module.coda.dom.LineType;
 import org.estatio.module.financial.dom.BankAccount;
 
 import static org.assertj.core.api.Assertions.assertThat;
