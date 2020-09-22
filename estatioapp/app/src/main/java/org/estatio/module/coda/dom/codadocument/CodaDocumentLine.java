@@ -46,12 +46,12 @@ import lombok.Setter;
         @Query(
                 name = "findUnique", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.module.coda.dom.doc.CodaDocLine "
+                        + "FROM org.estatio.module.coda.dom.codadocument.CodaDocumentLine "
                         + "WHERE document == :document "
                         + "   && lineNumber == :lineNumber "),
 })
 @Uniques({
-        @Unique(name = "CodaDocLine_document_lineNumber_UNQ", members = { "document", "lineNumber" }),
+        @Unique(name = "CodaDocumentLine_document_lineNumber_UNQ", members = { "document", "lineNumber" }),
 })
 @DomainObject(
         objectType = "codadocument.CodaDocumentLine",

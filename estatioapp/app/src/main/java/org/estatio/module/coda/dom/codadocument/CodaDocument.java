@@ -24,7 +24,6 @@ import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
-import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.Where;
 
@@ -51,13 +50,13 @@ import lombok.Setter;
         @Query(
                 name = "findByCmpCodeAndDocCodeAndDocNum", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.module.coda.dom.doc.CodaDocHead "
+                        + "FROM org.estatio.module.coda.dom.codadocument.CodaDocument "
                         + "WHERE cmpCode == :cmpCode "
                         + "   && docCode == :docCode "
                         + "   && docNum  == :docNum "),
 
 })
-@Unique(name = "CodaDocHead_uuid_UNQ", members = { "uuid" })
+@Unique(name = "CodaDocument_uuid_UNQ", members = { "uuid" })
 @DomainObject(
         objectType = "codadocument.CodaDocument",
         editing = Editing.DISABLED
@@ -79,7 +78,7 @@ public class CodaDocument implements Comparable<CodaDocument>, HasAtPath {
     @Getter @Setter
     private CodaDocumentType documentType;
 
-    @Property(optionality = Optionality.OPTIONAL, hidden = Where.EVERYWHERE)
+    @Property(hidden = Where.EVERYWHERE)
     @Column(allowsNull = "false")
     @Getter @Setter
     private String uuid;
