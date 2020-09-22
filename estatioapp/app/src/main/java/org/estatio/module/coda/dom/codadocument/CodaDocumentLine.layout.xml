@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<grid xsi:schemaLocation="http://isis.apache.org/applib/layout/component http://isis.apache.org/applib/layout/component/component.xsd http://isis.apache.org/applib/layout/grid/bootstrap3 http://isis.apache.org/applib/layout/grid/bootstrap3/bootstrap3.xsd" xmlns="http://isis.apache.org/applib/layout/grid/bootstrap3" xmlns:ns2="http://isis.apache.org/applib/layout/component" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <row>
+        <col span="12" unreferencedActions="true">
+            <ns2:domainObject/>
+            <ns2:action id="links"/>
+        </col>
+    </row>
+    <row>
+        <col span="12">
+            <row>
+                <col span="12">
+                    <tabGroup>
+                        <tab name="General">
+                            <row>
+                                <col span="4">
+                                    <ns2:fieldSet name="Coda Document Line" id="codadocumentline">
+                                        <ns2:property id="document"/>
+                                        <ns2:property id="lineNumber"/>
+                                        <ns2:property id="lineType"/>
+                                    </ns2:fieldSet>
+                                    <ns2:fieldSet name="Dates" id="dates">
+                                        <ns2:property id="documentDate"/>
+                                        <ns2:property id="valueDate"/>
+                                    </ns2:fieldSet>
+                                    <ns2:fieldSet name="Values" id="values">
+                                        <ns2:property id="homeValue"/>
+                                        <ns2:property id="docValue"/>
+                                        <ns2:property id="lineSense"/>
+                                    </ns2:fieldSet>
+                                </col>
+                                <col span="4">
+                                    <ns2:fieldSet name="Elements" id="elements">
+                                        <ns2:property id="element1"/>
+                                        <ns2:property id="element2"/>
+                                        <ns2:property id="element3"/>
+                                        <ns2:property id="element4"/>
+                                        <ns2:property id="element5"/>
+                                        <ns2:property id="element6"/>
+                                    </ns2:fieldSet>
+                                    <ns2:fieldSet name="Description" id="description">
+                                        <ns2:property id="description"/>
+                                    </ns2:fieldSet>
+                                </col>
+                                <col span="4">
+                                    <ns2:fieldSet name="External References" id="externalreferences">
+                                        <ns2:property id="externalReference1"/>
+                                        <ns2:property id="externalReference2"/>
+                                        <ns2:property id="externalReference3"/>
+                                        <ns2:property id="externalReference4"/>
+                                        <ns2:property id="externalReference5"/>
+                                        <ns2:property id="externalReference6"/>
+                                    </ns2:fieldSet>
+                                </col>
+                            </row>
+                        </tab>
+                        <tab name="Application Tenancy">
+                            <row>
+                                <col span="12">
+                                    <ns2:fieldSet name="Application Level" id="applicationLevel">
+                                        <ns2:property id="atPath"/>
+                                    </ns2:fieldSet>
+                                </col>
+                            </row>
+                        </tab>
+                        <tab name="Other">
+                            <row>
+                                <col span="12">
+                                    <ns2:fieldSet name="Other" id="other" unreferencedProperties="true">
+                                    </ns2:fieldSet>
+                                </col>
+                            </row>
+                        </tab>
+                        <tab name="Metadata">
+                            <row>
+                                <col span="12">
+                                    <ns2:fieldSet name="Metadata" id="metadata">
+                                        <ns2:action id="sync" position="PANEL"/>
+                                        <ns2:action id="recentChanges" position="PANEL_DROPDOWN"/>
+                                        <ns2:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
+                                        <ns2:action id="downloadJdoMetadata" position="PANEL_DROPDOWN"/>
+                                        <ns2:property id="id"/>
+                                        <ns2:property id="versionSequence"/>
+                                        <ns2:property id="datanucleusId"/>
+                                        <ns2:property id="datanucleusVersionLong"/>
+                                        <ns2:property id="datanucleusVersionTimestamp"/>
+                                    </ns2:fieldSet>
+                                </col>
+                            </row>
+                        </tab>
+                    </tabGroup>
+                </col>
+            </row>
+        </col>
+    </row>
+    <row>
+        <col span="12">
+            <tabGroup  unreferencedCollections="true">
+            </tabGroup>
+        </col>
+    </row>
+</grid>
