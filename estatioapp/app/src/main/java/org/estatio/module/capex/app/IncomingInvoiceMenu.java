@@ -319,7 +319,7 @@ public class IncomingInvoiceMenu {
     ///////////////////////////////////////////
 
     @Action(semantics = SemanticsOf.SAFE)
-    public List<IncomingInvoice> findInvoicesBySupplierAndApprovalStatesAndProperties(
+    public List<IncomingInvoice> findInvoicesBySupplierAndApprovalStateAndProperties(
             final Party supplier,
             final List<IncomingInvoiceApprovalState> approvalStates,
             final List<Property> properties) {
@@ -329,21 +329,29 @@ public class IncomingInvoiceMenu {
                 .collect(Collectors.toList());
     }
 
-    public boolean hideFindInvoicesBySupplierAndApprovalStatesAndProperties() {
+    public boolean hideFindInvoicesBySupplierAndApprovalStateAndProperties() {
         return personRepository.me()==null;
     }
 
-    public List<IncomingInvoiceApprovalState> default1FindInvoicesBySupplierAndApprovalStatesAndProperties() {
+    public List<IncomingInvoiceApprovalState> default1FindInvoicesBySupplierAndApprovalStateAndProperties() {
         return Collections.singletonList(IncomingInvoiceApprovalState.COMPLETED);
     }
 
-    public List<Property> choices2FindInvoicesBySupplierAndApprovalStatesAndProperties() {
-        return factoryService.mixin(Person_fixedAssetRoles.class, personRepository.me()).act()
-                .stream()
-                .map(FixedAssetRole::getAsset)
-                .filter(fixedAsset -> fixedAsset instanceof Property)
-                .map(fixedAsset -> (Property) fixedAsset)
-                .collect(Collectors.toList());
+    public List<Property> default2FindInvoicesBySupplierAndApprovalStateAndProperties() {
+        return choices2FindInvoicesBySupplierAndApprovalStateAndProperties();
+    }
+
+    public List<Property> choices2FindInvoicesBySupplierAndApprovalStateAndProperties() {
+        if (personRepository.me()!=null) {
+            return factoryService.mixin(Person_fixedAssetRoles.class, personRepository.me()).act()
+                    .stream()
+                    .map(FixedAssetRole::getAsset)
+                    .filter(fixedAsset -> fixedAsset instanceof Property)
+                    .map(fixedAsset -> (Property) fixedAsset)
+                    .collect(Collectors.toList());
+        } else {
+            return new ArrayList<>();
+        }
     }
 
     ///////////////////////////////////////////
