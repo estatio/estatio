@@ -22,7 +22,6 @@ import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import org.estatio.module.base.dom.distribution.DistributionService;
 import org.estatio.module.charge.dom.Charge;
-import org.estatio.module.invoice.dom.InvoiceStatus;
 import org.estatio.module.lease.dom.Frequency;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseItem;
@@ -36,18 +35,6 @@ import org.estatio.module.lease.dom.invoicing.InvoiceCalculationService;
 public class AmortisationScheduleService {
 
     public static Logger LOG = LoggerFactory.getLogger(AmortisationScheduleService.class);
-
-    public LocalDate firstInvoiceDateForLeaseItem(final LeaseItem leaseItem){
-        List<LocalDate> invoiceDates = new ArrayList<>();
-        for (LeaseTerm leaseTerm : leaseItem.getTerms()){
-            final List<LocalDate> datesForTerm = Lists.newArrayList(leaseTerm.getInvoiceItems()).stream()
-                    .filter(ii -> ii.getInvoice().getStatus() == InvoiceStatus.INVOICED)
-                    .map(ii -> ii.getInvoice().getInvoiceDate())
-                    .collect(Collectors.toList());
-            if (!datesForTerm.isEmpty()) invoiceDates.addAll(datesForTerm);
-        }
-        return invoiceDates.stream().min(LocalDate::compareTo).orElse(null);
-    }
 
     @Programmatic
     public AmortisationSchedule findOrCreateAmortisationScheduleForLeaseAndCharge(
