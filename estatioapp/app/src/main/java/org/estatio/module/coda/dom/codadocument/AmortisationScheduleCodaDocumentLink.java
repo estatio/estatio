@@ -37,6 +37,11 @@ import lombok.Setter;
                         + "FROM org.estatio.module.coda.dom.codadocument.AmortisationScheduleCodaDocumentLink "
                         + "WHERE codaDocument == :codaDocument "
                         + "   && amortisationSchedule  == :amortisationSchedule "),
+        @Query(
+                name = "findByAmortisationSchedule", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.module.coda.dom.codadocument.AmortisationScheduleCodaDocumentLink "
+                        + "WHERE amortisationSchedule  == :amortisationSchedule "),
 
 })
 @Unique(name = "AmortisationScheduleCodaDocumentLink_codaDocument_amortisationSchedule_UNQ", members = { "codaDocument", "amortisationSchedule" })

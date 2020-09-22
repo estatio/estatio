@@ -36,6 +36,15 @@ public class CodaDocumentLinkRepository {
     }
 
     @Programmatic
+    public List<AmortisationScheduleCodaDocumentLink> findByAmortisationSchedule(final AmortisationSchedule amortisationSchedule) {
+        return repositoryService.allMatches(
+                new QueryDefault<>(
+                        AmortisationScheduleCodaDocumentLink.class,
+                        "findByAmortisationSchedule",
+                        "amortisationSchedule", amortisationSchedule));
+    }
+
+    @Programmatic
     public AmortisationScheduleCodaDocumentLink findUnique(final AmortisationSchedule amortisationSchedule, final CodaDocument codaDocument){
         return repositoryService.uniqueMatch(
                 new QueryDefault<>(
