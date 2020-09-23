@@ -106,11 +106,11 @@ public class CodaDocumentLine implements Comparable<CodaDocumentLine>, HasAtPath
     @Getter @Setter
     private LocalDate valueDate;
 
-    @Column(allowsNull = "true")
+    @Column(allowsNull = "true", scale = 2)
     @Getter @Setter
     private BigDecimal homeValue;
 
-    @Column(allowsNull = "true")
+    @Column(allowsNull = "true", scale = 2)
     @Getter @Setter
     private BigDecimal docValue;
 

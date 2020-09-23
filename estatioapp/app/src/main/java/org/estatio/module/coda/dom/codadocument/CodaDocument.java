@@ -83,7 +83,7 @@ public class CodaDocument implements Comparable<CodaDocument>, HasAtPath {
     @Getter @Setter
     private String uuid;
 
-    @Column(allowsNull = "false", length = 12)
+    @Column(allowsNull = "false", length = 24)
     @Getter @Setter
     private String cmpCode;
 

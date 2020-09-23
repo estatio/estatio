@@ -31,6 +31,7 @@
                                     <ns2:fieldSet name="General" id="general">
                                         <ns2:property id="documentType"/>
                                         <ns2:property id="uuid"/>
+                                        <ns2:property id="currency"/>
                                     </ns2:fieldSet>
                                 </col>
                             </row>
