@@ -60,7 +60,7 @@ public class AmortisationScheduleInvoiceLink {
     }
 
     @Getter @Setter
-    @Column(allowsNull = "false", name = "amortisationScheduleId")
+    @Column(allowsNull = "false", name = "scheduleId")
     private AmortisationSchedule amortisationSchedule;
 
     @Getter @Setter
