@@ -17,14 +17,23 @@ import javax.jdo.annotations.Unique;
 import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
 
-import org.apache.isis.applib.annotation.*;
-import org.incode.module.base.dom.utils.TitleBuilder;
-import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 import org.joda.time.LocalDate;
+
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.BookmarkPolicy;
+import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.DomainObjectLayout;
+import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.PropertyLayout;
+import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.base.dom.types.NotesType;
+import org.incode.module.base.dom.utils.TitleBuilder;
+import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import org.estatio.module.base.dom.UdoDomainObject2;
 import org.estatio.module.charge.dom.Charge;
@@ -92,7 +101,8 @@ public class AmortisationSchedule extends UdoDomainObject2<AmortisationSchedule>
     public String title() {
         return TitleBuilder.start()
                 .withParent(getLease())
-                .withName("Schedule")
+                .withName("schedule ")
+                .withName(getCharge().getReference())
                 .withName(getInterval())
                 .toString();
     }
@@ -121,8 +131,8 @@ public class AmortisationSchedule extends UdoDomainObject2<AmortisationSchedule>
     @Column(allowsNull = "false")
     private LocalDate endDate;
 
-    @Property(hidden = Where.EVERYWHERE)
-    private LocalDateInterval getInterval() {
+    @Programmatic
+    public LocalDateInterval getInterval() {
         return LocalDateInterval.including(getStartDate(), getEndDate());
     }
 

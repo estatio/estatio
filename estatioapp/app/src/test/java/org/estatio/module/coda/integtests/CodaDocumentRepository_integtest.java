@@ -25,7 +25,7 @@ public class CodaDocumentRepository_integtest extends CodaModuleIntegTestAbstrac
         Assertions.assertThat(codaDocumentRepository.listAll()).isEmpty();
 
         // when
-        codaDocumentRepository.create(CodaDocumentType.INITIAL_COVID_AMORTISATION_BOOKING, cmpCode, docCode,
+        codaDocumentRepository.create(CodaDocumentType.INITIAL_COVID_AMORTISATION, cmpCode, docCode,
                 atPath);
 
         // then

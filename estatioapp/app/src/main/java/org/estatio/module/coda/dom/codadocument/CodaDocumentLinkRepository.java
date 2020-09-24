@@ -96,6 +96,15 @@ public class CodaDocumentLinkRepository {
     }
 
     @Programmatic
+    public List<OutgoingInvoiceCodaDocumentLink> findByInvoice(final InvoiceForLease invoice) {
+        return repositoryService.allMatches(
+                new QueryDefault<>(
+                        OutgoingInvoiceCodaDocumentLink.class,
+                        "findByInvoice",
+                        "invoice", invoice));
+    }
+
+    @Programmatic
     public OutgoingInvoiceCodaDocumentLink findUnique(final InvoiceForLease invoice, final CodaDocument codaDocument){
         return repositoryService.uniqueMatch(
                 new QueryDefault<>(

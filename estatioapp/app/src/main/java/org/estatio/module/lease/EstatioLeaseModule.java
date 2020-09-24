@@ -59,6 +59,7 @@ import org.estatio.module.lease.dom.amendments.PersistedCalculationResult;
 import org.estatio.module.lease.dom.amortisation.AmortisationEntry;
 import org.estatio.module.lease.dom.amortisation.AmortisationSchedule;
 import org.estatio.module.lease.dom.amortisation.AmortisationScheduleAmendmentItemLink;
+import org.estatio.module.lease.dom.amortisation.AmortisationScheduleInvoiceLink;
 import org.estatio.module.lease.dom.amortisation.AmortisationScheduleLeaseItemLink;
 import org.estatio.module.lease.dom.breaks.BreakOption;
 import org.estatio.module.lease.dom.breaks.BreakOptionRepository;
@@ -146,6 +147,7 @@ public final class EstatioLeaseModule extends ModuleAbstract {
                 deleteFrom(InvoiceItemForLease.class);
                 deleteFrom(InvoiceForLease.class);
 
+                deleteFrom(AmortisationScheduleInvoiceLink.class);
                 deleteFrom(AmortisationScheduleAmendmentItemLink.class);
                 deleteFrom(AmortisationScheduleLeaseItemLink.class);
                 deleteFrom(AmortisationEntry.class);

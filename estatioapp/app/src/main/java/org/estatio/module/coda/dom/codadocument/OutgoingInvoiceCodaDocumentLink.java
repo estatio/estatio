@@ -37,6 +37,11 @@ import lombok.Setter;
                         + "FROM org.estatio.module.coda.dom.codadocument.OutgoingInvoiceCodaDocumentLink "
                         + "WHERE codaDocument == :codaDocument "
                         + "   && invoice  == :invoice "),
+        @Query(
+                name = "findByInvoice", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.module.coda.dom.codadocument.OutgoingInvoiceCodaDocumentLink "
+                        + "WHERE invoice == :invoice "),
 
 })
 @Unique(name = "OutgoingInvoiceCodaDocumentLink_codaDocument_invoice_UNQ", members = { "codaDocument", "invoice" })
