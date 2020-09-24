@@ -28,6 +28,7 @@
                                     </ns2:fieldSet>
                                     <ns2:fieldSet name="Note" id="note">
                                         <ns2:property id="note"/>
+                                        <ns2:property id="creationStrategyUsed"/>
                                     </ns2:fieldSet>
                                 </col>
                             </row>

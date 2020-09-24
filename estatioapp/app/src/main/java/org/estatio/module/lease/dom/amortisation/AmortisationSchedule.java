@@ -155,6 +155,10 @@ public class AmortisationSchedule extends UdoDomainObject2<AmortisationSchedule>
         return !getEntries().isEmpty();
     }
 
+    @Getter @Setter
+    @Column(allowsNull = "true")
+    private CreationStrategy creationStrategyUsed;
+
     @Override
     public ApplicationTenancy getApplicationTenancy() {
         return getLease().getApplicationTenancy();
