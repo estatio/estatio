@@ -69,6 +69,14 @@ public class CodaDocumentLinkRepository {
         return link;
     }
 
+    @Programmatic
+    public List<AmortisationEntryCodaDocumentLink> findByEntry(final AmortisationEntry amortisationEntry) {
+        return repositoryService.allMatches(
+                new QueryDefault<>(
+                        AmortisationEntryCodaDocumentLink.class,
+                        "findByEntry",
+                        "amortisationEntry", amortisationEntry));
+    }
 
     @Programmatic
     public AmortisationEntryCodaDocumentLink findUnique(final AmortisationEntry amortisationEntry, final CodaDocument codaDocument){
