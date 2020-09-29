@@ -1,4 +1,4 @@
-package org.estatio.module.lease.dom.amortisation;
+package org.estatio.module.lease.contributions.amortisation;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -12,6 +12,8 @@ import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.module.lease.dom.LeaseItem;
+import org.estatio.module.lease.dom.amortisation.AmortisationSchedule;
+import org.estatio.module.lease.dom.amortisation.AmortisationScheduleLeaseItemLinkRepository;
 
 @Mixin
 public class AmortisationSchedule_leaseItems {
