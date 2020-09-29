@@ -23,6 +23,7 @@ import java.net.URL;
 import java.util.Objects;
 
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
@@ -46,6 +47,7 @@ import org.apache.isis.applib.services.eventbus.ObjectPersistedEvent;
 import org.apache.isis.applib.services.eventbus.ObjectRemovingEvent;
 import org.apache.isis.applib.services.eventbus.ObjectUpdatedEvent;
 import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
+import org.estatio.module.invoice.dom.InvoiceRepository;
 import org.incode.module.base.dom.Titled;
 import org.incode.module.base.dom.utils.TitleBuilder;
 import org.incode.module.country.dom.impl.Country;
@@ -220,8 +222,14 @@ public class BankAccount
     }
 
     public String disableChangeIban(){
+        if (getVerificationState() == BankAccountVerificationState.NOT_VERIFIED
+                && invoiceRepository.findByBuyer(getOwner()).isEmpty()
+                && invoiceRepository.findBySeller(getOwner()).isEmpty()) {
+            return null;
+        }
+
         // This is a temporary measure to prevent user errors:
-        return EstatioRole.ADMINISTRATOR.isApplicableFor(getUser()) ? null : "Only administrators can change an IBAN";
+        return EstatioRole.ADMINISTRATOR.isApplicableFor(getUser()) ? null : "Only administrators can change an already verified and/or used IBAN";
     }
 
 
@@ -447,4 +455,8 @@ public class BankAccount
         public String default1Act() { return bankAccount.getIban(); }
 
     }
+
+    @Inject
+    InvoiceRepository invoiceRepository;
+
 }
