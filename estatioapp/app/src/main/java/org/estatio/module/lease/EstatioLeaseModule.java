@@ -144,12 +144,13 @@ public final class EstatioLeaseModule extends ModuleAbstract {
 
                 deleteFrom(PersistedCalculationResult.class);
 
-                deleteFrom(InvoiceItemForLease.class);
-                deleteFrom(InvoiceForLease.class);
-
                 deleteFrom(AmortisationScheduleInvoiceLink.class);
                 deleteFrom(AmortisationScheduleAmendmentItemLink.class);
                 deleteFrom(AmortisationScheduleLeaseItemLink.class);
+
+                deleteFrom(InvoiceItemForLease.class);
+                deleteFrom(InvoiceForLease.class);
+
                 deleteFrom(AmortisationEntry.class);
                 deleteFrom(AmortisationSchedule.class);
 

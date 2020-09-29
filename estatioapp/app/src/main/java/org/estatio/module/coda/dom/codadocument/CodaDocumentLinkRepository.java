@@ -45,6 +45,15 @@ public class CodaDocumentLinkRepository {
     }
 
     @Programmatic
+    public List<AmortisationScheduleCodaDocumentLink> findByAmortisationScheduleLinkByDocument(final CodaDocument codaDocument) {
+        return repositoryService.allMatches(
+                new QueryDefault<>(
+                        AmortisationScheduleCodaDocumentLink.class,
+                        "findByDocument",
+                        "codaDocument", codaDocument));
+    }
+
+    @Programmatic
     public AmortisationScheduleCodaDocumentLink findUnique(final AmortisationSchedule amortisationSchedule, final CodaDocument codaDocument){
         return repositoryService.uniqueMatch(
                 new QueryDefault<>(
@@ -79,6 +88,15 @@ public class CodaDocumentLinkRepository {
     }
 
     @Programmatic
+    public List<AmortisationEntryCodaDocumentLink> findEntryLinkByDocument(final CodaDocument codaDocument) {
+        return repositoryService.allMatches(
+                new QueryDefault<>(
+                        AmortisationEntryCodaDocumentLink.class,
+                        "findByDocument",
+                        "codaDocument", codaDocument));
+    }
+
+    @Programmatic
     public AmortisationEntryCodaDocumentLink findUnique(final AmortisationEntry amortisationEntry, final CodaDocument codaDocument){
         return repositoryService.uniqueMatch(
                 new QueryDefault<>(
@@ -110,6 +128,15 @@ public class CodaDocumentLinkRepository {
                         OutgoingInvoiceCodaDocumentLink.class,
                         "findByInvoice",
                         "invoice", invoice));
+    }
+
+    @Programmatic
+    public List<OutgoingInvoiceCodaDocumentLink> findInvoiceLinkByDocument(final CodaDocument codaDocument) {
+        return repositoryService.allMatches(
+                new QueryDefault<>(
+                        OutgoingInvoiceCodaDocumentLink.class,
+                        "findByDocument",
+                        "codaDocument", codaDocument));
     }
 
     @Programmatic

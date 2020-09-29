@@ -1,4 +1,4 @@
-package org.estatio.module.coda.contributions;
+package org.estatio.module.coda.contributions.codadocument;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,20 +17,20 @@ import org.estatio.module.coda.dom.codadocument.CodaDocumentLinkRepository;
 import org.estatio.module.lease.dom.amortisation.AmortisationSchedule;
 
 @Mixin(method="coll")
-public class AmortisationSchedule_codaDocuments {
+public class CodaDocument_amortisationSchedule {
 
-    private final AmortisationSchedule amortisationSchedule;
-    public AmortisationSchedule_codaDocuments(final AmortisationSchedule amortisationSchedule) {
-        this.amortisationSchedule = amortisationSchedule;
+    private final CodaDocument codaDocument;
+    public CodaDocument_amortisationSchedule(final CodaDocument codaDocument) {
+        this.codaDocument = codaDocument;
     }
 
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed= Contributed.AS_ASSOCIATION)
     @Property
-    public List<CodaDocument> coll() {
-        return codaDocumentLinkRepository.findByAmortisationSchedule(amortisationSchedule)
+    public List<AmortisationSchedule> coll() {
+        return codaDocumentLinkRepository.findByAmortisationScheduleLinkByDocument(codaDocument)
                 .stream()
-                .map(l->l.getCodaDocument())
+                .map(l->l.getAmortisationSchedule())
                 .collect(Collectors.toList());
     }
 
