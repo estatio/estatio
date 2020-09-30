@@ -33,6 +33,7 @@ import org.estatio.module.party.fixtures.orgcomms.builders.OrganisationAndCommsB
 import lombok.Getter;
 import lombok.experimental.Accessors;
 import static org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum.Fr;
+import static org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum.FrBe;
 import static org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum.Gb;
 import static org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum.It;
 import static org.incode.module.apptenancy.fixtures.enums.ApplicationTenancy_enum.Nl;
@@ -49,6 +50,7 @@ public enum Organisation_enum
     DagoBankNl("DAGOBANK_NL", "DagoBank (NL)", null, Nl),
     HelloWorldFr("HELLOWORLD_FR", "Hello World Properties (France)", "HELLOWORLD code", Fr),
     HelloWorldGb("HELLOWORLD_GB", "Hello World Properties", null, Gb),
+    HelloWorldBe("HELLOWORLD_BE", "Hello World Properties", null, FrBe),
     HelloWorldIt("HW_IT", "Hello World Properties (Italy)", null, It),
     HelloWorldIt01("IT01", "Hello World Properties IT01 (Italy)", null, It),
     HelloWorldNl("HELLOWORLD_NL", "Hello World Properties (NL)", null, Nl),
@@ -68,6 +70,7 @@ public enum Organisation_enum
     PoisonNl("POISON_NL", "Poison Perfumeries B.V.", null, Nl),
     PretGb("PRET", "Pret-a-Partir", null, Gb),
     TopModelGb("TOPMODEL", "Topmodel Fashion", null, Gb),
+    TopModelBe("TOPMODELBE", "Topmodel Fashion", null, FrBe),
     TopSellerGb("TOPSELLER", "Topseller goods", null, Gb),
     YoukeaSe("YOUKEA", "Youkea Furniture", null, Se),
     PoisonSe("POISON_SE", "Poison Perfumeries", null, Se),

@@ -18,6 +18,7 @@ import lombok.Getter;
 import lombok.experimental.Accessors;
 import static org.estatio.module.asset.dom.PropertyType.SHOPPING_CENTER;
 import static org.incode.module.base.integtests.VT.ld;
+import static org.incode.module.country.fixtures.enums.Country_enum.BEL;
 import static org.incode.module.country.fixtures.enums.Country_enum.FRA;
 import static org.incode.module.country.fixtures.enums.Country_enum.GBR;
 import static org.incode.module.country.fixtures.enums.Country_enum.ITA;
@@ -48,7 +49,10 @@ public enum Property_enum implements PersonaWithFinder<Property>, PersonaWithBui
     VivFr   ("VIV", "Vive les shops", "Paris", FRA, SHOPPING_CENTER,
             ld(2004, 5, 6), ld(2008, 6, 1), "48.8740002697085;2.326230019708498"),
     BvvFr   ("BVV", "Bureaux Vive", "Paris", FRA, SHOPPING_CENTER,  // in the same invoice group as VivFr
-            ld(2004, 5, 6), ld(2008, 6, 1), "48.8740002697085;2.326230019708498");
+            ld(2004, 5, 6), ld(2008, 6, 1), "48.8740002697085;2.326230019708498"),
+    LuwBe("LUW", "Luxury warehouse", "Brussel", BEL, SHOPPING_CENTER,
+            ld(2004, 5, 6), ld(2008, 6, 1), "48.8740002697085;2.326230019708498")
+    ;
 
     private final String ref;
     private final String name;
