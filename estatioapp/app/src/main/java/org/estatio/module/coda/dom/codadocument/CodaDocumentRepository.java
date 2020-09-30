@@ -42,18 +42,19 @@ public class CodaDocumentRepository {
     }
 
 
-    // minimal props required
     @Programmatic
     public CodaDocument create(
             final CodaDocumentType documentType,
             final String cmpCode,
             final String docCode,
+            final String codaPeriod,
             final String atPath
     ){
         CodaDocument document = new CodaDocument();
         document.setDocumentType(documentType);
         document.setCmpCode(cmpCode);
         document.setDocCode(docCode);
+        document.setCodaPeriod(codaPeriod);
         document.setAtPath(atPath);
         document.setCurrency(CodaCurrency.EUR);
         document.setCreatedAt(clockService.nowAsLocalDateTime());

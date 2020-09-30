@@ -19,13 +19,14 @@ public class CodaDocumentRepository_integtest extends CodaModuleIntegTestAbstrac
 
         final String cmpCode = "IT01";
         final String docCode = "IT00COV19";
+        final String codaPeriod = "2020/13";
         final String atPath = "/ITA";
 
         // given
         Assertions.assertThat(codaDocumentRepository.listAll()).isEmpty();
 
         // when
-        codaDocumentRepository.create(CodaDocumentType.INITIAL_COVID_AMORTISATION, cmpCode, docCode,
+        codaDocumentRepository.create(CodaDocumentType.INITIAL_COVID_AMORTISATION, cmpCode, docCode, codaPeriod,
                 atPath);
 
         // then

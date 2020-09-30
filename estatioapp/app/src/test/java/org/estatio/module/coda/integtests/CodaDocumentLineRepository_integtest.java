@@ -19,6 +19,7 @@ public class CodaDocumentLineRepository_integtest extends CodaModuleIntegTestAbs
 
         final String cmpCode = "IT01";
         final String docCode = "IT00COV19";
+        final String codaPeriod = "2020/13";
         final String atPath = "/ITA";
         final int lineNumber = 1;
         final LineType lineType = LineType.ANALYSIS;
@@ -26,7 +27,7 @@ public class CodaDocumentLineRepository_integtest extends CodaModuleIntegTestAbs
         // given
         Assertions.assertThat(codaDocumentLineRepository.listAll()).isEmpty();
         final CodaDocument document = codaDocumentRepository
-                .create(CodaDocumentType.INITIAL_COVID_AMORTISATION, cmpCode, docCode,
+                .create(CodaDocumentType.INITIAL_COVID_AMORTISATION, cmpCode, docCode, codaPeriod,
                         atPath);
 
         // when
