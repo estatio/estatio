@@ -463,6 +463,18 @@ public class Lease
         return !EstatioRole.SUPERUSER.isApplicableFor(getUser()) ? "You need super user rights to change the dates" : null;
     }
 
+    @Getter @Setter
+    @Column(allowsNull = "true")
+    public Boolean noRentWhenPropertyClosed;
+
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    public Lease changeNoRentWhenPropertyClosed(
+            @Parameter(optionality = Optionality.OPTIONAL) final Boolean noRentWhenPropertyClosed){
+        setNoRentWhenPropertyClosed(noRentWhenPropertyClosed);
+        return this;
+    }
+
+
     @Programmatic
     @Override
     public LocalDateInterval getEffectiveInterval() {

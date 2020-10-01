@@ -804,6 +804,40 @@ public class AdminDashboard implements ViewModel {
         return new LocalDate(2020,6,30);
     }
 
+    @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
+    public void patchLeasesHavingNoRentWhenPropertyClosed(){
+
+        final List<String> leaseRefsToPatch = Arrays.asList(
+                "CAR-FOOTLOCK-49",
+                "CAR-SCARPE-074",
+                "CAS-FOOT2-1516",
+                "COL-BERSHKA-013",
+                "COL-PULL-02B",
+                "COL-ZARA-040",
+                "COL-ZARA-40M",
+                "CUR-FOOTLO2-089",
+                "CUR-JDSPORT-9C",
+                "FAB-SCARPE-MS3",
+                "GIG-FOOTLOC3-44",
+                "FIO-FOOTLO3-106",
+                "FIO-JDSPORT-038",
+                "FIO-GAP-047",
+                "FIO-YIMI-083A",
+                "FIO-OVS-206",
+                "CRE-JDSPORT-24"
+        );
+        for (String r : leaseRefsToPatch){
+            final Lease l = leaseRepository.findLeaseByReference(r);
+            if (l==null){
+                LOG.warn(String.format("Lease with ref %s not found when trying to patch has no rent when property closed", r));
+            } else {
+                l.setNoRentWhenPropertyClosed(true);
+                LOG.info(String.format("Lease with ref %s is set 'no rent when property closed'", l.getReference()));
+            }
+        }
+
+    }
+
     @Inject PropertyRepository propertyRepository;
 
     @Inject LeaseItemRepository leaseItemRepository;
