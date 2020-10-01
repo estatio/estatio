@@ -11,6 +11,7 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.query.QueryDefault;
+import org.apache.isis.applib.services.message.MessageService;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
@@ -69,6 +70,10 @@ public class AmortisationScheduleRepository {
             final Frequency frequency,
             final LocalDate startDate,
             final LocalDate endDate){
+        if (scheduledAmount.compareTo(BigDecimal.ZERO)<0){
+            messageService.raiseError("Scheduled amount cannot be negative");
+            return null;
+        }
         final AmortisationSchedule newSchedule = new AmortisationSchedule(lease, charge, scheduledAmount, frequency, startDate, endDate);
         serviceRegistry2.injectServicesInto(newSchedule);
         repositoryService.persistAndFlush(newSchedule);
@@ -80,5 +85,7 @@ public class AmortisationScheduleRepository {
 
     @Inject
     ServiceRegistry2 serviceRegistry2;
+
+    @Inject MessageService messageService;
 
 }
