@@ -28,9 +28,7 @@ import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.Where;
-import org.apache.isis.applib.services.eventbus.AbstractDomainEvent;
 import org.apache.isis.applib.services.eventbus.ActionDomainEvent;
-import org.apache.isis.applib.services.eventbus.EventBusService;
 
 import org.isisaddons.module.security.dom.tenancy.HasAtPath;
 
@@ -138,7 +136,19 @@ public class CodaDocument implements Comparable<CodaDocument>, HasAtPath {
     private SortedSet<CodaDocumentLine> lines = new TreeSet<>();
 
 
+    @Programmatic
+    public void updatePostedAtAndAttachedScheduleEntryIfAny(final LocalDateTime dateTime) {
+        setPostedAt(dateTime);
+        if (dateTime==null) return; // guard, but should not be possble
+        codaDocumentLinkRepository.findEntryLinkByDocument(this).forEach(l->{
+            l.getAmortisationEntry().setDateReported(dateTime.toLocalDate());
+            l.getAmortisationEntry().getSchedule().verifyOutstandingValue();
+        });
+
+    }
+
     //region > compareTo, toString
+
     @Override
     public int compareTo(final CodaDocument other) {
         return ComparisonChain.start()
@@ -157,15 +167,6 @@ public class CodaDocument implements Comparable<CodaDocument>, HasAtPath {
                 '}';
     }
 
-    @Programmatic
-    public void updatePostedAtSendingEvent(final LocalDateTime nowAsLocalDateTime) {
-        setPostedAt(nowAsLocalDateTime);
-        final CodaDocument.CodaDocumentChangePostedAtEvent event = new CodaDocument.CodaDocumentChangePostedAtEvent();
-        event.setEventPhase(AbstractDomainEvent.Phase.EXECUTED);
-        event.setSource(this);
-        eventBusService.post(event);
-    }
-
-    @Inject EventBusService eventBusService;
+    @Inject CodaDocumentLinkRepository codaDocumentLinkRepository;
 
 }

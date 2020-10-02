@@ -17,6 +17,8 @@ import javax.jdo.annotations.Unique;
 import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
 
+import com.google.common.collect.Lists;
+
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
@@ -158,6 +160,18 @@ public class AmortisationSchedule extends UdoDomainObject2<AmortisationSchedule>
 
     public boolean hideCreateAndDistributeEntries(){
         return !getEntries().isEmpty();
+    }
+
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    public void verifyOutstandingValue() {
+        setOutStandingValue(
+                getScheduledValue().subtract(
+                    Lists.newArrayList(getEntries()).stream()
+                    .filter(e->e.getDateReported()!=null)
+                    .map(e->e.getEntryAmount())
+                    .reduce(BigDecimal.ZERO, BigDecimal::add)
+                )
+        );
     }
 
     @Getter @Setter
