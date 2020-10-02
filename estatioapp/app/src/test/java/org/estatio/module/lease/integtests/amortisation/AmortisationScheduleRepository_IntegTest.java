@@ -73,7 +73,7 @@ public class AmortisationScheduleRepository_IntegTest extends LeaseModuleIntegTe
         // then
         assertThat(schedule.getLease()).isEqualTo(lease);
         assertThat(schedule.getCharge()).isEqualTo(charge);
-        assertThat(schedule.getScheduledAmount()).isEqualTo(scheduledAmount);
+        assertThat(schedule.getScheduledValue()).isEqualTo(scheduledAmount);
         assertThat(schedule.getFrequency()).isEqualTo(freq);
         assertThat(schedule.getStartDate()).isEqualTo(startDate);
         assertThat(schedule.getEndDate()).isEqualTo(endDate);

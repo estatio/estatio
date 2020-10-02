@@ -21,10 +21,13 @@
                                     </ns2:fieldSet>
                                     <ns2:fieldSet name="Schedule" id="schedule">
                                         <ns2:property id="charge"/>
-                                        <ns2:property id="scheduledAmount"/>
                                         <ns2:property id="frequency"/>
                                         <ns2:property id="startDate"/>
                                         <ns2:property id="endDate"/>
+                                    </ns2:fieldSet>
+                                    <ns2:fieldSet name="Values" id="values">
+                                        <ns2:property id="scheduledValue"/>
+                                        <ns2:property id="outstandingValue"/>
                                     </ns2:fieldSet>
                                     <ns2:fieldSet name="Note" id="note">
                                         <ns2:property id="note"/>

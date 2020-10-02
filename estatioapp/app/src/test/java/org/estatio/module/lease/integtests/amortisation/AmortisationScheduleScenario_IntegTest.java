@@ -90,7 +90,7 @@ public class AmortisationScheduleScenario_IntegTest extends LeaseModuleIntegTest
         // then
         assertThat(schedule.getLease()).isEqualTo(topmodelLease);
         assertThat(schedule.getCharge()).isEqualTo(discountItem.getCharge());
-        assertThat(schedule.getScheduledAmount()).isEqualTo(new BigDecimal("1638.85"));
+        assertThat(schedule.getScheduledValue()).isEqualTo(new BigDecimal("1638.85"));
         assertThat(schedule.getFrequency()).isEqualTo(Frequency.MONTHLY);
         assertThat(schedule.getStartDate()).isEqualTo(topModelAmendment.getDateSigned());
         assertThat(schedule.getEndDate()).isEqualTo(topModelAmendment.getDateSigned().plusYears(1));
@@ -100,7 +100,7 @@ public class AmortisationScheduleScenario_IntegTest extends LeaseModuleIntegTest
         assertThat(amendmentItems).hasSize(1);
         assertThat(mixin(AmortisationSchedule_leaseItems.class, schedule).$$()).hasSize(1);
 
-        assertThat(schedule.getScheduledAmount()).isEqualTo(amendmentItems.get(0).getCalculatedDiscountAmount().negate());
+        assertThat(schedule.getScheduledValue()).isEqualTo(amendmentItems.get(0).getCalculatedDiscountAmount().negate());
         assertThat(schedule.getEntries()).hasSize(13);
         
     }

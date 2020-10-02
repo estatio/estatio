@@ -85,14 +85,15 @@ public class AmortisationSchedule extends UdoDomainObject2<AmortisationSchedule>
     public AmortisationSchedule(
             final Lease lease,
             final Charge charge,
-            final BigDecimal scheduledAmount,
+            final BigDecimal scheduledValue,
             final Frequency frequency,
             final LocalDate startDate,
             final LocalDate endDate){
         this();
         this.lease = lease;
         this.charge = charge;
-        this.scheduledAmount = scheduledAmount;
+        this.scheduledValue = scheduledValue;
+        this.outStandingValue = scheduledValue;
         this.frequency = frequency;
         this.startDate = startDate;
         this.endDate = endDate;
@@ -117,7 +118,11 @@ public class AmortisationSchedule extends UdoDomainObject2<AmortisationSchedule>
 
     @Getter @Setter
     @Column(allowsNull = "false", scale = 2)
-    private BigDecimal scheduledAmount;
+    private BigDecimal scheduledValue;
+
+    @Getter @Setter
+    @Column(allowsNull = "false", scale = 2)
+    private BigDecimal outStandingValue;
 
     @Getter @Setter
     @Column(allowsNull = "false")

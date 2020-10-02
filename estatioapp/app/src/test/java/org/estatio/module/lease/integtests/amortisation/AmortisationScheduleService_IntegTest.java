@@ -76,7 +76,7 @@ public class AmortisationScheduleService_IntegTest extends LeaseModuleIntegTestA
         // given
         assertThat(schedule).isNotNull();
         final BigDecimal scheduledAmount = new BigDecimal("123.45");
-        schedule.setScheduledAmount(scheduledAmount);
+        schedule.setScheduledValue(scheduledAmount);
 
         // when
         amortisationScheduleService.createAndDistributeEntries(schedule);
@@ -102,7 +102,7 @@ public class AmortisationScheduleService_IntegTest extends LeaseModuleIntegTestA
         // given
         assertThat(schedule).isNotNull();
         final BigDecimal scheduledAmount = new BigDecimal("123.45");
-        schedule.setScheduledAmount(scheduledAmount);
+        schedule.setScheduledValue(scheduledAmount);
         schedule.setFrequency(Frequency.QUARTERLY);
         final LocalDate startDate = new LocalDate(2020, 8, 15);
         schedule.setStartDate(startDate);
@@ -133,7 +133,7 @@ public class AmortisationScheduleService_IntegTest extends LeaseModuleIntegTestA
         // given
         assertThat(schedule).isNotNull();
         final BigDecimal scheduledAmount = new BigDecimal("123.45");
-        schedule.setScheduledAmount(scheduledAmount);
+        schedule.setScheduledValue(scheduledAmount);
         schedule.setFrequency(Frequency.YEARLY);
 
         // when
@@ -150,7 +150,7 @@ public class AmortisationScheduleService_IntegTest extends LeaseModuleIntegTestA
         // given
         assertThat(schedule).isNotNull();
         final BigDecimal scheduledAmount = new BigDecimal("123.45");
-        schedule.setScheduledAmount(scheduledAmount);
+        schedule.setScheduledValue(scheduledAmount);
         amortisationEntryRepository.findOrCreate(schedule, startDate, BigDecimal.ZERO);
         transactionService.nextTransaction();
         assertThat(schedule.getEntries()).hasSize(1);
@@ -169,7 +169,7 @@ public class AmortisationScheduleService_IntegTest extends LeaseModuleIntegTestA
         // given
         assertThat(schedule).isNotNull();
         final BigDecimal scheduledAmount = BigDecimal.ZERO;
-        schedule.setScheduledAmount(scheduledAmount);
+        schedule.setScheduledValue(scheduledAmount);
 
         // when
         amortisationScheduleService.createAndDistributeEntries(schedule);
@@ -185,7 +185,7 @@ public class AmortisationScheduleService_IntegTest extends LeaseModuleIntegTestA
         // given
         assertThat(schedule).isNotNull();
         final BigDecimal negativeAmount = new BigDecimal("-123.45");
-        schedule.setScheduledAmount(negativeAmount);
+        schedule.setScheduledValue(negativeAmount);
 
         // when
         amortisationScheduleService.createAndDistributeEntries(schedule);

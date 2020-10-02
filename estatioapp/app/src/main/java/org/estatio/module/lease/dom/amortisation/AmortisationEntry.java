@@ -109,7 +109,7 @@ public class AmortisationEntry extends UdoDomainObject2<AmortisationSchedule> im
     @Override
     @Programmatic
     public BigDecimal getSourceValue() {
-        return schedule.getScheduledAmount();
+        return schedule.getScheduledValue();
     }
 
     @Override

@@ -119,7 +119,7 @@ public class AmortisationScheduleService {
 
         // safeguards
         if (!schedule.getEntries().isEmpty()) return;
-        if (schedule.getScheduledAmount().compareTo(BigDecimal.ZERO)<1) return;
+        if (schedule.getScheduledValue().compareTo(BigDecimal.ZERO)<1) return;
         if (!Arrays.asList(Frequency.MONTHLY, Frequency.QUARTERLY).contains(schedule.getFrequency())) return;
 
         // first entry creation
@@ -136,7 +136,7 @@ public class AmortisationScheduleService {
         }
 
         // distribution of amount
-        distributionService.distribute(Lists.newArrayList(schedule.getEntries()), schedule.getScheduledAmount(), 2);
+        distributionService.distribute(Lists.newArrayList(schedule.getEntries()), schedule.getScheduledValue(), 2);
 
     }
 
