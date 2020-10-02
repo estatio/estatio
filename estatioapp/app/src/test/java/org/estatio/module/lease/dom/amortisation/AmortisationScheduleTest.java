@@ -27,27 +27,27 @@ public class AmortisationScheduleTest {
         // when no entries
         schedule.verifyOutstandingValue();
         // then
-        Assertions.assertThat(schedule.getOutStandingValue()).isEqualTo(scheduledValue);
+        Assertions.assertThat(schedule.getOutstandingValue()).isEqualTo(scheduledValue);
 
         // when no entries reported
         schedule.getEntries().add(e1);
         schedule.getEntries().add(e2);
         schedule.verifyOutstandingValue();
         // then
-        Assertions.assertThat(schedule.getOutStandingValue()).isEqualTo(scheduledValue);
+        Assertions.assertThat(schedule.getOutstandingValue()).isEqualTo(scheduledValue);
 
         // when entries reported
         e1.setDateReported(new LocalDate(2020,1,2));
         schedule.verifyOutstandingValue();
         // then
-        Assertions.assertThat(schedule.getOutStandingValue()).isEqualTo(scheduledValue.subtract(e1.getEntryAmount()));
-        Assertions.assertThat(schedule.getOutStandingValue()).isEqualTo(new BigDecimal("1000.00"));
+        Assertions.assertThat(schedule.getOutstandingValue()).isEqualTo(scheduledValue.subtract(e1.getEntryAmount()));
+        Assertions.assertThat(schedule.getOutstandingValue()).isEqualTo(new BigDecimal("1000.00"));
         // and when
         e2.setDateReported(new LocalDate(2020,2,2));
         schedule.verifyOutstandingValue();
         // then
-        Assertions.assertThat(schedule.getOutStandingValue()).isEqualTo(scheduledValue.subtract(e1.getEntryAmount()).subtract(e2.getEntryAmount()));
-        Assertions.assertThat(schedule.getOutStandingValue()).isEqualTo(new BigDecimal("900.00"));
+        Assertions.assertThat(schedule.getOutstandingValue()).isEqualTo(scheduledValue.subtract(e1.getEntryAmount()).subtract(e2.getEntryAmount()));
+        Assertions.assertThat(schedule.getOutstandingValue()).isEqualTo(new BigDecimal("900.00"));
 
     }
 }

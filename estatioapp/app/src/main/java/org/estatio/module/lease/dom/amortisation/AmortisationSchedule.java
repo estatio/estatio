@@ -95,7 +95,7 @@ public class AmortisationSchedule extends UdoDomainObject2<AmortisationSchedule>
         this.lease = lease;
         this.charge = charge;
         this.scheduledValue = scheduledValue;
-        this.outStandingValue = scheduledValue;
+        this.outstandingValue = scheduledValue;
         this.frequency = frequency;
         this.startDate = startDate;
         this.endDate = endDate;
@@ -124,7 +124,7 @@ public class AmortisationSchedule extends UdoDomainObject2<AmortisationSchedule>
 
     @Getter @Setter
     @Column(allowsNull = "false", scale = 2)
-    private BigDecimal outStandingValue;
+    private BigDecimal outstandingValue;
 
     @Getter @Setter
     @Column(allowsNull = "false")
@@ -164,7 +164,7 @@ public class AmortisationSchedule extends UdoDomainObject2<AmortisationSchedule>
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     public void verifyOutstandingValue() {
-        setOutStandingValue(
+        setOutstandingValue(
                 getScheduledValue().subtract(
                     Lists.newArrayList(getEntries()).stream()
                     .filter(e->e.getDateReported()!=null)
@@ -177,6 +177,14 @@ public class AmortisationSchedule extends UdoDomainObject2<AmortisationSchedule>
     @Getter @Setter
     @Column(allowsNull = "true")
     private CreationStrategy creationStrategyUsed;
+
+    @Programmatic
+    public boolean isReported(){
+        for (AmortisationEntry entry : getEntries()){
+            if (entry.getDateReported()!=null) return true;
+        }
+        return false;
+    }
 
     @Override
     public ApplicationTenancy getApplicationTenancy() {
