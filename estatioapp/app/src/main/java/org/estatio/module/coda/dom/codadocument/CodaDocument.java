@@ -3,6 +3,7 @@ package org.estatio.module.coda.dom.codadocument;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import javax.inject.Inject;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.DatastoreIdentity;
 import javax.jdo.annotations.IdGeneratorStrategy;
@@ -24,8 +25,12 @@ import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.services.eventbus.AbstractDomainEvent;
+import org.apache.isis.applib.services.eventbus.ActionDomainEvent;
+import org.apache.isis.applib.services.eventbus.EventBusService;
 
 import org.isisaddons.module.security.dom.tenancy.HasAtPath;
 
@@ -119,6 +124,9 @@ public class CodaDocument implements Comparable<CodaDocument>, HasAtPath {
     @Column(allowsNull = "false")
     private LocalDateTime createdAt;
 
+    public static class CodaDocumentChangePostedAtEvent
+            extends ActionDomainEvent<CodaDocument> {}
+
     @Getter @Setter
     @Column(allowsNull = "true")
     private LocalDateTime postedAt;
@@ -148,5 +156,16 @@ public class CodaDocument implements Comparable<CodaDocument>, HasAtPath {
                 ", uuid='" + getUuid() + '\'' +
                 '}';
     }
+
+    @Programmatic
+    public void updatePostedAtSendingEvent(final LocalDateTime nowAsLocalDateTime) {
+        setPostedAt(nowAsLocalDateTime);
+        final CodaDocument.CodaDocumentChangePostedAtEvent event = new CodaDocument.CodaDocumentChangePostedAtEvent();
+        event.setEventPhase(AbstractDomainEvent.Phase.EXECUTED);
+        event.setSource(this);
+        eventBusService.post(event);
+    }
+
+    @Inject EventBusService eventBusService;
 
 }
