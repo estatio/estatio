@@ -61,7 +61,8 @@ public class InvoiceImportLine implements Importable {
             final BigDecimal itemNetAmount,
             final LocalDate itemStartDate,
             final LocalDate itemEndDate,
-            final String unitReference
+            final String unitReference,
+            final String invoiceNumber
     ) {
         this.leaseReference = leaseReference;
         this.dueDate = dueDate;
@@ -72,6 +73,7 @@ public class InvoiceImportLine implements Importable {
         this.itemStartDate = itemStartDate;
         this.itemEndDate = itemEndDate;
         this.unitReference = unitReference;
+        this.invoiceNumber = invoiceNumber;
     }
     //endregion
 
@@ -93,6 +95,8 @@ public class InvoiceImportLine implements Importable {
     private LocalDate itemEndDate;
     @Getter @Setter
     private String unitReference;
+    @Getter @Setter
+    private String invoiceNumber;
 
 //    @Override
 //    public List<Class> importAfter() {

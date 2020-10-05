@@ -545,6 +545,7 @@ public class InvoiceRepository_IntegTest extends LeaseModuleIntegTestAbstract {
                     netAmount,
                     itemStartDate,
                     itemEndDate,
+                    null,
                     null);
 
             InvoiceImportLine invoiceImportLine2 = new InvoiceImportLine(
@@ -556,6 +557,7 @@ public class InvoiceRepository_IntegTest extends LeaseModuleIntegTestAbstract {
                     netAmount,
                     itemStartDate,
                     itemEndDate,
+                    null,
                     null);
 
             // when
