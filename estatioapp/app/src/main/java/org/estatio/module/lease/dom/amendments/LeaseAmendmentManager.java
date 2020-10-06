@@ -272,6 +272,28 @@ public class LeaseAmendmentManager {
         return excelService.toExcel(getLines(), LeaseAmendmentImportLine.class, "lines", fileNameToUse);
     }
 
+    @Action(commandPersistence = CommandPersistence.NOT_PERSISTED)
+    public Blob downloadWithStateProposed(@Nullable final String fileName){
+        String fileNameToUse;
+        if (fileName==null) {
+            fileNameToUse = "Amendments-" + property.getReference();
+            if (getLeaseAmendmentType()==null) {
+                fileNameToUse = fileNameToUse + "-all-types";
+            } else {
+                fileNameToUse = fileNameToUse + "-" + getLeaseAmendmentType().toString();
+            }
+            fileNameToUse = fileNameToUse + "-" +  clockService.now().toString() +".xlsx";
+        } else {
+            if (!fileName.endsWith(".xlsx") && !fileName.endsWith(".xls")) {
+                fileNameToUse = fileName.concat(".xlsx");
+            } else {
+                fileNameToUse = fileName;
+            }
+        }
+        return excelService.toExcel(getLines().stream().filter(l->l.getLeaseAmendmentState()==LeaseAmendmentState.PROPOSED).collect(
+                Collectors.toList()), LeaseAmendmentImportLine.class, "lines", fileNameToUse);
+    }
+
     private boolean hasChangingFrequency(final LeaseItem i, final LeaseAmendmentType leaseAmendmentType){
         final LeaseAmendmentType.Tuple<InvoicingFrequency, InvoicingFrequency> tuple = leaseAmendmentType.getFrequencyChanges()
                 .stream()

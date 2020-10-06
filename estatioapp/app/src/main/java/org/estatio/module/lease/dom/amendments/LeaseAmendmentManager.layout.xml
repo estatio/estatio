@@ -30,6 +30,7 @@
             <cpt:collection id="lines">
                 <cpt:action id="downloadNewAmendmentProposalsForType" position="PANEL"/>
                 <cpt:action id="download" position="PANEL"/>
+                <cpt:action id="downloadWithStateProposed" position="PANEL"/>
                 <cpt:action id="importAmendments" position="PANEL"/>
                 <cpt:action id="applyAll" position="PANEL"/>
                 <cpt:action id="applyAllWithStatusApply" position="PANEL"/>
