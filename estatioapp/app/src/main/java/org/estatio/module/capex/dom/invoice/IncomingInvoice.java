@@ -1417,11 +1417,10 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
                 .stream()
                 .map(IncomingInvoiceItem.class::cast)
                 .forEach(x -> {
-                    if (x.getBudgetItem()!=null) {
-                        x.setChargeStartDate(chargeStartDate);
-                        x.setChargeEndDate(chargeEndDate);
-                    } else {
-                        messageService.warnUser(String.format("Charge period could not be changed for invoice item %d; it does not have a budget item", x.getSequence()));
+                    x.setChargeStartDate(chargeStartDate);
+                    x.setChargeEndDate(chargeEndDate);
+                    if (x.getBudgetItem()==null) {
+                        messageService.warnUser(String.format("Invoice item %d does not have a budget item", x.getSequence()));
                     }
                 });
         return this;
