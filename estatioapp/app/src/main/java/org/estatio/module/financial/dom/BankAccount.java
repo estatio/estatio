@@ -224,9 +224,9 @@ public class BankAccount
 
     public String disableChangeIban(){
         if (getVerificationState() == BankAccountVerificationState.NOT_VERIFIED
-                && invoiceRepository.findByBuyer(getOwner()).isEmpty()
-                && invoiceRepository.findBySeller(getOwner()).isEmpty()
-                && bankMandateRepository.findBankMandatesFor(this).isEmpty()) {
+                && invoiceRepository.findFirstByBuyer(getOwner()) == null
+                && invoiceRepository.findFirstBySeller(getOwner()) == null
+                && bankMandateRepository.findFirstBankMandateFor(this) == null) {
             return null;
         }
 
