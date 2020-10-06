@@ -150,5 +150,6 @@ public class LeaseAmendmentRepository {
     @Inject
     AgreementRoleTypeRepository agreementRoleTypeRepository;
 
-    @Inject ClockService clockService;
+    @Inject
+    ClockService clockService;
 }

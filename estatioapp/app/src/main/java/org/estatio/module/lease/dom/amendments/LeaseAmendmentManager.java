@@ -52,10 +52,11 @@ public class LeaseAmendmentManager {
         this.property = property;
     }
 
-    public LeaseAmendmentManager(final Property property, final LeaseAmendmentType leaseAmendmentType){
+    public LeaseAmendmentManager(final Property property, final LeaseAmendmentType leaseAmendmentType, final LeaseAmendmentState leaseAmendmentState){
         this();
         this.property = property;
         this.leaseAmendmentType = leaseAmendmentType;
+        this.state = leaseAmendmentState;
     }
 
     public String title(){
@@ -68,16 +69,28 @@ public class LeaseAmendmentManager {
     @Getter @Setter
     private LeaseAmendmentType leaseAmendmentType;
 
+    @Getter @Setter
+    private LeaseAmendmentState state;
+
     @Action(semantics = SemanticsOf.SAFE)
     public List<LeaseAmendmentImportLine> getLines(){
         List<LeaseAmendmentImportLine> result = new ArrayList<>();
         if (getProperty()==null) return result; // Should not be possible
         if (getLeaseAmendmentType()!=null){
-            final List<LeaseAmendment> amendments = leaseAmendmentRepository.findByType(getLeaseAmendmentType())
-                    .stream()
-                    .filter(a -> a.getLease().getProperty() == getProperty())
-                    .collect(Collectors.toList());
-            createLinesAndAddToResult(result, amendments);
+            if (getState()==null) {
+                final List<LeaseAmendment> amendments = leaseAmendmentRepository.findByType(getLeaseAmendmentType())
+                        .stream()
+                        .filter(a -> a.getLease().getProperty() == getProperty())
+                        .collect(Collectors.toList());
+                createLinesAndAddToResult(result, amendments);
+            } else {
+                final List<LeaseAmendment> amendments = leaseAmendmentRepository.findByType(getLeaseAmendmentType())
+                        .stream()
+                        .filter(a->a.getState() == getState())
+                        .filter(a -> a.getLease().getProperty() == getProperty())
+                        .collect(Collectors.toList());
+                createLinesAndAddToResult(result, amendments);
+            }
         } else {
             final List<Lease> leasesByProperty = leaseRepository.findLeasesByProperty(property)
                     .stream()
@@ -86,7 +99,12 @@ public class LeaseAmendmentManager {
                     .collect(Collectors.toList());
             for (Lease lease : leasesByProperty){
                 final List<LeaseAmendment> amendmentsForLeaseOfAllTypes = leaseAmendmentRepository.findByLease(lease);
-                createLinesAndAddToResult(result, amendmentsForLeaseOfAllTypes);
+                if (getState()!=null) {
+                    createLinesAndAddToResult(result, amendmentsForLeaseOfAllTypes.stream().filter(a->a.getState()==getState()).collect(
+                            Collectors.toList()));
+                } else {
+                    createLinesAndAddToResult(result, amendmentsForLeaseOfAllTypes);
+                }
             }
         }
         return result
@@ -121,7 +139,12 @@ public class LeaseAmendmentManager {
 
     @Action(semantics = SemanticsOf.SAFE)
     public LeaseAmendmentManager filterByType(@Nullable final LeaseAmendmentType leaseAmendmentType){
-        return new LeaseAmendmentManager(property, leaseAmendmentType);
+        return new LeaseAmendmentManager(getProperty(), leaseAmendmentType, getState());
+    }
+
+    @Action(semantics = SemanticsOf.SAFE)
+    public LeaseAmendmentManager filterByState(@Nullable final LeaseAmendmentState leaseAmendmentState){
+        return new LeaseAmendmentManager(getProperty(), getLeaseAmendmentType(), leaseAmendmentState);
     }
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
@@ -142,7 +165,7 @@ public class LeaseAmendmentManager {
                 }
             }
         }
-        return new LeaseAmendmentManager(getProperty(), getLeaseAmendmentType());
+        return new LeaseAmendmentManager(getProperty(), getLeaseAmendmentType(), getState());
     }
 
     public String disableApplyAllWithStatusApply(){
@@ -167,7 +190,7 @@ public class LeaseAmendmentManager {
                 }
             }
         }
-        return new LeaseAmendmentManager(getProperty(), getLeaseAmendmentType());
+        return new LeaseAmendmentManager(getProperty(), getLeaseAmendmentType(), getState());
     }
 
     public boolean hideApplyAll(){
@@ -270,28 +293,6 @@ public class LeaseAmendmentManager {
             }
         }
         return excelService.toExcel(getLines(), LeaseAmendmentImportLine.class, "lines", fileNameToUse);
-    }
-
-    @Action(commandPersistence = CommandPersistence.NOT_PERSISTED)
-    public Blob downloadWithStateProposed(@Nullable final String fileName){
-        String fileNameToUse;
-        if (fileName==null) {
-            fileNameToUse = "Amendments-" + property.getReference();
-            if (getLeaseAmendmentType()==null) {
-                fileNameToUse = fileNameToUse + "-all-types";
-            } else {
-                fileNameToUse = fileNameToUse + "-" + getLeaseAmendmentType().toString();
-            }
-            fileNameToUse = fileNameToUse + "-" +  clockService.now().toString() +".xlsx";
-        } else {
-            if (!fileName.endsWith(".xlsx") && !fileName.endsWith(".xls")) {
-                fileNameToUse = fileName.concat(".xlsx");
-            } else {
-                fileNameToUse = fileName;
-            }
-        }
-        return excelService.toExcel(getLines().stream().filter(l->l.getLeaseAmendmentState()==LeaseAmendmentState.PROPOSED).collect(
-                Collectors.toList()), LeaseAmendmentImportLine.class, "lines", fileNameToUse);
     }
 
     private boolean hasChangingFrequency(final LeaseItem i, final LeaseAmendmentType leaseAmendmentType){
