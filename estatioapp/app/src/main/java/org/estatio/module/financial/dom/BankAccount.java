@@ -47,6 +47,7 @@ import org.apache.isis.applib.services.eventbus.ObjectPersistedEvent;
 import org.apache.isis.applib.services.eventbus.ObjectRemovingEvent;
 import org.apache.isis.applib.services.eventbus.ObjectUpdatedEvent;
 import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
+import org.estatio.module.bankmandate.dom.BankMandateRepository;
 import org.estatio.module.invoice.dom.InvoiceRepository;
 import org.incode.module.base.dom.Titled;
 import org.incode.module.base.dom.utils.TitleBuilder;
@@ -224,7 +225,8 @@ public class BankAccount
     public String disableChangeIban(){
         if (getVerificationState() == BankAccountVerificationState.NOT_VERIFIED
                 && invoiceRepository.findByBuyer(getOwner()).isEmpty()
-                && invoiceRepository.findBySeller(getOwner()).isEmpty()) {
+                && invoiceRepository.findBySeller(getOwner()).isEmpty()
+                && bankMandateRepository.findBankMandatesFor(this).isEmpty()) {
             return null;
         }
 
@@ -458,5 +460,8 @@ public class BankAccount
 
     @Inject
     InvoiceRepository invoiceRepository;
+
+    @Inject
+    BankMandateRepository bankMandateRepository;
 
 }
