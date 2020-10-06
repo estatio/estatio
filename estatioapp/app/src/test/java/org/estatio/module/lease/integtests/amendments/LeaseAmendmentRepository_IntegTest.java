@@ -28,6 +28,7 @@ import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
+import org.estatio.module.asset.fixtures.property.enums.Property_enum;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.amendments.LeaseAmendment;
 import org.estatio.module.lease.dom.amendments.LeaseAmendmentAgreementTypeEnum;
@@ -92,10 +93,32 @@ public class LeaseAmendmentRepository_IntegTest extends LeaseModuleIntegTestAbst
 
         // and when
         final List<LeaseAmendment> resultsForDemoType = leaseAmendmentRepository.findByType(LeaseAmendmentType.DEMO_TYPE);
+        final List<LeaseAmendment> resultsForDemoTypeOxf = leaseAmendmentRepository.findByTypeAndProperty(LeaseAmendmentType.DEMO_TYPE, Property_enum.OxfGb.findUsing(serviceRegistry));
+        final List<LeaseAmendment> resultsForDemoTypeRon = leaseAmendmentRepository.findByTypeAndProperty(LeaseAmendmentType.DEMO_TYPE, Property_enum.RonIt.findUsing(serviceRegistry));
+        final List<LeaseAmendment> resultsForOxf = leaseAmendmentRepository.findByProperty(Property_enum.OxfGb.findUsing(serviceRegistry));
+        final List<LeaseAmendment> resultsForRon = leaseAmendmentRepository.findByProperty(Property_enum.RonIt.findUsing(serviceRegistry));
+        final List<LeaseAmendment> resultsForOxfProposed = leaseAmendmentRepository.findByPropertyAndState(Property_enum.OxfGb.findUsing(serviceRegistry), LeaseAmendmentState.PROPOSED);
+        final List<LeaseAmendment> resultsForOxfSigned = leaseAmendmentRepository.findByPropertyAndState(Property_enum.OxfGb.findUsing(serviceRegistry), LeaseAmendmentState.SIGNED);
+        final List<LeaseAmendment> resultsForDemoTypeAndProposed = leaseAmendmentRepository.findByTypeAndState(LeaseAmendmentType.DEMO_TYPE, LeaseAmendmentState.PROPOSED);
+        final List<LeaseAmendment> resultsForDemoTypeAndSigned = leaseAmendmentRepository.findByTypeAndState(LeaseAmendmentType.DEMO_TYPE, LeaseAmendmentState.SIGNED);
+        final List<LeaseAmendment> resultsForDemoTypeAndProposedForOxf = leaseAmendmentRepository.findByTypeAndStateAndProperty(LeaseAmendmentType.DEMO_TYPE, LeaseAmendmentState.PROPOSED,
+                Property_enum.OxfGb.findUsing(serviceRegistry));
+        final List<LeaseAmendment> resultsForDemoTypeAndProposedForRon = leaseAmendmentRepository.findByTypeAndStateAndProperty(LeaseAmendmentType.DEMO_TYPE, LeaseAmendmentState.PROPOSED,
+                Property_enum.RonIt.findUsing(serviceRegistry));
         final List<LeaseAmendment> resultsForOtherType = leaseAmendmentRepository.findByType(LeaseAmendmentType.COVID_ITA_FREQ_CHANGE_ONLY);
         // then
         assertThat(resultsForDemoType).hasSize(1);
+        assertThat(resultsForDemoTypeOxf).hasSize(1);
+        assertThat(resultsForDemoTypeRon).isEmpty();
+        assertThat(resultsForOxf).hasSize(1);
+        assertThat(resultsForRon).isEmpty();
+        assertThat(resultsForOxfProposed).hasSize(1);
+        assertThat(resultsForOxfSigned).isEmpty();
+        assertThat(resultsForDemoTypeAndProposed).hasSize(1);
+        assertThat(resultsForDemoTypeAndProposedForOxf).hasSize(1);
         assertThat(resultsForDemoType.get(0)).isEqualTo(leaseAmendment);
+        assertThat(resultsForDemoTypeAndSigned).isEmpty();
+        assertThat(resultsForDemoTypeAndProposedForRon).isEmpty();
         assertThat(resultsForOtherType).isEmpty();
 
         // and when

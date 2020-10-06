@@ -1,6 +1,7 @@
 package org.estatio.module.lease.dom.amendments;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -17,6 +18,7 @@ import org.apache.isis.applib.services.repository.RepositoryService;
 import org.estatio.module.agreement.dom.role.AgreementRoleType;
 import org.estatio.module.agreement.dom.role.AgreementRoleTypeRepository;
 import org.estatio.module.agreement.dom.type.AgreementTypeRepository;
+import org.estatio.module.asset.dom.Property;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
 
@@ -47,6 +49,16 @@ public class LeaseAmendmentRepository {
                         LeaseAmendment.class,
                         "findByType",
                         "leaseAmendmentType", leaseAmendmentType));
+    }
+
+    @Programmatic
+    public List<LeaseAmendment> findByTypeAndState(final LeaseAmendmentType leaseAmendmentType, final LeaseAmendmentState state) {
+        return repositoryService.allMatches(
+                new QueryDefault<>(
+                        LeaseAmendment.class,
+                        "findByTypeAndState",
+                        "leaseAmendmentType", leaseAmendmentType,
+                        "state", state));
     }
 
     @Programmatic
@@ -136,6 +148,42 @@ public class LeaseAmendmentRepository {
         leaseAmendment.newRole(artTenant, lease.getSecondaryParty(), null ,null);
 
         return leaseAmendment;
+    }
+
+    @Programmatic
+    public List<LeaseAmendment> findByTypeAndProperty(final LeaseAmendmentType leaseAmendmentType, final Property property){
+        return findByType(leaseAmendmentType).stream()
+                .filter(a->a.getLease()!=null)
+                .filter(a->a.getLease().getProperty()!=null)
+                .filter(a->a.getLease().getProperty()==property)
+                .collect(Collectors.toList());
+    }
+
+    @Programmatic
+    public List<LeaseAmendment> findByTypeAndStateAndProperty(final LeaseAmendmentType leaseAmendmentType, final LeaseAmendmentState state, final Property property){
+        return findByTypeAndState(leaseAmendmentType, state).stream()
+                .filter(a->a.getLease()!=null)
+                .filter(a->a.getLease().getProperty()!=null)
+                .filter(a->a.getLease().getProperty()==property)
+                .collect(Collectors.toList());
+    }
+
+    @Programmatic
+    public List<LeaseAmendment> findByProperty(final Property property){
+        return listAll().stream()
+                .filter(a->a.getLease()!=null)
+                .filter(a->a.getLease().getProperty()!=null)
+                .filter(a->a.getLease().getProperty()==property)
+                .collect(Collectors.toList());
+    }
+
+    @Programmatic
+    public List<LeaseAmendment> findByPropertyAndState(final Property property, final LeaseAmendmentState state){
+        return findByState(state).stream()
+                .filter(a->a.getLease()!=null)
+                .filter(a->a.getLease().getProperty()!=null)
+                .filter(a->a.getLease().getProperty()==property)
+                .collect(Collectors.toList());
     }
 
     @Inject

@@ -33,7 +33,6 @@ import org.estatio.module.lease.dom.InvoicingFrequency;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseItem;
 import org.estatio.module.lease.dom.LeaseRepository;
-import org.estatio.module.lease.dom.LeaseStatus;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -78,33 +77,15 @@ public class LeaseAmendmentManager {
         if (getProperty()==null) return result; // Should not be possible
         if (getLeaseAmendmentType()!=null){
             if (getState()==null) {
-                final List<LeaseAmendment> amendments = leaseAmendmentRepository.findByType(getLeaseAmendmentType())
-                        .stream()
-                        .filter(a -> a.getLease().getProperty() == getProperty())
-                        .collect(Collectors.toList());
-                createLinesAndAddToResult(result, amendments);
+                createLinesAndAddToResult(result, leaseAmendmentRepository.findByTypeAndProperty(getLeaseAmendmentType(), getProperty()));
             } else {
-                final List<LeaseAmendment> amendments = leaseAmendmentRepository.findByType(getLeaseAmendmentType())
-                        .stream()
-                        .filter(a->a.getState() == getState())
-                        .filter(a -> a.getLease().getProperty() == getProperty())
-                        .collect(Collectors.toList());
-                createLinesAndAddToResult(result, amendments);
+                createLinesAndAddToResult(result, leaseAmendmentRepository.findByTypeAndStateAndProperty(getLeaseAmendmentType(), getState(), getProperty()));
             }
         } else {
-            final List<Lease> leasesByProperty = leaseRepository.findLeasesByProperty(property)
-                    .stream()
-                    .filter(l->l.getStatus()== LeaseStatus.ACTIVE || l.getStatus()==LeaseStatus.SUSPENDED_PARTIALLY)
-                    .filter(l->getLeaseAmendmentType()!=null ? (l.getTenancyEndDate()==null || l.getTenancyEndDate().isAfter(getLeaseAmendmentType().getAmendmentStartDate())) : (l.getTenancyEndDate()==null || l.getTenancyEndDate().isAfter(clockService.now().withDayOfMonth(1))))
-                    .collect(Collectors.toList());
-            for (Lease lease : leasesByProperty){
-                final List<LeaseAmendment> amendmentsForLeaseOfAllTypes = leaseAmendmentRepository.findByLease(lease);
-                if (getState()!=null) {
-                    createLinesAndAddToResult(result, amendmentsForLeaseOfAllTypes.stream().filter(a->a.getState()==getState()).collect(
-                            Collectors.toList()));
-                } else {
-                    createLinesAndAddToResult(result, amendmentsForLeaseOfAllTypes);
-                }
+            if (getState()!=null) {
+                createLinesAndAddToResult(result, leaseAmendmentRepository.findByPropertyAndState(getProperty(), getState()));
+            } else {
+                createLinesAndAddToResult(result, leaseAmendmentRepository.findByProperty(getProperty()));
             }
         }
         return result
