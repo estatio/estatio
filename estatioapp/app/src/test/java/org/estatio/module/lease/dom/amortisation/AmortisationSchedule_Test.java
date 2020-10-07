@@ -6,7 +6,7 @@ import org.assertj.core.api.Assertions;
 import org.joda.time.LocalDate;
 import org.junit.Test;
 
-public class AmortisationScheduleTest {
+public class AmortisationSchedule_Test {
 
     @Test
     public void verifyOutstandingValue() {
@@ -49,5 +49,21 @@ public class AmortisationScheduleTest {
         Assertions.assertThat(schedule.getOutstandingValue()).isEqualTo(scheduledValue.subtract(e1.getEntryAmount()).subtract(e2.getEntryAmount()));
         Assertions.assertThat(schedule.getOutstandingValue()).isEqualTo(new BigDecimal("900.00"));
 
+    }
+
+    @Test
+    public void appendTextToNote() throws Exception {
+        // given
+        AmortisationSchedule schedule = new AmortisationSchedule();
+        schedule.setNote(null);
+        // when
+        schedule.appendTextToNote("XXXXX");
+        // then
+        Assertions.assertThat(schedule.getNote()).isEqualTo("XXXXX");
+
+        // and when
+        schedule.appendTextToNote("YYY");
+        // then
+        Assertions.assertThat(schedule.getNote()).isEqualTo("XXXXX | YYY");
     }
 }

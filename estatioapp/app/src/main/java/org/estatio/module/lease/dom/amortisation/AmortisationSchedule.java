@@ -186,6 +186,16 @@ public class AmortisationSchedule extends UdoDomainObject2<AmortisationSchedule>
         return false;
     }
 
+    @Programmatic
+    public AmortisationSchedule appendTextToNote(final String text){
+        if (getNote()==null || getNote().length()==0){
+            setNote(text);
+        } else {
+            setNote(getNote() + " | " + text);
+        }
+        return this;
+    }
+
     @Override
     public ApplicationTenancy getApplicationTenancy() {
         return getLease().getApplicationTenancy();

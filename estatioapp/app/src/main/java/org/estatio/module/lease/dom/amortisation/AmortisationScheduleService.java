@@ -104,7 +104,7 @@ public class AmortisationScheduleService {
 
             if (amountDerivedFromLinkedAmendmentItems.compareTo(scheduledAmount) != 0) {
                 String note = String.format("The amount derived from the linked amendment item(s) %s does not match the scheduled amount derived from the linked lease item(s)!", amountDerivedFromLinkedAmendmentItems);
-                amortisationSchedule.setNote(note);
+                amortisationSchedule.appendTextToNote(note);
             }
         }
 
