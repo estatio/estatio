@@ -19,6 +19,7 @@
 package org.estatio.module.lease.integtests.amortisation;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 
 import javax.inject.Inject;
 
@@ -68,7 +69,7 @@ public class AmortisationScheduleRepository_IntegTest extends LeaseModuleIntegTe
         // when
         final AmortisationSchedule schedule = amortisationScheduleRepository
                 .findOrCreate(lease, charge, scheduledAmount, freq,
-                        startDate, endDate);
+                        startDate, endDate, BigInteger.ONE);
 
         // then
         assertThat(schedule.getLease()).isEqualTo(lease);
@@ -79,14 +80,15 @@ public class AmortisationScheduleRepository_IntegTest extends LeaseModuleIntegTe
         assertThat(schedule.getEndDate()).isEqualTo(endDate);
 
         assertThat(amortisationScheduleRepository.listAll()).hasSize(1);
-        assertThat(amortisationScheduleRepository.findUnique(lease, charge, startDate)).isEqualTo(schedule);
+        assertThat(amortisationScheduleRepository.findUnique(lease, charge, startDate, BigInteger.ONE)).isEqualTo(schedule);
         assertThat(amortisationScheduleRepository.findByLease(lease)).hasSize(1);
+        assertThat(amortisationScheduleRepository.findByLeaseAndChargeAndStartDate(lease, charge, startDate)).hasSize(1);
 
         // and when
         transactionService.nextTransaction();
         final AmortisationSchedule schedule2 = amortisationScheduleRepository
                 .findOrCreate(lease, charge, scheduledAmount, freq,
-                        startDate, endDate);
+                        startDate, endDate, BigInteger.ONE);
         // then is idempotent
         assertThat(schedule2).isEqualTo(schedule);
     }

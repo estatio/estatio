@@ -1,6 +1,7 @@
 package org.estatio.module.lease.dom.amortisation;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -31,11 +32,24 @@ public class AmortisationScheduleRepository {
     }
 
     @Programmatic
-    public AmortisationSchedule findUnique(final Lease lease, final Charge charge, final LocalDate startDate) {
+    public AmortisationSchedule findUnique(final Lease lease, final Charge charge, final LocalDate startDate, final
+            BigInteger sequence) {
         return repositoryService.uniqueMatch(
                 new QueryDefault<>(
                         AmortisationSchedule.class,
                         "findUnique",
+                        "lease", lease,
+                        "charge", charge,
+                        "startDate", startDate,
+                        "sequence", sequence));
+    }
+
+    @Programmatic
+    public List<AmortisationSchedule> findByLeaseAndChargeAndStartDate(final Lease lease, final Charge charge, final LocalDate startDate) {
+        return repositoryService.allMatches(
+                new QueryDefault<>(
+                        AmortisationSchedule.class,
+                        "findByLeaseAndChargeAndStartDate",
                         "lease", lease,
                         "charge", charge,
                         "startDate", startDate));
@@ -57,9 +71,10 @@ public class AmortisationScheduleRepository {
             final BigDecimal scheduledAmount,
             final Frequency frequency,
             final LocalDate startDate,
-            final LocalDate endDate){
-        final AmortisationSchedule result = findUnique(lease, charge, startDate);
-        if (result == null) return create(lease, charge, scheduledAmount, frequency, startDate, endDate);
+            final LocalDate endDate,
+            final BigInteger sequence){
+        final AmortisationSchedule result = findUnique(lease, charge, startDate, sequence);
+        if (result == null) return create(lease, charge, scheduledAmount, frequency, startDate, endDate, sequence);
         return result;
     }
 
@@ -69,12 +84,13 @@ public class AmortisationScheduleRepository {
             final BigDecimal scheduledAmount,
             final Frequency frequency,
             final LocalDate startDate,
-            final LocalDate endDate){
+            final LocalDate endDate,
+            final BigInteger sequence){
         if (scheduledAmount.compareTo(BigDecimal.ZERO)<0){
             messageService.raiseError("Scheduled amount cannot be negative");
             return null;
         }
-        final AmortisationSchedule newSchedule = new AmortisationSchedule(lease, charge, scheduledAmount, frequency, startDate, endDate);
+        final AmortisationSchedule newSchedule = new AmortisationSchedule(lease, charge, scheduledAmount, frequency, startDate, endDate, sequence);
         serviceRegistry2.injectServicesInto(newSchedule);
         repositoryService.persistAndFlush(newSchedule);
         return newSchedule;

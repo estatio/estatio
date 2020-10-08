@@ -19,6 +19,7 @@
 package org.estatio.module.lease.integtests.amortisation;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 
 import javax.inject.Inject;
 
@@ -73,7 +74,7 @@ public class AmortisationLinkRepositories_IntegTest extends LeaseModuleIntegTest
         final LocalDate endDate = startDate.plusYears(1);
         final AmortisationSchedule schedule = amortisationScheduleRepository
                 .findOrCreate(lease, charge, scheduledAmount, freq,
-                        startDate, endDate);
+                        startDate, endDate, BigInteger.ONE);
         assertThat(amortisationScheduleLeaseItemLinkRepo.listAll()).isEmpty();
         assertThat(schedule).isNotNull();
 
@@ -114,7 +115,7 @@ public class AmortisationLinkRepositories_IntegTest extends LeaseModuleIntegTest
         final LocalDate endDate = startDate.plusYears(1);
         final AmortisationSchedule schedule = amortisationScheduleRepository
                 .findOrCreate(lease, charge, scheduledAmount, freq,
-                        startDate, endDate);
+                        startDate, endDate, BigInteger.ONE);
         assertThat(amortisationScheduleAmendmentItemLinkRepo.listAll()).isEmpty();
         assertThat(schedule).isNotNull();
         final LeaseAmendment amendment = mixin(Lease_amendments.class, lease).$$().stream().findFirst().orElse(null);

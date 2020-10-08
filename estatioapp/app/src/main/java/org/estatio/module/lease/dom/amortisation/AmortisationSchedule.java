@@ -1,6 +1,7 @@
 package org.estatio.module.lease.dom.amortisation;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -63,14 +64,22 @@ import lombok.Setter;
                         + "FROM org.estatio.module.lease.dom.amortisation.AmortisationSchedule "
                         + "WHERE lease == :lease "),
         @Query(
-                name = "findUnique", language = "JDOQL",
+                name = "findByLeaseAndChargeAndStartDate", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.module.lease.dom.amortisation.AmortisationSchedule "
                         + "WHERE lease == :lease "
                         + "&& charge == :charge "
                         + "&& startDate == :startDate "),
+        @Query(
+                name = "findUnique", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.module.lease.dom.amortisation.AmortisationSchedule "
+                        + "WHERE lease == :lease "
+                        + "&& charge == :charge "
+                        + "&& startDate == :startDate "
+                        + "&& sequence == :sequence "),
 })
-@Unique(name = "AmortisationSchedule_lease_charge_startDate_UNQ", members = { "lease", "charge", "startDate" })
+@Unique(name = "AmortisationSchedule_lease_charge_startDate_sequence_UNQ", members = { "lease", "charge", "startDate", "sequence" })
 @DomainObject(
         editing = Editing.DISABLED,
         objectType = "amortisation.AmortisationSchedule"
@@ -81,7 +90,7 @@ import lombok.Setter;
 public class AmortisationSchedule extends UdoDomainObject2<AmortisationSchedule> {
 
     public AmortisationSchedule() {
-        super("lease, charge, startDate");
+        super("lease, charge, startDate, sequence");
     }
 
     public AmortisationSchedule(
@@ -90,7 +99,8 @@ public class AmortisationSchedule extends UdoDomainObject2<AmortisationSchedule>
             final BigDecimal scheduledValue,
             final Frequency frequency,
             final LocalDate startDate,
-            final LocalDate endDate){
+            final LocalDate endDate,
+            final BigInteger sequence){
         this();
         this.lease = lease;
         this.charge = charge;
@@ -99,6 +109,7 @@ public class AmortisationSchedule extends UdoDomainObject2<AmortisationSchedule>
         this.frequency = frequency;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.sequence = sequence;
     }
 
     public String title() {
@@ -177,6 +188,10 @@ public class AmortisationSchedule extends UdoDomainObject2<AmortisationSchedule>
     @Getter @Setter
     @Column(allowsNull = "true")
     private CreationStrategy creationStrategyUsed;
+
+    @Getter @Setter
+    @Column(allowsNull = "false")
+    private BigInteger sequence;
 
     @Programmatic
     public boolean isReported(){
