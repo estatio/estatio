@@ -24,6 +24,7 @@
                                         <ns2:property id="frequency"/>
                                         <ns2:property id="startDate"/>
                                         <ns2:property id="endDate"/>
+                                        <ns2:property id="sequence"/>
                                     </ns2:fieldSet>
                                     <ns2:fieldSet name="Values" id="values">
                                         <ns2:property id="scheduledValue"/>
