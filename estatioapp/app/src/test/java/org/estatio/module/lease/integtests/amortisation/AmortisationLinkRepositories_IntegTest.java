@@ -135,6 +135,7 @@ public class AmortisationLinkRepositories_IntegTest extends LeaseModuleIntegTest
         assertThat(amortisationScheduleAmendmentItemLinkRepo.listAll()).hasSize(1);
         assertThat(amortisationScheduleAmendmentItemLinkRepo.findUnique(schedule, amendmentItem)).isEqualTo(link);
         assertThat(amortisationScheduleAmendmentItemLinkRepo.findBySchedule(schedule)).hasSize(1);
+        assertThat(amortisationScheduleAmendmentItemLinkRepo.findByAmendmentItem(amendmentItem)).hasSize(1);
 
         // and when
         transactionService.nextTransaction();
