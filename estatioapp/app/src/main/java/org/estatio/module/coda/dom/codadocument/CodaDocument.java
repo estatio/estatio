@@ -74,7 +74,11 @@ public class CodaDocument implements Comparable<CodaDocument>, HasAtPath {
     }
 
     public String title() {
-        return String.format("%s | %s ", getCmpCode(), getDocCode());
+        if (getDocNum() == null) {
+            return String.format("%s | %s ", getCmpCode(), getDocCode());
+        } else {
+            return String.format("%s | %s | %s", getCmpCode(), getDocCode(), getDocNum());
+        }
     }
 
     @Column(allowsNull = "false")

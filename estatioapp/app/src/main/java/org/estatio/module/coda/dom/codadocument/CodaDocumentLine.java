@@ -62,6 +62,10 @@ import lombok.Setter;
 )
 public class CodaDocumentLine implements Comparable<CodaDocumentLine>, HasAtPath {
 
+    public String title() {
+        return String.format("%s - %s ", getDocument().title(), getLineNumber());
+    }
+
     @Getter @Setter
     @Column(allowsNull = "false", name = "documentId")
     private CodaDocument document;
