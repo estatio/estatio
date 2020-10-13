@@ -1,4 +1,4 @@
-package org.estatio.module.application.imports;
+package org.estatio.module.budgetassignment.imports;
 
 import java.math.BigDecimal;
 import java.util.List;

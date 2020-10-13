@@ -32,6 +32,7 @@ import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
 
 import org.estatio.module.budget.EstatioBudgetModule;
 import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResult;
+import org.estatio.module.capex.EstatioCapexModule;
 import org.estatio.module.lease.EstatioLeaseModule;
 
 @XmlRootElement(name = "module")
@@ -43,7 +44,8 @@ public final class EstatioBudgetAssignmentModule extends ModuleAbstract {
     public Set<Module> getDependencies(){
         return Sets.newHashSet(
                 new EstatioBudgetModule(),
-                new EstatioLeaseModule());
+                new EstatioLeaseModule(),
+                new EstatioCapexModule());
     }
 
 

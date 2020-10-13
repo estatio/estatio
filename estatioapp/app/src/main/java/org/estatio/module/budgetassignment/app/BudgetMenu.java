@@ -1,4 +1,4 @@
-package org.estatio.module.application.app;
+package org.estatio.module.budgetassignment.app;
 
 import java.util.List;
 
@@ -15,7 +15,7 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.estatio.module.application.imports.BudgetImportExportManager;
+import org.estatio.module.budgetassignment.imports.BudgetImportExportManager;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budget.BudgetRepository;

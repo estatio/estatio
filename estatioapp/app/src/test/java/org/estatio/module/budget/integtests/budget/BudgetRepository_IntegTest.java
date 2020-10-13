@@ -12,7 +12,7 @@ import org.junit.rules.ExpectedException;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import org.estatio.module.application.app.BudgetMenu;
+import org.estatio.module.budgetassignment.app.BudgetMenu;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.asset.fixtures.property.enums.Property_enum;

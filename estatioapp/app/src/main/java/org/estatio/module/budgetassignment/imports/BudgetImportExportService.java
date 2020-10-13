@@ -14,7 +14,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.estatio.module.application.imports;
+package org.estatio.module.budgetassignment.imports;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -48,9 +48,6 @@ import org.estatio.module.budget.dom.keytable.DirectCostTable;
 import org.estatio.module.budget.dom.keytable.KeyTable;
 import org.estatio.module.budget.dom.keytable.PartitioningTableRepository;
 import org.estatio.module.budget.dom.partioning.PartitionItem;
-import org.estatio.module.budgetassignment.imports.DirectCostLine;
-import org.estatio.module.budgetassignment.imports.KeyItemImportExportLineItem;
-import org.estatio.module.budgetassignment.imports.Status;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.imports.ChargeImport;
 

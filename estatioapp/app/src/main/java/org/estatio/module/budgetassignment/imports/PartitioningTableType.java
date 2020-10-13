@@ -1,4 +1,4 @@
-package org.estatio.module.application.imports;
+package org.estatio.module.budgetassignment.imports;
 
 public enum PartitioningTableType {
     KEY_TABLE,

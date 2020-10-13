@@ -8,6 +8,7 @@ import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.services.factory.FactoryService;
 import org.apache.isis.applib.services.user.UserService;
 
 import org.estatio.module.budget.dom.budget.Budget;
@@ -16,6 +17,7 @@ import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.budget.dom.partioning.PartitionItem;
 import org.estatio.module.budget.dom.partioning.PartitionItemRepository;
+import org.estatio.module.capex.contributions.BudgetItem_IncomingInvoiceItems;
 
 /**
  * This cannot be inlined (needs to be a mixin) because Budget doesn't know about BudgetCalculationResultLinkRepository
@@ -49,6 +51,9 @@ public class Budget_Remove {
 
     public String disableRemoveBudget(){
         if (budget.getStatus()!=Status.NEW) return "This budget is not in a state of new";
+        for (BudgetItem budgetItem : budget.getItems()) {
+            if (factoryService.mixin(BudgetItem_IncomingInvoiceItems.class, budgetItem).invoiceItems().size()>0) return "There are invoice items attached";
+        }
         return null;
     }
 
@@ -61,5 +66,8 @@ public class Budget_Remove {
 
     @Inject
     private UserService userService;
+
+    @Inject
+    private FactoryService factoryService;
 
 }
