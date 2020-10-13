@@ -17,6 +17,13 @@ import javax.servlet.http.HttpSession;
 
 import com.google.common.collect.Lists;
 
+import org.apache.commons.lang3.StringUtils;
+import org.estatio.module.application.exports.ActiveDelegatedUserExportLine;
+import org.estatio.module.party.dom.role.PartyRole;
+import org.isisaddons.module.security.dom.user.AccountType;
+import org.isisaddons.module.security.dom.user.ApplicationUser;
+import org.isisaddons.module.security.dom.user.ApplicationUserRepository;
+import org.isisaddons.module.security.dom.user.ApplicationUserStatus;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
@@ -843,6 +850,32 @@ public class AdminDashboard implements ViewModel {
         );
     }
 
+    @Action(semantics = SemanticsOf.SAFE)
+    public Blob downloadActiveDelegatedUsers(){
+        List<ActiveDelegatedUserExportLine> exportLines = new ArrayList<>();
+        applicationUserRepository.allUsers().stream()
+                .filter(user ->
+                        user.getAccountType() == AccountType.DELEGATED &&
+                        user.getStatus() == ApplicationUserStatus.ENABLED)
+                .forEach(l->{
+                    ActiveDelegatedUserExportLine line = new ActiveDelegatedUserExportLine();
+                    line.setUsername(l.getUsername());
+                    line.setStatus(l.getStatus().toString());
+                    line.setAtPath(l.getAtPath());
+                    line.setFamilyName(l.getFamilyName());
+                    line.setGivenName(l.getGivenName());
+                    Person person = personRepository.findByUsername(l.getUsername());
+                    if (person!=null) {
+                        line.setPersonRef(person.getReference());
+                        List<String> roles = person.getRoles().stream().map(role -> role.getRoleType().getTitle()).distinct().collect(Collectors.toList());
+                        line.setPartyRoles(StringUtils.join(roles, ", "));
+                    }
+                    exportLines.add(line);
+                });
+
+        return excelService.toExcel(exportLines, ActiveDelegatedUserExportLine.class, "ActiveDelegatedUsers", String.format("AD-users-Estatio-per-%s.xlsx", LocalDate.now().toString()));
+    }
+
     @Inject PropertyRepository propertyRepository;
 
     @Inject LeaseItemRepository leaseItemRepository;
@@ -943,5 +976,8 @@ public class AdminDashboard implements ViewModel {
 
     @Inject
     ExcelService excelService;
+
+    @Inject
+    ApplicationUserRepository applicationUserRepository;
 
 }
