@@ -23,7 +23,6 @@ import org.estatio.module.budget.dom.budget.Status;
 import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResult;
 import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResultRepository;
 
-// TODO: need to untangle this and push back down to budget module
 @DomainService(
         nature = NatureOfService.VIEW_MENU_ONLY,
         objectType = "org.estatio.app.menus.budget.BudgetMenu"

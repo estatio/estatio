@@ -20,7 +20,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -49,11 +48,10 @@ import org.estatio.module.budget.dom.keytable.DirectCostTable;
 import org.estatio.module.budget.dom.keytable.KeyTable;
 import org.estatio.module.budget.dom.keytable.PartitioningTableRepository;
 import org.estatio.module.budget.dom.partioning.PartitionItem;
-import org.estatio.module.capex.dom.invoice.IncomingInvoiceItemRepository;
+import org.estatio.module.budgetassignment.dom.BudgetService;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.imports.ChargeImport;
 
-// TODO: need to untangle this and push back down to budget module
 @DomainService(nature = NatureOfService.DOMAIN)
 public class BudgetImportExportService {
 
@@ -192,19 +190,26 @@ public class BudgetImportExportService {
         if (budgetOfFirstLine.equals(budget)) {
 
             budget.removeNewCalculationsOfType(BudgetCalculationType.BUDGETED);
-            if (budgetItemsMutable(budget)) {
+            if (budgetService.budgetCannotBeRemovedReason(budget)==null) {
                 budget.removeAllBudgetItems();
+            } else {
+                // seems redundant because we also delete when importing using BudgetImportExport#importData we need this code here, becasue we want to remove all Partitioning tables
+                for (BudgetItem budgetItem : budget.getItems()) {
+                    for (PartitionItem pItem : budgetItem.getPartitionItems()){
+                        pItem.remove();
+                    }
+                }
             }
             budget.removeAllPartitioningTables();
 
-            if (budgetItemsMutable(budget)) {
-                // import budget and items
-                BudgetImportExport previousRow = null;
-                for (BudgetImportExport lineItem : lineItems) {
-                    lineItem.importData(previousRow).get(0);
-                    previousRow = lineItem;
-                }
+
+            // import budget and items
+            BudgetImportExport previousRow = null;
+            for (BudgetImportExport lineItem : lineItems) {
+                lineItem.importData(previousRow).get(0);
+                previousRow = lineItem;
             }
+
 
             // import keyTables
             importKeyTables(lineItems, objects, budget);
@@ -219,15 +224,6 @@ public class BudgetImportExportService {
         }
 
         return budget;
-    }
-
-    private boolean budgetItemsMutable(final Budget budget){
-        for (BudgetItem budgetItem : budget.getItems()){
-            if (incomingInvoiceItemRepository.findByBudgetItem(budgetItem).stream()
-                    .filter(i->!i.isDiscarded())
-                    .collect(Collectors.toList()).size()>0) return false;
-        }
-        return true;
     }
 
     private Budget getBudgetUsingFirstLine(List<BudgetImportExport> lineItems){
@@ -349,7 +345,6 @@ public class BudgetImportExportService {
 
     @Inject PartitioningTableRepository partitioningTableRepository;
 
-    @Inject
-    IncomingInvoiceItemRepository incomingInvoiceItemRepository;
+    @Inject BudgetService budgetService;
 
 }

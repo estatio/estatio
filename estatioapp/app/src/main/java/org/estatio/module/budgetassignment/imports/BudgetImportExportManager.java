@@ -36,29 +36,21 @@ import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Publishing;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.ViewModelLayout;
-import org.apache.isis.applib.services.factory.FactoryService;
-import org.apache.isis.applib.services.message.MessageService;
-import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.value.Blob;
 
 import org.isisaddons.module.excel.dom.ExcelService;
 import org.isisaddons.module.excel.dom.WorksheetContent;
 import org.isisaddons.module.excel.dom.WorksheetSpec;
 
-import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.budget.dom.budget.Budget;
-import org.estatio.module.budget.dom.budget.BudgetRepository;
 import org.estatio.module.budget.dom.budget.Status;
-import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationRepository;
 import org.estatio.module.budget.dom.keytable.DirectCostTable;
 import org.estatio.module.budget.dom.keytable.KeyTable;
-import org.estatio.module.budget.dom.keytable.PartitioningTableRepository;
 import org.estatio.module.charge.imports.ChargeImport;
 
 import lombok.Getter;
 import lombok.Setter;
 
-// TODO: need to untangle this and push back down to budget module
 @DomainObject(
         nature = Nature.VIEW_MODEL,
         objectType = "org.estatio.app.services.budget.BudgetImportExportManager"
@@ -190,23 +182,5 @@ public class BudgetImportExportManager {
 
     @Inject
     private PartitioningTableItemImportExportService partitioningTableItemImportExportService;
-    
-    @Inject
-    PartitioningTableRepository partitioningTableRepository;
-
-    @Inject
-    private ServiceRegistry2 serviceRegistry2;
-
-    @Inject
-    private BudgetRepository budgetRepository;
-
-    @Inject
-    PropertyRepository propertyRepository;
-
-    @Inject FactoryService factoryService;
-
-    @Inject MessageService messageService;
-
-    @Inject BudgetCalculationRepository budgetCalculationRepository;
 
 }

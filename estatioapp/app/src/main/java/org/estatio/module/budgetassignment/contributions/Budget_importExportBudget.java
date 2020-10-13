@@ -24,7 +24,6 @@ import org.isisaddons.module.excel.dom.ExcelService;
 import org.estatio.module.budgetassignment.imports.BudgetImportExportManager;
 import org.estatio.module.budget.dom.budget.Budget;
 
-// TODO: need to untangle this and push back down to budget module
 @Mixin(method = "act")
 public class Budget_importExportBudget {
 

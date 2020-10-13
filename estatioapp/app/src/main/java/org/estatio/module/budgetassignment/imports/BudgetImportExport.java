@@ -27,7 +27,6 @@ import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budget.BudgetRepository;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
-import org.estatio.module.budget.dom.budgetitem.BudgetItemRepository;
 import org.estatio.module.budget.dom.keytable.DirectCostTable;
 import org.estatio.module.budget.dom.keytable.DirectCostTableRepository;
 import org.estatio.module.budget.dom.keytable.FoundationValueType;
@@ -35,16 +34,13 @@ import org.estatio.module.budget.dom.keytable.KeyTable;
 import org.estatio.module.budget.dom.keytable.KeyTableRepository;
 import org.estatio.module.budget.dom.keytable.KeyValueMethod;
 import org.estatio.module.budget.dom.partioning.PartitionItem;
-import org.estatio.module.budget.dom.partioning.PartitionItemRepository;
-import org.estatio.module.capex.dom.invoice.IncomingInvoiceItemRepository;
-import org.estatio.module.capex.dom.order.OrderItemRepository;
+import org.estatio.module.budgetassignment.dom.BudgetService;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
 
 import lombok.Getter;
 import lombok.Setter;
 
-// TODO: need to untangle this and push back down to budget module
 @DomainObject(
         nature = Nature.VIEW_MODEL,
         objectType = "org.estatio.app.services.budget.BudgetImportExport"
@@ -142,7 +138,7 @@ public class BudgetImportExport implements Importable, FixtureAwareRowHandler<Bu
     @Programmatic
     public List<Object> importData(final Object previousRow) {
         if (previousRow==null){
-            removeExistingBudgetItemsIfNotLinked();
+            removeExistingPartitionItemsAndBudgetItemIfCanBeRemoved();
         }
         Charge incomingCharge = fetchCharge(getIncomingChargeReference());
         BudgetItem budgetItem = findOrCreateBudgetAndBudgetItem(incomingCharge);
@@ -155,14 +151,14 @@ public class BudgetImportExport implements Importable, FixtureAwareRowHandler<Bu
         return Lists.newArrayList(budgetItem.getBudget());
     }
 
-    private void removeExistingBudgetItemsIfNotLinked(){
+    private void removeExistingPartitionItemsAndBudgetItemIfCanBeRemoved(){
         Property property = propertyRepository.findPropertyByReference(getPropertyReference());
         Budget budget = budgetRepository.findOrCreateBudget(property, getBudgetStartDate(), getBudgetEndDate());
         for (BudgetItem item : budget.getItems()){
-            if (orderItemRepository.findByBudgetItem(item).size() == 0 && incomingInvoiceItemRepository.findByBudgetItem(item).size() == 0) {
-                for (PartitionItem pItem : item.getPartitionItems()) {
-                    pItem.remove();
-                }
+            for (PartitionItem pItem : item.getPartitionItems()) {
+                pItem.remove();
+            }
+            if (budgetService.budgetItemCannotBeRemovedReason(item)==null) {
                 repositoryService.removeAndFlush(item);
             }
         }
@@ -235,12 +231,6 @@ public class BudgetImportExport implements Importable, FixtureAwareRowHandler<Bu
     private BudgetRepository budgetRepository;
 
     @Inject
-    private BudgetItemRepository budgetItemRepository;
-
-    @Inject
-    private PartitionItemRepository partitionItemRepository;
-
-    @Inject
     private PropertyRepository propertyRepository;
 
     @Inject
@@ -250,12 +240,9 @@ public class BudgetImportExport implements Importable, FixtureAwareRowHandler<Bu
     private RepositoryService repositoryService;
 
     @Inject
-    private OrderItemRepository orderItemRepository;
-
-    @Inject
-    private IncomingInvoiceItemRepository incomingInvoiceItemRepository;
-
-    @Inject
     private DirectCostTableRepository directCostTableRepository;
+
+    @Inject
+    private BudgetService budgetService;
 
 }
