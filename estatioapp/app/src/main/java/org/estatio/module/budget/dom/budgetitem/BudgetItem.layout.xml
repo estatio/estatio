@@ -4,7 +4,6 @@
     <row>
         <col span="12" unreferencedActions="true">
             <ns2:domainObject/>
-            <ns2:action id="newValue"/>
             <ns2:action id="recentChanges"/>
             <ns2:action id="links"/>
         </col>

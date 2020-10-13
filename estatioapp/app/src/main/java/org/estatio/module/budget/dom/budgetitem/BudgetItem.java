@@ -141,23 +141,6 @@ public class BudgetItem extends UdoDomainObject2<BudgetItem>
     @Getter @Setter
     private SortedSet<BudgetItemValue> values = new TreeSet<>();
 
-    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
-    public BudgetItem newValue(final BigDecimal value, final LocalDate date){
-        return newValue(value, date, BudgetCalculationType.AUDITED);
-    }
-
-    public LocalDate default1NewValue(final BigDecimal value, final LocalDate date){
-        return getBudget().getStartDate();
-    }
-
-    public String validateNewValue(final BigDecimal value, final LocalDate date){
-        return budgetItemValueRepository.validateNewBudgetItemValue(this, value, date, BudgetCalculationType.AUDITED);
-    }
-
-    public String disableNewValue(){
-        return budgetItemValueRepository.findByBudgetItemAndType(this, BudgetCalculationType.AUDITED).size()>0 ? "Audited value already entered" : null;
-    }
-
     @Programmatic
     public BudgetItem newValue(final BigDecimal value, final LocalDate date, final BudgetCalculationType type){
         budgetItemValueRepository.newBudgetItemValue(this, value, date, type);

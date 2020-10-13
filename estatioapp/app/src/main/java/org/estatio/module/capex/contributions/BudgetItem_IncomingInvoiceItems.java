@@ -21,15 +21,15 @@ import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 @Mixin
 public class BudgetItem_IncomingInvoiceItems {
 
-    private final BudgetItem BudgetItem;
-    public BudgetItem_IncomingInvoiceItems(BudgetItem BudgetItem){
-        this.BudgetItem = BudgetItem;
+    private final BudgetItem budgetItem;
+    public BudgetItem_IncomingInvoiceItems(BudgetItem budgetItem){
+        this.budgetItem = budgetItem;
     }
 
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     public List<IncomingInvoiceItem> invoiceItems() {
-        return incomingInvoiceItemRepository.findByBudgetItem(BudgetItem).stream()
+        return incomingInvoiceItemRepository.findByBudgetItem(budgetItem).stream()
                 .filter(i->!i.isDiscarded())
                 .collect(Collectors.toList());
     }

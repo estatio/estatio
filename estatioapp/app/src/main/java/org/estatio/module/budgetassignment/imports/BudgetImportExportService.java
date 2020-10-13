@@ -20,6 +20,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -48,6 +49,7 @@ import org.estatio.module.budget.dom.keytable.DirectCostTable;
 import org.estatio.module.budget.dom.keytable.KeyTable;
 import org.estatio.module.budget.dom.keytable.PartitioningTableRepository;
 import org.estatio.module.budget.dom.partioning.PartitionItem;
+import org.estatio.module.capex.dom.invoice.IncomingInvoiceItemRepository;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.imports.ChargeImport;
 
@@ -190,14 +192,18 @@ public class BudgetImportExportService {
         if (budgetOfFirstLine.equals(budget)) {
 
             budget.removeNewCalculationsOfType(BudgetCalculationType.BUDGETED);
-            budget.removeAllBudgetItems();
+            if (budgetItemsMutable(budget)) {
+                budget.removeAllBudgetItems();
+            }
             budget.removeAllPartitioningTables();
 
-            // import budget and items
-            BudgetImportExport previousRow = null;
-            for (BudgetImportExport lineItem : lineItems) {
-                lineItem.importData(previousRow).get(0);
-                previousRow = lineItem;
+            if (budgetItemsMutable(budget)) {
+                // import budget and items
+                BudgetImportExport previousRow = null;
+                for (BudgetImportExport lineItem : lineItems) {
+                    lineItem.importData(previousRow).get(0);
+                    previousRow = lineItem;
+                }
             }
 
             // import keyTables
@@ -213,6 +219,15 @@ public class BudgetImportExportService {
         }
 
         return budget;
+    }
+
+    private boolean budgetItemsMutable(final Budget budget){
+        for (BudgetItem budgetItem : budget.getItems()){
+            if (incomingInvoiceItemRepository.findByBudgetItem(budgetItem).stream()
+                    .filter(i->!i.isDiscarded())
+                    .collect(Collectors.toList()).size()>0) return false;
+        }
+        return true;
     }
 
     private Budget getBudgetUsingFirstLine(List<BudgetImportExport> lineItems){
@@ -333,5 +348,8 @@ public class BudgetImportExportService {
     @Inject MessageService messageService;
 
     @Inject PartitioningTableRepository partitioningTableRepository;
+
+    @Inject
+    IncomingInvoiceItemRepository incomingInvoiceItemRepository;
 
 }
