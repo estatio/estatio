@@ -48,6 +48,7 @@ import org.estatio.module.capex.dom.order.OrderItem;
 import org.estatio.module.capex.dom.order.OrderRepository;
 import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.charge.dom.Charge;
+import org.estatio.module.coda.dom.LineType;
 import org.estatio.module.coda.dom.costcentre.CostCentre;
 import org.estatio.module.financial.dom.BankAccount;
 import org.estatio.module.party.dom.Organisation;

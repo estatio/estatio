@@ -43,7 +43,9 @@ import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.services.eventbus.AbstractDomainEvent;
 import org.apache.isis.applib.services.eventbus.ActionDomainEvent;
+import org.apache.isis.applib.services.eventbus.EventBusService;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
@@ -375,7 +377,8 @@ public class Occupancy
     @Getter @Setter
     private OccupancyReportingType reportOCR;
 
-
+    public static class OccupancyChangeReportingOptionsEvent
+            extends ActionDomainEvent<Occupancy> {}
 
     public Occupancy changeReportingOptions(
             final OccupancyReportingType reportTurnover,
@@ -384,6 +387,13 @@ public class Occupancy
         setReportTurnover(reportTurnover);
         setReportRent(reportRent);
         setReportOCR(reportOCR);
+
+        // fire event
+        final Occupancy.OccupancyChangeReportingOptionsEvent event = new Occupancy.OccupancyChangeReportingOptionsEvent();
+        event.setEventPhase(AbstractDomainEvent.Phase.EXECUTED);
+        event.setSource(this);
+        eventBusService.post(event);
+
         return this;
     }
 
@@ -535,4 +545,6 @@ public class Occupancy
 
     @Inject
     SalesAreaLicenseRepository salesAreaLicenseRepository;
+
+    @Inject EventBusService eventBusService;
 }

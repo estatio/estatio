@@ -380,6 +380,20 @@ public class Budget extends UdoDomainObject2<Budget>
         return this;
     }
 
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
+    public Budget distributeAllInvalidKeytables(){
+        Lists.newArrayList(getKeyTables()).stream().forEach(kt->{
+            if (!kt.isValidForKeyValues()){
+                kt.distributeSourceValues();
+            }
+        });
+        return this;
+    }
+
+    public boolean hideDistributeAllInvalidKeytables(){
+        return getStatus()!=Status.NEW;
+    }
+
     @Override
     @Programmatic
     public BudgetItem findOrCreateBudgetItem(

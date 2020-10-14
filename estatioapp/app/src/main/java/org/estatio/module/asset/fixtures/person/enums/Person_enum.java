@@ -31,6 +31,7 @@ import static org.estatio.module.party.dom.relationship.PartyRelationshipTypeEnu
 import static org.estatio.module.party.fixtures.organisation.enums.Organisation_enum.OmsHyraSe;
 import static org.estatio.module.party.fixtures.organisation.enums.Organisation_enum.PastaPapaItNl;
 import static org.estatio.module.party.fixtures.organisation.enums.Organisation_enum.PerdantFr;
+import static org.estatio.module.party.fixtures.organisation.enums.Organisation_enum.TopModelBe;
 import static org.estatio.module.party.fixtures.organisation.enums.Organisation_enum.TopModelGb;
 import static org.estatio.module.party.fixtures.organisation.enums.Organisation_enum.TopModelIt;
 import static org.estatio.module.party.fixtures.organisation.enums.Organisation_enum.TopModelSe;
@@ -222,6 +223,10 @@ public enum Person_enum
 
     GinoVannelliGb("GVANNELLI", "Gino", "Vannelli", "G", true, MALE, Gb, Gb,
             CONTACT, TopModelGb,
+            new IPartyRoleType[] {  },
+            new FixedAssetRoleSpec[] {}),
+    GinoVannelliBe("GVANNELLIBE", "Gino", "Vannelli", "G", true, MALE, FrBe, FrBe,
+            CONTACT, TopModelBe,
             new IPartyRoleType[] {  },
             new FixedAssetRoleSpec[] {}),
 

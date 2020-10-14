@@ -463,6 +463,18 @@ public class Lease
         return !EstatioRole.SUPERUSER.isApplicableFor(getUser()) ? "You need super user rights to change the dates" : null;
     }
 
+    @Getter @Setter
+    @Column(allowsNull = "true")
+    public Boolean noRentWhenPropertyClosed;
+
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    public Lease changeNoRentWhenPropertyClosed(
+            @Parameter(optionality = Optionality.OPTIONAL) final Boolean noRentWhenPropertyClosed){
+        setNoRentWhenPropertyClosed(noRentWhenPropertyClosed);
+        return this;
+    }
+
+
     @Programmatic
     @Override
     public LocalDateInterval getEffectiveInterval() {
@@ -528,6 +540,16 @@ public class Lease
             return "At the start date of the occupancy this unit is not available.";
         }
         return null;
+    }
+
+    @Programmatic
+    public Occupancy newOccupancy(
+            final LocalDate startDate,
+            final Unit unit,
+            final Occupancy.OccupancyReportingType turnoverReportingType) {
+        Occupancy occupancy = occupancyRepository.newOccupancy(this, unit, startDate, turnoverReportingType);
+        occupancies.add(occupancy);
+        return occupancy;
     }
 
     @Programmatic
@@ -1145,14 +1167,15 @@ public class Lease
     private void copyOccupancies(final Lease newLease, final LocalDate startDate) {
         for (Occupancy occupancy : this.getOccupancies()) {
             if (occupancy.getInterval().contains(startDate) || occupancy.getInterval().endDateExcluding().equals(startDate)) {
-                Occupancy newOccupancy = newLease.newOccupancy(startDate, occupancy.getUnit());
+                Occupancy newOccupancy = newLease.newOccupancy(startDate, occupancy.getUnit(), occupancy.getReportTurnover());
                 newOccupancy.setActivity(occupancy.getActivity());
                 newOccupancy.setBrand(occupancy.getBrand());
                 newOccupancy.setSector(occupancy.getSector());
                 newOccupancy.setUnitSize(occupancy.getUnitSize());
                 newOccupancy.setReportOCR(occupancy.getReportOCR());
                 newOccupancy.setReportRent(occupancy.getReportRent());
-                newOccupancy.setReportTurnover(occupancy.getReportTurnover());
+                // ECP-1246: we now copy using the LEASE#newOccupancy programmatic action in order to trigger the occupancy created event with the correct param
+//                newOccupancy.setReportTurnover(occupancy.getReportTurnover());
             }
         }
     }

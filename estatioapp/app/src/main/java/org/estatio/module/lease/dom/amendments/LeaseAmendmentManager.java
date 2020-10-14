@@ -33,7 +33,6 @@ import org.estatio.module.lease.dom.InvoicingFrequency;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseItem;
 import org.estatio.module.lease.dom.LeaseRepository;
-import org.estatio.module.lease.dom.LeaseStatus;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -52,10 +51,11 @@ public class LeaseAmendmentManager {
         this.property = property;
     }
 
-    public LeaseAmendmentManager(final Property property, final LeaseAmendmentType leaseAmendmentType){
+    public LeaseAmendmentManager(final Property property, final LeaseAmendmentType leaseAmendmentType, final LeaseAmendmentState leaseAmendmentState){
         this();
         this.property = property;
         this.leaseAmendmentType = leaseAmendmentType;
+        this.state = leaseAmendmentState;
     }
 
     public String title(){
@@ -68,25 +68,24 @@ public class LeaseAmendmentManager {
     @Getter @Setter
     private LeaseAmendmentType leaseAmendmentType;
 
+    @Getter @Setter
+    private LeaseAmendmentState state;
+
     @Action(semantics = SemanticsOf.SAFE)
     public List<LeaseAmendmentImportLine> getLines(){
         List<LeaseAmendmentImportLine> result = new ArrayList<>();
         if (getProperty()==null) return result; // Should not be possible
         if (getLeaseAmendmentType()!=null){
-            final List<LeaseAmendment> amendments = leaseAmendmentRepository.findByType(getLeaseAmendmentType())
-                    .stream()
-                    .filter(a -> a.getLease().getProperty() == getProperty())
-                    .collect(Collectors.toList());
-            createLinesAndAddToResult(result, amendments);
+            if (getState()==null) {
+                createLinesAndAddToResult(result, leaseAmendmentRepository.findByTypeAndProperty(getLeaseAmendmentType(), getProperty()));
+            } else {
+                createLinesAndAddToResult(result, leaseAmendmentRepository.findByTypeAndStateAndProperty(getLeaseAmendmentType(), getState(), getProperty()));
+            }
         } else {
-            final List<Lease> leasesByProperty = leaseRepository.findLeasesByProperty(property)
-                    .stream()
-                    .filter(l->l.getStatus()== LeaseStatus.ACTIVE || l.getStatus()==LeaseStatus.SUSPENDED_PARTIALLY)
-                    .filter(l->getLeaseAmendmentType()!=null ? (l.getTenancyEndDate()==null || l.getTenancyEndDate().isAfter(getLeaseAmendmentType().getAmendmentStartDate())) : (l.getTenancyEndDate()==null || l.getTenancyEndDate().isAfter(clockService.now().withDayOfMonth(1))))
-                    .collect(Collectors.toList());
-            for (Lease lease : leasesByProperty){
-                final List<LeaseAmendment> amendmentsForLeaseOfAllTypes = leaseAmendmentRepository.findByLease(lease);
-                createLinesAndAddToResult(result, amendmentsForLeaseOfAllTypes);
+            if (getState()!=null) {
+                createLinesAndAddToResult(result, leaseAmendmentRepository.findByPropertyAndState(getProperty(), getState()));
+            } else {
+                createLinesAndAddToResult(result, leaseAmendmentRepository.findByProperty(getProperty()));
             }
         }
         return result
@@ -121,7 +120,12 @@ public class LeaseAmendmentManager {
 
     @Action(semantics = SemanticsOf.SAFE)
     public LeaseAmendmentManager filterByType(@Nullable final LeaseAmendmentType leaseAmendmentType){
-        return new LeaseAmendmentManager(property, leaseAmendmentType);
+        return new LeaseAmendmentManager(getProperty(), leaseAmendmentType, getState());
+    }
+
+    @Action(semantics = SemanticsOf.SAFE)
+    public LeaseAmendmentManager filterByState(@Nullable final LeaseAmendmentState leaseAmendmentState){
+        return new LeaseAmendmentManager(getProperty(), getLeaseAmendmentType(), leaseAmendmentState);
     }
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
@@ -142,7 +146,7 @@ public class LeaseAmendmentManager {
                 }
             }
         }
-        return new LeaseAmendmentManager(getProperty(), getLeaseAmendmentType());
+        return new LeaseAmendmentManager(getProperty(), getLeaseAmendmentType(), getState());
     }
 
     public String disableApplyAllWithStatusApply(){
@@ -167,7 +171,7 @@ public class LeaseAmendmentManager {
                 }
             }
         }
-        return new LeaseAmendmentManager(getProperty(), getLeaseAmendmentType());
+        return new LeaseAmendmentManager(getProperty(), getLeaseAmendmentType(), getState());
     }
 
     public boolean hideApplyAll(){

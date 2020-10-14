@@ -31,6 +31,7 @@ import org.estatio.module.party.fixtures.orgcomms.builders.OrganisationAndCommsB
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.experimental.Accessors;
+import static org.incode.module.country.fixtures.enums.Country_enum.BEL;
 import static org.incode.module.country.fixtures.enums.Country_enum.FRA;
 import static org.incode.module.country.fixtures.enums.Country_enum.GBR;
 import static org.incode.module.country.fixtures.enums.Country_enum.ITA;
@@ -78,6 +79,17 @@ public enum OrganisationAndComms_enum
                     null,
                     null)
     }),
+    HelloWorldBe(Organisation_enum.HelloWorldBe,
+            new OrganisationAndCommsBuilder.CommsSpec[] {
+                    new OrganisationAndCommsBuilder.CommsSpec("5 Covent Garden", null, "W1A1AA", "Brussels", null, BEL, true,
+                            "+44202211333",
+                            "+442022211399",
+                            "info@hello.example.com"),
+                    new OrganisationAndCommsBuilder.CommsSpec("1 Circle Square", null, "W2AXXX", "Brussels", null, BEL, true,
+                            null,
+                            null,
+                            null)
+            }),
     HelloWorldFr(Organisation_enum.HelloWorldFr,
             new OrganisationAndCommsBuilder.CommsSpec[] {
                     new OrganisationAndCommsBuilder.CommsSpec("5 Jardin du Convent", null, "W1A1AA", "Paris", null, FRA, true,

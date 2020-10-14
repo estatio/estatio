@@ -89,6 +89,9 @@
                         <ns2:property id="activityComments">
                             <ns2:action id="changeActivityComments" position="BELOW" promptStyle="INLINE_AS_IF_EDIT"/>
                         </ns2:property>
+                        <ns2:property id="noRentWhenPropertyClosed">
+                            <ns2:action id="changeNoRentWhenPropertyClosed" position="BELOW" promptStyle="INLINE_AS_IF_EDIT"/>
+                        </ns2:property>
                     </ns2:fieldSet>
                 </col>
             </row>

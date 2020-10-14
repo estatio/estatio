@@ -81,6 +81,11 @@
                 </ns2:property>
                 <ns2:property id="adjustment"/>
             </ns2:fieldSet>
+            <ns2:fieldSet name="Amortisation" id="amortisation">
+                <ns2:property id="noAmortisation" hidden="ALL_TABLES">
+                    <ns2:action id="toggleNoAmortisation" position="PANEL_DROPDOWN"/>
+                </ns2:property>
+            </ns2:fieldSet>
         </col>
         <col span="3">
             <ns2:fieldSet name="Amounts" id="amounts">

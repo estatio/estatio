@@ -96,7 +96,7 @@ public class LeaseAmendmentImport_IntegTest extends LeaseModuleIntegTestAbstract
 
         // when
         final LeaseAmendmentManager manager = mixin(Property_maintainLeaseAmendments.class, oxf)
-                .$$(LeaseAmendmentType.DEMO_TYPE2);
+                .$$(LeaseAmendmentType.DEMO_TYPE2,null);
         serviceRegistry2.injectServicesInto(manager);
         manager.importAmendments(excelSheet);
 

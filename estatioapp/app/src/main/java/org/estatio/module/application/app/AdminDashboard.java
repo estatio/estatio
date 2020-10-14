@@ -46,10 +46,12 @@ import org.apache.isis.applib.services.factory.FactoryService;
 import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
 import org.apache.isis.applib.services.message.MessageService;
 import org.apache.isis.applib.services.wrapper.WrapperFactory;
+import org.apache.isis.applib.value.Blob;
 import org.apache.isis.applib.value.Markup;
 import org.apache.isis.core.metamodel.services.configinternal.ConfigurationServiceInternal;
 import org.apache.isis.core.metamodel.specloader.ServiceInitializer;
 
+import org.isisaddons.module.excel.dom.ExcelService;
 import org.isisaddons.module.publishmq.dom.servicespi.PublisherServiceUsingActiveMq;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.isisaddons.module.servletapi.dom.HttpSessionProvider;
@@ -91,11 +93,14 @@ import org.estatio.module.lease.dom.amendments.LeaseAmendmentItemForDiscount;
 import org.estatio.module.lease.dom.amendments.LeaseAmendmentItemType;
 import org.estatio.module.lease.dom.amendments.LeaseAmendmentRepository;
 import org.estatio.module.lease.dom.amendments.LeaseAmendmentState;
+import org.estatio.module.lease.dom.amendments.Lease_amendments;
 import org.estatio.module.lease.dom.amendments.Lease_closeOldAndOpenNewLeaseItem;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLeaseRepository;
 import org.estatio.module.lease.dom.invoicing.InvoiceItemForLease;
+import org.estatio.module.lease.dom.occupancy.Occupancy;
 import org.estatio.module.lease.dom.settings.LeaseInvoicingSettingsService;
+import org.estatio.module.lease.imports.InvoiceImportLine;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.OrganisationRepository;
 import org.estatio.module.party.dom.Person;
@@ -804,6 +809,40 @@ public class AdminDashboard implements ViewModel {
         return new LocalDate(2020,6,30);
     }
 
+    @Action(semantics = SemanticsOf.SAFE)
+    public Blob createInvoiceImportSheetForPropertyAndCharge(final org.estatio.module.asset.dom.Property property, final Charge charge){
+        List<InvoiceImportLine> result = new ArrayList<>();
+        leaseRepository.findLeasesByProperty(property).stream()
+                .filter(l->!factoryService.mixin(Lease_amendments.class,l).$$().isEmpty())
+                .forEach(l->{
+                    InvoiceImportLine line = new InvoiceImportLine();
+                    line.setLeaseReference(l.getReference());
+                    line.setItemChargeReference(charge.getReference());
+                    final Occupancy occupancy = l.primaryOccupancy().orElse(null);
+                    if (occupancy!=null && occupancy.getUnit()!=null){
+                        line.setUnitReference(occupancy.getUnit().getReference());
+                    }
+                    result.add(line);
+                });
+        return excelService.toExcel(result, InvoiceImportLine.class, "InvoiceForLease", property.getReference() + "-invoice-import.xlsx");
+    }
+
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
+    public void importInvoiceImportSheet(final Blob sheet){
+        excelService.fromExcel(sheet, InvoiceImportLine.class, "InvoiceForLease").forEach(
+                l->{
+                    final List<Object> invoices = l.importData();
+                    invoices.forEach(o->{
+                        if (l.getInvoiceNumber()!=null) {
+                            InvoiceForLease invoice = (InvoiceForLease) o;
+                            invoice.setStatus(InvoiceStatus.INVOICED);
+                            invoice.setInvoiceNumber(l.getInvoiceNumber());
+                        }
+                    });
+                }
+        );
+    }
+
     @Inject PropertyRepository propertyRepository;
 
     @Inject LeaseItemRepository leaseItemRepository;
@@ -899,6 +938,10 @@ public class AdminDashboard implements ViewModel {
     @Inject
     StateTransitionService stateTransitionService;
 
-    @Inject LeaseAmendmentRepository leaseAmendmentRepository;
+    @Inject
+    LeaseAmendmentRepository leaseAmendmentRepository;
+
+    @Inject
+    ExcelService excelService;
 
 }

@@ -68,6 +68,12 @@ import lombok.Setter;
                         + "FROM org.estatio.module.lease.dom.amendments.LeaseAmendment "
                         + "WHERE leaseAmendmentType == :leaseAmendmentType"),
         @Query(
+                name = "findByTypeAndState", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.module.lease.dom.amendments.LeaseAmendment "
+                        + "WHERE leaseAmendmentType == :leaseAmendmentType && "
+                        + "state == :state "),
+        @Query(
                 name = "findUnique", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.module.lease.dom.amendments.LeaseAmendment "

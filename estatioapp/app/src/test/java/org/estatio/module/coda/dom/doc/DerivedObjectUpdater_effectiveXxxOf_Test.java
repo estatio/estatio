@@ -7,6 +7,7 @@ import org.junit.Test;
 
 import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.charge.dom.Charge;
+import org.estatio.module.coda.dom.LineType;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 

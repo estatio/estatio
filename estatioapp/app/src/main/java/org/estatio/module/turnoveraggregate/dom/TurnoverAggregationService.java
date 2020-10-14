@@ -24,8 +24,8 @@ import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
-import org.estatio.module.turnover.dom.Status;
 import org.estatio.module.turnover.dom.Frequency;
+import org.estatio.module.turnover.dom.Status;
 import org.estatio.module.turnover.dom.Turnover;
 import org.estatio.module.turnover.dom.TurnoverReportingConfig;
 import org.estatio.module.turnover.dom.TurnoverReportingConfigRepository;
@@ -58,7 +58,13 @@ public class TurnoverAggregationService {
     public void aggregate(
             final Turnover changedTurnover
     ){
-        aggregate(changedTurnover.getDate(), changedTurnover.getConfig(), changedTurnover.getReportedAt(), false);
+        final TurnoverReportingConfig config = changedTurnover.getConfig();
+        final Lease lease = config.getOccupancy().getLease();
+        if (!config.getAggregationInitialized() && lease.getPrevious()!=null){
+            //ECP-1245: in order to avoid possible 'gaps' in aggregation creation when previous turnovers on previous lease
+            aggregateTurnoversForLease(lease, config.getEffectiveStartDate(), null, false);
+        }
+        aggregate(changedTurnover.getDate(), config, changedTurnover.getReportedAt(), false);
     }
 
     public void aggregateTurnoversForLease(final Lease lease, final LocalDate startDate, final LocalDate endDate, final boolean maintainOnly){

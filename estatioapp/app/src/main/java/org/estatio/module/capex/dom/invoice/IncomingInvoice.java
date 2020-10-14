@@ -30,6 +30,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.Lists;
 
+import org.apache.isis.applib.services.message.MessageService;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
@@ -1406,6 +1407,43 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
                 budgetItem);
     }
 
+    public IncomingInvoice editChargePeriod(
+            final List<InvoiceItem> invoiceItems,
+            @Nullable
+            final LocalDate chargeStartDate,
+            @Nullable
+            final LocalDate chargeEndDate) {
+        invoiceItems
+                .stream()
+                .map(IncomingInvoiceItem.class::cast)
+                .forEach(x -> {
+                    x.setChargeStartDate(chargeStartDate);
+                    x.setChargeEndDate(chargeEndDate);
+                    if (x.getBudgetItem()==null) {
+                        messageService.warnUser(String.format("Invoice item %d does not have a budget item", x.getSequence()));
+                    }
+                });
+        return this;
+    }
+
+    public List<InvoiceItem> default0EditChargePeriod() {
+        return new ArrayList<>(getItems());
+    }
+
+    public List<InvoiceItem> choices0EditChargePeriod() {
+        return new ArrayList<>(getItems());
+    }
+
+    public boolean hideEditChargePeriod() {
+        return hideEditBudgetItem();
+    }
+
+    public String validateEditChargePeriod(final List<InvoiceItem> invoiceItems, final LocalDate chargeStartDate, final LocalDate chargeEndDate) {
+        if (chargeStartDate==null && chargeEndDate!=null) return "Please fill in charge start date as well";
+        if (chargeStartDate!=null && chargeEndDate!=null && chargeEndDate.isBefore(chargeStartDate)) return "The charge end date cannot be before the start date";
+        return null;
+    }
+
     public IncomingInvoice editBudgetItem(final BudgetItem budgetItem, final LocalDate startDate, final LocalDate endDate) {
         Lists.newArrayList(getItems())
                 .stream()
@@ -2751,5 +2789,8 @@ public class IncomingInvoice extends Invoice<IncomingInvoice> implements SellerB
     IncomingInvoiceNotificationService notificationService;
 
     @Inject WrapperFactory wrapperFactory;
+
+    @Inject
+    MessageService messageService;
 
 }

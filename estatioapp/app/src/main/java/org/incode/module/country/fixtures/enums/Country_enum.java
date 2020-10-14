@@ -23,6 +23,7 @@ public enum Country_enum implements PersonaWithBuilderScript<Country, CountryBui
     NLD("NLD", "NL", "The Netherlands", ApplicationTenancy_enum.Nl),
     ITA("ITA", "IT", "Italy",           ApplicationTenancy_enum.It),
     FRA("FRA", "FR", "France",          ApplicationTenancy_enum.Fr),
+    BEL("BEL", "BE", "Belgium",         ApplicationTenancy_enum.FrBe),
     SWE("SWE", "SE", "Sweden",          ApplicationTenancy_enum.Se);
 
     private final String ref3;

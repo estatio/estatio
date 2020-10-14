@@ -51,8 +51,8 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.asset.dom.UnitRepository;
-import org.estatio.module.budget.dom.Distributable;
-import org.estatio.module.budget.dom.DistributionService;
+import org.estatio.module.base.dom.distribution.Distributable;
+import org.estatio.module.base.dom.distribution.DistributionService;
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationViewmodel;
@@ -218,7 +218,6 @@ public class KeyTable extends PartitioningTable {
         /*
         call distribute method
          */
-        DistributionService distributionService = new DistributionService();
         distributionService.distribute(input, getKeyValueMethod().divider(this), getPrecision());
 
         return this;
@@ -241,7 +240,6 @@ public class KeyTable extends PartitioningTable {
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     public KeyTable distributeSourceValues() {
 
-        DistributionService distributionService = new DistributionService();
         distributionService.distribute(new ArrayList(getItems()), getKeyValueMethod().divider(this), getPrecision());
 
         return this;
@@ -298,9 +296,8 @@ public class KeyTable extends PartitioningTable {
     @Action(restrictTo = RestrictTo.PROTOTYPING, semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     public KeyTable deleteItems() {
         for (KeyItem keyItem : getItems()) {
-            repositoryService.removeAndFlush(keyItem);
+            keyItem.deleteKeyItem();
         }
-
         return this;
     }
 
@@ -331,7 +328,8 @@ public class KeyTable extends PartitioningTable {
         return null;
     }
 
-    private String isAssignedReason(){
+    @Programmatic
+    public String isAssignedReason(){
         if (isAssignedForTypeReason(BudgetCalculationType.AUDITED)!=null){
             return isAssignedForTypeReason(BudgetCalculationType.AUDITED);
         }
@@ -377,4 +375,7 @@ public class KeyTable extends PartitioningTable {
     @Inject
     PartitionItemRepository partitionItemRepository;
 
+    @Inject
+    DistributionService distributionService;
+    
 }
