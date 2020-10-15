@@ -235,6 +235,17 @@ public class LeaseAmendment extends Agreement {
     }
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
+    public LeaseAmendment appliedManually(){
+        setState(LeaseAmendmentState.APPLIED);
+        setDateApplied(clockService.now());
+        return this;
+    }
+
+    public boolean hideAppliedManually(){
+        return !Arrays.asList(LeaseAmendmentState.SIGNED, LeaseAmendmentState.APPLY).contains(getState());
+    }
+
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     public LeaseAmendment createOrRenewLeasePreview(){
         if (getLeasePreview()!=null) getLeasePreview().remove("Replacing preview");
         leaseAmendmentService.getLeasePreviewFor(this);

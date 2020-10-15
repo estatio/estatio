@@ -29,6 +29,7 @@
                                     <ns2:fieldSet name="State" id="state">
                                         <ns2:action id="apply" position="PANEL"/>
                                         <ns2:action id="sign" position="PANEL"/>
+                                        <ns2:action id="appliedManually" position="PANEL_DROPDOWN"/>
                                         <ns2:property id="state"/>
                                         <ns2:property id="dateSigned">
                                             <ns2:action id="changeDateSigned" position="PANEL"/>
