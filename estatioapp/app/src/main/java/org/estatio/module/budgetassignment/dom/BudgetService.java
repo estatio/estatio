@@ -1,13 +1,19 @@
 package org.estatio.module.budgetassignment.dom;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.util.List;
 
 import javax.inject.Inject;
 
+import org.joda.time.LocalDate;
+
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
+
+import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budget.Status;
@@ -43,7 +49,6 @@ public class BudgetService {
         }
     }
 
-    @Programmatic
     private BudgetItem calculateAuditedValues(final BudgetItem budgetItem){
         final List<IncomingInvoiceItem> invoiceItemsForBudgetItem = incomingInvoiceItemRepository.findByBudgetItem(budgetItem);
         budgetItem.upsertValue(sumInvoiceNetAmount(invoiceItemsForBudgetItem), budgetItem.getBudget().getStartDate(), BudgetCalculationType.AUDITED);
@@ -55,6 +60,35 @@ public class BudgetService {
                 .filter(ii->ii.getNetAmount()!=null)
                 .map(ii -> ii.getNetAmount())
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    @Programmatic
+    public BigDecimal auditedValueForBudgetItemAndInterval(final BudgetItem budgetItem, final LocalDate startDate, final LocalDate endDate){
+        if (LocalDateInterval.including(startDate, endDate).isValid()){
+            return incomingInvoiceItemRepository.findByBudgetItem(budgetItem).stream()
+                    .map(ii-> netamountForInvoiceItemAndCalculationInterval(ii, LocalDateInterval.including(startDate, endDate)))
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        }
+        return null;
+    }
+
+    BigDecimal netamountForInvoiceItemAndCalculationInterval(final IncomingInvoiceItem invoiceItem, final LocalDateInterval calculationInterval){
+        // TODO: check with user the behaviour for charge start- and/or end date null
+        final LocalDateInterval chargeInterval = LocalDateInterval
+                .including(invoiceItem.getChargeStartDate(), invoiceItem.getChargeEndDate());
+        if (calculationInterval.overlaps(chargeInterval) && invoiceItem.getNetAmount()!=null){
+
+            if (calculationInterval.contains(chargeInterval)) return invoiceItem.getNetAmount();
+            if (chargeInterval.contains(calculationInterval)) return invoiceItem.getNetAmount();
+
+            final int denominator = chargeInterval.days();
+            final int numerator = chargeInterval.overlap(calculationInterval).days();
+            return invoiceItem.getNetAmount().multiply(BigDecimal.valueOf(numerator)).divide(BigDecimal.valueOf(denominator), MathContext.DECIMAL64).setScale(
+                    6, RoundingMode.HALF_UP);
+
+        }
+        return BigDecimal.ZERO;
     }
 
     @Inject OrderItemRepository orderItemRepository;
