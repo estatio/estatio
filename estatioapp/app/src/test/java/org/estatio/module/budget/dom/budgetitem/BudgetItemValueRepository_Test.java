@@ -73,7 +73,7 @@ public class BudgetItemValueRepository_Test {
             });
 
             // when
-            BudgetItemValue newBudgetItemValue = budgetItemValueRepository.newBudgetItemValue(budgetItem, value, date, type);
+            BudgetItemValue newBudgetItemValue = budgetItemValueRepository.createBudgetItemValue(budgetItem, value, date, type);
 
             // then
             assertThat(newBudgetItemValue.getBudgetItem()).isEqualTo(budgetItem);
@@ -103,7 +103,7 @@ public class BudgetItemValueRepository_Test {
             };
 
             // then
-            assertThat(budgetItemValueRepository.validateNewBudgetItemValue(budgetItem, null, date, type)).isEqualTo("Value cannot be empty");
+            assertThat(budgetItemValueRepository.validateCreateBudgetItemValue(budgetItem, null, date, type)).isEqualTo("Value cannot be empty");
 
             // and when
             budgetItemValueRepository = new BudgetItemValueRepository() {
@@ -114,7 +114,7 @@ public class BudgetItemValueRepository_Test {
             };
 
             // then
-            assertThat(budgetItemValueRepository.validateNewBudgetItemValue(budgetItem, null, date, type)).isEqualTo("Only one value of type BUDGETED is allowed");
+            assertThat(budgetItemValueRepository.validateCreateBudgetItemValue(budgetItem, null, date, type)).isEqualTo("Only one value of type BUDGETED is allowed");
         }
     }
 

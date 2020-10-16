@@ -81,11 +81,11 @@ public class BudgetItem_Test {
             context.checking(new Expectations(){{
                 oneOf(mockBudgetCalculationRepository).findByBudgetItemAndCalculationType(budgetItem, BudgetCalculationType.BUDGETED);
                 will(returnValue(Arrays.asList(calculation)));
-                oneOf(mockBudgetItemValueRepository).updateOrCreateBudgetItemValue(value, budgetItem, date, BudgetCalculationType.BUDGETED);
+                oneOf(mockBudgetItemValueRepository).upsert(budgetItem, value, date, BudgetCalculationType.BUDGETED);
             }});
 
             // when
-            budgetItem.updateOrCreateBudgetItemValue(value, date, BudgetCalculationType.BUDGETED);
+            budgetItem.upsertValue(value, date, BudgetCalculationType.BUDGETED);
 
         }
 
@@ -105,7 +105,7 @@ public class BudgetItem_Test {
             }});
 
             // when
-            budgetItem.updateOrCreateBudgetItemValue(new BigDecimal("100.00"), new LocalDate(2018,01,01), BudgetCalculationType.BUDGETED);
+            budgetItem.upsertValue(new BigDecimal("100.00"), new LocalDate(2018,01,01), BudgetCalculationType.BUDGETED);
 
         }
 

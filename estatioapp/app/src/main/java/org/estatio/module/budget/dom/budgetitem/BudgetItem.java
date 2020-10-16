@@ -141,12 +141,6 @@ public class BudgetItem extends UdoDomainObject2<BudgetItem>
     @Getter @Setter
     private SortedSet<BudgetItemValue> values = new TreeSet<>();
 
-    @Programmatic
-    public BudgetItem newValue(final BigDecimal value, final LocalDate date, final BudgetCalculationType type){
-        budgetItemValueRepository.newBudgetItemValue(this, value, date, type);
-        return this;
-    }
-
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     public BigDecimal getBudgetedValue() {
@@ -273,9 +267,9 @@ public class BudgetItem extends UdoDomainObject2<BudgetItem>
     }
 
     @Programmatic
-    public BudgetItem updateOrCreateBudgetItemValue(final BigDecimal value, final LocalDate date, final BudgetCalculationType type){
+    public BudgetItem upsertValue(final BigDecimal value, final LocalDate date, final BudgetCalculationType type){
         if (value!=null && !isAssignedForType(type)) {
-            budgetItemValueRepository.updateOrCreateBudgetItemValue(value, this, date, type);
+            budgetItemValueRepository.upsert( this, value, date, type);
         }
         return this;
     }

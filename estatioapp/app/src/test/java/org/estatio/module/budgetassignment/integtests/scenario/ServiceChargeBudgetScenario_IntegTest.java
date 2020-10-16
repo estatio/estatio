@@ -271,7 +271,7 @@ public class ServiceChargeBudgetScenario_IntegTest extends BudgetAssignmentModul
 
         // when adding audited values to budget items
         Lists.newArrayList(budget.getItems()).forEach(i->{
-            i.newValue(i.getBudgetedValue(), budget.getStartDate(), BudgetCalculationType.AUDITED);
+            i.upsertValue(i.getBudgetedValue(), budget.getStartDate(), BudgetCalculationType.AUDITED);
         });
         wrap(mixin(Budget_Reconcile.class, budget)).reconcile(false);
         calculations = budgetCalculationRepository.findByBudget(budget);

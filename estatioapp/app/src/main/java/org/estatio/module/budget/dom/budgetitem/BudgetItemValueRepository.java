@@ -41,7 +41,7 @@ public class BudgetItemValueRepository extends UdoDomainRepositoryAndFactory<Bud
         super(BudgetItemValueRepository.class, BudgetItemValue.class);
     }
 
-    public BudgetItemValue newBudgetItemValue(
+    public BudgetItemValue createBudgetItemValue(
             final BudgetItem budgetItem,
             final BigDecimal value,
             final LocalDate date,
@@ -49,7 +49,7 @@ public class BudgetItemValueRepository extends UdoDomainRepositoryAndFactory<Bud
         return repositoryService.persistAndFlush(new BudgetItemValue(budgetItem, date, type, value));
     }
 
-    public String validateNewBudgetItemValue(
+    public String validateCreateBudgetItemValue(
             final BudgetItem budgetItem,
             final BigDecimal value,
             final LocalDate date,
@@ -66,6 +66,16 @@ public class BudgetItemValueRepository extends UdoDomainRepositoryAndFactory<Bud
         return null;
     }
 
+    public BudgetItemValue upsert(final BudgetItem budgetItem, final BigDecimal value, final LocalDate date, final BudgetCalculationType type) {
+        BudgetItemValue itemValue = findUnique(budgetItem, date, type);
+        if (itemValue != null) {
+            itemValue.setValue(value);
+        } else {
+            itemValue = createBudgetItemValue(budgetItem, value, date, type);
+        }
+        return itemValue;
+    }
+
     public List<BudgetItemValue> findByBudgetItemAndType(final BudgetItem budgetItem, final BudgetCalculationType type) {
         return allMatches("findByBudgetItemAndType", "budgetItem", budgetItem, "type", type);
     }
@@ -76,16 +86,6 @@ public class BudgetItemValueRepository extends UdoDomainRepositoryAndFactory<Bud
 
     public List<BudgetItemValue> allBudgetItemValues() {
         return allInstances();
-    }
-
-    public BudgetItemValue updateOrCreateBudgetItemValue(final BigDecimal value, final BudgetItem budgetItem, final LocalDate date, final BudgetCalculationType type) {
-        BudgetItemValue itemValue = findUnique(budgetItem, date, type);
-        if (itemValue != null) {
-            itemValue.setValue(value);
-        } else {
-            itemValue = newBudgetItemValue(budgetItem, value, date, type);
-        }
-        return itemValue;
     }
 
     @Inject

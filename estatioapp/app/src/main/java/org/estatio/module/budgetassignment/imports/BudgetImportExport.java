@@ -171,8 +171,8 @@ public class BudgetImportExport implements Importable, FixtureAwareRowHandler<Bu
         budget.findOrCreatePartitioningForBudgeting();
         BudgetItem budgetItem = budget
                 .findOrCreateBudgetItem(incomingCharge)
-                .updateOrCreateBudgetItemValue(getBudgetedValue(), getBudgetStartDate(), BudgetCalculationType.BUDGETED)
-                .updateOrCreateBudgetItemValue(getAuditedValue(), getBudgetEndDate(), BudgetCalculationType.AUDITED);
+                .upsertValue(getBudgetedValue(), getBudgetStartDate(), BudgetCalculationType.BUDGETED)
+                .upsertValue(getAuditedValue(), getBudgetEndDate(), BudgetCalculationType.AUDITED);
         budgetItem.setCalculationDescription(getCalculationDescription());
         return budgetItem;
     }
