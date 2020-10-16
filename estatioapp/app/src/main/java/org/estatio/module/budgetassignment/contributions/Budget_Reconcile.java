@@ -16,7 +16,7 @@ import org.estatio.module.budget.dom.budget.Status;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationService;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResult;
-import org.estatio.module.budgetassignment.dom.service.BudgetAssignmentService;
+import org.estatio.module.budgetassignment.dom.BudgetAssignmentService;
 
 /**
  * This currently could be inlined into Budget, however it is incomplete and my suspicion is that eventually it

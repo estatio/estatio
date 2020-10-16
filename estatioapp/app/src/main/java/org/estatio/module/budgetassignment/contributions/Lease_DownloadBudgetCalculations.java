@@ -21,7 +21,7 @@ import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculation;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResult;
 import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResultRepository;
-import org.estatio.module.budgetassignment.dom.service.CalculationResultsForLeaseViewmodel;
+import org.estatio.module.budgetassignment.dom.calculationresult.CalculationResultsForLeaseViewmodel;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseItem;
 import org.estatio.module.lease.dom.LeaseItemType;

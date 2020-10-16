@@ -1,4 +1,4 @@
-package org.estatio.module.budgetassignment.dom.service;
+package org.estatio.module.budgetassignment.dom;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
