@@ -18,22 +18,8 @@ import org.estatio.module.budget.dom.partioning.PartitionItem;
 public class BudgetCalculationService {
 
     public List<BudgetCalculation> calculate(final Budget budget, final BudgetCalculationType type) {
-
         removeNewCalculationsOfType(budget, type);
-
-        List<BudgetCalculation> budgetCalculations = new ArrayList<>();
-        for (BudgetCalculationViewmodel result : getCalculationsForType(budget, type)){
-            budgetCalculations.add(
-                    budgetCalculationRepository.findOrCreateBudgetCalculation(
-                    result.getPartitionItem(),
-                    result.getItem(),
-                    result.getValue(),
-                    result.getCalculationType(),
-                    budget.getStartDate(),
-                    budget.getEndDate())
-            );
-        }
-        return budgetCalculations;
+        return getCalculationsForType(budget, type);
     }
 
     public void removeNewCalculationsOfType(final Budget budget, final BudgetCalculationType type) {
@@ -42,65 +28,57 @@ public class BudgetCalculationService {
         );
     }
 
-    public List<BudgetCalculationViewmodel> getCalculationsForType(final Budget budget, final BudgetCalculationType type){
-        List<BudgetCalculationViewmodel> budgetCalculationViewmodels = new ArrayList<>();
+    public List<BudgetCalculation> getCalculationsForType(final Budget budget, final BudgetCalculationType type){
+        List<BudgetCalculation> calculations = new ArrayList<>();
         for (BudgetItem budgetItem : budget.getItems()) {
-
-            budgetCalculationViewmodels.addAll(calculate(budgetItem, type));
-
+            calculations.addAll(calculate(budgetItem, type));
         }
-        return budgetCalculationViewmodels;
+        return calculations;
     }
 
-    public List<BudgetCalculationViewmodel> getAllCalculations(final Budget budget){
-        List<BudgetCalculationViewmodel> budgetCalculationViewmodels = new ArrayList<>();
+    public List<BudgetCalculation> getAllCalculations(final Budget budget){
+        List<BudgetCalculation> calculations = new ArrayList<>();
         for (BudgetItem budgetItem : budget.getItems()) {
-
-            budgetCalculationViewmodels.addAll(calculate(budgetItem, BudgetCalculationType.BUDGETED));
-            budgetCalculationViewmodels.addAll(calculate(budgetItem, BudgetCalculationType.AUDITED));
-
+            calculations.addAll(calculate(budgetItem, BudgetCalculationType.BUDGETED));
+            calculations.addAll(calculate(budgetItem, BudgetCalculationType.AUDITED));
         }
-        return budgetCalculationViewmodels;
+        return calculations;
     }
 
-    private List<BudgetCalculationViewmodel> calculate(final BudgetItem budgetItem, final BudgetCalculationType type) {
-
-        List<BudgetCalculationViewmodel> result = new ArrayList<>();
+    private List<BudgetCalculation> calculate(final BudgetItem budgetItem, final BudgetCalculationType type){
+        List<BudgetCalculation> result = new ArrayList<>();
         for (PartitionItem partitionItem : budgetItem.getPartitionItemsForType(type)) {
-
             result.addAll(calculate(partitionItem, type));
-
         }
-
         return result;
     }
 
-    private List<BudgetCalculationViewmodel> calculate(final PartitionItem partitionItem, final BudgetCalculationType type) {
+    private List<BudgetCalculation> calculate(final PartitionItem partitionItem, final BudgetCalculationType type) {
 
-        List<BudgetCalculationViewmodel> results = new ArrayList<>();
+        List<BudgetCalculation> results = new ArrayList<>();
 
         switch (type) {
-            case BUDGETED:
-                results.addAll(calculateForTotalAndType(partitionItem, partitionItem.getBudgetedValue(), BudgetCalculationType.BUDGETED));
+        case BUDGETED:
+            results.addAll(
+                    calculateForTotalAndType(partitionItem, partitionItem.getBudgetedValue(), BudgetCalculationType.BUDGETED));
             break;
 
-            case AUDITED:
-                if (partitionItem.getBudgetItem().getAuditedValue() != null) {
-                    results.addAll(calculateForTotalAndType(partitionItem, partitionItem.getAuditedValue(), BudgetCalculationType.AUDITED));
-                }
+        case AUDITED:
+            if (partitionItem.getBudgetItem().getAuditedValue() != null) {
+                results.addAll(
+                        calculateForTotalAndType(partitionItem, partitionItem.getAuditedValue(), BudgetCalculationType.AUDITED));
+            }
             break;
         }
 
         return results;
     }
 
-    private List<BudgetCalculationViewmodel> calculateForTotalAndType(final PartitionItem partitionItem, final BigDecimal partitionItemValue, final BudgetCalculationType calculationType) {
+    private List<BudgetCalculation> calculateForTotalAndType(final PartitionItem partitionItem, final BigDecimal partitionItemValue, final BudgetCalculationType calculationType) {
 
-        List<BudgetCalculationViewmodel> results = new ArrayList<>();
-
+        List<BudgetCalculation> results = new ArrayList<>();
         final PartitioningTable partitioningTable = partitionItem.getPartitioningTable();
-        results.addAll(partitioningTable.calculateFor(partitionItem, partitionItemValue, calculationType));
-
+        results.addAll(partitioningTable.calculateFor(partitionItem, partitionItemValue, calculationType, partitionItem.getBudget().getStartDate(), partitionItem.getBudget().getEndDate()));
         return results;
 
     }

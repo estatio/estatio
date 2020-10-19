@@ -17,10 +17,12 @@
 
 package org.estatio.module.budget.dom.keytable;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
+import org.joda.time.LocalDate;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -29,8 +31,10 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.incode.module.unittestsupport.dom.bean.AbstractBeanPropertiesTest;
 
 import org.estatio.module.budget.dom.budget.Budget;
+import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationRepository;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
+import org.estatio.module.budget.dom.keyitem.KeyItem;
 import org.estatio.module.budget.dom.partioning.PartitionItem;
 import org.estatio.module.budget.dom.partioning.PartitionItemRepository;
 import org.estatio.module.budget.dom.partioning.Partitioning;
@@ -156,6 +160,55 @@ public class KeyTable_Test {
 
             // then
             assertThat(reason).isEqualTo("some reason");
+
+        }
+
+        @Mock BudgetCalculationRepository mockBudgetCalculationRepository;
+
+        @Test
+        public void calculateFor_works() throws Exception {
+
+            // given
+            final BigDecimal partitionItemValue = new BigDecimal("1234.56");
+            final BudgetCalculationType budgetCalculationType = BudgetCalculationType.BUDGETED;
+            final KeyTable keyTable = new KeyTable();
+            keyTable.budgetCalculationRepository = mockBudgetCalculationRepository;
+            keyTable.setKeyValueMethod(KeyValueMethod.PROMILLE);
+            keyTable.setPrecision(6);
+
+            KeyItem keyItem1 = new KeyItem();
+            keyItem1.setValue(new BigDecimal("1.00"));
+            keyTable.getItems().add(keyItem1);
+
+            KeyItem keyItem2 = new KeyItem();
+            keyItem2.setValue(new BigDecimal("2.00"));
+            keyTable.getItems().add(keyItem2);
+
+            PartitionItem partitionItem = new PartitionItem();
+
+            LocalDate calcStartDate = new LocalDate(2019,1,1);
+            LocalDate calcEndDate = new LocalDate(2019,12,31);
+
+            // expect
+            context.checking(new Expectations(){{
+                oneOf(mockBudgetCalculationRepository).findOrCreateBudgetCalculation(
+                        partitionItem
+                        , keyItem1
+                        , new BigDecimal("1.234560")
+                        , BudgetCalculationType.BUDGETED
+                        , calcStartDate
+                        , calcEndDate);
+                oneOf(mockBudgetCalculationRepository).findOrCreateBudgetCalculation(
+                        partitionItem
+                        , keyItem2
+                        , new BigDecimal("2.469120")
+                        , BudgetCalculationType.BUDGETED
+                        , calcStartDate
+                        , calcEndDate);
+            }});
+
+            // when
+            keyTable.calculateFor(partitionItem, partitionItemValue, budgetCalculationType, calcStartDate, calcEndDate);
 
         }
 

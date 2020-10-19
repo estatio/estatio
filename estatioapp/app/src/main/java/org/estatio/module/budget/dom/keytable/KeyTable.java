@@ -34,6 +34,8 @@ import javax.jdo.annotations.Persistent;
 
 import com.google.common.collect.Lists;
 
+import org.joda.time.LocalDate;
+
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.CollectionLayout;
@@ -54,8 +56,9 @@ import org.estatio.module.asset.dom.UnitRepository;
 import org.estatio.module.base.dom.distribution.Distributable;
 import org.estatio.module.base.dom.distribution.DistributionService;
 import org.estatio.module.budget.dom.budget.Budget;
+import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculation;
+import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationRepository;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
-import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationViewmodel;
 import org.estatio.module.budget.dom.keyitem.KeyItem;
 import org.estatio.module.budget.dom.keyitem.KeyItemRepository;
 import org.estatio.module.budget.dom.partioning.PartitionItem;
@@ -347,18 +350,27 @@ public class KeyTable extends PartitioningTable {
 
     @Programmatic
     @Override
-    public List<BudgetCalculationViewmodel> calculateFor(final PartitionItem partitionItem, final BigDecimal partitionItemValue, final BudgetCalculationType type) {
+    public List<BudgetCalculation> calculateFor(
+            final PartitionItem partitionItem,
+            final BigDecimal partitionItemValue,
+            final BudgetCalculationType type,
+            final LocalDate calculationStartDate,
+            final LocalDate calculationEndDate) {
         BigDecimal divider = getKeyValueMethod().divider(this);
-        List<BudgetCalculationViewmodel> results = new ArrayList<>();
+        List<BudgetCalculation> results = new ArrayList<>();
         Lists.newArrayList(getItems()).stream().forEach(i->{
-            results.add(new BudgetCalculationViewmodel(
-                    partitionItem,
-                    i,
-                    partitionItemValue.multiply(i.getValue())
-                    .divide(divider, MathContext.DECIMAL64)
-                    .setScale(getPrecision(), BigDecimal.ROUND_HALF_UP),
-                    type
-            ));
+            final BudgetCalculation budgetCalculation = budgetCalculationRepository
+                    .findOrCreateBudgetCalculation(
+                            partitionItem,
+                            i,
+                            partitionItemValue.multiply(i.getValue())
+                                    .divide(divider, MathContext.DECIMAL64)
+                                    .setScale(getPrecision(), BigDecimal.ROUND_HALF_UP),
+                            type,
+                            calculationStartDate,
+                            calculationEndDate
+                    );
+            results.add(budgetCalculation);
         });
         return results;
     }
@@ -377,5 +389,7 @@ public class KeyTable extends PartitioningTable {
 
     @Inject
     DistributionService distributionService;
-    
+
+    @Inject
+    BudgetCalculationRepository budgetCalculationRepository;
 }

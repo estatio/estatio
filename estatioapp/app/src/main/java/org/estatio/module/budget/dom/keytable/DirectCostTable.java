@@ -32,6 +32,8 @@ import javax.jdo.annotations.Persistent;
 
 import com.google.common.collect.Lists;
 
+import org.joda.time.LocalDate;
+
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.CollectionLayout;
@@ -51,8 +53,9 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.asset.dom.UnitRepository;
 import org.estatio.module.budget.dom.budget.Budget;
+import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculation;
+import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationRepository;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
-import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationViewmodel;
 import org.estatio.module.budget.dom.keyitem.DirectCost;
 import org.estatio.module.budget.dom.keyitem.DirectCostRepository;
 import org.estatio.module.budget.dom.partioning.PartitionItem;
@@ -218,31 +221,42 @@ public class DirectCostTable extends PartitioningTable {
 
     @Programmatic
     @Override
-    public List<BudgetCalculationViewmodel> calculateFor(final PartitionItem partitionItem, final BigDecimal partitionItemValue, final BudgetCalculationType type) {
-        List<BudgetCalculationViewmodel> results = new ArrayList<>();
+    public List<BudgetCalculation> calculateFor(
+            final PartitionItem partitionItem,
+            final BigDecimal partitionItemValue,
+            final BudgetCalculationType type,
+            final LocalDate calculationStartDate,
+            final LocalDate calculationEndDate) {
+        List<BudgetCalculation> results = new ArrayList<>();
         Lists.newArrayList(getItems()).stream().forEach(i->{
             switch (type){
             case BUDGETED:
                 if (i.getBudgetedCost()!=null){
-                    results.add(new BudgetCalculationViewmodel(
-                            partitionItem,
-                            i,
-                            i.getBudgetedCost(),
-                            type
-                    ));
+                    final BudgetCalculation createBudgetCalculation = budgetCalculationRepository
+                            .findOrCreateBudgetCalculation(
+                                    partitionItem,
+                                    i,
+                                    i.getBudgetedCost(),
+                                    type,
+                                    calculationStartDate,
+                                    calculationEndDate
+                            );
+                    results.add(createBudgetCalculation);
                 }
             case AUDITED:
                 if (i.getAuditedCost()!=null){
-                    results.add(new BudgetCalculationViewmodel(
-                            partitionItem,
-                            i,
-                            i.getAuditedCost(),
-                            type
-                    ));
+                    final BudgetCalculation createBudgetCalculation = budgetCalculationRepository
+                            .findOrCreateBudgetCalculation(
+                                    partitionItem,
+                                    i,
+                                    i.getAuditedCost(),
+                                    type,
+                                    calculationStartDate,
+                                    calculationEndDate
+                            );
+                    results.add(createBudgetCalculation);
                 }
-
             }
-
         });
         return results;
     }
@@ -258,5 +272,8 @@ public class DirectCostTable extends PartitioningTable {
 
     @Inject
     UnitRepository unitRepository;
+
+    @Inject
+    BudgetCalculationRepository budgetCalculationRepository;
 
 }
