@@ -28,7 +28,9 @@ public class BudgetCalculationService {
                     result.getPartitionItem(),
                     result.getItem(),
                     result.getValue(),
-                    result.getCalculationType())
+                    result.getCalculationType(),
+                    budget.getStartDate(),
+                    budget.getEndDate())
             );
         }
         return budgetCalculations;

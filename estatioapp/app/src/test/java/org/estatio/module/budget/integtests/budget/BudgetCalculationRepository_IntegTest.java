@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -54,13 +55,18 @@ public class BudgetCalculationRepository_IntegTest extends BudgetModuleIntegTest
         @Test
         public void happyCase() throws Exception {
             // given
+            Budget oxfBudget2015 = OxfBudget2015.findUsing(serviceRegistry);
+            final LocalDate calculationStartDate = oxfBudget2015.getStartDate();
+            final LocalDate calculationEndDate = oxfBudget2015.getEndDate();
+
             PartitionItem partitionItem = partitionItemRepository.allPartitionItems().get(0);
             final KeyTable keyTable = (KeyTable) partitionItem.getPartitioningTable();
             KeyItem keyItem = keyTable.getItems().first();
-            BudgetCalculation newBudgetCalculation = budgetCalculationRepository.createBudgetCalculation(partitionItem, keyItem, BigDecimal.ZERO, BudgetCalculationType.BUDGETED);
+            BudgetCalculation newBudgetCalculation = budgetCalculationRepository.createBudgetCalculation(partitionItem, keyItem, BigDecimal.ZERO, BudgetCalculationType.BUDGETED,
+                    calculationStartDate, calculationEndDate);
 
             // when
-            BudgetCalculation budgetCalculation = budgetCalculationRepository.findUnique(partitionItem, keyItem, BudgetCalculationType.BUDGETED);
+            BudgetCalculation budgetCalculation = budgetCalculationRepository.findUnique(partitionItem, keyItem, BudgetCalculationType.BUDGETED, calculationStartDate, calculationEndDate);
 
             // then
             assertThat(budgetCalculation).isEqualTo(newBudgetCalculation);

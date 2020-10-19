@@ -21,7 +21,6 @@ package org.estatio.module.budget.dom.budgetcalculation;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 
-import javax.inject.Inject;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.DatastoreIdentity;
 import javax.jdo.annotations.IdGeneratorStrategy;
@@ -34,6 +33,8 @@ import javax.jdo.annotations.Unique;
 import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
 
+import org.joda.time.LocalDate;
+
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Auditing;
@@ -44,7 +45,6 @@ import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.Publishing;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
-import org.apache.isis.applib.services.repository.RepositoryService;
 import org.apache.isis.applib.services.timestamp.Timestampable;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
@@ -80,7 +80,9 @@ import lombok.Setter;
                         "FROM org.estatio.module.budget.dom.budgetcalculation.BudgetCalculation " +
                         "WHERE partitionItem == :partitionItem " +
                         "&& tableItem == :tableItem " +
-                        "&& calculationType == :calculationType"),
+                        "&& calculationType == :calculationType "
+                        + "&& calculationStartDate == :calculationStartDate "
+                        + "&& calculationEndDate == :calculationEndDate "),
         @Query(
                 name = "findByPartitionItemAndCalculationType", language = "JDOQL",
                 value = "SELECT " +
@@ -130,7 +132,7 @@ import lombok.Setter;
         @Index(name = "BudgetCalculation_budget_unit_invoiceCharge_incomingCharge_type_IDX",
                 members = { "budget", "unit", "invoiceCharge", "incomingCharge", "calculationType" })
 })
-@Unique(name = "BudgetCalculation_partitionItem_tableItem_calculationType_UNQ", members = {"partitionItem", "tableItem", "calculationType"})
+@Unique(name = "BudgetCalculation_partitionItem_tableItem_type_startDate_endDate_UNQ", members = {"partitionItem", "tableItem", "calculationType", "calculationStartDate", "calculationEndDate"})
 @DomainObject(
         auditing = Auditing.DISABLED,
         publishing = Publishing.DISABLED,
@@ -154,6 +156,14 @@ public class BudgetCalculation extends UdoDomainObject2<BudgetCalculation>
     @Getter @Setter
     @Column(allowsNull = "false", scale = 6)
     private BigDecimal value;
+
+    @Getter @Setter
+    @Column(allowsNull = "false")
+    private LocalDate calculationStartDate;
+
+    @Getter @Setter
+    @Column(allowsNull = "false")
+    private LocalDate calculationEndDate;
 
     @Getter @Setter
     @Column(allowsNull = "false", name="partitionItemId")
@@ -222,8 +232,5 @@ public class BudgetCalculation extends UdoDomainObject2<BudgetCalculation>
     public void finalizeCalculation() {
         setStatus(Status.ASSIGNED);
     }
-
-    @Inject
-    RepositoryService repositoryService;
 
 }

@@ -23,6 +23,7 @@ import javax.inject.Inject;
 
 import com.google.common.collect.Lists;
 
+import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -83,6 +84,8 @@ public class DirectCostCalculation_IntegTest extends BudgetAssignmentModuleInteg
 
         // given
         final Budget budget = Budget_enum.OxfDirectCostBudget2015.findUsing(serviceRegistry);
+        final LocalDate calculationStartDate = budget.getStartDate();
+        final LocalDate calculationEndDate = budget.getEndDate();
         // when
         wrap(mixin(Budget_Calculate.class, budget)).calculate(false);
         // then
@@ -99,7 +102,7 @@ public class DirectCostCalculation_IntegTest extends BudgetAssignmentModuleInteg
         final DirectCost directCost = Lists.newArrayList(budget.getDirectCostTables().first().getItems()).get(2);
         assertThat(directCost.getBudgetedCost()).isNull();
 
-        BudgetCalculation nonCalculated = budgetCalculationRepository.findUnique(budget.getItems().first().getPartitionItems().get(0), directCost, BudgetCalculationType.BUDGETED);
+        BudgetCalculation nonCalculated = budgetCalculationRepository.findUnique(budget.getItems().first().getPartitionItems().get(0), directCost, BudgetCalculationType.BUDGETED, calculationStartDate, calculationEndDate);
         assertThat(nonCalculated).isNull();
     }
 
