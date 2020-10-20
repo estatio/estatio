@@ -63,7 +63,7 @@ public class BudgetService {
     }
 
     @Programmatic
-    public BigDecimal auditedValueForBudgetItemAndInterval(final BudgetItem budgetItem, final LocalDate startDate, final LocalDate endDate){
+    public BigDecimal auditedValueForBudgetItemAndCalculationInterval(final BudgetItem budgetItem, final LocalDate startDate, final LocalDate endDate){
         if (LocalDateInterval.including(startDate, endDate).isValid()){
             return incomingInvoiceItemRepository.findByBudgetItem(budgetItem).stream()
                     .map(ii-> netamountForInvoiceItemAndCalculationInterval(ii, LocalDateInterval.including(startDate, endDate)))

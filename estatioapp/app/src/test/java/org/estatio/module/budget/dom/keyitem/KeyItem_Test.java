@@ -79,40 +79,6 @@ public class KeyItem_Test {
     }
 
     @Test
-    public void testChangeAuditedValue(){
-
-        // given
-        KeyTable table = new KeyTable();
-        table.setPrecision(3);
-        KeyItem item = new KeyItem();
-        item.setAuditedValue(new BigDecimal(2));
-        item.setPartitioningTable(table);
-        assertTrue(item.getAuditedValue().equals(new BigDecimal(2)));
-
-        //when
-        item.changeAuditedValue(BigDecimal.valueOf(2.3335));
-
-        //then
-        assertEquals(item.getAuditedValue(),BigDecimal.valueOf(2.334).setScale(3, BigDecimal.ROUND_HALF_UP));
-
-    }
-
-    @Test
-    public void testValidateChangeAuditedValue(){
-
-        // given
-        KeyTable table = new KeyTable();
-        table.setPrecision(3);
-        KeyItem item = new KeyItem();
-        item.setAuditedValue(new BigDecimal(2));
-        item.setPartitioningTable(table);
-        assertTrue(item.getAuditedValue().equals(new BigDecimal(2)));
-
-        //when, then
-        assertEquals(item.validateChangeAuditedValue(BigDecimal.valueOf(-0.001)),"Value cannot be less than zero");
-    }
-
-    @Test
     public void testChangeSourceValue(){
 
         // given

@@ -212,7 +212,7 @@ public class BudgetService_Test {
 
         // when
         final BigDecimal returnValue = service
-                .auditedValueForBudgetItemAndInterval(budgetItem, calculationStartDate, calculationEndDate);
+                .auditedValueForBudgetItemAndCalculationInterval(budgetItem, calculationStartDate, calculationEndDate);
         Assertions.assertThat(returnValue).isEqualTo(new BigDecimal("1246.912000"));
 
     }

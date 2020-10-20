@@ -22,12 +22,8 @@
                 <ns2:property id="sourceValue">
                     <ns2:action id="changeSourceValue" position="BELOW"/>
                 </ns2:property>
-                <ns2:property id="divCalculatedSourceValue"/>
                 <ns2:property id="value">
                     <ns2:action id="changeValue" position="BELOW"/>
-                </ns2:property>
-                <ns2:property id="auditedValue">
-                    <ns2:action id="changeAuditedValue" position="BELOW"/>
                 </ns2:property>
             </ns2:fieldSet>
             <ns2:fieldSet name="Metadata" id="metadata">

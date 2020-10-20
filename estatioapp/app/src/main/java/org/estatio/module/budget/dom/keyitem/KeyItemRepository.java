@@ -25,6 +25,8 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.services.registry.ServiceRegistry2;
+import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
@@ -45,12 +47,13 @@ public class KeyItemRepository extends UdoDomainRepositoryAndFactory<KeyItem> {
             final Unit unit,
             final BigDecimal sourceValue,
             final BigDecimal keyValue) {
-        KeyItem keyItem = newTransientInstance();
+        KeyItem keyItem = new KeyItem();
         keyItem.setPartitioningTable(keyTable);
         keyItem.setUnit(unit);
         keyItem.setSourceValue(sourceValue);
         keyItem.setValue(keyValue);
-        persistIfNotAlready(keyItem);
+        repositoryService.persistAndFlush(keyItem);
+        serviceRegistry2.injectServicesInto(keyItem);
 
         return keyItem;
     }
@@ -94,4 +97,8 @@ public class KeyItemRepository extends UdoDomainRepositoryAndFactory<KeyItem> {
 
     @Inject
     PartitioningTableItemRepository partitioningTableItemRepository;
+
+    @Inject ServiceRegistry2 serviceRegistry2;
+
+    @Inject RepositoryService repositoryService;
 }

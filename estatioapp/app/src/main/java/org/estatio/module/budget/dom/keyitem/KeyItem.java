@@ -24,12 +24,12 @@ import java.math.RoundingMode;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
-import javax.validation.constraints.Digits;
 
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
@@ -68,7 +68,7 @@ public class KeyItem extends PartitioningTableItem
     }
 
     public KeyItem(){
-        super("partitioningTable, unit, sourceValue, value, auditedValue");
+        super("partitioningTable, unit, sourceValue, value");
     }
 
     @Column(allowsNull = "false", scale = 6)
@@ -117,36 +117,6 @@ public class KeyItem extends PartitioningTableItem
         return null;
     }
 
-    //region > auditedValue (property)
-    @Column(allowsNull = "true", scale = 6)
-    @PropertyLayout(hidden = Where.EVERYWHERE)
-    @Getter @Setter
-    private BigDecimal auditedValue;
-
-    @ActionLayout(hidden = Where.EVERYWHERE)
-    public KeyItem changeAuditedValue(final BigDecimal auditedKeyValue) {
-        KeyTable keyTable = (KeyTable) getPartitioningTable();
-        setAuditedValue(auditedKeyValue.setScale(keyTable.getPrecision(), BigDecimal.ROUND_HALF_UP));
-        return this;
-    }
-
-    public BigDecimal default0ChangeAuditedValue(final BigDecimal auditedKeyValue) {
-        if (getAuditedValue()!=null) {
-            KeyTable keyTable = (KeyTable) getPartitioningTable();
-        return getAuditedValue().setScale(keyTable.getPrecision(), BigDecimal.ROUND_HALF_UP);
-        } else {
-            return BigDecimal.ZERO;
-        }
-    }
-
-    public String validateChangeAuditedValue(final BigDecimal auditedKeyValue) {
-        if (auditedKeyValue.compareTo(BigDecimal.ZERO) < 0) {
-            return "Value cannot be less than zero";
-        }
-        return null;
-    }
-    //endregion
-
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     public KeyTable deleteKeyItem() {
         KeyTable keyTable = (KeyTable) this.getPartitioningTable();
@@ -166,8 +136,7 @@ public class KeyItem extends PartitioningTableItem
         return getPartitioningTable().getApplicationTenancy();
     }
 
-    @Digits(integer = 13, fraction = 6)
-    @Action(semantics = SemanticsOf.SAFE)
+    @Programmatic
     public BigDecimal getDivCalculatedSourceValue(){
         KeyTable keyTable = (KeyTable) getPartitioningTable();
         if (keyTable.getFoundationValueType() == FoundationValueType.AREA) {
@@ -176,8 +145,4 @@ public class KeyItem extends PartitioningTableItem
         return BigDecimal.ZERO;
     }
 
-    public boolean hideDivCalculatedSourceValue(){
-        KeyTable keyTable = (KeyTable) getPartitioningTable();
-        return keyTable.getFoundationValueType()!= FoundationValueType.AREA;
-    }
 }

@@ -37,9 +37,7 @@ import com.google.common.collect.Lists;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.CollectionLayout;
-import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Programmatic;
@@ -56,6 +54,7 @@ import org.estatio.module.asset.dom.UnitRepository;
 import org.estatio.module.base.dom.distribution.Distributable;
 import org.estatio.module.base.dom.distribution.DistributionService;
 import org.estatio.module.budget.dom.budget.Budget;
+import org.estatio.module.budget.dom.budget.Status;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculation;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationRepository;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
@@ -84,108 +83,19 @@ public class KeyTable extends PartitioningTable {
     @Getter @Setter
     private FoundationValueType foundationValueType;
 
-    @Action(semantics = SemanticsOf.IDEMPOTENT)
-    public KeyTable changeFoundationValueType(
-            final FoundationValueType foundationValueType) {
-        setFoundationValueType(foundationValueType);
-        return this;
-    }
-
-    public FoundationValueType default0ChangeFoundationValueType(final FoundationValueType foundationValueType) {
-        return getFoundationValueType();
-    }
-
-    public String validateChangeFoundationValueType(final FoundationValueType foundationValueType) {
-        if (foundationValueType.equals(null)) {
-            return "Foundation value type can't be empty";
-        }
-        return null;
-    }
-
-    public String disableChangeFoundationValueType(){
-        return isAssignedReason();
-    }
-
     @Column(allowsNull = "false")
     @Getter @Setter
     private KeyValueMethod keyValueMethod;
-
-    @Action(semantics = SemanticsOf.IDEMPOTENT)
-    public KeyTable changeKeyValueMethod(
-            final KeyValueMethod keyValueMethod) {
-        setKeyValueMethod(keyValueMethod);
-        return this;
-    }
-
-    public KeyValueMethod default0ChangeKeyValueMethod(final KeyValueMethod keyValueMethod) {
-        return getKeyValueMethod();
-    }
-
-    public String validateChangeKeyValueMethod(final KeyValueMethod keyValueMethod) {
-        if (keyValueMethod.equals(null)) {
-            return "Key value method can't be empty";
-        }
-        return null;
-    }
-
-    public String disableChangeKeyValueMethod(){
-        return isAssignedReason();
-    }
 
     @PropertyLayout(hidden = Where.EVERYWHERE)
     @Column(allowsNull = "false")
     @Getter @Setter
     private Integer precision;
 
-    @Action(semantics = SemanticsOf.IDEMPOTENT)
-    @ActionLayout(hidden = Where.EVERYWHERE)
-    public KeyTable changePrecision(
-            final Integer numberOfDigits) {
-        setPrecision(numberOfDigits);
-        return this;
-    }
-
-    public Integer default0ChangePrecision(final Integer numberOfDigits) {
-        return getPrecision();
-    }
-
-    public String validateChangePrecision(final Integer numberOfDigits) {
-        if (numberOfDigits < 0 || numberOfDigits > 6) {
-            return "Number Of Digits must have a value between 0 and 6";
-        }
-        return null;
-    }
-
-    public String disableChangePrecision(){
-        return isAssignedReason();
-    }
-
     @CollectionLayout(defaultView = "table")
     @Persistent(mappedBy = "partitioningTable", dependentElement = "true")
     @Getter @Setter
     private SortedSet<KeyItem> items = new TreeSet<>();
-
-    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
-    @ActionLayout(contributed = Contributed.AS_ACTION)
-    public KeyItem newItem(
-            final Unit unit,
-            final BigDecimal sourceValue,
-            final BigDecimal keyValue) {
-
-        return keyItemRepository.newItem(this, unit, sourceValue, keyValue);
-    }
-
-    public String validateNewItem(
-            final Unit unit,
-            final BigDecimal sourceValue,
-            final BigDecimal keyValue) {
-
-        return keyItemRepository.validateNewItem(this, unit, sourceValue, keyValue);
-    }
-
-    public String disableNewItem(){
-        return isAssignedReason();
-    }
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     public KeyTable generateItems() {
@@ -260,24 +170,8 @@ public class KeyTable extends PartitioningTable {
         return getBudget().getProperty().getApplicationTenancy();
     }
 
-    // //////////////////////////////////////
-    @PropertyLayout(hidden = Where.EVERYWHERE)
-    public boolean isValid() {
-        return (this.isValidForKeyValues() && this.isValidForUnits());
-    }
-
     public boolean isValidForKeyValues() {
         return getKeyValueMethod().isValid(this);
-    }
-
-    @PropertyLayout(hidden = Where.EVERYWHERE)
-    public boolean isValidForUnits() {
-        for (KeyItem item : this.getItems()) {
-            if (!this.unitIntervalValidForThisKeyTable(item.getUnit())) {
-                return false;
-            }
-        }
-        return true;
     }
 
     @Programmatic
@@ -289,7 +183,7 @@ public class KeyTable extends PartitioningTable {
     public KeyTable createCopyFor(final Budget newBudget) {
         KeyTable newKeyTableCopy = newBudget.createKeyTable(getName(), getFoundationValueType(), getKeyValueMethod());
         for (KeyItem item : getItems()){
-            newKeyTableCopy.newItem(item.getUnit(), item.getSourceValue(), item.getValue());
+            keyItemRepository.newItem(newKeyTableCopy, item.getUnit(), item.getSourceValue(), item.getValue());
         }
         return newKeyTableCopy;
     }
@@ -305,16 +199,29 @@ public class KeyTable extends PartitioningTable {
     }
 
     @Programmatic
-    public List<PartitionItem> usedInPartitionItems(){
-        List<PartitionItem> result = new ArrayList<>();
+    public boolean usedInPartitionItem(){
         for (Partitioning partitioning : getBudget().getPartitionings()) {
             for (PartitionItem partitionItem : partitioning.getItems()) {
                 if (partitionItem.getPartitioningTable()==this){
-                    result.add(partitionItem);
+                    return true;
                 }
             }
         }
-        return result;
+        return false;
+    }
+
+    @Programmatic
+    public boolean usedInPartitionItemForBudgeted(){
+        for (Partitioning partitioning : getBudget().getPartitionings()) {
+            if (partitioning.getType()==BudgetCalculationType.BUDGETED) {
+                for (PartitionItem partitionItem : partitioning.getItems()) {
+                    if (partitionItem.getPartitioningTable() == this) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
@@ -325,7 +232,7 @@ public class KeyTable extends PartitioningTable {
     }
 
     public String disableRemove(){
-        if (!usedInPartitionItems().isEmpty()){
+        if (usedInPartitionItem()){
             return "Please remove partition items that use this keytable first";
         }
         return null;
@@ -333,18 +240,8 @@ public class KeyTable extends PartitioningTable {
 
     @Programmatic
     public String isAssignedReason(){
-        if (isAssignedForTypeReason(BudgetCalculationType.AUDITED)!=null){
-            return isAssignedForTypeReason(BudgetCalculationType.AUDITED);
-        }
-        return isAssignedForTypeReason(BudgetCalculationType.BUDGETED);
-    }
-
-    String isAssignedForTypeReason(final BudgetCalculationType budgetCalculationType){
-        for (PartitionItem partitionItem : partitionItemRepository.findByPartitioningTable(this)){
-            if (partitionItem.getBudgetItem().isAssignedForType(budgetCalculationType)){
-                return partitionItem.getBudgetItem().isAssignedForTypeReason(budgetCalculationType);
-            }
-        }
+        if (getBudget().getStatus()==Status.RECONCILED) return "The budget is reconciled";
+        if (getBudget().getStatus()== Status.ASSIGNED && usedInPartitionItemForBudgeted()) return "The budget is assigned";
         return null;
     }
 
