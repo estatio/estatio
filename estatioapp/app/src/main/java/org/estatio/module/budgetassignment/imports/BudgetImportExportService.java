@@ -178,7 +178,7 @@ public class BudgetImportExportService {
 
 
         WorksheetSpec spec1 = new WorksheetSpec(BudgetImportExport.class, "budget");
-        WorksheetSpec spec2 = new WorksheetSpec(KeyItemImportExportLineItem.class, "keyItems");
+        WorksheetSpec spec2 = new WorksheetSpec(KeyItemImportExportLine.class, "keyItems");
         WorksheetSpec spec3 = new WorksheetSpec(DirectCostLine.class, "directCosts");
         List<List<?>> objects =
                 excelService.fromExcel(spreadsheet, Arrays.asList(spec1, spec2, spec3));
@@ -235,33 +235,33 @@ public class BudgetImportExportService {
     private void importKeyTables(final List<BudgetImportExport> budgetItemLines, final List<List<?>> objects, final Budget budget){
 
         List<KeyTable> keyTablesToImport = keyTablesToImport(budgetItemLines, budget);
-        List<KeyItemImportExportLineItem> keyItemLines = (List<KeyItemImportExportLineItem>) objects.get(1);
+        List<KeyItemImportExportLine> keyItemLines = (List<KeyItemImportExportLine>) objects.get(1);
 
         // filter case where no key items are filled in
         if (keyItemLines.size() == 0) {return;}
 
         for (KeyTable keyTable : keyTablesToImport){
-            List<KeyItemImportExportLineItem> itemsToImportForKeyTable = new ArrayList<>();
-            for (KeyItemImportExportLineItem keyItemLine : keyItemLines){
+            List<KeyItemImportExportLine> itemsToImportForKeyTable = new ArrayList<>();
+            for (KeyItemImportExportLine keyItemLine : keyItemLines){
                 if (keyItemLine.getKeyTableName().equals(keyTable.getName())){
-                    itemsToImportForKeyTable.add(new KeyItemImportExportLineItem(keyItemLine));
+                    itemsToImportForKeyTable.add(new KeyItemImportExportLine(keyItemLine));
                 }
             }
             for (KeyItem keyItem : keyTable.getItems()) {
                 Boolean keyItemFound = false;
-                for (KeyItemImportExportLineItem lineItem : itemsToImportForKeyTable){
+                for (KeyItemImportExportLine lineItem : itemsToImportForKeyTable){
                     if (lineItem.getUnitReference().equals(keyItem.getUnit().getReference())){
                         keyItemFound = true;
                         break;
                     }
                 }
                 if (!keyItemFound) {
-                    KeyItemImportExportLineItem deletedItem = new KeyItemImportExportLineItem(keyItem, null);
+                    KeyItemImportExportLine deletedItem = new KeyItemImportExportLine(keyItem, null);
                     deletedItem.setStatus(Status.DELETED);
                     itemsToImportForKeyTable.add(deletedItem);
                 }
             }
-            for (KeyItemImportExportLineItem item : itemsToImportForKeyTable){
+            for (KeyItemImportExportLine item : itemsToImportForKeyTable){
                 serviceRegistry2.injectServicesInto(item);
                 item.validate();
                 item.apply();

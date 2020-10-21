@@ -42,10 +42,10 @@ import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.PropertyLayout;
-import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.repository.RepositoryService;
+import org.apache.isis.applib.services.xactn.TransactionService3;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
@@ -61,7 +61,6 @@ import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.module.budget.dom.keyitem.KeyItem;
 import org.estatio.module.budget.dom.keyitem.KeyItemRepository;
 import org.estatio.module.budget.dom.partioning.PartitionItem;
-import org.estatio.module.budget.dom.partioning.PartitionItemRepository;
 import org.estatio.module.budget.dom.partioning.Partitioning;
 
 import lombok.Getter;
@@ -102,6 +101,7 @@ public class KeyTable extends PartitioningTable {
 
         //delete old items
         deleteItems();
+        transactionService3.nextTransaction();
 
         /*
         create list of input pairs: identifier - sourcevalue
@@ -144,7 +144,7 @@ public class KeyTable extends PartitioningTable {
     }
 
     public String disableGenerateItems(){
-        return isAssignedReason();
+        return isImmutableReason();
     }
 
     // //////////////////////////////////////
@@ -152,14 +152,16 @@ public class KeyTable extends PartitioningTable {
     @MemberOrder(name = "items", sequence = "4")
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     public KeyTable distributeSourceValues() {
-
-        distributionService.distribute(new ArrayList(getItems()), getKeyValueMethod().divider(this), getPrecision());
-
+        if (getFoundationValueType()!=FoundationValueType.MANUAL) {
+            distributionService
+                    .distribute(new ArrayList(getItems()), getKeyValueMethod().divider(this), getPrecision());
+        }
         return this;
     }
 
     public String disableDistributeSourceValues(){
-        return isAssignedReason();
+        if (getFoundationValueType()!=FoundationValueType.MANUAL) return "This is a manual table";
+        return isImmutableReason();
     }
 
     // //////////////////////////////////////
@@ -190,7 +192,7 @@ public class KeyTable extends PartitioningTable {
 
     // //////////////////////////////////////
 
-    @Action(restrictTo = RestrictTo.PROTOTYPING, semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
+    @Programmatic
     public KeyTable deleteItems() {
         for (KeyItem keyItem : getItems()) {
             keyItem.deleteKeyItem();
@@ -239,7 +241,7 @@ public class KeyTable extends PartitioningTable {
     }
 
     @Programmatic
-    public String isAssignedReason(){
+    public String isImmutableReason(){
         if (getBudget().getStatus()==Status.RECONCILED) return "The budget is reconciled";
         if (getBudget().getStatus()== Status.ASSIGNED && usedInPartitionItemForBudgeted()) return "The budget is assigned";
         return null;
@@ -282,11 +284,10 @@ public class KeyTable extends PartitioningTable {
     RepositoryService repositoryService;
 
     @Inject
-    PartitionItemRepository partitionItemRepository;
-
-    @Inject
     DistributionService distributionService;
 
     @Inject
     BudgetCalculationRepository budgetCalculationRepository;
+
+    @Inject TransactionService3 transactionService3;
 }

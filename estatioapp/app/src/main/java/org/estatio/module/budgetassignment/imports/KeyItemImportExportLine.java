@@ -27,6 +27,7 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.InvokeOn;
+import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Nature;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Publishing;
@@ -42,6 +43,7 @@ import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budget.BudgetRepository;
 import org.estatio.module.budget.dom.keyitem.KeyItem;
 import org.estatio.module.budget.dom.keyitem.KeyItemRepository;
+import org.estatio.module.budget.dom.keytable.FoundationValueType;
 import org.estatio.module.budget.dom.keytable.KeyTable;
 import org.estatio.module.budget.dom.keytable.PartitioningTableRepository;
 import org.estatio.module.party.dom.Party;
@@ -51,15 +53,15 @@ import lombok.Setter;
 
 @DomainObject(
         nature = Nature.VIEW_MODEL,
-        objectType = "org.estatio.app.services.budget.KeyItemImportExportLineItem"
+        objectType = "org.estatio.app.services.budget.KeyItemImportExportLine"
 )
-public class KeyItemImportExportLineItem
-        implements Comparable<KeyItemImportExportLineItem> {
+public class KeyItemImportExportLine
+        implements Comparable<KeyItemImportExportLine> {
 
-    public KeyItemImportExportLineItem() {
+    public KeyItemImportExportLine() {
     }
 
-    public KeyItemImportExportLineItem(final KeyItem keyItem, final Party tenant) {
+    public KeyItemImportExportLine(final KeyItem keyItem, final Party tenant) {
         this.keyItem = keyItem;
         this.propertyReference = keyItem.getPartitioningTable().getBudget().getProperty().getReference();
         this.unitReference = keyItem.getUnit().getReference();
@@ -71,7 +73,7 @@ public class KeyItemImportExportLineItem
         this.tenantOnBudgetStartDate = tenant!=null ? tenant.getName() : null;
     }
 
-    public KeyItemImportExportLineItem(final KeyItemImportExportLineItem item) {
+    public KeyItemImportExportLine(final KeyItemImportExportLine item) {
         this.keyItem = item.keyItem;
         this.propertyReference = item.propertyReference;
         this.unitReference = item.unitReference;
@@ -89,23 +91,29 @@ public class KeyItemImportExportLineItem
     }
 
     @Getter @Setter
+    @MemberOrder(sequence = "1")
     private String propertyReference;
 
     @Getter @Setter
+    @MemberOrder(sequence = "2")
     private String keyTableName;
 
     @Getter @Setter
+    @MemberOrder(sequence = "3")
     private LocalDate startDate;
 
     @Getter @Setter
+    @MemberOrder(sequence = "4")
     private String unitReference;
 
     @Column(scale = 6)
     @Getter @Setter
+    @MemberOrder(sequence = "5")
     private BigDecimal sourceValue;
 
     @Column(scale = 6)
     @Getter @Setter
+    @MemberOrder(sequence = "6")
     private BigDecimal keyValue;
 
     @Getter @Setter
@@ -113,9 +121,11 @@ public class KeyItemImportExportLineItem
 
     @Column(scale = 6)
     @Getter @Setter
+    @MemberOrder(sequence = "8")
     private BigDecimal divSourceValue;
 
     @Getter @Setter
+    @MemberOrder(sequence = "7")
     private String tenantOnBudgetStartDate;
 
     //region > apply (action)
@@ -226,9 +236,37 @@ public class KeyItemImportExportLineItem
         return property;
     }
 
+    @Programmatic
+    public String reasonInValid(){
+        if (getPropertyReference()==null) return "Property reference is mandatory";
+        if (getProperty()==null) {
+            return String.format("Property not found for property reference %s", getPropertyReference());
+        }
+        if (getKeyTableName()==null) return "Keytable name is mandatory";
+        if (getStartDate()==null) return "Startdate is mandatory";
+        final Budget budget = budgetRepository
+                .findByPropertyAndStartDate(getProperty(), getStartDate());
+        if (budget==null) return String.format("Budget could not be found for property %s and startDate %s", getPropertyReference(), getStartDate());
+        if (getKeyTable()==null) return String.format("Keytable could not be found for name %s and startDate %s", getKeyTableName(), getStartDate());
+        if (getUnitReference()==null) return "Unit reference is mandatory";
+        if (getUnit()==null) return String.format("Unit with reference %s not found", getUnitReference());
+        if (getSourceValue()==null) return "Source value is mandatory";
+        if (getKeyValue()==null && getKeyTable().getFoundationValueType()== FoundationValueType.MANUAL) return String.format("Key value is mandatory for table with foundation value type %s", getKeyTable().getFoundationValueType());
+        return null;
+    }
+
+    public void importData() {
+        KeyItem keyItem = new KeyItem();
+        keyItem.setPartitioningTable(getKeyTable());
+        keyItem.setUnit(getUnit());
+        keyItem.setValue(getKeyValue()!=null ? getKeyValue().setScale(keyTable.getPrecision(), BigDecimal.ROUND_HALF_UP) : BigDecimal.ZERO);
+        keyItem.setSourceValue(getSourceValue().setScale(2, BigDecimal.ROUND_HALF_UP));
+        repositoryService.persistAndFlush(keyItem);
+    }
+
 
     @Override
-    public int compareTo(final KeyItemImportExportLineItem other) {
+    public int compareTo(final KeyItemImportExportLine other) {
         return this.keyItem.compareTo(other.keyItem);
     }
 
@@ -253,6 +291,4 @@ public class KeyItemImportExportLineItem
 
     @Inject
     RepositoryService repositoryService;
-
-
 }

@@ -30,6 +30,8 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.services.message.MessageService;
+import org.apache.isis.applib.services.xactn.TransactionService3;
 
 import org.isisaddons.module.excel.dom.ExcelService;
 
@@ -38,6 +40,7 @@ import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 import org.estatio.module.budget.dom.keyitem.DirectCost;
 import org.estatio.module.budget.dom.keyitem.KeyItem;
 import org.estatio.module.budget.dom.keyitem.PartitioningTableItem;
+import org.estatio.module.budget.dom.keytable.KeyTable;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
 import org.estatio.module.lease.dom.occupancy.OccupancyRepository;
 import org.estatio.module.party.dom.Party;
@@ -53,17 +56,17 @@ public class PartitioningTableItemImportExportService {
     }
 
     @Programmatic
-    public List<KeyItemImportExportLineItem> items(KeyItemImportExportManager manager) {
+    public List<KeyItemImportExportLine> items(KeyItemImportExportManager manager) {
         return Lists.transform(Lists.newArrayList(manager.getKeyTable().getItems()), toLineItem());
     }
 
     @Programmatic
-    public List<KeyItemImportExportLineItem> items(SortedSet<KeyItem> keyItems) {
+    public List<KeyItemImportExportLine> items(SortedSet<KeyItem> keyItems) {
         return Lists.transform(Lists.newArrayList(keyItems), toLineItem());
     }
 
-    private Function<KeyItem, KeyItemImportExportLineItem> toLineItem() {
-        return keyItem -> new KeyItemImportExportLineItem(keyItem, tenandAtStartDateBudget(keyItem));
+    private Function<KeyItem, KeyItemImportExportLine> toLineItem() {
+        return keyItem -> new KeyItemImportExportLine(keyItem, tenantAtStartDateBudget(keyItem));
     }
 
     @Programmatic
@@ -77,19 +80,67 @@ public class PartitioningTableItemImportExportService {
     }
 
     private Function<DirectCost, DirectCostLine> toDirectCostLine() {
-        return directCost -> new DirectCostLine(directCost, tenandAtStartDateBudget(directCost));
+        return directCost -> new DirectCostLine(directCost, tenantAtStartDateBudget(directCost));
     }
 
-    private Party tenandAtStartDateBudget(final PartitioningTableItem item){
+    private Party tenantAtStartDateBudget(final PartitioningTableItem item){
         final LocalDate startAndEndDate = item.getPartitioningTable().getBudget().getStartDate();
         final List<Occupancy> candidates = occupancyRepository.occupanciesByUnitAndInterval(item.getUnit(), LocalDateInterval.including(startAndEndDate, startAndEndDate));
         return candidates.isEmpty() ? null :  candidates.get(0).getLease().getSecondaryParty();
     }
 
-    @javax.inject.Inject
+    public KeyTable importLines(final List<KeyItemImportExportLine> lines){
+        if (!allLinesHaveSameKeyTableName(lines)){
+            messageService.warnUser("Import failed; all lines should have the same key table name");
+            return null;
+        }
+        final KeyTable keyTableIfAny = lines.get(0).getKeyTable();
+        if (!allLinesValid(lines)) {
+            messageService.warnUser("Import failed; invalid lines found");
+            return keyTableIfAny !=null ? keyTableIfAny : null;
+        }
+        // when we get to here, there is a keytable
+        if (keyTableIfAny.isImmutableReason()!=null){
+            messageService.warnUser(keyTableIfAny.isImmutableReason());
+            return keyTableIfAny;
+        }
+        keyTableIfAny.deleteItems();
+        lines.forEach(l->l.importData());
+        transactionService3.nextTransaction();
+        keyTableIfAny.distributeSourceValues();
+        return keyTableIfAny;
+    }
+
+    private boolean allLinesValid(final List<KeyItemImportExportLine> lines) {
+        for (KeyItemImportExportLine line : lines){
+            if (line.reasonInValid()!=null) {
+                messageService.warnUser(line.reasonInValid());
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean allLinesHaveSameKeyTableName(final List<KeyItemImportExportLine> lines) {
+        if (lines.isEmpty()) return true;
+        final String keyTableName = lines.get(0).getKeyTableName();
+        if (keyTableName==null) return false;
+        for (KeyItemImportExportLine line : lines){
+            if (!keyTableName.equals(line.getKeyTableName())) return false;
+        }
+        return true;
+    }
+
+    @Inject
     private ExcelService excelService;
 
     @Inject
     private OccupancyRepository occupancyRepository;
+
+    @Inject
+    private MessageService messageService;
+
+    @Inject
+    private TransactionService3 transactionService3;
 
 }

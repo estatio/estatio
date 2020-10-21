@@ -127,7 +127,7 @@ public class KeyItem extends PartitioningTableItem
 
     public String disableDeleteKeyItem(){
         KeyTable keyTable = (KeyTable) this.getPartitioningTable();
-        return keyTable.isAssignedReason();
+        return keyTable.isImmutableReason();
     }
 
     @Override

@@ -110,8 +110,8 @@ public class BudgetImportExportManager {
         return budgetImportExportService.lines(this);
     }
 
-    public List<KeyItemImportExportLineItem> getKeyItemLines() {
-        List<KeyItemImportExportLineItem> result = new ArrayList<>();
+    public List<KeyItemImportExportLine> getKeyItemLines() {
+        List<KeyItemImportExportLine> result = new ArrayList<>();
         if (getBudget()==null){return result;} // for import from menu where budget unknown
         for (KeyTable keyTable : this.getBudget().getKeyTables()){
             result.addAll(partitioningTableItemImportExportService.items(keyTable.getItems()));
@@ -155,7 +155,7 @@ public class BudgetImportExportManager {
     public Blob exportBudget() {
         final String fileName = withExtension(getFileName(), ".xlsx");
         WorksheetSpec spec1 = new WorksheetSpec(BudgetImportExport.class, "budget");
-        WorksheetSpec spec2 = new WorksheetSpec(KeyItemImportExportLineItem.class, "keyItems");
+        WorksheetSpec spec2 = new WorksheetSpec(KeyItemImportExportLine.class, "keyItems");
         WorksheetSpec spec3 = new WorksheetSpec(DirectCostLine.class, "directCosts");
         WorksheetSpec spec4 = new WorksheetSpec(ChargeImport.class, "charges");
         WorksheetContent worksheetContent = new WorksheetContent(getLines(), spec1);

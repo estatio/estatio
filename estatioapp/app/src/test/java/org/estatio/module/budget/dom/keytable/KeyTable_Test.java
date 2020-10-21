@@ -82,7 +82,7 @@ public class KeyTable_Test {
         }
 
         @Test
-        public void is_assigned_reason_works() throws Exception {
+        public void is_immutable_reason_works() throws Exception {
 
             // given
             KeyTable keyTable = new KeyTable();
@@ -92,12 +92,12 @@ public class KeyTable_Test {
             // when
             budget.setStatus(Status.RECONCILED);
             // then
-            assertThat(keyTable.isAssignedReason()).isEqualTo("The budget is reconciled");
+            assertThat(keyTable.isImmutableReason()).isEqualTo("The budget is reconciled");
 
             // when
             budget.setStatus(Status.ASSIGNED);
             // then
-            assertThat(keyTable.isAssignedReason()).isNull();
+            assertThat(keyTable.isImmutableReason()).isNull();
 
             // when
             budget.setStatus(Status.ASSIGNED);
@@ -108,7 +108,7 @@ public class KeyTable_Test {
             partioning.getItems().add(partitionItem);
             budget.getPartitionings().add(partioning);
             // then
-            assertThat(keyTable.isAssignedReason()).isEqualTo("The budget is assigned");
+            assertThat(keyTable.isImmutableReason()).isEqualTo("The budget is assigned");
 
 
         }

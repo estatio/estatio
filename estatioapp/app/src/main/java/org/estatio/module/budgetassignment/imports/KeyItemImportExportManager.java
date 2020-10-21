@@ -90,7 +90,7 @@ public class KeyItemImportExportManager {
 
     @SuppressWarnings("unchecked")
     @Collection
-    public List<KeyItemImportExportLineItem> getKeyItems() {
+    public List<KeyItemImportExportLine> getKeyItems() {
         return partitioningTableItemImportExportService.items(this);
     }
 
@@ -100,7 +100,7 @@ public class KeyItemImportExportManager {
     @MemberOrder(name = "keyItems", sequence = "1")
     public Blob export() {
         final String fileName = withExtension(getFileName(), ".xlsx");
-        WorksheetSpec spec = new WorksheetSpec(KeyItemImportExportLineItem.class, "keyItems");
+        WorksheetSpec spec = new WorksheetSpec(KeyItemImportExportLine.class, "keyItems");
         WorksheetContent worksheetContent = new WorksheetContent(getKeyItems(), spec);
         return excelService.toExcel(worksheetContent, fileName);
     }
@@ -120,26 +120,26 @@ public class KeyItemImportExportManager {
             @Parameter(fileAccept = ".xlsx")
             @ParameterLayout(named = "Excel spreadsheet")
             final Blob spreadsheet) {
-        WorksheetSpec spec = new WorksheetSpec(KeyItemImportExportLineItem.class, "keyItems");
-        List<KeyItemImportExportLineItem> lineItems =
+        WorksheetSpec spec = new WorksheetSpec(KeyItemImportExportLine.class, "keyItems");
+        List<KeyItemImportExportLine> lineItems =
                 excelService.fromExcel(spreadsheet, spec);
 
-        List<KeyItemImportExportLineItem> newItems = new ArrayList<>();
-        for (KeyItemImportExportLineItem item : lineItems) {
+        List<KeyItemImportExportLine> newItems = new ArrayList<>();
+        for (KeyItemImportExportLine item : lineItems) {
             serviceRegistry2.injectServicesInto(item);
             item.validate();
             newItems.add(item);
         }
         for (KeyItem keyItem : keyTable.getItems()) {
             Boolean keyItemFound = false;
-            for (KeyItemImportExportLineItem lineItem : newItems){
+            for (KeyItemImportExportLine lineItem : newItems){
                 if (lineItem.getUnitReference().equals(keyItem.getUnit().getReference())){
                     keyItemFound = true;
                     break;
                 }
             }
             if (!keyItemFound) {
-                KeyItemImportExportLineItem deletedItem = new KeyItemImportExportLineItem(keyItem, null);
+                KeyItemImportExportLine deletedItem = new KeyItemImportExportLine(keyItem, null);
                 serviceRegistry2.injectServicesInto(deletedItem);
                 deletedItem.setStatus(Status.DELETED);
                 newItems.add(deletedItem);

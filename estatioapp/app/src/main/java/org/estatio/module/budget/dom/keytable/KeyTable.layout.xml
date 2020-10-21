@@ -40,7 +40,6 @@
             <ns2:collection id="items">
                 <ns2:action id="distributeSourceValues"/>
                 <ns2:action id="generateItems"/>
-                <ns2:action id="deleteItems"/>
             </ns2:collection>
         </col>
     </row>
