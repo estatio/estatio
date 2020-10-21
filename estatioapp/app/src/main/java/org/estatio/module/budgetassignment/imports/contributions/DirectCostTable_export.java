@@ -49,11 +49,10 @@ public class DirectCostTable_export {
     @ActionLayout(contributed = Contributed.AS_ACTION)
     @MemberOrder(name = "items", sequence = "5")
     public Blob act(final String filename) {
-
-        final String fileName = withExtension(filename, ".xlsx");
+        final String fileNameToUse = withExtension(filename, ".xlsx");
         WorksheetSpec spec = new WorksheetSpec(DirectCostLine.class, "directCosts");
         WorksheetContent worksheetContent = new WorksheetContent(partitioningTableItemImportExportService.directCostsToLines(directCostTable.getItems()), spec);
-        return excelService.toExcel(worksheetContent, fileName);
+        return excelService.toExcel(worksheetContent, fileNameToUse);
 
     }
 

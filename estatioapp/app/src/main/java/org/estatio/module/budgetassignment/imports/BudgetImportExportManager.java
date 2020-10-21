@@ -29,7 +29,6 @@ import org.apache.isis.applib.annotation.Collection;
 import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
-import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Nature;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
@@ -68,7 +67,6 @@ public class BudgetImportExportManager {
 
     public BudgetImportExportManager() {
         this.name = "Budget Import / Export";
-        this.fileName = "export.xlsx";
     }
 
     public BudgetImportExportManager(Budget budget) {
@@ -77,7 +75,6 @@ public class BudgetImportExportManager {
     }
 
     public BudgetImportExportManager(BudgetImportExportManager budgetImportExportManager) {
-        this.fileName = budgetImportExportManager.getFileName();
         this.name = budgetImportExportManager.getName();
         this.budget = budgetImportExportManager.getBudget();
     }
@@ -86,20 +83,7 @@ public class BudgetImportExportManager {
     private String name;
     @Getter @Setter
     private Budget budget;
-    @Getter @Setter
-    private String fileName;
 
-    @Action(semantics = SemanticsOf.IDEMPOTENT)
-    @ActionLayout(named = "Change File Name")
-    @MemberOrder(name = "fileName", sequence = "1")
-    public BudgetImportExportManager changeFileName(final String fileName) {
-        this.setFileName(fileName);
-        return new BudgetImportExportManager(this);
-    }
-
-    public String default0ChangeFileName() {
-        return getFileName();
-    }
 
     @SuppressWarnings("unchecked")
     @Collection()
@@ -150,10 +134,30 @@ public class BudgetImportExportManager {
         return null;
     }
 
+    @Action(publishing = Publishing.DISABLED, semantics = SemanticsOf.IDEMPOTENT)
+    @ActionLayout()
+    @CollectionLayout()
+    public Budget updateBudget(
+            @Parameter(fileAccept = ".xlsx")
+            @ParameterLayout(named = "Excel spreadsheet")
+            final Blob spreadsheet) {
+        return budgetImportExportService.updateBudget(getBudget(), spreadsheet);
+    }
+
+    public String disableUpdateBudget(){
+        if (getBudget()==null || getBudget().getStatus()==Status.RECONCILED) return "This budget is reconciled";
+        return null;
+    }
+
+    public boolean hideUpdateBudget(){
+        if (getBudget()==null || getBudget().getStatus()==Status.NEW) return true;
+        return false;
+    }
+
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(cssClassFa = "fa-download")
-    public Blob exportBudget() {
-        final String fileName = withExtension(getFileName(), ".xlsx");
+    public Blob exportBudget(final String filename) {
+        final String fileNameToUse = withExtension(filename, ".xlsx");
         WorksheetSpec spec1 = new WorksheetSpec(BudgetImportExport.class, "budget");
         WorksheetSpec spec2 = new WorksheetSpec(KeyItemImportExportLine.class, "keyItems");
         WorksheetSpec spec3 = new WorksheetSpec(DirectCostLine.class, "directCosts");
@@ -162,12 +166,7 @@ public class BudgetImportExportManager {
         WorksheetContent keyItemsContent = new WorksheetContent(getKeyItemLines(), spec2);
         WorksheetContent directCostsContent = new WorksheetContent(getDirectCostLines(), spec3);
         WorksheetContent chargesContent = new WorksheetContent(getCharges(), spec4);
-        return excelService.toExcel(Arrays.asList(worksheetContent, keyItemsContent, directCostsContent, chargesContent), fileName);
-
-    }
-
-    public String disableExportBudget() {
-        return getFileName() == null ? "file name is required" : null;
+        return excelService.toExcel(Arrays.asList(worksheetContent, keyItemsContent, directCostsContent, chargesContent), fileNameToUse);
     }
 
     private static String withExtension(final String fileName, final String fileExtension) {

@@ -168,6 +168,7 @@ public class DirectCostTable extends PartitioningTable {
     @Programmatic
     public DirectCostTable deleteItems() {
         for (DirectCost directCost : getItems()) {
+            getBudget().removeNewCalculations();
             repositoryService.removeAndFlush(directCost);
         }
         return this;

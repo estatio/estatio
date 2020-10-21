@@ -21,25 +21,23 @@ package org.estatio.module.budget.dom.keyitem;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
+import javax.inject.Inject;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
 
-import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.PropertyLayout;
-import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.base.dom.utils.TitleBuilder;
 
 import org.estatio.module.base.dom.distribution.Distributable;
-import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.module.budget.dom.keytable.FoundationValueType;
 import org.estatio.module.budget.dom.keytable.KeyTable;
 
@@ -75,60 +73,9 @@ public class KeyItem extends PartitioningTableItem
     @Getter @Setter
     private BigDecimal sourceValue;
 
-    @ActionLayout(hidden = Where.EVERYWHERE)
-    public KeyItem changeSourceValue(final BigDecimal sourceValue) {
-        setSourceValue(sourceValue.setScale(2, BigDecimal.ROUND_HALF_UP));
-        return this;
-    }
-
-    public BigDecimal default0ChangeSourceValue(final BigDecimal sourceValue) {
-        return getSourceValue();
-    }
-
-    public String validateChangeSourceValue(final BigDecimal sourceValue) {
-        if (sourceValue.compareTo(BigDecimal.ZERO) < 0) {
-            return "Source Value must be positive";
-        }
-        return null;
-    }
-
-    // //////////////////////////////////////
-
     @Column(allowsNull = "false", scale = 6)
     @Getter @Setter
     private BigDecimal value;
-
-    @ActionLayout(hidden = Where.EVERYWHERE)
-    public KeyItem changeValue(final BigDecimal keyValue) {
-        KeyTable keyTable = (KeyTable) getPartitioningTable();
-        setValue(keyValue.setScale(keyTable.getPrecision(), BigDecimal.ROUND_HALF_UP));
-        return this;
-    }
-
-    public BigDecimal default0ChangeValue(final BigDecimal targetValue) {
-        KeyTable keyTable = (KeyTable) getPartitioningTable();
-        return getValue().setScale(keyTable.getPrecision(), BigDecimal.ROUND_HALF_UP);
-    }
-
-    public String validateChangeValue(final BigDecimal keyValue) {
-        if (keyValue.compareTo(BigDecimal.ZERO) < 0) {
-            return "Value cannot be less than zero";
-        }
-        return null;
-    }
-
-    @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
-    public KeyTable deleteKeyItem() {
-        KeyTable keyTable = (KeyTable) this.getPartitioningTable();
-        this.getPartitioningTable().getBudget().removeNewCalculationsOfType(BudgetCalculationType.BUDGETED);
-        removeIfNotAlready(this);
-        return keyTable;
-    }
-
-    public String disableDeleteKeyItem(){
-        KeyTable keyTable = (KeyTable) this.getPartitioningTable();
-        return keyTable.isImmutableReason();
-    }
 
     @Override
     @PropertyLayout(hidden = Where.EVERYWHERE)
@@ -145,4 +92,10 @@ public class KeyItem extends PartitioningTableItem
         return BigDecimal.ZERO;
     }
 
+    @Programmatic
+    public void delete() {
+        repositoryService.removeAndFlush(this);
+    }
+
+    @Inject RepositoryService repositoryService;
 }

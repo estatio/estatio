@@ -31,7 +31,6 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.message.MessageService;
-import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.value.Blob;
 
 import org.isisaddons.module.excel.dom.ExcelService;
@@ -41,10 +40,8 @@ import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budget.BudgetRepository;
-import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.budget.dom.keytable.KeyTable;
-import org.estatio.module.budget.dom.keytable.PartitioningTableRepository;
 import org.estatio.module.budget.dom.partioning.PartitionItem;
 import org.estatio.module.budgetassignment.dom.BudgetService;
 import org.estatio.module.charge.dom.Charge;
@@ -187,11 +184,11 @@ public class BudgetImportExportService {
         Budget budgetOfFirstLine = budgetRepository.findByPropertyAndDate(property, lineItems.get(0).getBudgetStartDate());
         if (budgetOfFirstLine.equals(budget)) {
 
-            budget.removeNewCalculationsOfType(BudgetCalculationType.BUDGETED);
+            budget.removeNewCalculations();
             if (budgetService.budgetCannotBeRemovedReason(budget)==null) {
                 budget.removeAllBudgetItems();
             } else {
-                // seems redundant because we also delete when importing using BudgetImportExport#importData we need this code here, becasue we want to remove all Partitioning tables
+                // seems redundant because we also delete when importing using BudgetImportExport#importData; we need this code here, because we want to remove all Partitioning tables
                 for (BudgetItem budgetItem : budget.getItems()) {
                     for (PartitionItem pItem : budgetItem.getPartitionItems()){
                         pItem.remove();
@@ -244,6 +241,12 @@ public class BudgetImportExportService {
         });
     }
 
+    @Programmatic
+    public Budget updateBudget(final Budget budget, final Blob spreadsheet) {
+        // TODO: implement
+        return budget;
+    }
+
     @Inject
     private ExcelService excelService;
 
@@ -251,14 +254,9 @@ public class BudgetImportExportService {
 
     @Inject BudgetRepository budgetRepository;
 
-    @Inject ServiceRegistry2 serviceRegistry2;
-
     @Inject MessageService messageService;
-
-    @Inject PartitioningTableRepository partitioningTableRepository;
 
     @Inject BudgetService budgetService;
 
     @Inject PartitioningTableItemImportExportService partitioningTableItemImportExportService;
-
 }

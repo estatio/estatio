@@ -121,12 +121,22 @@ import lombok.Setter;
                         + "calculationType == :type && "
                         + "status == :status"),
         @Query(
+                name = "findByBudgetAndStatus", language = "JDOQL",
+                value = "SELECT " +
+                        "FROM org.estatio.module.budget.dom.budgetcalculation.BudgetCalculation " +
+                        "WHERE budget == :budget && "
+                        + "status == :status"),
+        @Query(
                 name = "findByBudget", language = "JDOQL",
                 value = "SELECT " +
                         "FROM org.estatio.module.budget.dom.budgetcalculation.BudgetCalculation " +
                         "WHERE budget == :budget "),
 })
 @Indices({
+        @Index(name = "BudgetCalculation_budget_status_IDX",
+                members = { "budget", "status" }),
+        @Index(name = "BudgetCalculation_budget_type_status_IDX",
+                members = { "budget", "calculationType", "status" }),
         @Index(name = "BudgetCalculation_budget_unit_invoiceCharge_type_IDX",
                 members = { "budget", "unit", "invoiceCharge", "calculationType" }),
         @Index(name = "BudgetCalculation_budget_unit_invoiceCharge_incomingCharge_type_IDX",

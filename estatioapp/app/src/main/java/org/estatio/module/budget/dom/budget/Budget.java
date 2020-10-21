@@ -352,6 +352,10 @@ public class Budget extends UdoDomainObject2<Budget>
         return this;
     }
 
+    public void removeNewCalculations() {
+        budgetCalculationRepository.findByBudgetAndStatus(this, org.estatio.module.budget.dom.budgetcalculation.Status.NEW).forEach(c->repositoryService.removeAndFlush(c));
+    }
+
     @Programmatic
     public Budget removeNewCalculationsOfType(final BudgetCalculationType type){
         budgetCalculationService.removeNewCalculationsOfType(this, type);
@@ -427,5 +431,4 @@ public class Budget extends UdoDomainObject2<Budget>
 
     @Inject
     BudgetCalculationService budgetCalculationService;
-
 }

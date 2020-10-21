@@ -193,8 +193,9 @@ public class KeyTable extends PartitioningTable {
 
     @Programmatic
     public KeyTable deleteItems() {
+        getBudget().removeNewCalculations();
         for (KeyItem keyItem : getItems()) {
-            keyItem.deleteKeyItem();
+            keyItem.delete();
         }
         return this;
     }
@@ -262,5 +263,6 @@ public class KeyTable extends PartitioningTable {
     @Inject
     BudgetCalculationRepository budgetCalculationRepository;
 
-    @Inject TransactionService3 transactionService3;
+    @Inject
+    TransactionService3 transactionService3;
 }

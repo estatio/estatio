@@ -49,11 +49,11 @@ public class KeyTable_export {
     @ActionLayout(contributed = Contributed.AS_ACTION)
     @MemberOrder(name = "items", sequence = "5")
     public Blob act(final String filename) {
-        final String fileName = withExtension(filename, ".xlsx");
+        final String fileNameToUse = withExtension(filename, ".xlsx");
         WorksheetSpec spec = new WorksheetSpec(KeyItemImportExportLine.class, "keyItems");
         WorksheetContent worksheetContent = new WorksheetContent(
                 partitioningTableItemImportExportService.keyItemsToLines(keyTable.getItems()), spec);
-        return excelService.toExcel(worksheetContent, fileName);
+        return excelService.toExcel(worksheetContent, fileNameToUse);
     }
 
     private static String withExtension(final String fileName, final String fileExtension) {

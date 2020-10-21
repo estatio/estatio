@@ -92,7 +92,7 @@ public class ServiceChargeBudgetScenario_IntegTest extends BudgetAssignmentModul
 
         //**IMPORTANT!** truncate keytable
         KeyTable key2 = budget.getKeyTables().last();
-        key2.getItems().last().deleteKeyItem();
+        key2.getItems().last().delete();
         transactionService.nextTransaction();
 
         leasePoison = Lease_enum.BudPoison001Nl.findUsing(serviceRegistry);

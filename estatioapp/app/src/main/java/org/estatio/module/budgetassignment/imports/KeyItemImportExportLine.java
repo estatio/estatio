@@ -21,17 +21,12 @@ import java.math.BigDecimal;
 import javax.inject.Inject;
 import javax.jdo.annotations.Column;
 
-import org.apache.commons.lang3.ObjectUtils;
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainObject;
-import org.apache.isis.applib.annotation.InvokeOn;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Nature;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.Publishing;
-import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.message.MessageService;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
@@ -77,7 +72,6 @@ public class KeyItemImportExportLine
         this.keyItem = item.keyItem;
         this.propertyReference = item.propertyReference;
         this.unitReference = item.unitReference;
-        this.status = item.status;
         this.sourceValue = item.sourceValue.setScale(6, BigDecimal.ROUND_HALF_UP);
         this.keyValue = item.keyValue.setScale(6, BigDecimal.ROUND_HALF_UP);
         this.keyTableName = item.keyTableName;
@@ -116,9 +110,6 @@ public class KeyItemImportExportLine
     @MemberOrder(sequence = "6")
     private BigDecimal keyValue;
 
-    @Getter @Setter
-    private Status status;
-
     @Column(scale = 6)
     @Getter @Setter
     @MemberOrder(sequence = "8")
@@ -127,73 +118,6 @@ public class KeyItemImportExportLine
     @Getter @Setter
     @MemberOrder(sequence = "7")
     private String tenantOnBudgetStartDate;
-
-    //region > apply (action)
-    @Action(
-            semantics = SemanticsOf.IDEMPOTENT,
-            invokeOn = InvokeOn.OBJECT_AND_COLLECTION,
-            publishing = Publishing.DISABLED
-    )
-    public KeyItem apply() {
-
-        switch (getStatus()) {
-
-            case ADDED:
-                KeyItem keyItem = new KeyItem();
-                keyItem.setPartitioningTable(getKeyTable());
-                keyItem.setUnit(getUnit());
-                keyItem.setValue(getKeyValue().setScale(keyTable.getPrecision(), BigDecimal.ROUND_HALF_UP));
-                keyItem.setSourceValue(getSourceValue().setScale(2, BigDecimal.ROUND_HALF_UP));
-                repositoryService.persistAndFlush(keyItem);
-                break;
-
-            case UPDATED:
-                getKeyItem().changeValue(this.getKeyValue().setScale(keyTable.getPrecision(), BigDecimal.ROUND_HALF_UP));
-                getKeyItem().setSourceValue(this.getSourceValue().setScale(2, BigDecimal.ROUND_HALF_UP));
-                break;
-
-            case DELETED:
-                String message = "KeyItem for unit " + getKeyItem().getUnit().getReference() + " deleted";
-                getKeyItem().deleteKeyItem();
-                messageService.informUser(message);
-                return null;
-
-            case NOT_FOUND:
-                messageService.informUser("KeyItem not found");
-                return null;
-
-            default:
-                break;
-
-        }
-
-        return getKeyItem();
-    }
-    //endregion
-
-
-    @Programmatic
-    public void validate() {
-        setStatus(calculateStatus());
-//        setComments(getStatus().name());
-    }
-
-    private Status calculateStatus() {
-        if (getProperty() == null || getUnit() == null || getKeyTable() == null) {
-            return Status.NOT_FOUND;
-        }
-        if (getKeyItem() == null) {
-            return Status.ADDED;
-        }
-        if (ObjectUtils.notEqual(getKeyItem().getValue().setScale(6, BigDecimal.ROUND_HALF_UP), getKeyValue().setScale(6, BigDecimal.ROUND_HALF_UP)) || ObjectUtils.notEqual(getKeyItem().getSourceValue().setScale(6, BigDecimal.ROUND_HALF_UP), getSourceValue().setScale(6, BigDecimal.ROUND_HALF_UP))) {
-            return Status.UPDATED;
-        }
-        // added for newly created lines for deleted items
-        if (getStatus() == Status.DELETED) {
-            return Status.DELETED;
-        }
-        return Status.UNCHANGED;
-    }
 
     private Unit unit;
 
