@@ -37,9 +37,11 @@ import org.isisaddons.module.excel.dom.ExcelService;
 
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
+import org.estatio.module.budget.dom.budget.Status;
 import org.estatio.module.budget.dom.keyitem.DirectCost;
 import org.estatio.module.budget.dom.keyitem.KeyItem;
 import org.estatio.module.budget.dom.keyitem.PartitioningTableItem;
+import org.estatio.module.budget.dom.keytable.DirectCostTable;
 import org.estatio.module.budget.dom.keytable.KeyTable;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
 import org.estatio.module.lease.dom.occupancy.OccupancyRepository;
@@ -56,7 +58,7 @@ public class PartitioningTableItemImportExportService {
     }
 
     @Programmatic
-    public List<KeyItemImportExportLine> items(SortedSet<KeyItem> keyItems) {
+    public List<KeyItemImportExportLine> keyItemsToLines(SortedSet<KeyItem> keyItems) {
         return Lists.transform(Lists.newArrayList(keyItems), toLineItem());
     }
 
@@ -65,12 +67,7 @@ public class PartitioningTableItemImportExportService {
     }
 
     @Programmatic
-    public List<DirectCostLine> items(DirectCostImportExportManager manager) {
-        return Lists.transform(Lists.newArrayList(manager.getDirectCostTable().getItems()), toDirectCostLine());
-    }
-
-    @Programmatic
-    public List<DirectCostLine> directCosts(SortedSet<DirectCost> directCosts) {
+    public List<DirectCostLine> directCostsToLines(SortedSet<DirectCost> directCosts) {
         return Lists.transform(Lists.newArrayList(directCosts), toDirectCostLine());
     }
 
@@ -122,6 +119,47 @@ public class PartitioningTableItemImportExportService {
         if (keyTableName==null) return false;
         for (KeyItemImportExportLine line : lines){
             if (!keyTableName.equals(line.getKeyTableName())) return false;
+        }
+        return true;
+    }
+
+    public DirectCostTable importDirectCostLines(final List<DirectCostLine> lines){
+        if (!allLinesHaveSameDirectCostTableName(lines)){
+            messageService.warnUser("Import failed; all lines should have the same direct cost table name");
+            return null;
+        }
+        final DirectCostTable directCostTableIfAny = lines.get(0).getDirectCostTable();
+        if (!this.allDirectCostLinesValid(lines)) {
+            messageService.warnUser("Import failed; invalid lines found");
+            return directCostTableIfAny !=null ? directCostTableIfAny : null;
+        }
+        // when we get to here, there is a directCostTable
+        if (directCostTableIfAny.getBudget().getStatus()== Status.NEW){
+            directCostTableIfAny.deleteItems();
+        }
+        if (directCostTableIfAny.getBudget().getStatus()== Status.ASSIGNED && !directCostTableIfAny.usedInPartitionItemForBudgeted()){
+            directCostTableIfAny.deleteItems();
+        }
+        lines.forEach(l->l.importData());
+        return directCostTableIfAny;
+    }
+
+    private boolean allDirectCostLinesValid(final List<DirectCostLine> lines) {
+        for (DirectCostLine line : lines){
+            if (line.reasonInValid()!=null) {
+                messageService.warnUser(line.reasonInValid());
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean allLinesHaveSameDirectCostTableName(final List<DirectCostLine> lines) {
+        if (lines.isEmpty()) return true;
+        final String tableName = lines.get(0).getDirectCostTableName();
+        if (tableName==null) return false;
+        for (DirectCostLine line : lines){
+            if (!tableName.equals(line.getDirectCostTableName())) return false;
         }
         return true;
     }

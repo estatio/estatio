@@ -27,6 +27,7 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.InvokeOn;
+import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Nature;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Publishing;
@@ -91,29 +92,36 @@ public class DirectCostLine
     //endregion
 
     @Getter @Setter
+    @MemberOrder(sequence = "1")
     private String propertyReference;
 
     @Getter @Setter
+    @MemberOrder(sequence = "2")
     private String directCostTableName;
 
     @Getter @Setter
+    @MemberOrder(sequence = "3")
     private LocalDate startDate;
 
     @Getter @Setter
+    @MemberOrder(sequence = "4")
     private String unitReference;
 
     @Column(scale = 2)
     @Getter @Setter
+    @MemberOrder(sequence = "5")
     private BigDecimal budgetedCost;
 
     @Column(scale = 2)
     @Getter @Setter
+    @MemberOrder(sequence = "6")
     private BigDecimal auditedCost;
 
     @Getter @Setter
     private Status status;
 
     @Getter @Setter
+    @MemberOrder(sequence = "7")
     private String tenantOnBudgetStartDate;
 
     //region > apply (action)
@@ -212,7 +220,7 @@ public class DirectCostLine
     @Programmatic
     public DirectCost getDirectCost() {
         if (directCost == null) {
-            directCost = directCostRepository.findByDirectCostTableAndUnit(getDirectCostTable(), getUnit());
+            directCost = directCostRepository.findUnique(getDirectCostTable(), getUnit());
         }
         return directCost;
     }
@@ -227,6 +235,27 @@ public class DirectCostLine
         return property;
     }
 
+    @Programmatic
+    public String reasonInValid() {
+        if (getPropertyReference()==null) return "Property reference is mandatory";
+        if (getProperty()==null) {
+            return String.format("Property not found for property reference %s", getPropertyReference());
+        }
+        if (getDirectCostTableName()==null) return "DirectCostTable name is mandatory";
+        if (getStartDate()==null) return "Startdate is mandatory";
+        final Budget budget = budgetRepository.findByPropertyAndStartDate(getProperty(), getStartDate());
+        if (budget==null) return String.format("Budget could not be found for property %s and startDate %s", getPropertyReference(), getStartDate());
+        if (getDirectCostTable()==null) return String.format("DirectCostTable could not be found for name %s and startDate %s", getDirectCostTable(), getStartDate());
+        if (getUnitReference()==null) return "Unit reference is mandatory";
+        if (getUnit()==null) return String.format("Unit with reference %s not found", getUnitReference());
+        if (getBudgetedCost()==null) return "Budgeted cost is mandatory";
+        return null;
+    }
+
+    @Programmatic
+    public void importData() {
+        directCostRepository.upsertValuesUsingBusinessLogicOrCreate(getDirectCostTable(), getUnit(), getBudgetedCost(), getAuditedCost());
+    }
 
     @Override
     public int compareTo(final DirectCostLine other) {
@@ -253,5 +282,4 @@ public class DirectCostLine
 
     @Inject
     RepositoryService repositoryService;
-
 }

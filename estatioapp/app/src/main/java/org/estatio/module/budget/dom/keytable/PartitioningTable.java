@@ -34,6 +34,7 @@ import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculation;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.module.budget.dom.partioning.PartitionItem;
+import org.estatio.module.budget.dom.partioning.Partitioning;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -121,6 +122,32 @@ public abstract class PartitioningTable extends UdoDomainObject2<Budget> impleme
 
     public String default0ChangeName(final String name) {
         return getName();
+    }
+
+    @Programmatic
+    public boolean usedInPartitionItem(){
+        for (Partitioning partitioning : getBudget().getPartitionings()) {
+            for (PartitionItem partitionItem : partitioning.getItems()) {
+                if (partitionItem.getPartitioningTable()==this){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    @Programmatic
+    public boolean usedInPartitionItemForBudgeted(){
+        for (Partitioning partitioning : getBudget().getPartitionings()) {
+            if (partitioning.getType()==BudgetCalculationType.BUDGETED) {
+                for (PartitionItem partitionItem : partitioning.getItems()) {
+                    if (partitionItem.getPartitioningTable() == this) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     @Programmatic

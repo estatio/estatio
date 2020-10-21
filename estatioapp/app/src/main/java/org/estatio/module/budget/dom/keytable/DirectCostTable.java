@@ -43,7 +43,6 @@ import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.PropertyLayout;
-import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.repository.RepositoryService;
@@ -53,6 +52,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.asset.dom.UnitRepository;
 import org.estatio.module.budget.dom.budget.Budget;
+import org.estatio.module.budget.dom.budget.Status;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculation;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationRepository;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
@@ -60,7 +60,6 @@ import org.estatio.module.budget.dom.keyitem.DirectCost;
 import org.estatio.module.budget.dom.keyitem.DirectCostRepository;
 import org.estatio.module.budget.dom.partioning.PartitionItem;
 import org.estatio.module.budget.dom.partioning.PartitionItemRepository;
-import org.estatio.module.budget.dom.partioning.Partitioning;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -102,7 +101,7 @@ public class DirectCostTable extends PartitioningTable {
     }
 
     public String disableNewDirectCost(){
-        return isAssignedReason();
+        return isImmutableForBudgetedValueReason();
     }
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
@@ -126,7 +125,7 @@ public class DirectCostTable extends PartitioningTable {
     }
 
     public String disableGenerateItems(){
-        return isAssignedReason();
+        return isImmutableForBudgetedValueReason();
     }
 
 
@@ -166,27 +165,12 @@ public class DirectCostTable extends PartitioningTable {
         return newKeyTableCopy;
     }
 
-    // //////////////////////////////////////
-
-    @Action(restrictTo = RestrictTo.PROTOTYPING, semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
+    @Programmatic
     public DirectCostTable deleteItems() {
         for (DirectCost directCost : getItems()) {
             repositoryService.removeAndFlush(directCost);
         }
         return this;
-    }
-
-    @Programmatic
-    public List<PartitionItem> usedInPartitionItems(){
-        List<PartitionItem> result = new ArrayList<>();
-        for (Partitioning partitioning : getBudget().getPartitionings()) {
-            for (PartitionItem partitionItem : partitioning.getItems()) {
-                if (partitionItem.getPartitioningTable()==this){
-                    result.add(partitionItem);
-                }
-            }
-        }
-        return result;
     }
 
     @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
@@ -197,25 +181,15 @@ public class DirectCostTable extends PartitioningTable {
     }
 
     public String disableRemove(){
-        if (!usedInPartitionItems().isEmpty()){
+        if (super.usedInPartitionItem()){
             return "Please remove partition items that use this table first";
         }
         return null;
     }
 
-    private String isAssignedReason(){
-        if (isAssignedForTypeReason(BudgetCalculationType.AUDITED)!=null){
-            return isAssignedForTypeReason(BudgetCalculationType.AUDITED);
-        }
-        return isAssignedForTypeReason(BudgetCalculationType.BUDGETED);
-    }
-
-    String isAssignedForTypeReason(final BudgetCalculationType budgetCalculationType){
-        for (PartitionItem partitionItem : partitionItemRepository.findByPartitioningTable(this)){
-            if (partitionItem.getBudgetItem().isAssignedForType(budgetCalculationType)){
-                return partitionItem.getBudgetItem().isAssignedForTypeReason(budgetCalculationType);
-            }
-        }
+    private String isImmutableForBudgetedValueReason(){
+        if (getBudget().getStatus()== Status.RECONCILED) return "The budget is reconciled";
+        if (getBudget().getStatus()== Status.ASSIGNED && usedInPartitionItemForBudgeted()) return "The budget is assigned";
         return null;
     }
 

@@ -30,7 +30,6 @@
             <ns2:collection id="items">
                 <ns2:action id="newDirectCost"/>
                 <ns2:action id="generateItems"/>
-                <ns2:action id="deleteItems"/>
             </ns2:collection>
         </col>
     </row>

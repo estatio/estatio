@@ -114,7 +114,7 @@ public class BudgetImportExportManager {
         List<KeyItemImportExportLine> result = new ArrayList<>();
         if (getBudget()==null){return result;} // for import from menu where budget unknown
         for (KeyTable keyTable : this.getBudget().getKeyTables()){
-            result.addAll(partitioningTableItemImportExportService.items(keyTable.getItems()));
+            result.addAll(partitioningTableItemImportExportService.keyItemsToLines(keyTable.getItems()));
         }
         return result;
     }
@@ -123,7 +123,7 @@ public class BudgetImportExportManager {
         List<DirectCostLine> result = new ArrayList<>();
         if (getBudget()==null){return result;} // for import from menu where budget unknown
         for (DirectCostTable directCostTable : this.getBudget().getDirectCostTables()){
-            result.addAll(partitioningTableItemImportExportService.directCosts(directCostTable.getItems()));
+            result.addAll(partitioningTableItemImportExportService.directCostsToLines(directCostTable.getItems()));
         }
         return result;
     }

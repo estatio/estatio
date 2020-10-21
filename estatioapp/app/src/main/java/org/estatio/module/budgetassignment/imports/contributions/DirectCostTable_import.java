@@ -16,6 +16,8 @@
  */
 package org.estatio.module.budgetassignment.imports.contributions;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import org.apache.isis.applib.annotation.Action;
@@ -27,37 +29,29 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.value.Blob;
 
 import org.isisaddons.module.excel.dom.ExcelService;
-import org.isisaddons.module.excel.dom.WorksheetContent;
-import org.isisaddons.module.excel.dom.WorksheetSpec;
 
-import org.estatio.module.budget.dom.keytable.KeyTable;
-import org.estatio.module.budgetassignment.imports.KeyItemImportExportLine;
+import org.estatio.module.budget.dom.keytable.DirectCostTable;
+import org.estatio.module.budgetassignment.imports.DirectCostLine;
 import org.estatio.module.budgetassignment.imports.PartitioningTableItemImportExportService;
 
 @Mixin(method="act")
-public class KeyTable_export {
+public class DirectCostTable_import {
 
-    private final KeyTable keyTable;
+    private final DirectCostTable directCostTable;
 
-    public KeyTable_export(KeyTable keyTable) {
-        this.keyTable = keyTable;
+    public DirectCostTable_import(DirectCostTable directCostTable) {
+        this.directCostTable = directCostTable;
     }
 
     @Action(
-            semantics = SemanticsOf.IDEMPOTENT
+            semantics = SemanticsOf.NON_IDEMPOTENT
     )
     @ActionLayout(contributed = Contributed.AS_ACTION)
     @MemberOrder(name = "items", sequence = "5")
-    public Blob act(final String filename) {
-        final String fileName = withExtension(filename, ".xlsx");
-        WorksheetSpec spec = new WorksheetSpec(KeyItemImportExportLine.class, "keyItems");
-        WorksheetContent worksheetContent = new WorksheetContent(
-                partitioningTableItemImportExportService.keyItemsToLines(keyTable.getItems()), spec);
-        return excelService.toExcel(worksheetContent, fileName);
-    }
-
-    private static String withExtension(final String fileName, final String fileExtension) {
-        return fileName.endsWith(fileExtension) ? fileName : fileName + fileExtension;
+    public DirectCostTable act(final Blob filename) {
+        final List<DirectCostLine> lines = excelService
+                .fromExcel(filename, DirectCostLine.class, "directCosts");
+        return partitioningTableItemImportExportService.importDirectCostLines(lines);
     }
 
     @Inject ExcelService excelService;

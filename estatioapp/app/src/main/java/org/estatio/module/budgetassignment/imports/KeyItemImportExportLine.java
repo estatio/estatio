@@ -256,12 +256,7 @@ public class KeyItemImportExportLine
     }
 
     public void importData() {
-        KeyItem keyItem = new KeyItem();
-        keyItem.setPartitioningTable(getKeyTable());
-        keyItem.setUnit(getUnit());
-        keyItem.setValue(getKeyValue()!=null ? getKeyValue().setScale(keyTable.getPrecision(), BigDecimal.ROUND_HALF_UP) : BigDecimal.ZERO);
-        keyItem.setSourceValue(getSourceValue().setScale(2, BigDecimal.ROUND_HALF_UP));
-        repositoryService.persistAndFlush(keyItem);
+        keyItemRepository.newItem(getKeyTable(), getUnit(), getSourceValue().setScale(6, BigDecimal.ROUND_HALF_UP), getKeyValue()!=null ? getKeyValue().setScale(keyTable.getPrecision(), BigDecimal.ROUND_HALF_UP) : BigDecimal.ZERO);
     }
 
 

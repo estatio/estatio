@@ -61,7 +61,6 @@ import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.module.budget.dom.keyitem.KeyItem;
 import org.estatio.module.budget.dom.keyitem.KeyItemRepository;
 import org.estatio.module.budget.dom.partioning.PartitionItem;
-import org.estatio.module.budget.dom.partioning.Partitioning;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -198,32 +197,6 @@ public class KeyTable extends PartitioningTable {
             keyItem.deleteKeyItem();
         }
         return this;
-    }
-
-    @Programmatic
-    public boolean usedInPartitionItem(){
-        for (Partitioning partitioning : getBudget().getPartitionings()) {
-            for (PartitionItem partitionItem : partitioning.getItems()) {
-                if (partitionItem.getPartitioningTable()==this){
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    @Programmatic
-    public boolean usedInPartitionItemForBudgeted(){
-        for (Partitioning partitioning : getBudget().getPartitionings()) {
-            if (partitioning.getType()==BudgetCalculationType.BUDGETED) {
-                for (PartitionItem partitionItem : partitioning.getItems()) {
-                    if (partitionItem.getPartitioningTable() == this) {
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
     }
 
     @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
