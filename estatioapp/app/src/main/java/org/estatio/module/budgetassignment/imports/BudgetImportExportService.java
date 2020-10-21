@@ -40,6 +40,7 @@ import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budget.BudgetRepository;
+import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.budget.dom.keytable.KeyTable;
 import org.estatio.module.budget.dom.partioning.PartitionItem;
@@ -63,57 +64,67 @@ public class BudgetImportExportService {
         if (manager.getBudget()==null){return result;}
 
         for (BudgetItem item : manager.getBudget().getItems()) {
-            result.addAll(createLines(item, manager));
+            result.addAll(createLines(item, BudgetCalculationType.AUDITED));
+        }
+        for (BudgetItem item : manager.getBudget().getItems()) {
+            result.addAll(createLines(item, BudgetCalculationType.BUDGETED));
         }
         return result;
     }
 
-    private List<BudgetImportExport> createLines(final BudgetItem item, final BudgetImportExportManager manager){
+    private List<BudgetImportExport> createLines(final BudgetItem item, final BudgetCalculationType budgetCalculationType){
 
         List<BudgetImportExport> lines = new ArrayList<>();
 
-        String propertyReference = manager.getBudget().getProperty().getReference();
-        LocalDate budgetStartDate = manager.getBudget().getStartDate();
-        LocalDate budgetEndDate = manager.getBudget().getEndDate();
+        String propertyReference = item.getBudget().getProperty().getReference();
+        LocalDate budgetStartDate = item.getBudget().getStartDate();
+        LocalDate budgetEndDate = item.getBudget().getEndDate();
         String budgetChargeReference = item.getCharge().getReference();
         BigDecimal budgetedValue = item.getBudgetedValue();
         BigDecimal auditedValue = item.getAuditedValue();
 
-        if (item.getPartitionItems().size()==0){
+        if (item.getPartitionItems().size()==0 && budgetCalculationType==BudgetCalculationType.BUDGETED){
             // create 1 line
             lines.add(new BudgetImportExport(propertyReference,budgetStartDate,budgetEndDate, budgetChargeReference,budgetedValue,auditedValue,null,null,null, null, null, null, null, null, null,null));
 
         } else {
             // create a line for each partion item
             for (PartitionItem partitionItem : item.getPartitionItems()) {
-                final PartitioningTableType type;
-                KeyTable keyTable = null;
-                if (partitionItem.getPartitioningTable().getClass().isAssignableFrom(KeyTable.class)) {
-                    keyTable = (KeyTable) partitionItem.getPartitioningTable();
-                    type = PartitioningTableType.KEY_TABLE;
-                } else {
-                    type = PartitioningTableType.DIRECT_COST_TABLE;
-                }
-                lines.add(
-                        new BudgetImportExport(
-                                propertyReference,
-                                budgetStartDate,
-                                budgetEndDate,
-                                budgetChargeReference,
-                                budgetedValue,
-                                auditedValue,
-                                partitionItem.getPartitioningTable().getName(),
-                                type == PartitioningTableType.KEY_TABLE ? keyTable.getFoundationValueType().toString() : null,
-                                type == PartitioningTableType.KEY_TABLE ? keyTable.getKeyValueMethod().toString() : null,
-                                partitionItem.getCharge().getReference(),
-                                partitionItem.getPercentage(),
-                                partitionItem.getFixedBudgetedAmount(),
-                                partitionItem.getFixedAuditedAmount(),
-                                item.getCalculationDescription(),
-                                type.toString(),
-                                partitionItem.getPartitioning().getType())
-                );
+                final BudgetCalculationType calculationType = partitionItem.getPartitioning().getType();
+                if (calculationType == budgetCalculationType) {
+                    final PartitioningTableType type;
+                    KeyTable keyTable = null;
+                    if (partitionItem.getPartitioningTable().getClass().isAssignableFrom(KeyTable.class)) {
+                        keyTable = (KeyTable) partitionItem.getPartitioningTable();
+                        type = PartitioningTableType.KEY_TABLE;
+                    } else {
+                        type = PartitioningTableType.DIRECT_COST_TABLE;
+                    }
+                    lines.add(
+                            new BudgetImportExport(
+                                    propertyReference,
+                                    budgetStartDate,
+                                    budgetEndDate,
+                                    budgetChargeReference,
+                                    budgetedValue,
+                                    auditedValue,
+                                    partitionItem.getPartitioningTable().getName(),
+                                    type == PartitioningTableType.KEY_TABLE ?
+                                            keyTable.getFoundationValueType().toString() :
+                                            null,
+                                    type == PartitioningTableType.KEY_TABLE ?
+                                            keyTable.getKeyValueMethod().toString() :
+                                            null,
+                                    partitionItem.getCharge().getReference(),
+                                    partitionItem.getPercentage(),
+                                    partitionItem.getFixedBudgetedAmount(),
+                                    partitionItem.getFixedAuditedAmount(),
+                                    item.getCalculationDescription(),
+                                    type.toString(),
+                                    calculationType)
+                    );
 
+                }
             }
 
         }
