@@ -186,11 +186,11 @@ public class BudgetImportExport implements Importable, FixtureAwareRowHandler<Bu
         Charge targetCharge = fetchCharge(getOutgoingChargeReference());
         if (partitioningTableType == PartitioningTableType.KEY_TABLE) {
             KeyTable keyTable = findOrCreateKeyTable(budgetItem.getBudget(), getPartitioningTableName(), getFoundationValueType(), getKeyValueMethod());
-            return budgetItem.updateOrCreatePartitionItem(targetCharge, keyTable, getPercentage() == null ? BigDecimal.ZERO : getPercentage(), getFixedBudgetedAmount() == null || getFixedBudgetedAmount().equals(BigDecimal.ZERO) ? null : getFixedBudgetedAmount(),
+            return budgetItem.updateOrCreatePartitionItem(BudgetCalculationType.valueOf(getBudgetCalculationType()), targetCharge, keyTable, getPercentage() == null ? BigDecimal.ZERO : getPercentage(), getFixedBudgetedAmount() == null || getFixedBudgetedAmount().equals(BigDecimal.ZERO) ? null : getFixedBudgetedAmount(),
                     getFixedAuditedAmount() == null || getFixedAuditedAmount().equals(BigDecimal.ZERO) ? null : getFixedAuditedAmount());
         } else {
             DirectCostTable directCostTable = findOrCreateDirectCostTable(budgetItem.getBudget(), getPartitioningTableName());
-            return budgetItem.updateOrCreatePartitionItem(targetCharge, directCostTable, getPercentage() == null ? BigDecimal.ZERO : getPercentage(), getFixedBudgetedAmount() == null || getFixedBudgetedAmount().equals(BigDecimal.ZERO) ? null : getFixedBudgetedAmount(),
+            return budgetItem.updateOrCreatePartitionItem(BudgetCalculationType.valueOf(getBudgetCalculationType()),targetCharge, directCostTable, getPercentage() == null ? BigDecimal.ZERO : getPercentage(), getFixedBudgetedAmount() == null || getFixedBudgetedAmount().equals(BigDecimal.ZERO) ? null : getFixedBudgetedAmount(),
                     getFixedAuditedAmount() == null || getFixedAuditedAmount().equals(BigDecimal.ZERO) ? null : getFixedAuditedAmount());
         }
     }
