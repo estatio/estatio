@@ -56,11 +56,6 @@ public class PartitioningTableItemImportExportService {
     }
 
     @Programmatic
-    public List<KeyItemImportExportLine> items(KeyItemImportExportManager manager) {
-        return Lists.transform(Lists.newArrayList(manager.getKeyTable().getItems()), toLineItem());
-    }
-
-    @Programmatic
     public List<KeyItemImportExportLine> items(SortedSet<KeyItem> keyItems) {
         return Lists.transform(Lists.newArrayList(keyItems), toLineItem());
     }

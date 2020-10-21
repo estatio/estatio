@@ -160,7 +160,7 @@ public class KeyTable extends PartitioningTable {
     }
 
     public String disableDistributeSourceValues(){
-        if (getFoundationValueType()!=FoundationValueType.MANUAL) return "This is a manual table";
+        if (getFoundationValueType()==FoundationValueType.MANUAL) return "This is a manual table";
         return isImmutableReason();
     }
 
