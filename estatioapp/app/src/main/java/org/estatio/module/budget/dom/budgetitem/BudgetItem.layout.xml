@@ -23,6 +23,7 @@
                                 <ns2:property id="auditedValue"/>
                                 <ns2:property id="calculationDescription"/>
                                 <ns2:property id="applicationTenancy"/>
+                                <ns2:property id="applicationLevelPath" hidden="EVERYWHERE"/>
                             </ns2:fieldSet>
                         </col>
                     </row>

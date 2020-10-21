@@ -16,6 +16,7 @@
                     <ns2:action id="changeName" position="BELOW"/>
                 </ns2:property>
                 <ns2:property id="applicationTenancy"/>
+                <ns2:property id="applicationLevelPath" hidden="EVERYWHERE"/>
                 <ns2:property id="budget"/>
             </ns2:fieldSet>
             <ns2:fieldSet name="Dates" id="dates"/>

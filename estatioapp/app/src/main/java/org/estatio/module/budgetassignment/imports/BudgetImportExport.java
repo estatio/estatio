@@ -69,7 +69,8 @@ public class BudgetImportExport implements Importable, FixtureAwareRowHandler<Bu
             final BigDecimal fixedBudgetedAmount,
             final BigDecimal fixedAuditedAmount,
             final String calculationDescription,
-            final String tableType){
+            final String tableType,
+            final BudgetCalculationType budgetCalculationType){
         this.propertyReference = propertyReference;
         this.budgetStartDate = budgetStartDate;
         this.budgetEndDate = budgetEndDate;
@@ -85,6 +86,7 @@ public class BudgetImportExport implements Importable, FixtureAwareRowHandler<Bu
         this.fixedAuditedAmount = fixedAuditedAmount;
         this.calculationDescription = calculationDescription;
         this.tableType = tableType;
+        this.budgetCalculationType = budgetCalculationType.name();
     }
 
     @Getter @Setter
@@ -103,7 +105,7 @@ public class BudgetImportExport implements Importable, FixtureAwareRowHandler<Bu
     @MemberOrder(sequence = "4")
     private BigDecimal budgetedValue;
     @Getter @Setter
-    @MemberOrder(sequence = "6")
+    @MemberOrder(sequence = "5")
     private BigDecimal auditedValue;
     @Getter @Setter
     @MemberOrder(sequence = "9")
@@ -121,7 +123,7 @@ public class BudgetImportExport implements Importable, FixtureAwareRowHandler<Bu
     @MemberOrder(sequence = "13")
     private BigDecimal percentage;
     @Getter @Setter
-    @MemberOrder(sequence = "5")
+    @MemberOrder(sequence = "6")
     private BigDecimal fixedBudgetedAmount;
     @Getter @Setter
     @MemberOrder(sequence = "7")
@@ -132,6 +134,9 @@ public class BudgetImportExport implements Importable, FixtureAwareRowHandler<Bu
     @Getter @Setter
     @MemberOrder(sequence = "15")
     private String tableType;
+    @Getter @Setter
+    @MemberOrder(sequence = "0")
+    private String budgetCalculationType;
 
 
     @Override

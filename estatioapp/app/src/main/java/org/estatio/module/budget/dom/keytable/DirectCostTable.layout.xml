@@ -15,6 +15,7 @@
                     <ns2:action id="changeName" position="BELOW"/>
                 </ns2:property>
                 <ns2:property id="budget"/>
+                <ns2:property id="applicationLevelPath" hidden="EVERYWHERE"/>
             </ns2:fieldSet>
             <ns2:fieldSet name="Metadata" id="metadata">
                 <ns2:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>

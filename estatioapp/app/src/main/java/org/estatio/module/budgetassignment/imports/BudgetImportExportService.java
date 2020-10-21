@@ -81,7 +81,7 @@ public class BudgetImportExportService {
 
         if (item.getPartitionItems().size()==0){
             // create 1 line
-            lines.add(new BudgetImportExport(propertyReference,budgetStartDate,budgetEndDate, budgetChargeReference,budgetedValue,auditedValue,null,null,null, null, null, null, null, null, null));
+            lines.add(new BudgetImportExport(propertyReference,budgetStartDate,budgetEndDate, budgetChargeReference,budgetedValue,auditedValue,null,null,null, null, null, null, null, null, null,null));
 
         } else {
             // create a line for each partion item
@@ -110,7 +110,8 @@ public class BudgetImportExportService {
                                 partitionItem.getFixedBudgetedAmount(),
                                 partitionItem.getFixedAuditedAmount(),
                                 item.getCalculationDescription(),
-                                type.toString())
+                                type.toString(),
+                                partitionItem.getPartitioning().getType())
                 );
 
             }
