@@ -20,6 +20,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -42,9 +43,6 @@ import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budget.BudgetRepository;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
-import org.estatio.module.budget.dom.keyitem.DirectCost;
-import org.estatio.module.budget.dom.keyitem.KeyItem;
-import org.estatio.module.budget.dom.keytable.DirectCostTable;
 import org.estatio.module.budget.dom.keytable.KeyTable;
 import org.estatio.module.budget.dom.keytable.PartitioningTableRepository;
 import org.estatio.module.budget.dom.partioning.PartitionItem;
@@ -212,10 +210,10 @@ public class BudgetImportExportService {
 
 
             // import keyTables
-            importKeyTables(lineItems, objects, budget);
+            importKeyTables((List<KeyItemImportExportLine>) objects.get(1));
 
             // import directCosts
-            importDirectCostTables(lineItems, objects, budget);
+            importDirectCostTables((List<DirectCostLine>) objects.get(2));
 
         } else {
 
@@ -226,110 +224,24 @@ public class BudgetImportExportService {
         return budget;
     }
 
-    private Budget getBudgetUsingFirstLine(List<BudgetImportExport> lineItems){
-        BudgetImportExport firstLine = lineItems.get(0);
-        Property property = propertyRepository.findPropertyByReference(firstLine.getPropertyReference());
-        return budgetRepository.findByPropertyAndStartDate(property, firstLine.getBudgetStartDate());
+    private void importKeyTables(final List<KeyItemImportExportLine> keyItemLines){
+        final List<String> distinctKeyTableNames = keyItemLines.stream().map(l -> l.getKeyTableName()).distinct()
+                .collect(Collectors.toList());
+        distinctKeyTableNames.forEach(ktn->{
+            final List<KeyItemImportExportLine> linesForKeyTableName = keyItemLines.stream()
+                    .filter(l -> l.getKeyTableName().equals(ktn)).collect(Collectors.toList());
+            partitioningTableItemImportExportService.importLines(linesForKeyTableName);
+        });
     }
 
-    private void importKeyTables(final List<BudgetImportExport> budgetItemLines, final List<List<?>> objects, final Budget budget){
-
-        List<KeyTable> keyTablesToImport = keyTablesToImport(budgetItemLines, budget);
-        List<KeyItemImportExportLine> keyItemLines = (List<KeyItemImportExportLine>) objects.get(1);
-
-        // filter case where no key items are filled in
-        if (keyItemLines.size() == 0) {return;}
-
-        for (KeyTable keyTable : keyTablesToImport){
-            List<KeyItemImportExportLine> itemsToImportForKeyTable = new ArrayList<>();
-            for (KeyItemImportExportLine keyItemLine : keyItemLines){
-                if (keyItemLine.getKeyTableName().equals(keyTable.getName())){
-                    itemsToImportForKeyTable.add(new KeyItemImportExportLine(keyItemLine));
-                }
-            }
-            for (KeyItem keyItem : keyTable.getItems()) {
-                Boolean keyItemFound = false;
-                for (KeyItemImportExportLine lineItem : itemsToImportForKeyTable){
-                    if (lineItem.getUnitReference().equals(keyItem.getUnit().getReference())){
-                        keyItemFound = true;
-                        break;
-                    }
-                }
-                if (!keyItemFound) {
-                    KeyItemImportExportLine deletedItem = new KeyItemImportExportLine(keyItem, null);
-                    deletedItem.setStatus(Status.DELETED);
-                    itemsToImportForKeyTable.add(deletedItem);
-                }
-            }
-            for (KeyItemImportExportLine item : itemsToImportForKeyTable){
-                serviceRegistry2.injectServicesInto(item);
-                item.validate();
-                item.apply();
-            }
-        }
-    }
-
-    private List<KeyTable> keyTablesToImport(final List<BudgetImportExport> lineItems, final Budget budget){
-        List<KeyTable> result = new ArrayList<>();
-        for (BudgetImportExport lineItem :lineItems) {
-            if (PartitioningTableType.valueOf(lineItem.getTableType()) == PartitioningTableType.KEY_TABLE) {
-                KeyTable foundKeyTable = (KeyTable) partitioningTableRepository.findByBudgetAndName(budget, lineItem.getPartitioningTableName());
-                if (foundKeyTable != null && !result.contains(foundKeyTable)) {
-                    result.add(foundKeyTable);
-                }
-            }
-        }
-        return result;
-    }
-
-    private void importDirectCostTables(final List<BudgetImportExport> budgetItemLines, final List<List<?>> objects, final Budget budget){
-
-        List<DirectCostTable> tablesToImport = directCostTablesToImport(budgetItemLines, budget);
-        List<DirectCostLine> lines = (List<DirectCostLine>) objects.get(2);
-
-        // filter case where no key items are filled in
-        if (lines.size() == 0) {return;}
-
-        for (DirectCostTable table : tablesToImport){
-            List<DirectCostLine> itemsToImportForTable = new ArrayList<>();
-            for (DirectCostLine line : lines){
-                if (line.getDirectCostTableName().equals(table.getName())){
-                    itemsToImportForTable.add(new DirectCostLine(line));
-                }
-            }
-            for (DirectCost directCost : table.getItems()) {
-                Boolean itemFound = false;
-                for (DirectCostLine lineItem : itemsToImportForTable){
-                    if (lineItem.getUnitReference().equals(directCost.getUnit().getReference())){
-                        itemFound = true;
-                        break;
-                    }
-                }
-                if (!itemFound) {
-                    DirectCostLine deletedItem = new DirectCostLine(directCost, null);
-                    deletedItem.setStatus(Status.DELETED);
-                    itemsToImportForTable.add(deletedItem);
-                }
-            }
-            for (DirectCostLine item : itemsToImportForTable){
-                serviceRegistry2.injectServicesInto(item);
-                item.validate();
-                item.apply();
-            }
-        }
-    }
-
-    private List<DirectCostTable> directCostTablesToImport(final List<BudgetImportExport> lineItems, final Budget budget){
-        List<DirectCostTable> result = new ArrayList<>();
-        for (BudgetImportExport lineItem :lineItems) {
-            if (PartitioningTableType.valueOf(lineItem.getTableType()) == PartitioningTableType.DIRECT_COST_TABLE) {
-                DirectCostTable foundTable = (DirectCostTable) partitioningTableRepository.findByBudgetAndName(budget, lineItem.getPartitioningTableName());
-                if (foundTable != null && !result.contains(foundTable)) {
-                    result.add(foundTable);
-                }
-            }
-        }
-        return result;
+    private void importDirectCostTables(final List<DirectCostLine> directCostLines){
+        final List<String> distinctDirectCostTableNames = directCostLines.stream().map(l -> l.getDirectCostTableName()).distinct()
+                .collect(Collectors.toList());
+        distinctDirectCostTableNames.forEach(dctn->{
+            final List<DirectCostLine> linesForDirectCostTableName = directCostLines.stream()
+                    .filter(l -> l.getDirectCostTableName().equals(dctn)).collect(Collectors.toList());
+            partitioningTableItemImportExportService.importDirectCostLines(linesForDirectCostTableName);
+        });
     }
 
     @Inject
@@ -346,5 +258,7 @@ public class BudgetImportExportService {
     @Inject PartitioningTableRepository partitioningTableRepository;
 
     @Inject BudgetService budgetService;
+
+    @Inject PartitioningTableItemImportExportService partitioningTableItemImportExportService;
 
 }
