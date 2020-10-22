@@ -35,16 +35,16 @@ import org.estatio.module.lease.dom.occupancy.OccupancyRepository;
  * This cannot be inlined (needs to be a mixin) because Budget doesn't know about CalculationResultViewModel
  */
 @Mixin
-public class Budget_DownloadCalculations {
+public class Budget_DownloadCalculationResults {
 
     private final Budget budget;
-    public Budget_DownloadCalculations(Budget budget){
+    public Budget_DownloadCalculationResults(Budget budget){
         this.budget = budget;
     }
 
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(cssClassFa = "fa-download")
-    public Blob downloadCalculations() {
+    public Blob downloadCalculationResults() {
         final String fileName =  budget.title() + ".xlsx";
         WorksheetSpec spec = new WorksheetSpec(CalculationResultViewModel.class, "values");
         WorksheetContent worksheetContent = new WorksheetContent(getCalculationResultsForBudget(), spec);
