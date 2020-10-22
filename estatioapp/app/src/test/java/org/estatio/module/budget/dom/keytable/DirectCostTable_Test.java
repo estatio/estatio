@@ -1,34 +1,30 @@
 package org.estatio.module.budget.dom.keytable;
 
 import java.math.BigDecimal;
+import java.util.List;
 
-import org.jmock.Expectations;
-import org.jmock.auto.Mock;
+import org.assertj.core.api.Assertions;
 import org.joda.time.LocalDate;
-import org.junit.Rule;
 import org.junit.Test;
 
-import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
-
-import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationRepository;
+import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
+import org.estatio.module.budget.dom.budgetcalculation.InMemBudgetCalculation;
+import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.budget.dom.keyitem.DirectCost;
 import org.estatio.module.budget.dom.partioning.PartitionItem;
 
 public class DirectCostTable_Test {
 
-    @Rule
-    public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(JUnitRuleMockery2.Mode.INTERFACES_AND_CLASSES);
-
-    @Mock
-    BudgetCalculationRepository mockBudgetCalculationRepository;
-
     @Test
-    public void calculateFor_works() {
+    public void calculateInMemFor_works() {
 
         // given
+        Budget budget = new Budget();
+        BudgetItem budgetItem = new BudgetItem();
+        budgetItem.setBudget(budget);
+
         DirectCostTable directCostTable = new DirectCostTable();
-        directCostTable.budgetCalculationRepository = mockBudgetCalculationRepository;
         DirectCost directCost1 = new DirectCost();
         directCost1.setBudgetedCost(new BigDecimal("123.45"));
         directCostTable.getItems().add(directCost1);
@@ -38,22 +34,39 @@ public class DirectCostTable_Test {
         directCostTable.getItems().add(directCost2);
 
         PartitionItem partitionItem = new PartitionItem();
+        partitionItem.setBudgetItem(budgetItem);
 
         LocalDate calcStartDate = new LocalDate(2019,1,1);
         LocalDate calcEndDate = new LocalDate(2019,12,31);
 
-        // expect
-        context.checking(new Expectations(){{
-            oneOf(mockBudgetCalculationRepository).findOrCreateBudgetCalculation(
-                    partitionItem, directCost1, directCost1.getBudgetedCost(), BudgetCalculationType.BUDGETED, calcStartDate, calcEndDate
-            );
-            oneOf(mockBudgetCalculationRepository).findOrCreateBudgetCalculation(
-                    partitionItem, directCost2, directCost2.getBudgetedCost(), BudgetCalculationType.BUDGETED, calcStartDate, calcEndDate
-            );
-        }});
-
         // when
-        directCostTable.calculateFor(partitionItem, null, BudgetCalculationType.BUDGETED, calcStartDate, calcEndDate);
+        final List<InMemBudgetCalculation> calculations = directCostTable
+                .calculateInMemFor(partitionItem, null, BudgetCalculationType.BUDGETED, calcStartDate, calcEndDate);
+        // then
+        Assertions.assertThat(calculations).hasSize(2);
+        final InMemBudgetCalculation firstCalc = calculations.get(0);
+        Assertions.assertThat(firstCalc.getValue()).isEqualTo(new BigDecimal("123.45"));
+        Assertions.assertThat(firstCalc.getCalculationStartDate()).isEqualTo(calcStartDate);
+        Assertions.assertThat(firstCalc.getCalculationEndDate()).isEqualTo(calcEndDate);
+        Assertions.assertThat(firstCalc.getCalculationType()).isEqualTo(BudgetCalculationType.BUDGETED);
+        Assertions.assertThat(firstCalc.getBudget()).isEqualTo(budget);
+        Assertions.assertThat(firstCalc.getPartitionItem()).isEqualTo(partitionItem);
+        Assertions.assertThat(firstCalc.getTableItem()).isEqualTo(directCost1);
+        Assertions.assertThat(firstCalc.getUnit()).isNull();
+        Assertions.assertThat(firstCalc.getIncomingCharge()).isNull();
+        Assertions.assertThat(firstCalc.getInvoiceCharge()).isNull();
+
+        final InMemBudgetCalculation secondCalc = calculations.get(1);
+        Assertions.assertThat(secondCalc.getValue()).isEqualTo(new BigDecimal("234.56"));
+        Assertions.assertThat(secondCalc.getCalculationStartDate()).isEqualTo(calcStartDate);
+        Assertions.assertThat(secondCalc.getCalculationEndDate()).isEqualTo(calcEndDate);
+        Assertions.assertThat(secondCalc.getCalculationType()).isEqualTo(BudgetCalculationType.BUDGETED);
+        Assertions.assertThat(secondCalc.getBudget()).isEqualTo(budget);
+        Assertions.assertThat(secondCalc.getPartitionItem()).isEqualTo(partitionItem);
+        Assertions.assertThat(secondCalc.getTableItem()).isEqualTo(directCost2);
+        Assertions.assertThat(secondCalc.getUnit()).isNull();
+        Assertions.assertThat(secondCalc.getIncomingCharge()).isNull();
+        Assertions.assertThat(secondCalc.getInvoiceCharge()).isNull();
 
     }
 }

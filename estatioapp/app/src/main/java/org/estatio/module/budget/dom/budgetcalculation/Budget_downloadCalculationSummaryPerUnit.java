@@ -35,13 +35,10 @@ public class Budget_downloadCalculationSummaryPerUnit {
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(cssClassFa = "fa-download")
     public Blob $$(final String filename, final BudgetCalculationType budgetCalculationType, final LocalDate calculationStartDate, final LocalDate calculationEndDate) {
-        final List<BudgetCalculation> calculations = budgetCalculationRepository.findByBudget(budget).stream()
-                .filter(bc->bc.getCalculationStartDate().equals(calculationStartDate))
-                .filter(bc->bc.getCalculationEndDate().equals(calculationEndDate))
-                .filter(bc -> bc.getCalculationType() == budgetCalculationType).collect(
-                        Collectors.toList());
+        final List<InMemBudgetCalculation> calculations = budgetCalculationService
+                .calculateInMem(budget, budgetCalculationType, calculationStartDate, calculationEndDate);
         List<CalculationVM> vmList = new ArrayList<>();
-        for (BudgetCalculation calculation : calculations){
+        for (InMemBudgetCalculation calculation : calculations){
             final Occupancy occupancyIfAny = occupancyRepository
                     .occupanciesByUnitAndInterval(calculation.getUnit(), calculation.getBudget().getInterval()).stream()
                     .findFirst().orElse(null);
@@ -77,10 +74,10 @@ public class Budget_downloadCalculationSummaryPerUnit {
         return fileName.endsWith(fileExtension) ? fileName : fileName + fileExtension;
     }
 
-    @Inject BudgetCalculationRepository budgetCalculationRepository;
-
     @Inject ExcelService excelService;
 
     @Inject OccupancyRepository occupancyRepository;
+
+    @Inject BudgetCalculationService budgetCalculationService;
 
 }

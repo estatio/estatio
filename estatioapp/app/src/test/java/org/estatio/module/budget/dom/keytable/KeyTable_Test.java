@@ -18,21 +18,20 @@
 package org.estatio.module.budget.dom.keytable;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
+import java.util.List;
 
-import org.jmock.Expectations;
-import org.jmock.auto.Mock;
+import org.assertj.core.api.Assertions;
 import org.joda.time.LocalDate;
-import org.junit.Rule;
 import org.junit.Test;
-
-import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
 import org.incode.module.unittestsupport.dom.bean.AbstractBeanPropertiesTest;
 
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budget.Status;
-import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationRepository;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
+import org.estatio.module.budget.dom.budgetcalculation.InMemBudgetCalculation;
+import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.budget.dom.keyitem.KeyItem;
 import org.estatio.module.budget.dom.partioning.PartitionItem;
 import org.estatio.module.budget.dom.partioning.Partitioning;
@@ -113,19 +112,18 @@ public class KeyTable_Test {
 
         }
 
-        @Rule
-        public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(JUnitRuleMockery2.Mode.INTERFACES_AND_CLASSES);
-
-        @Mock BudgetCalculationRepository mockBudgetCalculationRepository;
 
         @Test
-        public void calculateFor_works() throws Exception {
+        public void calculateInMemFor_works() throws Exception {
 
             // given
+            Budget budget = new Budget();
+            BudgetItem budgetItem = new BudgetItem();
+            budgetItem.setBudget(budget);
+
             final BigDecimal partitionItemValue = new BigDecimal("1234.56");
             final BudgetCalculationType budgetCalculationType = BudgetCalculationType.BUDGETED;
             final KeyTable keyTable = new KeyTable();
-            keyTable.budgetCalculationRepository = mockBudgetCalculationRepository;
             keyTable.setKeyValueMethod(KeyValueMethod.PROMILLE);
             keyTable.setPrecision(6);
 
@@ -138,31 +136,47 @@ public class KeyTable_Test {
             keyTable.getItems().add(keyItem2);
 
             PartitionItem partitionItem = new PartitionItem();
+            partitionItem.setBudgetItem(budgetItem);
 
             LocalDate calcStartDate = new LocalDate(2019,1,1);
             LocalDate calcEndDate = new LocalDate(2019,12,31);
 
-            // expect
-            context.checking(new Expectations(){{
-                oneOf(mockBudgetCalculationRepository).findOrCreateBudgetCalculation(
-                        partitionItem
-                        , keyItem1
-                        , new BigDecimal("1.234560")
-                        , BudgetCalculationType.BUDGETED
-                        , calcStartDate
-                        , calcEndDate);
-                oneOf(mockBudgetCalculationRepository).findOrCreateBudgetCalculation(
-                        partitionItem
-                        , keyItem2
-                        , new BigDecimal("2.469120")
-                        , BudgetCalculationType.BUDGETED
-                        , calcStartDate
-                        , calcEndDate);
-            }});
-
             // when
-            keyTable.calculateFor(partitionItem, partitionItemValue, budgetCalculationType, calcStartDate, calcEndDate);
+            final List<InMemBudgetCalculation> calculations = keyTable.calculateInMemFor(partitionItem, partitionItemValue, budgetCalculationType, calcStartDate, calcEndDate);
 
+            // then
+            Assertions.assertThat(calculations).hasSize(2);
+            BigDecimal divider = keyTable.getKeyValueMethod().divider(keyTable);
+
+            final InMemBudgetCalculation firstCalc = calculations.get(0);
+            Assertions.assertThat(firstCalc.getValue()).isEqualTo(new BigDecimal("1.234560"));
+            Assertions.assertThat(firstCalc.getValue()).isEqualTo(partitionItemValue.multiply(keyItem1.getValue())
+                    .divide(divider, MathContext.DECIMAL64)
+                    .setScale(keyTable.getPrecision(), BigDecimal.ROUND_HALF_UP));
+            Assertions.assertThat(firstCalc.getCalculationStartDate()).isEqualTo(calcStartDate);
+            Assertions.assertThat(firstCalc.getCalculationEndDate()).isEqualTo(calcEndDate);
+            Assertions.assertThat(firstCalc.getCalculationType()).isEqualTo(BudgetCalculationType.BUDGETED);
+            Assertions.assertThat(firstCalc.getBudget()).isEqualTo(budget);
+            Assertions.assertThat(firstCalc.getPartitionItem()).isEqualTo(partitionItem);
+            Assertions.assertThat(firstCalc.getTableItem()).isEqualTo(keyItem1);
+            Assertions.assertThat(firstCalc.getUnit()).isNull();
+            Assertions.assertThat(firstCalc.getIncomingCharge()).isNull();
+            Assertions.assertThat(firstCalc.getInvoiceCharge()).isNull();
+
+            final InMemBudgetCalculation secondCalc = calculations.get(1);
+            Assertions.assertThat(secondCalc.getValue()).isEqualTo(new BigDecimal("2.469120"));
+            Assertions.assertThat(secondCalc.getValue()).isEqualTo(partitionItemValue.multiply(keyItem2.getValue())
+                    .divide(divider, MathContext.DECIMAL64)
+                    .setScale(keyTable.getPrecision(), BigDecimal.ROUND_HALF_UP));
+            Assertions.assertThat(secondCalc.getCalculationStartDate()).isEqualTo(calcStartDate);
+            Assertions.assertThat(secondCalc.getCalculationEndDate()).isEqualTo(calcEndDate);
+            Assertions.assertThat(secondCalc.getCalculationType()).isEqualTo(BudgetCalculationType.BUDGETED);
+            Assertions.assertThat(secondCalc.getBudget()).isEqualTo(budget);
+            Assertions.assertThat(secondCalc.getPartitionItem()).isEqualTo(partitionItem);
+            Assertions.assertThat(secondCalc.getTableItem()).isEqualTo(keyItem2);
+            Assertions.assertThat(secondCalc.getUnit()).isNull();
+            Assertions.assertThat(secondCalc.getIncomingCharge()).isNull();
+            Assertions.assertThat(secondCalc.getInvoiceCharge()).isNull();
         }
 
     }

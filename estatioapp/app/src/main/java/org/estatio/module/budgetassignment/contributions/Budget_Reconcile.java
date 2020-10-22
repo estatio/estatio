@@ -35,7 +35,7 @@ public class Budget_Reconcile {
     public Budget reconcile(
             @ParameterLayout(describedAs = "Final calculation will make the calculations permanent and impact the leases")
             final boolean finalCalculation) {
-            budgetCalculationService.calculate(budget, BudgetCalculationType.AUDITED);
+            budgetCalculationService.calculate(budget, BudgetCalculationType.AUDITED, budget.getStartDate(), budget.getEndDate(), true);
             if (finalCalculation){
                 List<BudgetCalculationResult> results = budgetAssignmentService.calculateResults(budget, BudgetCalculationType.AUDITED);
                 budgetAssignmentService.assignNonAssignedCalculationResultsToLeases(results);

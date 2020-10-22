@@ -53,13 +53,12 @@ import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.asset.dom.UnitRepository;
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budget.Status;
-import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculation;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationRepository;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
+import org.estatio.module.budget.dom.budgetcalculation.InMemBudgetCalculation;
 import org.estatio.module.budget.dom.keyitem.DirectCost;
 import org.estatio.module.budget.dom.keyitem.DirectCostRepository;
 import org.estatio.module.budget.dom.partioning.PartitionItem;
-import org.estatio.module.budget.dom.partioning.PartitionItemRepository;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -196,43 +195,54 @@ public class DirectCostTable extends PartitioningTable {
 
     @Programmatic
     @Override
-    public List<BudgetCalculation> calculateFor(
+    public List<InMemBudgetCalculation> calculateInMemFor(
             final PartitionItem partitionItem,
             final BigDecimal partitionItemValue,
             final BudgetCalculationType type,
             final LocalDate calculationStartDate,
             final LocalDate calculationEndDate) {
-        List<BudgetCalculation> results = new ArrayList<>();
+        List<InMemBudgetCalculation> results = new ArrayList<>();
         Lists.newArrayList(getItems()).stream().forEach(i->{
-            switch (type){
-            case BUDGETED:
-                if (i.getBudgetedCost()!=null){
-                    final BudgetCalculation createBudgetCalculation = budgetCalculationRepository
-                            .findOrCreateBudgetCalculation(
-                                    partitionItem,
-                                    i,
-                                    i.getBudgetedCost(),
-                                    type,
-                                    calculationStartDate,
-                                    calculationEndDate
-                            );
-                    results.add(createBudgetCalculation);
-                }
-            case AUDITED:
-                if (i.getAuditedCost()!=null){
-                    final BudgetCalculation createBudgetCalculation = budgetCalculationRepository
-                            .findOrCreateBudgetCalculation(
-                                    partitionItem,
-                                    i,
-                                    i.getAuditedCost(),
-                                    type,
-                                    calculationStartDate,
-                                    calculationEndDate
-                            );
-                    results.add(createBudgetCalculation);
-                }
+            if (i.getBudgetedCost()!=null){
+                results.add(
+                        BudgetCalculationRepository.createInMemBudgetCalculation(
+                                partitionItem,
+                                i,
+                                type==BudgetCalculationType.BUDGETED ? i.getBudgetedCost() : i.getAuditedCost(),
+                                type,
+                                calculationStartDate,
+                                calculationEndDate
+                        )
+                );
             }
         });
+        return results;
+    }
+
+    @Programmatic
+    @Override
+    public List<InMemBudgetCalculation> calculateInMemForUnit(
+            final PartitionItem partitionItem,
+            final BigDecimal partitionItemValue,
+            final BudgetCalculationType type,
+            final Unit unit,
+            final LocalDate calculationStartDate,
+            final LocalDate calculationEndDate) {
+        List<InMemBudgetCalculation> results = new ArrayList<>();
+        final DirectCost directCostForUnitIfAny = Lists.newArrayList(getItems()).stream().filter(i -> i.getUnit() == unit).findFirst()
+                .orElse(null);
+        if (directCostForUnitIfAny!=null){
+            results.add(
+                    BudgetCalculationRepository.createInMemBudgetCalculation(
+                            partitionItem,
+                            directCostForUnitIfAny,
+                            type==BudgetCalculationType.BUDGETED ? directCostForUnitIfAny.getBudgetedCost() : directCostForUnitIfAny.getAuditedCost(),
+                            type,
+                            calculationStartDate,
+                            calculationEndDate
+                    )
+            );
+        }
         return results;
     }
 
@@ -243,12 +253,7 @@ public class DirectCostTable extends PartitioningTable {
     RepositoryService repositoryService;
 
     @Inject
-    PartitionItemRepository partitionItemRepository;
-
-    @Inject
     UnitRepository unitRepository;
 
-    @Inject
-    BudgetCalculationRepository budgetCalculationRepository;
 
 }

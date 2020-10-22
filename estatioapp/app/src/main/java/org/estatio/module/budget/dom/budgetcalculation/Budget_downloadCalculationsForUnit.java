@@ -39,9 +39,9 @@ public class Budget_downloadCalculationsForUnit {
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(cssClassFa = "fa-download")
     public Blob $$(final String filename, final Unit unit, final BudgetCalculationType budgetCalculationType, final LocalDate calculationStartDate, final LocalDate calculationEndDate) {
-        final List<BudgetCalculation> calculations = budgetCalculationRepository.findByBudgetAndUnitAndType(budget, unit, budgetCalculationType);
+        final List<InMemBudgetCalculation> calculations= budgetCalculationService.calculateInMemForUnit(budget, budgetCalculationType, unit, calculationStartDate, calculationEndDate);
         List<CalculationVMForUnit> vmList = new ArrayList<>();
-        for (BudgetCalculation calculation : calculations){
+        for (InMemBudgetCalculation calculation : calculations){
             StringBuffer buffer = new StringBuffer();
             buffer.append(calculation.getIncomingCharge().getReference());
             buffer.append("-");
@@ -60,7 +60,7 @@ public class Budget_downloadCalculationsForUnit {
             }
             String incomingChargeReferenceAndPartitioning = buffer.toString();
 
-            final BigDecimal budgetItemAmount = budgetCalculationType==BudgetCalculationType.BUDGETED ? calculation.getBudgetItem().getBudgetedValue() : calculation.getBudgetItem().getAuditedValue();
+            final BigDecimal budgetItemAmount = budgetCalculationType==BudgetCalculationType.BUDGETED ? calculation.getPartitionItem().getBudgetItem().getBudgetedValue() : calculation.getPartitionItem().getBudgetItem().getAuditedValue();
 
             StringBuffer buffer1 = new StringBuffer();
             buffer1.append(calculation.getTableItem().getPartitioningTable().getName());
@@ -84,7 +84,7 @@ public class Budget_downloadCalculationsForUnit {
                     new CalculationVMForUnit(
                             incomingChargeReferenceAndPartitioning,
                             budgetItemAmount,
-                            calculation.getBudgetItem().getCalculationDescription(),
+                            calculation.getPartitionItem().getBudgetItem().getCalculationDescription(),
                             tableNameAndSourceValue,
                             calculation.getValue()
                     )
@@ -121,7 +121,7 @@ public class Budget_downloadCalculationsForUnit {
         return fileName.endsWith(fileExtension) ? fileName : fileName + fileExtension;
     }
 
-    @Inject BudgetCalculationRepository budgetCalculationRepository;
+    @Inject BudgetCalculationService budgetCalculationService;
 
     @Inject ExcelService excelService;
 

@@ -49,6 +49,27 @@ public class BudgetCalculationRepository extends UdoDomainRepositoryAndFactory<B
         return budgetCalculation;
     }
 
+    public static InMemBudgetCalculation createInMemBudgetCalculation(
+            final PartitionItem partitionItem,
+            final PartitioningTableItem tableItem,
+            final BigDecimal value,
+            final BudgetCalculationType calculationType,
+            final LocalDate calculationStartDate,
+            final LocalDate calculationEndDate){
+        return new InMemBudgetCalculation(
+                value,
+                calculationStartDate,
+                calculationEndDate,
+                partitionItem,
+                tableItem,
+                calculationType,
+                partitionItem.getBudget(),
+                tableItem.getUnit(),
+                partitionItem.getCharge(),
+                partitionItem.getBudgetItem().getCharge()
+        );
+    }
+
     public BudgetCalculation findOrCreateBudgetCalculation(
             final PartitionItem partitionItem,
             final PartitioningTableItem keyItem,
@@ -61,6 +82,26 @@ public class BudgetCalculationRepository extends UdoDomainRepositoryAndFactory<B
                 calculationEndDate);
         return uniqueCalcuationIfAny ==null ?
                 createBudgetCalculation(partitionItem, keyItem, value, calculationType, calculationStartDate, calculationEndDate) :
+                uniqueCalcuationIfAny;
+    }
+
+    public BudgetCalculation findOrCreateBudgetCalculation(
+            final InMemBudgetCalculation inMemBudgetCalculation
+    ) {
+        final BudgetCalculation uniqueCalcuationIfAny = findUnique(
+                inMemBudgetCalculation.getPartitionItem(),
+                inMemBudgetCalculation.getTableItem(),
+                inMemBudgetCalculation.getCalculationType(),
+                inMemBudgetCalculation.getCalculationStartDate(),
+                inMemBudgetCalculation.getCalculationEndDate());
+        return uniqueCalcuationIfAny ==null ?
+                createBudgetCalculation(
+                        inMemBudgetCalculation.getPartitionItem(),
+                        inMemBudgetCalculation.getTableItem(),
+                        inMemBudgetCalculation.getValue(),
+                        inMemBudgetCalculation.getCalculationType(),
+                        inMemBudgetCalculation.getCalculationStartDate(),
+                        inMemBudgetCalculation.getCalculationEndDate()) :
                 uniqueCalcuationIfAny;
     }
 

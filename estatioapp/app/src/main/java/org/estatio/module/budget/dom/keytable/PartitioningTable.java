@@ -28,11 +28,12 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.incode.module.base.dom.utils.TitleBuilder;
 
+import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.base.dom.UdoDomainObject2;
 import org.estatio.module.base.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.module.budget.dom.budget.Budget;
-import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculation;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
+import org.estatio.module.budget.dom.budgetcalculation.InMemBudgetCalculation;
 import org.estatio.module.budget.dom.partioning.PartitionItem;
 import org.estatio.module.budget.dom.partioning.Partitioning;
 
@@ -151,15 +152,23 @@ public abstract class PartitioningTable extends UdoDomainObject2<Budget> impleme
     }
 
     @Programmatic
-    public abstract List<BudgetCalculation> calculateFor(
+    public abstract List<InMemBudgetCalculation> calculateInMemFor(
             final PartitionItem partitionItem,
             final BigDecimal partitionItemValue,
             final BudgetCalculationType budgetCalculationType,
             final LocalDate calculationStartDate,
             final LocalDate calculationEndDate);
 
+    @Programmatic
+    public abstract List<InMemBudgetCalculation> calculateInMemForUnit(
+            final PartitionItem partitionItem,
+            final BigDecimal partitionItemValue,
+            final BudgetCalculationType budgetCalculationType,
+            final Unit unit,
+            final LocalDate calculationStartDate,
+            final LocalDate calculationEndDate);
+
     @Inject
     PartitioningTableRepository partitioningTableRepository;
-
 
 }

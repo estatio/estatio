@@ -55,9 +55,9 @@ import org.estatio.module.base.dom.distribution.Distributable;
 import org.estatio.module.base.dom.distribution.DistributionService;
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budget.Status;
-import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculation;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationRepository;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
+import org.estatio.module.budget.dom.budgetcalculation.InMemBudgetCalculation;
 import org.estatio.module.budget.dom.keyitem.KeyItem;
 import org.estatio.module.budget.dom.keyitem.KeyItemRepository;
 import org.estatio.module.budget.dom.partioning.PartitionItem;
@@ -223,17 +223,17 @@ public class KeyTable extends PartitioningTable {
 
     @Programmatic
     @Override
-    public List<BudgetCalculation> calculateFor(
+    public List<InMemBudgetCalculation> calculateInMemFor(
             final PartitionItem partitionItem,
             final BigDecimal partitionItemValue,
             final BudgetCalculationType type,
             final LocalDate calculationStartDate,
             final LocalDate calculationEndDate) {
         BigDecimal divider = getKeyValueMethod().divider(this);
-        List<BudgetCalculation> results = new ArrayList<>();
+        List<InMemBudgetCalculation> results = new ArrayList<>();
         Lists.newArrayList(getItems()).stream().forEach(i->{
-            final BudgetCalculation budgetCalculation = budgetCalculationRepository
-                    .findOrCreateBudgetCalculation(
+            results.add(BudgetCalculationRepository
+                    .createInMemBudgetCalculation(
                             partitionItem,
                             i,
                             partitionItemValue.multiply(i.getValue())
@@ -242,9 +242,37 @@ public class KeyTable extends PartitioningTable {
                             type,
                             calculationStartDate,
                             calculationEndDate
-                    );
-            results.add(budgetCalculation);
+                    ));
         });
+        return results;
+    }
+
+    @Programmatic
+    @Override
+    public List<InMemBudgetCalculation> calculateInMemForUnit(
+            final PartitionItem partitionItem,
+            final BigDecimal partitionItemValue,
+            final BudgetCalculationType type,
+            final Unit unit,
+            final LocalDate calculationStartDate,
+            final LocalDate calculationEndDate) {
+        BigDecimal divider = getKeyValueMethod().divider(this);
+        List<InMemBudgetCalculation> results = new ArrayList<>();
+        final KeyItem keyItemForUnitIfAny = Lists.newArrayList(getItems()).stream().filter(i -> i.getUnit() == unit).findFirst()
+                .orElse(null);
+        if (keyItemForUnitIfAny!=null) {
+            results.add(BudgetCalculationRepository
+                    .createInMemBudgetCalculation(
+                            partitionItem,
+                            keyItemForUnitIfAny,
+                            partitionItemValue.multiply(keyItemForUnitIfAny.getValue())
+                                    .divide(divider, MathContext.DECIMAL64)
+                                    .setScale(getPrecision(), BigDecimal.ROUND_HALF_UP),
+                            type,
+                            calculationStartDate,
+                            calculationEndDate
+                    ));
+        }
         return results;
     }
 
@@ -259,9 +287,6 @@ public class KeyTable extends PartitioningTable {
 
     @Inject
     DistributionService distributionService;
-
-    @Inject
-    BudgetCalculationRepository budgetCalculationRepository;
 
     @Inject
     TransactionService3 transactionService3;

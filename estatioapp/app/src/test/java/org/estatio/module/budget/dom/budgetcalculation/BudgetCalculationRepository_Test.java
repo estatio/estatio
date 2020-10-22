@@ -20,6 +20,7 @@ package org.estatio.module.budget.dom.budgetcalculation;
 import java.math.BigDecimal;
 import java.util.List;
 
+import org.assertj.core.api.Assertions;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
@@ -219,6 +220,52 @@ public class BudgetCalculationRepository_Test {
             assertThat(newBudgetCalculation.getTableItem()).isEqualTo(keyItem);
             assertThat(newBudgetCalculation.getValue()).isEqualTo(value);
         }
+    }
+
+    public static class OtherTests extends BudgetCalculationRepository_Test {
+
+        @Test
+        public void createInMemBudgetCalculation_works() throws Exception {
+
+            // given
+            Charge invoiceCharge = new Charge();
+            Charge incomingCharge = new Charge();
+
+            Budget budget = new Budget();
+            BudgetItem budgetItem = new BudgetItem();
+            budgetItem.setBudget(budget);
+            budgetItem.setCharge(incomingCharge);
+
+            PartitionItem partitionItem = new PartitionItem();
+            partitionItem.setBudgetItem(budgetItem);
+            partitionItem.setCharge(invoiceCharge);
+
+            Unit unit = new Unit();
+            KeyItem tableItem = new KeyItem();
+            tableItem.setUnit(unit);
+
+            BigDecimal value = new BigDecimal("1234.5678");
+            BudgetCalculationType calculationType = BudgetCalculationType.BUDGETED;
+            LocalDate startDate = new LocalDate(2020,1,1);
+            LocalDate endDate = new LocalDate(2020,10,15);
+
+            // when
+            final InMemBudgetCalculation inMemCalc = BudgetCalculationRepository
+                    .createInMemBudgetCalculation(partitionItem, tableItem, value, calculationType, startDate, endDate);
+            // then
+            Assertions.assertThat(inMemCalc.getValue()).isEqualTo(value);
+            Assertions.assertThat(inMemCalc.getCalculationStartDate()).isEqualTo(startDate);
+            Assertions.assertThat(inMemCalc.getCalculationEndDate()).isEqualTo(endDate);
+            Assertions.assertThat(inMemCalc.getPartitionItem()).isEqualTo(partitionItem);
+            Assertions.assertThat(inMemCalc.getTableItem()).isEqualTo(tableItem);
+            Assertions.assertThat(inMemCalc.getCalculationType()).isEqualTo(calculationType);
+            Assertions.assertThat(inMemCalc.getBudget()).isEqualTo(budget);
+            Assertions.assertThat(inMemCalc.getUnit()).isEqualTo(unit);
+            Assertions.assertThat(inMemCalc.getInvoiceCharge()).isEqualTo(invoiceCharge);
+            Assertions.assertThat(inMemCalc.getIncomingCharge()).isEqualTo(incomingCharge);
+
+        }
+
     }
 
 }
