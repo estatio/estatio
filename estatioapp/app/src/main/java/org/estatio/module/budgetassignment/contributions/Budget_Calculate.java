@@ -18,9 +18,7 @@ import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResult;
 import org.estatio.module.budgetassignment.dom.BudgetAssignmentService;
 
-/**
- * This cannot be inlined (needs to be a mixin) because Budget doesn't know about BudgetAssignmentService.
- */
+
 @Mixin
 public class Budget_Calculate {
 

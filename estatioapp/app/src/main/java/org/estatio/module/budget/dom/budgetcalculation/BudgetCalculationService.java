@@ -28,7 +28,7 @@ public class BudgetCalculationService {
                 calculationEndDate);
         if (persistCalculations){
             inMemCalcs.forEach(c->{
-                budgetCalculationRepository.findOrCreateBudgetCalculation((InMemBudgetCalculation) c);
+                budgetCalculationRepository.findOrCreateBudgetCalculation(c);
             });
         }
     }
@@ -75,6 +75,10 @@ public class BudgetCalculationService {
 
         List<InMemBudgetCalculation> results = new ArrayList<>();
 
+        // TODO: find a way take calculation period into account for audited value
+        // we now use partitionItem#getAuditedValue which is not correct unless the calculation start- and end date are equal to the budget start- and end date
+        // we may need to parameterise the audited value or move this service up to budget assigment module or ....?
+
         switch (type) {
         case BUDGETED:
             results.addAll(
@@ -95,6 +99,10 @@ public class BudgetCalculationService {
     private List<InMemBudgetCalculation> calculateInMemForUnit(final PartitionItem partitionItem, final BudgetCalculationType type, final Unit unit, final LocalDate calculationStartDate, final LocalDate calculationEndDate) {
 
         List<InMemBudgetCalculation> results = new ArrayList<>();
+
+        // TODO: take calculation period into account for audited value
+        // we now use partitionItem#getAuditedValue which is not correct unless the calculation start- and end date are equal to the budget start- and end date
+        // we may need to parameterise the audited value or move this service up to budget assigment module or ....?
 
         switch (type) {
         case BUDGETED:
