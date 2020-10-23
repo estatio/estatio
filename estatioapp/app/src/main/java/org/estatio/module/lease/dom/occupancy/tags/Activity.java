@@ -27,6 +27,7 @@ import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.Where;
 
+import org.estatio.module.base.dom.EstatioRole;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.base.dom.types.NameType;
@@ -114,5 +115,9 @@ public class Activity
 
     public Sector default1Change() {
         return getSector();
+    }
+
+    public String disableChange() {
+        return EstatioRole.ADMINISTRATOR.isApplicableFor(getUser()) ? null : "Users cannot change sectors or activities.";
     }
 }
