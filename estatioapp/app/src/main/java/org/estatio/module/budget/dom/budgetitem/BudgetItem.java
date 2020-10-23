@@ -288,7 +288,7 @@ public class BudgetItem extends UdoDomainObject2<BudgetItem>
             partitioning = getBudget().getPartitioningForBudgeting();
             break;
         case AUDITED:
-            partitioning = getBudget().getPartitioningForReconciliation();
+            partitioning = getBudget().findOrCreatePartitioningForReconciliation();
             break;
         default:
             partitioning = getBudget().getPartitioningForBudgeting();

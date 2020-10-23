@@ -376,12 +376,21 @@ public class Budget extends UdoDomainObject2<Budget>
     }
 
     @Programmatic
-    public Budget findOrCreatePartitioningForBudgeting(){
+    public Partitioning findOrCreatePartitioningForBudgeting(){
         Partitioning partitioningForBudgeting = getPartitioningForBudgeting();
         if (partitioningForBudgeting==null){
-            partitioningRepository.newPartitioning(this, getStartDate(), getEndDate(), BudgetCalculationType.BUDGETED);
+            partitioningForBudgeting = partitioningRepository.newPartitioning(this, getStartDate(), getEndDate(), BudgetCalculationType.BUDGETED);
         }
-        return this;
+        return partitioningForBudgeting;
+    }
+
+    @Programmatic
+    public Partitioning findOrCreatePartitioningForReconciliation(){
+        Partitioning partitioningForReconciliation = getPartitioningForReconciliation();
+        if (partitioningForReconciliation==null){
+            partitioningForReconciliation = partitioningRepository.newPartitioning(this, getStartDate(), getEndDate(), BudgetCalculationType.AUDITED);
+        }
+        return partitioningForReconciliation;
     }
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
