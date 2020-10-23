@@ -11,10 +11,10 @@ import org.estatio.module.budget.dom.budget.Status;
 import org.estatio.module.budgetassignment.dom.BudgetService;
 
 @Mixin
-public class Budget_UpdateAuditedValues {
+public class Budget_updateAuditedValues {
 
     private final Budget budget;
-    public Budget_UpdateAuditedValues(Budget budget){
+    public Budget_updateAuditedValues(Budget budget){
         this.budget = budget;
     }
 

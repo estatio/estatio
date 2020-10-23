@@ -23,10 +23,10 @@ import org.estatio.module.budgetassignment.dom.BudgetAssignmentService;
  * may (like the other mixins that do calculations) will depend upon services that are not within Budget.
  */
 @Mixin
-public class Budget_Reconcile {
+public class Budget_reconcile {
 
     private final Budget budget;
-    public Budget_Reconcile(Budget budget){
+    public Budget_reconcile(Budget budget){
         this.budget = budget;
     }
 

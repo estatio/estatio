@@ -18,10 +18,10 @@ import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculati
  * This cannot be inlined (needs to be a mixin) because Budget doesn't know about BudgetCalculationResultLinkRepository
  */
 @Mixin
-public class Budget_CalculationResults {
+public class Budget_calculationResults {
 
     private final Budget budget;
-    public Budget_CalculationResults(Budget budget){
+    public Budget_calculationResults(Budget budget){
         this.budget = budget;
     }
 

@@ -4,7 +4,6 @@
         <col span="12" unreferencedActions="true">
             <ns2:domainObject/>
             <ns2:action id="recentChanges"/>
-            <ns2:action id="createBudgetItemAllocation"/>
             <ns2:action id="links"/>
         </col>
     </row>
@@ -39,7 +38,6 @@
         </col>
         <col span="8" unreferencedCollections="true">
             <ns2:collection id="items">
-                <ns2:action id="distributeSourceValues"/>
                 <ns2:action id="generateItems"/>
             </ns2:collection>
         </col>

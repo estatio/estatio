@@ -24,11 +24,11 @@ import org.estatio.module.lease.dom.occupancy.Occupancy;
 import org.estatio.module.lease.dom.occupancy.OccupancyRepository;
 
 @Mixin
-public class Budget_downloadCalculationSummaryPerUnit {
+public class Budget_downloadCalculationSummary {
 
     private final Budget budget;
 
-    public Budget_downloadCalculationSummaryPerUnit(Budget budget) {
+    public Budget_downloadCalculationSummary(Budget budget) {
         this.budget = budget;
     }
 

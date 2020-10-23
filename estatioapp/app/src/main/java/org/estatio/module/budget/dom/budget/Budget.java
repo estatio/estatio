@@ -352,6 +352,7 @@ public class Budget extends UdoDomainObject2<Budget>
         return this;
     }
 
+    @Programmatic
     public void removeNewCalculations() {
         budgetCalculationRepository.findByBudgetAndStatus(this, org.estatio.module.budget.dom.budgetcalculation.Status.NEW).forEach(c->repositoryService.removeAndFlush(c));
     }
@@ -391,20 +392,6 @@ public class Budget extends UdoDomainObject2<Budget>
             partitioningForReconciliation = partitioningRepository.newPartitioning(this, getStartDate(), getEndDate(), BudgetCalculationType.AUDITED);
         }
         return partitioningForReconciliation;
-    }
-
-    @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
-    public Budget distributeAllInvalidKeytables(){
-        Lists.newArrayList(getKeyTables()).stream().forEach(kt->{
-            if (!kt.isValidForKeyValues()){
-                kt.distributeSourceValues();
-            }
-        });
-        return this;
-    }
-
-    public boolean hideDistributeAllInvalidKeytables(){
-        return getStatus()!=Status.NEW;
     }
 
     @Override

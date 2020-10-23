@@ -39,7 +39,6 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
-import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
@@ -146,10 +145,7 @@ public class KeyTable extends PartitioningTable {
         return isImmutableReason();
     }
 
-    // //////////////////////////////////////
-
-    @MemberOrder(name = "items", sequence = "4")
-    @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
+    @Programmatic
     public KeyTable distributeSourceValues() {
         if (getFoundationValueType()!=FoundationValueType.MANUAL) {
             distributionService
@@ -157,13 +153,6 @@ public class KeyTable extends PartitioningTable {
         }
         return this;
     }
-
-    public String disableDistributeSourceValues(){
-        if (getFoundationValueType()==FoundationValueType.MANUAL) return "This is a manual table";
-        return isImmutableReason();
-    }
-
-    // //////////////////////////////////////
 
     @Override
     @PropertyLayout(hidden = Where.EVERYWHERE)

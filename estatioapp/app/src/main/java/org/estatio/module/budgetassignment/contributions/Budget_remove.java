@@ -21,10 +21,10 @@ import org.estatio.module.budgetassignment.dom.BudgetService;
  * This cannot be inlined (needs to be a mixin) because Budget doesn't know about BudgetCalculationResultLinkRepository
  */
 @Mixin
-public class Budget_Remove {
+public class Budget_remove {
 
     private final Budget budget;
-    public Budget_Remove(Budget budget){
+    public Budget_remove(Budget budget){
         this.budget = budget;
     }
 
@@ -47,9 +47,10 @@ public class Budget_Remove {
         budget.remove();
     }
 
-    public String disableRemoveBudget(){
-        if (budget.getStatus()!= Status.NEW) return "This budget is not in a state of new";
-        return budgetService.budgetCannotBeRemovedReason(budget);
+    public boolean hideRemoveBudget(){
+        if (budgetService.budgetCannotBeRemovedReason(budget)==null) return false;
+        if (budget.getStatus()== Status.NEW) return false;
+        return true;
     }
 
     public String validateRemoveBudget(final boolean areYouSure){

@@ -35,10 +35,10 @@ import org.estatio.module.lease.dom.occupancy.OccupancyRepository;
  * This cannot be inlined (needs to be a mixin) because Budget doesn't know about CalculationResultViewModel
  */
 @Mixin
-public class Budget_DownloadCalculationResults {
+public class Budget_downloadCalculationResults {
 
     private final Budget budget;
-    public Budget_DownloadCalculationResults(Budget budget){
+    public Budget_downloadCalculationResults(Budget budget){
         this.budget = budget;
     }
 

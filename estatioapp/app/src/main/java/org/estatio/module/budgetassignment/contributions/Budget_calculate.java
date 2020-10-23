@@ -20,10 +20,10 @@ import org.estatio.module.budgetassignment.dom.BudgetAssignmentService;
 
 
 @Mixin
-public class Budget_Calculate {
+public class Budget_calculate {
 
     private final Budget budget;
-    public Budget_Calculate(Budget budget){
+    public Budget_calculate(Budget budget){
         this.budget = budget;
     }
 
