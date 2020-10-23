@@ -109,6 +109,56 @@ public class BudgetItem_Test {
 
         }
 
+        @Test
+        public void upsertValue_removes_audited_value_when_null_and_not_assigned() throws Exception {
+
+            // given
+            BudgetItem budgetItem = new BudgetItem();
+            budgetItem.budgetCalculationRepository = mockBudgetCalculationRepository;
+            budgetItem.budgetItemValueRepository = mockBudgetItemValueRepository;
+            BudgetCalculation calculation = new BudgetCalculation();
+            calculation.setStatus(Status.NEW);
+            final LocalDate date = new LocalDate(2018, 01, 01);
+            BudgetItemValue auditedValue = new BudgetItemValue();
+
+            // expect
+            context.checking(new Expectations(){{
+                allowing(mockBudgetCalculationRepository).findByBudgetItemAndCalculationType(budgetItem, BudgetCalculationType.AUDITED);
+                will(returnValue(Arrays.asList(calculation)));
+                oneOf(mockBudgetItemValueRepository).findUnique(budgetItem, date, BudgetCalculationType.AUDITED);
+                will(returnValue(auditedValue));
+                oneOf(mockBudgetItemValueRepository).remove(auditedValue);
+
+            }});
+
+            // when
+            budgetItem.upsertValue(null, date, BudgetCalculationType.AUDITED);
+
+        }
+
+        @Test
+        public void upsertValue_does_not_remove_audited_value_when_null_and_assigned() throws Exception {
+
+            // given
+            BudgetItem budgetItem = new BudgetItem();
+            budgetItem.budgetCalculationRepository = mockBudgetCalculationRepository;
+            budgetItem.budgetItemValueRepository = mockBudgetItemValueRepository;
+            BudgetCalculation calculation = new BudgetCalculation();
+            calculation.setStatus(Status.ASSIGNED);
+            final LocalDate date = new LocalDate(2018, 01, 01);
+            BudgetItemValue auditedValue = new BudgetItemValue();
+
+            // expect
+            context.checking(new Expectations(){{
+                allowing(mockBudgetCalculationRepository).findByBudgetItemAndCalculationType(budgetItem, BudgetCalculationType.AUDITED);
+                will(returnValue(Arrays.asList(calculation)));
+            }});
+
+            // when
+            budgetItem.upsertValue(null, date, BudgetCalculationType.AUDITED);
+
+        }
+
     }
 
 }

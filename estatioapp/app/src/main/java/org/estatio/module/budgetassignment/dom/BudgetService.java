@@ -12,6 +12,7 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
@@ -19,6 +20,7 @@ import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budget.Status;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
+import org.estatio.module.budget.dom.partioning.PartitionItem;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceItemRepository;
 import org.estatio.module.capex.dom.order.OrderItemRepository;
@@ -27,7 +29,59 @@ import org.estatio.module.capex.dom.order.OrderItemRepository;
 public class BudgetService {
 
     @Programmatic
+    public void removeExistingPartitionItemsAndBudgetItemsIfCanBeRemoved(final Budget budget){
+        switch (budget.getStatus()){
+        case RECONCILED:
+            return;
+        case NEW:
+            for (BudgetItem item : budget.getItems()) {
+                for (PartitionItem pItem : item.getPartitionItems()) {
+                    pItem.remove();
+                }
+                if (budgetItemCannotBeRemovedReason(item) == null) {
+                    repositoryService.removeAndFlush(item);
+                }
+            }
+            break;
+        case ASSIGNED:
+        default:
+            for (BudgetItem item : budget.getItems()) {
+                for (PartitionItem pItem : item.getPartitionItems()) {
+                    if (pItem.getType()==BudgetCalculationType.AUDITED) {
+                        pItem.remove();
+                    }
+                }
+            }
+        }
+    }
+
+    @Programmatic
+    public void removeExistingPartitionItemsIfCanBeRemoved(final Budget budget) {
+        switch (budget.getStatus()){
+        case RECONCILED:
+            return;
+        case NEW:
+            for (BudgetItem item : budget.getItems()) {
+                for (PartitionItem pItem : item.getPartitionItems()) {
+                    pItem.remove();
+                }
+            }
+            break;
+        case ASSIGNED:
+        default:
+            for (BudgetItem item : budget.getItems()) {
+                for (PartitionItem pItem : item.getPartitionItems()) {
+                    if (pItem.getType()==BudgetCalculationType.AUDITED) {
+                        pItem.remove();
+                    }
+                }
+            }
+        }
+    }
+
+    @Programmatic
     public String budgetItemCannotBeRemovedReason(final BudgetItem budgetItem){
+        if (budgetItem.getBudget().getStatus()!=Status.NEW) return "The budget is not in a status of NEW";
         if (orderItemRepository.findByBudgetItem(budgetItem).size()>0) return "There are orderitems attached";
         if (incomingInvoiceItemRepository.findByBudgetItem(budgetItem).size()>0) return "There are invoice items attached";
         return null;
@@ -95,4 +149,5 @@ public class BudgetService {
 
     @Inject IncomingInvoiceItemRepository incomingInvoiceItemRepository;
 
+    @Inject RepositoryService repositoryService;
 }

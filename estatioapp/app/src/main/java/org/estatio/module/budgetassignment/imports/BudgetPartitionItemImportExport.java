@@ -45,22 +45,21 @@ import lombok.Setter;
         nature = Nature.VIEW_MODEL,
         objectType = "org.estatio.app.services.budget.BudgetImportExport"
 )
-public class BudgetImportExport implements Importable, FixtureAwareRowHandler<BudgetImportExport> {
+public class BudgetPartitionItemImportExport
+        implements Importable, FixtureAwareRowHandler<BudgetPartitionItemImportExport> {
 
     public String title() {
         return "Budget Import / Export";
     }
 
-    public BudgetImportExport(){
+    public BudgetPartitionItemImportExport(){
     }
 
-    public BudgetImportExport(
+    public BudgetPartitionItemImportExport(
             final String propertyReference,
             final LocalDate budgetStartDate,
             final LocalDate budgetEndDate,
             final String incomingChargeReference,
-            final BigDecimal budgetedValue,
-            final BigDecimal auditedValue,
             final String partitioningTableName,
             final String foundationValueType,
             final String keyValueMethod,
@@ -68,15 +67,13 @@ public class BudgetImportExport implements Importable, FixtureAwareRowHandler<Bu
             final BigDecimal percentage,
             final BigDecimal fixedBudgetedAmount,
             final BigDecimal fixedAuditedAmount,
-            final String calculationDescription,
             final String tableType,
-            final BudgetCalculationType budgetCalculationType){
+            final BudgetCalculationType budgetCalculationType,
+            final String calculationDescription){
         this.propertyReference = propertyReference;
         this.budgetStartDate = budgetStartDate;
         this.budgetEndDate = budgetEndDate;
         this.incomingChargeReference = incomingChargeReference;
-        this.budgetedValue = budgetedValue;
-        this.auditedValue = auditedValue;
         this.partitioningTableName = partitioningTableName;
         this.foundationValueType = foundationValueType;
         this.keyValueMethod = keyValueMethod;
@@ -84,69 +81,66 @@ public class BudgetImportExport implements Importable, FixtureAwareRowHandler<Bu
         this.percentage = percentage;
         this.fixedBudgetedAmount = fixedBudgetedAmount;
         this.fixedAuditedAmount = fixedAuditedAmount;
-        this.calculationDescription = calculationDescription;
         this.tableType = tableType;
         this.budgetCalculationType = budgetCalculationType.name();
+        this.calculationDescription = calculationDescription;
     }
-
-    @Getter @Setter
-    @MemberOrder(sequence = "14")
-    private String propertyReference;
     @Getter @Setter
     @MemberOrder(sequence = "1")
-    private LocalDate budgetStartDate;
+    private String budgetCalculationType;
     @Getter @Setter
     @MemberOrder(sequence = "2")
-    private LocalDate budgetEndDate;
-    @Getter @Setter
-    @MemberOrder(sequence = "3")
     private String incomingChargeReference;
     @Getter @Setter
-    @MemberOrder(sequence = "4")
-    private BigDecimal budgetedValue;
-    @Getter @Setter
-    @MemberOrder(sequence = "5")
-    private BigDecimal auditedValue;
-    @Getter @Setter
-    @MemberOrder(sequence = "9")
-    private String partitioningTableName;
-    @Getter @Setter
-    @MemberOrder(sequence = "10")
-    private String foundationValueType;
-    @Getter @Setter
-    @MemberOrder(sequence = "11")
-    private String keyValueMethod;
-    @Getter @Setter
-    @MemberOrder(sequence = "12")
-    private String outgoingChargeReference;
-    @Getter @Setter
-    @MemberOrder(sequence = "13")
-    private BigDecimal percentage;
-    @Getter @Setter
-    @MemberOrder(sequence = "6")
-    private BigDecimal fixedBudgetedAmount;
-    @Getter @Setter
-    @MemberOrder(sequence = "7")
-    private BigDecimal fixedAuditedAmount;
-    @Getter @Setter
-    @MemberOrder(sequence = "8")
+    @MemberOrder(sequence = "3")
     private String calculationDescription;
     @Getter @Setter
-    @MemberOrder(sequence = "15")
+    @MemberOrder(sequence = "4")
+    private BigDecimal fixedBudgetedAmount;
+    @Getter @Setter
+    @MemberOrder(sequence = "5")
+    private BigDecimal fixedAuditedAmount;
+    @Getter @Setter
+    @MemberOrder(sequence = "6")
+    private BigDecimal percentage;
+    @Getter @Setter
+    @MemberOrder(sequence = "7")
+    private String partitioningTableName;
+    @Getter @Setter
+    @MemberOrder(sequence = "8")
+    private String foundationValueType;
+    @Getter @Setter
+    @MemberOrder(sequence = "9")
     private String tableType;
     @Getter @Setter
-    @MemberOrder(sequence = "0")
-    private String budgetCalculationType;
-
+    @MemberOrder(sequence = "10")
+    private String outgoingChargeReference;
+    @Getter @Setter
+    @MemberOrder(sequence = "11")
+    private String propertyReference;
+    @Getter @Setter
+    @MemberOrder(sequence = "12")
+    private LocalDate budgetStartDate;
+    @Getter @Setter
+    @MemberOrder(sequence = "13")
+    private LocalDate budgetEndDate;
+    @Getter @Setter
+    @MemberOrder(sequence = "14")
+    private String keyValueMethod;
 
     @Override
     @Programmatic
     public List<Object> importData(final Object previousRow) {
+        Property property = propertyRepository.findPropertyByReference(getPropertyReference());
+        if (property == null) throw  new ApplicationException(String.format("Property with reference [%s] not found.", getPropertyReference()));
+        Budget budget = budgetRepository.findByPropertyAndDate(property, getBudgetStartDate());
+        if (budget == null) throw  new ApplicationException(String.format("Budget for property %s and date %s not found.", getPropertyReference(), getBudgetStartDate()));
         if (previousRow==null){
-            removeExistingPartitionItemsAndBudgetItemIfCanBeRemoved();
+            budgetService.removeExistingPartitionItemsIfCanBeRemoved(budget);
         }
         Charge incomingCharge = fetchCharge(getIncomingChargeReference());
-        BudgetItem budgetItem = findOrCreateBudgetAndBudgetItem(incomingCharge);
+        BudgetItem budgetItem = fetchBudgetItemForCharge(budget, incomingCharge);
+        budget.findOrCreatePartitioningForBudgeting();
         if (getOutgoingChargeReference()!=null && getPartitioningTableName()!=null) {
             final PartitioningTableType partitioningTableType = PartitioningTableType.valueOf(getTableType());
             if (partitioningTableType == PartitioningTableType.DIRECT_COST_TABLE || (partitioningTableType == PartitioningTableType.KEY_TABLE && getKeyValueMethod()!=null && getFoundationValueType()!=null)) {
@@ -154,32 +148,6 @@ public class BudgetImportExport implements Importable, FixtureAwareRowHandler<Bu
             }
         }
         return Lists.newArrayList(budgetItem.getBudget());
-    }
-
-    private void removeExistingPartitionItemsAndBudgetItemIfCanBeRemoved(){
-        Property property = propertyRepository.findPropertyByReference(getPropertyReference());
-        Budget budget = budgetRepository.findOrCreateBudget(property, getBudgetStartDate(), getBudgetEndDate());
-        for (BudgetItem item : budget.getItems()){
-            for (PartitionItem pItem : item.getPartitionItems()) {
-                pItem.remove();
-            }
-            if (budgetService.budgetItemCannotBeRemovedReason(item)==null) {
-                repositoryService.removeAndFlush(item);
-            }
-        }
-    }
-
-    private BudgetItem findOrCreateBudgetAndBudgetItem(final Charge incomingCharge){
-        Property property = propertyRepository.findPropertyByReference(getPropertyReference());
-        if (property == null) throw  new ApplicationException(String.format("Property with reference [%s] not found.", getPropertyReference()));
-        Budget budget = budgetRepository.findOrCreateBudget(property, getBudgetStartDate(), getBudgetEndDate());
-        budget.findOrCreatePartitioningForBudgeting();
-        BudgetItem budgetItem = budget
-                .findOrCreateBudgetItem(incomingCharge)
-                .upsertValue(getBudgetedValue(), getBudgetStartDate(), BudgetCalculationType.BUDGETED)
-                .upsertValue(getAuditedValue(), getBudgetEndDate(), BudgetCalculationType.AUDITED);
-        budgetItem.setCalculationDescription(getCalculationDescription());
-        return budgetItem;
     }
 
     private PartitionItem findOrCreatePartitionItem(final BudgetItem budgetItem, final PartitioningTableType partitioningTableType) {
@@ -193,6 +161,13 @@ public class BudgetImportExport implements Importable, FixtureAwareRowHandler<Bu
             return budgetItem.updateOrCreatePartitionItem(BudgetCalculationType.valueOf(getBudgetCalculationType()),targetCharge, directCostTable, getPercentage() == null ? BigDecimal.ZERO : getPercentage(), getFixedBudgetedAmount() == null || getFixedBudgetedAmount().equals(BigDecimal.ZERO) ? null : getFixedBudgetedAmount(),
                     getFixedAuditedAmount() == null || getFixedAuditedAmount().equals(BigDecimal.ZERO) ? null : getFixedAuditedAmount());
         }
+    }
+
+    private BudgetItem fetchBudgetItemForCharge(final Budget budget, final Charge incomingCharge){
+        final BudgetItem budgetItem = Lists.newArrayList(budget.getItems()).stream()
+                .filter(i -> i.getCharge() == incomingCharge).findFirst().orElse(null);
+        if (budgetItem == null) throw  new ApplicationException(String.format("BudgetItem with charge %s not found.", getIncomingChargeReference()));
+        return budgetItem;
     }
 
     private Charge fetchCharge(final String chargeReference) {
@@ -225,7 +200,7 @@ public class BudgetImportExport implements Importable, FixtureAwareRowHandler<Bu
     private ExcelFixture2 excelFixture2;
 
     @Override
-    public void handleRow(final BudgetImportExport previousRow) {
+    public void handleRow(final BudgetPartitionItemImportExport previousRow) {
         importData(previousRow);
     }
 

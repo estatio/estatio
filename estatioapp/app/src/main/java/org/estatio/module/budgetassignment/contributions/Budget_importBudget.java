@@ -16,38 +16,45 @@
  */
 package org.estatio.module.budgetassignment.contributions;
 
-import org.apache.isis.applib.annotation.*;
-import org.apache.isis.applib.services.actinvoc.ActionInvocationContext;
+import javax.inject.Inject;
+
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
+import org.apache.isis.applib.annotation.Contributed;
+import org.apache.isis.applib.annotation.Mixin;
+import org.apache.isis.applib.annotation.Publishing;
+import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.value.Blob;
 
 import org.isisaddons.module.excel.dom.ExcelService;
 
-import org.estatio.module.budgetassignment.imports.BudgetImportExportManager;
 import org.estatio.module.budget.dom.budget.Budget;
+import org.estatio.module.budgetassignment.imports.BudgetImportExportService;
 
 @Mixin(method = "act")
-public class Budget_importExportBudget {
+public class Budget_importBudget {
 
     private final Budget budget;
 
-    public Budget_importExportBudget(Budget budget) {
+    public Budget_importBudget(Budget budget) {
         this.budget = budget;
     }
 
     @Action(
-            semantics = SemanticsOf.IDEMPOTENT,
+            semantics = SemanticsOf.SAFE,
             publishing = Publishing.DISABLED
     )
     @ActionLayout(contributed = Contributed.AS_ACTION)
-    public BudgetImportExportManager act() {
-
-        return new BudgetImportExportManager(budget);
-
+    public Budget act(final Blob spreadSheet,
+            final boolean importKeyTables,
+            final boolean importCharges) {
+        return budgetImportExportService.importBudget(budget, spreadSheet, importKeyTables, importCharges);
     }
 
-    @javax.inject.Inject
+    @Inject
     private ExcelService excelService;
 
-    @javax.inject.Inject
-    private ActionInvocationContext actionInvocationContext;
+    @Inject
+    private BudgetImportExportService budgetImportExportService;
 
 }

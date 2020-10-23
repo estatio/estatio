@@ -16,9 +16,7 @@
  */
 package org.estatio.module.budgetassignment.imports;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,9 +40,9 @@ import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budget.BudgetRepository;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
+import org.estatio.module.budget.dom.keytable.DirectCostTable;
 import org.estatio.module.budget.dom.keytable.KeyTable;
 import org.estatio.module.budget.dom.partioning.PartitionItem;
-import org.estatio.module.budgetassignment.dom.BudgetService;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.imports.ChargeImport;
 
@@ -58,179 +56,85 @@ public class BudgetImportExportService {
         }
     }
 
-    public List<BudgetImportExport> lines(BudgetImportExportManager manager) {
-
-        List<BudgetImportExport> result = new ArrayList<BudgetImportExport>();
-        if (manager.getBudget()==null){return result;}
-
-        for (BudgetItem item : manager.getBudget().getItems()) {
-            result.addAll(createLines(item, BudgetCalculationType.AUDITED));
-        }
-        for (BudgetItem item : manager.getBudget().getItems()) {
-            result.addAll(createLines(item, BudgetCalculationType.BUDGETED));
-        }
-        return result;
-    }
-
-    private List<BudgetImportExport> createLines(final BudgetItem item, final BudgetCalculationType budgetCalculationType){
-
-        List<BudgetImportExport> lines = new ArrayList<>();
-
-        String propertyReference = item.getBudget().getProperty().getReference();
-        LocalDate budgetStartDate = item.getBudget().getStartDate();
-        LocalDate budgetEndDate = item.getBudget().getEndDate();
-        String budgetChargeReference = item.getCharge().getReference();
-        BigDecimal budgetedValue = item.getBudgetedValue();
-        BigDecimal auditedValue = item.getAuditedValue();
-
-        if (item.getPartitionItems().size()==0 && budgetCalculationType==BudgetCalculationType.BUDGETED){
-            // create 1 line
-            lines.add(new BudgetImportExport(propertyReference,budgetStartDate,budgetEndDate, budgetChargeReference,budgetedValue,auditedValue,null,null,null, null, null, null, null, null, null,null));
-
-        } else {
-            // create a line for each partion item
-            for (PartitionItem partitionItem : item.getPartitionItems()) {
-                final BudgetCalculationType calculationType = partitionItem.getPartitioning().getType();
-                if (calculationType == budgetCalculationType) {
-                    final PartitioningTableType type;
-                    KeyTable keyTable = null;
-                    if (partitionItem.getPartitioningTable().getClass().isAssignableFrom(KeyTable.class)) {
-                        keyTable = (KeyTable) partitionItem.getPartitioningTable();
-                        type = PartitioningTableType.KEY_TABLE;
-                    } else {
-                        type = PartitioningTableType.DIRECT_COST_TABLE;
-                    }
-                    lines.add(
-                            new BudgetImportExport(
-                                    propertyReference,
-                                    budgetStartDate,
-                                    budgetEndDate,
-                                    budgetChargeReference,
-                                    budgetedValue,
-                                    auditedValue,
-                                    partitionItem.getPartitioningTable().getName(),
-                                    type == PartitioningTableType.KEY_TABLE ?
-                                            keyTable.getFoundationValueType().toString() :
-                                            null,
-                                    type == PartitioningTableType.KEY_TABLE ?
-                                            keyTable.getKeyValueMethod().toString() :
-                                            null,
-                                    partitionItem.getCharge().getReference(),
-                                    partitionItem.getPercentage(),
-                                    partitionItem.getFixedBudgetedAmount(),
-                                    partitionItem.getFixedAuditedAmount(),
-                                    item.getCalculationDescription(),
-                                    type.toString(),
-                                    calculationType)
-                    );
-
-                }
-            }
-
-        }
-
-        return lines;
-    }
-
-    public List<ChargeImport> charges(BudgetImportExportManager manager) {
-
-        List<ChargeImport> result = new ArrayList<ChargeImport>();
-        if (manager.getBudget()==null){return result;}
-
-        for (BudgetItem item : manager.getBudget().getItems()) {
-            result.add(createCharge(item.getCharge()));
-        }
-
-        for (BudgetItem item : manager.getBudget().getItems()) {
-            for (PartitionItem partitionItem : item.getPartitionItems()){
-                if (notInResult(result, partitionItem.getCharge())) {
-                    result.add(createCharge(partitionItem.getCharge()));
-                }
-            }
-        }
-        return result;
-    }
-
-    private boolean notInResult(List<ChargeImport> list, Charge charge){
-        for (ChargeImport line : list){
-            if (line.getReference().equals(charge.getReference())){
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private ChargeImport createCharge(final Charge charge){
-        return new ChargeImport(
-                charge.getAtPath(),
-                charge.getReference(),
-                charge.getName(),
-                charge.getDescription(),
-                charge.getTax() !=null ? charge.getTax().getReference() : null,
-                charge.getGroup()!=null ? charge.getGroup().getReference() : null,
-                charge.getGroup()!=null ? charge.getGroup().getName() : null,
-                charge.getApplicability().name(),
-                charge.getParent()!=null ? charge.getParent().getReference() : null
-        );
-    }
-
     @Programmatic
     public Budget importBudget(
             final Budget budget,
-            final Blob spreadsheet) {
+            final Blob spreadsheet,
+            final boolean importKeyTables,
+            final boolean importCharges) {
 
-        WorksheetSpec chargeSpec = new WorksheetSpec(ChargeImport.class, "charges");
-        List<ChargeImport> chargeLines = excelService.fromExcel(spreadsheet, chargeSpec);
-        chargeLines.forEach(l->l.importData(null));
+        // import charges
+        if (importCharges) {
+            WorksheetSpec chargeSpec = new WorksheetSpec(ChargeImport.class, "charges");
+            List<ChargeImport> chargeLines = excelService.fromExcel(spreadsheet, chargeSpec);
+            chargeLines.forEach(l -> l.importData(null));
+        }
 
+        // import budget items
+        WorksheetSpec budgetItemSpec = new WorksheetSpec(BudgetItemImportExport.class, "budgetItems");
+        List<BudgetItemImportExport> budgetItemLines = excelService.fromExcel(spreadsheet, budgetItemSpec);
+        Property property = propertyRepository.findPropertyByReference(budgetItemLines.get(0).getPropertyReference());
+        Budget budgetOfFirstLine = budgetRepository.findByPropertyAndDate(property, budgetItemLines.get(0).getBudgetStartDate());
 
-        WorksheetSpec spec1 = new WorksheetSpec(BudgetImportExport.class, "budget");
-        WorksheetSpec spec2 = new WorksheetSpec(KeyItemImportExportLine.class, "keyItems");
-        WorksheetSpec spec3 = new WorksheetSpec(DirectCostLine.class, "directCosts");
-        List<List<?>> objects =
-                excelService.fromExcel(spreadsheet, Arrays.asList(spec1, spec2, spec3));
+        // validate budget item lines
+        if (!budgetOfFirstLine.equals(budget)) {
+            messageService.warnUser("Unexpected budget found on sheet budgetItems");
+            return budget;
+        }
+        if (!allLinesReferToSameBudget(budgetItemLines)) {
+            messageService.warnUser("All lines on sheet budgetItems should refer to the same budget");
+            return budget;
+        }
 
-        List<BudgetImportExport> lineItems = (List<BudgetImportExport>) objects.get(0);
+        // import budget item lines
+        BudgetItemImportExport previous = null;
+        for (BudgetItemImportExport line : budgetItemLines){
+            line.importData(previous);
+            previous = line;
+        }
 
-        Property property = propertyRepository.findPropertyByReference(lineItems.get(0).getPropertyReference());
-        Budget budgetOfFirstLine = budgetRepository.findByPropertyAndDate(property, lineItems.get(0).getBudgetStartDate());
-        if (budgetOfFirstLine.equals(budget)) {
+        // import partition items
+        WorksheetSpec partitionItemSpec = new WorksheetSpec(BudgetPartitionItemImportExport.class, "partitionItems");
+        List<BudgetPartitionItemImportExport> partitionItemLines = excelService.fromExcel(spreadsheet, partitionItemSpec);
+        property = propertyRepository.findPropertyByReference(partitionItemLines.get(0).getPropertyReference());
+        budgetOfFirstLine = budgetRepository.findByPropertyAndDate(property, partitionItemLines.get(0).getBudgetStartDate());
 
-            budget.removeNewCalculations();
-            if (budgetService.budgetCannotBeRemovedReason(budget)==null) {
-                budget.removeAllBudgetItems();
-            } else {
-                // seems redundant because we also delete when importing using BudgetImportExport#importData; we need this code here, because we want to remove all Partitioning tables
-                for (BudgetItem budgetItem : budget.getItems()) {
-                    for (PartitionItem pItem : budgetItem.getPartitionItems()){
-                        pItem.remove();
-                    }
-                }
-            }
-            budget.removeAllPartitioningTables();
+        // validate partition item lines
+        if (!budgetOfFirstLine.equals(budget)) {
+            messageService.warnUser("Unexpected budget found on sheet partitionItems");
+            return budget;
+        }
+        // just to be sure ...
+        budget.removeNewCalculations();
+        // import partition item lines
+        BudgetPartitionItemImportExport previousRow = null;
+        for (BudgetPartitionItemImportExport line : partitionItemLines) {
+            line.importData(previousRow);
+            previousRow = line;
+        }
 
+        // import keytables and direccost tables
+        if (importKeyTables) {
+            WorksheetSpec keyItemSpec = new WorksheetSpec(KeyItemImportExportLine.class, "keyItems");
+            List<KeyItemImportExportLine> keyItemLines = excelService.fromExcel(spreadsheet, keyItemSpec);
+            importKeyTables(keyItemLines);
 
-            // import budget and items
-            BudgetImportExport previousRow = null;
-            for (BudgetImportExport lineItem : lineItems) {
-                lineItem.importData(previousRow).get(0);
-                previousRow = lineItem;
-            }
-
-
-            // import keyTables
-            importKeyTables((List<KeyItemImportExportLine>) objects.get(1));
-
-            // import directCosts
-            importDirectCostTables((List<DirectCostLine>) objects.get(2));
-
-        } else {
-
-            messageService.warnUser("Budget found in import does not equal budget on import manager");
-
+            WorksheetSpec direcCostSpec = new WorksheetSpec(DirectCostLine.class, "directCosts");
+            List<DirectCostLine> direcCostLines = excelService.fromExcel(spreadsheet, direcCostSpec);
+            importDirectCostTables(direcCostLines);
         }
 
         return budget;
+    }
+
+    private boolean allLinesReferToSameBudget(final List<BudgetItemImportExport> budgetItemLines) {
+        final List<String> propRefs = budgetItemLines.stream().map(l -> l.getPropertyReference()).distinct()
+                .collect(Collectors.toList());
+        final List<LocalDate> startDates = budgetItemLines.stream().map(l -> l.getBudgetStartDate()).distinct()
+                .collect(Collectors.toList());
+        final List<LocalDate> endDates = budgetItemLines.stream().map(l -> l.getBudgetEndDate()).distinct()
+                .collect(Collectors.toList());
+        return propRefs.size() == 1 && startDates.size() == 1 && endDates.size() == 1;
     }
 
     private void importKeyTables(final List<KeyItemImportExportLine> keyItemLines){
@@ -253,10 +157,152 @@ public class BudgetImportExportService {
         });
     }
 
-    @Programmatic
-    public Budget updateBudget(final Budget budget, final Blob spreadsheet) {
-        // TODO: implement
-        return budget;
+    public List<BudgetItemImportExport> getBudgetItemLines(final Budget budget) {
+        List<BudgetItemImportExport> result = new ArrayList<BudgetItemImportExport>();
+        if (budget==null){return result;}
+        for (BudgetItem item : budget.getItems()) {
+            result.add(
+                    new BudgetItemImportExport(
+                            budget.getProperty().getReference(),
+                            budget.getStartDate(),
+                            budget.getEndDate(),
+                            item.getCharge().getReference(),
+                            item.getBudgetedValue(),
+                            item.getAuditedValue(),
+                            item.getCalculationDescription()
+                    )
+            );
+        }
+        return result;
+    }
+
+    public List<BudgetPartitionItemImportExport> getPartionItemLines(final Budget budget) {
+        List<BudgetPartitionItemImportExport> result = new ArrayList<BudgetPartitionItemImportExport>();
+        if (budget==null){return result;}
+
+        for (BudgetItem item : budget.getItems()) {
+            result.addAll(createPartitionItemLines(item, BudgetCalculationType.AUDITED));
+        }
+        for (BudgetItem item : budget.getItems()) {
+            result.addAll(createPartitionItemLines(item, BudgetCalculationType.BUDGETED));
+        }
+        return result;
+    }
+
+    public List<KeyItemImportExportLine> getKeyItemLines(final Budget budget) {
+        List<KeyItemImportExportLine> result = new ArrayList<>();
+        if (budget==null){return result;} // for import from menu where budget unknown
+        for (KeyTable keyTable : budget.getKeyTables()){
+            result.addAll(partitioningTableItemImportExportService.keyItemsToLines(keyTable.getItems()));
+        }
+        return result;
+    }
+
+    public List<DirectCostLine> getDirectCostLines(final Budget budget){
+        List<DirectCostLine> result = new ArrayList<>();
+        if (budget==null){return result;} // for import from menu where budget unknown
+        for (DirectCostTable directCostTable : budget.getDirectCostTables()){
+            result.addAll(partitioningTableItemImportExportService.directCostsToLines(directCostTable.getItems()));
+        }
+        return result;
+    }
+
+    private List<BudgetPartitionItemImportExport> createPartitionItemLines(final BudgetItem item, final BudgetCalculationType budgetCalculationType){
+
+        List<BudgetPartitionItemImportExport> lines = new ArrayList<>();
+
+        String propertyReference = item.getBudget().getProperty().getReference();
+        LocalDate budgetStartDate = item.getBudget().getStartDate();
+        LocalDate budgetEndDate = item.getBudget().getEndDate();
+        String budgetChargeReference = item.getCharge().getReference();
+
+        if (item.getPartitionItems().size()==0 && budgetCalculationType==BudgetCalculationType.BUDGETED){
+            // create 1 line
+            lines.add(new BudgetPartitionItemImportExport(propertyReference,budgetStartDate,budgetEndDate, budgetChargeReference,null,null,null, null, null, null, null, null, null, null));
+
+        } else {
+            // create a line for each partion item
+            for (PartitionItem partitionItem : item.getPartitionItems()) {
+                final BudgetCalculationType calculationType = partitionItem.getPartitioning().getType();
+                if (calculationType == budgetCalculationType) {
+                    final PartitioningTableType type;
+                    KeyTable keyTable = null;
+                    if (partitionItem.getPartitioningTable().getClass().isAssignableFrom(KeyTable.class)) {
+                        keyTable = (KeyTable) partitionItem.getPartitioningTable();
+                        type = PartitioningTableType.KEY_TABLE;
+                    } else {
+                        type = PartitioningTableType.DIRECT_COST_TABLE;
+                    }
+                    lines.add(
+                            new BudgetPartitionItemImportExport(
+                                    propertyReference,
+                                    budgetStartDate,
+                                    budgetEndDate,
+                                    budgetChargeReference,
+                                    partitionItem.getPartitioningTable().getName(),
+                                    type == PartitioningTableType.KEY_TABLE ?
+                                            keyTable.getFoundationValueType().toString() :
+                                            null,
+                                    type == PartitioningTableType.KEY_TABLE ?
+                                            keyTable.getKeyValueMethod().toString() :
+                                            null,
+                                    partitionItem.getCharge().getReference(),
+                                    partitionItem.getPercentage(),
+                                    partitionItem.getFixedBudgetedAmount(),
+                                    partitionItem.getFixedAuditedAmount(),
+                                    type.toString(),
+                                    calculationType,
+                                    partitionItem.getBudgetItem().getCalculationDescription())
+                    );
+
+                }
+            }
+
+        }
+
+        return lines;
+    }
+
+    public List<ChargeImport> getCharges(final Budget budget) {
+
+        List<ChargeImport> result = new ArrayList<ChargeImport>();
+        if (budget==null){return result;}
+
+        for (BudgetItem item : budget.getItems()) {
+            result.add(createChargeImportLine(item.getCharge()));
+        }
+
+        for (BudgetItem item : budget.getItems()) {
+            for (PartitionItem partitionItem : item.getPartitionItems()){
+                if (notInResult(result, partitionItem.getCharge())) {
+                    result.add(createChargeImportLine(partitionItem.getCharge()));
+                }
+            }
+        }
+        return result;
+    }
+
+    private boolean notInResult(List<ChargeImport> list, Charge charge){
+        for (ChargeImport line : list){
+            if (line.getReference().equals(charge.getReference())){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private ChargeImport createChargeImportLine(final Charge charge){
+        return new ChargeImport(
+                charge.getAtPath(),
+                charge.getReference(),
+                charge.getName(),
+                charge.getDescription(),
+                charge.getTax() !=null ? charge.getTax().getReference() : null,
+                charge.getGroup()!=null ? charge.getGroup().getReference() : null,
+                charge.getGroup()!=null ? charge.getGroup().getName() : null,
+                charge.getApplicability().name(),
+                charge.getParent()!=null ? charge.getParent().getReference() : null
+        );
     }
 
     @Inject
@@ -267,8 +313,6 @@ public class BudgetImportExportService {
     @Inject BudgetRepository budgetRepository;
 
     @Inject MessageService messageService;
-
-    @Inject BudgetService budgetService;
 
     @Inject PartitioningTableItemImportExportService partitioningTableItemImportExportService;
 }

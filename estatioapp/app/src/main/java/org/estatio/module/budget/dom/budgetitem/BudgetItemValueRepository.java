@@ -88,6 +88,10 @@ public class BudgetItemValueRepository extends UdoDomainRepositoryAndFactory<Bud
         return allInstances();
     }
 
+    public void remove(final BudgetItemValue value){
+        repositoryService.removeAndFlush(value);
+    }
+
     @Inject
     RepositoryService repositoryService;
 }

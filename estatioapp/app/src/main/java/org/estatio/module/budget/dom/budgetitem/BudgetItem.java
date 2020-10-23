@@ -269,8 +269,13 @@ public class BudgetItem extends UdoDomainObject2<BudgetItem>
 
     @Programmatic
     public BudgetItem upsertValue(final BigDecimal value, final LocalDate date, final BudgetCalculationType type){
-        if (value!=null && !isAssignedForType(type)) {
+        if (isAssignedForType(type)) return this;
+        if (value!=null) {
             budgetItemValueRepository.upsert( this, value, date, type);
+        }
+        if (value == null && type == BudgetCalculationType.AUDITED){
+            final BudgetItemValue auditedValueIfAny = budgetItemValueRepository.findUnique(this, date, type);
+            if (auditedValueIfAny!=null) budgetItemValueRepository.remove(auditedValueIfAny);
         }
         return this;
     }

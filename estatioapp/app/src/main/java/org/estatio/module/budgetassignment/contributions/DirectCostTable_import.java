@@ -14,7 +14,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.estatio.module.budgetassignment.imports.contributions;
+package org.estatio.module.budgetassignment.contributions;
 
 import java.util.List;
 

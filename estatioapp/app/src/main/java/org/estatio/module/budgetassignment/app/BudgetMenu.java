@@ -10,16 +10,13 @@ import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
-import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.estatio.module.budgetassignment.imports.BudgetImportExportManager;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budget.BudgetRepository;
-import org.estatio.module.budget.dom.budget.Status;
 import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResult;
 import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResultRepository;
 
@@ -73,22 +70,6 @@ public class BudgetMenu {
     @CollectionLayout(defaultView = "table")
     public List<BudgetCalculationResult> allBudgetCalculationResults(){
         return budgetCalculationResultRepository.allBudgetCalculationResults();
-    }
-
-    @Action(semantics = SemanticsOf.IDEMPOTENT)
-    @MemberOrder(sequence = "2")
-    public BudgetImportExportManager uploadBudget(final Property property, final Budget budget) {
-        return new BudgetImportExportManager(budget);
-    }
-
-    public List<Budget> choices1UploadBudget(
-            final Property property,
-            final Budget budget) {
-        return budgetRepository.findByProperty(property);
-    }
-
-    public String validateUploadBudget(final Property property, final Budget budget){
-        return budget.getStatus()!=Status.NEW ? "This budget is assigned already" : null;
     }
 
     @Inject
