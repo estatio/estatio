@@ -96,6 +96,10 @@ public class Sector
     @Getter @Setter
     private String name;
 
+    @javax.jdo.annotations.Column(allowsNull = "true")
+    @Getter @Setter
+    private Integer sortOrder;
+
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Persistent(mappedBy = "sector")

@@ -101,6 +101,10 @@ public class Activity
     @Getter @Setter
     private String name;
 
+    @javax.jdo.annotations.Column(allowsNull = "true")
+    @Getter @Setter
+    private Integer sortOrder;
+
     public Activity change(
             final String name,
             final Sector sector) {
