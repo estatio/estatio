@@ -27,6 +27,7 @@ import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.Where;
 
+import org.apache.isis.applib.types.DescriptionType;
 import org.estatio.module.base.dom.EstatioRole;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
@@ -100,6 +101,10 @@ public class Activity
     @javax.jdo.annotations.Column(allowsNull = "false", length= NameType.Meta.MAX_LEN)
     @Getter @Setter
     private String name;
+
+    @javax.jdo.annotations.Column(allowsNull = "false", length= DescriptionType.Meta.MAX_LEN)
+    @Getter @Setter
+    private String description;
 
     @javax.jdo.annotations.Column(allowsNull = "true")
     @Getter @Setter
