@@ -75,16 +75,14 @@ public class BudgetCalculationService {
 
         List<InMemBudgetCalculation> results = new ArrayList<>();
 
-        // TODO: find a way take calculation period into account for audited value
-        // we now use partitionItem#getAuditedValue which is not correct unless the calculation start- and end date are equal to the budget start- and end date
-        // we may need to parameterise the audited value or move this service up to budget assigment module or ....?
-
         switch (type) {
         case BUDGETED:
             results.addAll(
                     calculateInMemForTotalAndType(partitionItem, partitionItem.getBudgetedValue(), BudgetCalculationType.BUDGETED, calculationStartDate, calculationEndDate));
             break;
 
+        // We do not bother here about the audited value that will be derived from incoming invoices for occupancies not covering the budget period;
+        // the calculation results for those will not be assigned to lease terms by BudgetsAssignmentService#assignNonAssignedCalculationResultsToLeases
         case AUDITED:
             if (partitionItem.getBudgetItem().getAuditedValue() != null) {
                 results.addAll(
@@ -100,16 +98,14 @@ public class BudgetCalculationService {
 
         List<InMemBudgetCalculation> results = new ArrayList<>();
 
-        // TODO: take calculation period into account for audited value
-        // we now use partitionItem#getAuditedValue which is not correct unless the calculation start- and end date are equal to the budget start- and end date
-        // we may need to parameterise the audited value or move this service up to budget assigment module or ....?
-
         switch (type) {
         case BUDGETED:
             results.addAll(
                     calculateInMemForUnitTotalAndType(partitionItem, partitionItem.getBudgetedValue(), BudgetCalculationType.BUDGETED, unit, calculationStartDate, calculationEndDate));
             break;
 
+        // We do not bother here about the audited value that will be derived from incoming invoices for occupancies not covering the budget period;
+        // the calculation results for those will not be assigned to lease terms by BudgetsAssignmentService#assignNonAssignedCalculationResultsToLeases
         case AUDITED:
             if (partitionItem.getBudgetItem().getAuditedValue() != null) {
                 results.addAll(

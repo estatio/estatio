@@ -114,11 +114,9 @@ public class ServiceChargeBudgetScenario_IntegTest extends BudgetAssignmentModul
     public void fullScenarioTest() throws Exception {
         calculate_budgeted();
         when_not_final_and_calculating_again();
-        finalCalculation_budgeted();
-//            assignBudgetWhenUpdated();
-            calculate_audited();
-            finalCalculation_audited();
-//            assignBudgetWhenAuditedAndUpdated();
+        assign_budget();
+        calculate_audited();
+        reconcile_budget();
     }
 
     public static BigDecimal U1_BVAL_1 = new BigDecimal("1928.57");
@@ -199,7 +197,7 @@ public class ServiceChargeBudgetScenario_IntegTest extends BudgetAssignmentModul
 
     }
 
-    public void finalCalculation_budgeted() throws Exception {
+    public void assign_budget() throws Exception {
 
         // given
         // when
@@ -224,13 +222,13 @@ public class ServiceChargeBudgetScenario_IntegTest extends BudgetAssignmentModul
         final List<BudgetCalculationResult> calculationResults = budgetCalculationResultRepository.allBudgetCalculationResults();
         assertThat(calculationResults).hasSize(14);
 
-        checkResultsAndTermsForLease(leasePoison, new ExpectedTestResult(2, Arrays.asList(U1_BVAL_1,U1_BVAL_2), Arrays.asList(invoiceCharge1, invoiceCharge2)));
-        checkResultsAndTermsForLease(leaseMiracle, new ExpectedTestResult(2, Arrays.asList(U2_BVAL_1,U2_BVAL_2), Arrays.asList(invoiceCharge1, invoiceCharge2)));
-        checkResultsAndTermsForLease(leaseHello3, new ExpectedTestResult(2, Arrays.asList(U3_BVAL_1,U3_BVAL_2), Arrays.asList(invoiceCharge1, invoiceCharge2)));
-        checkResultsAndTermsForLease(leaseDago, new ExpectedTestResult(4, Arrays.asList(U4_BVAL_1.add(U7_BVAL_1),U4_BVAL_2.add(U7_BVAL_2), U4_BVAL_1.add(U7_BVAL_1), U4_BVAL_2.add(U7_BVAL_2)), Arrays.asList(invoiceCharge1, invoiceCharge2, invoiceCharge1, invoiceCharge2)));
-        checkResultsAndTermsForLease(leaseNlBank, new ExpectedTestResult(2, Arrays.asList(U4_BVAL_1,U4_BVAL_2), Arrays.asList(invoiceCharge1, invoiceCharge2)));
-        checkResultsAndTermsForLease(leaseHyper, new ExpectedTestResult(2, Arrays.asList(U5_BVAL_1,U5_BVAL_2), Arrays.asList(invoiceCharge1, invoiceCharge2)));
-        checkResultsAndTermsForLease(leaseHello6, new ExpectedTestResult(0, Arrays.asList(), Arrays.asList()));
+        checkResultsAndTermsForLease(leasePoison, BudgetCalculationType.BUDGETED, new ExpectedTestResult(2, Arrays.asList(U1_BVAL_1,U1_BVAL_2), Arrays.asList(null,null), Arrays.asList(invoiceCharge1, invoiceCharge2)));
+        checkResultsAndTermsForLease(leaseMiracle, BudgetCalculationType.BUDGETED, new ExpectedTestResult(2, Arrays.asList(U2_BVAL_1,U2_BVAL_2), Arrays.asList(null,null), Arrays.asList(invoiceCharge1, invoiceCharge2)));
+        checkResultsAndTermsForLease(leaseHello3, BudgetCalculationType.BUDGETED, new ExpectedTestResult(2, Arrays.asList(U3_BVAL_1,U3_BVAL_2), Arrays.asList(null,null), Arrays.asList(invoiceCharge1, invoiceCharge2)));
+        checkResultsAndTermsForLease(leaseDago, BudgetCalculationType.BUDGETED, new ExpectedTestResult(4, Arrays.asList(U4_BVAL_1.add(U7_BVAL_1),U4_BVAL_2.add(U7_BVAL_2), U4_BVAL_1.add(U7_BVAL_1), U4_BVAL_2.add(U7_BVAL_2)), Arrays.asList(null,null,null,null), Arrays.asList(invoiceCharge1, invoiceCharge2, invoiceCharge1, invoiceCharge2)));
+        checkResultsAndTermsForLease(leaseNlBank, BudgetCalculationType.BUDGETED, new ExpectedTestResult(2, Arrays.asList(U4_BVAL_1,U4_BVAL_2), Arrays.asList(null,null), Arrays.asList(invoiceCharge1, invoiceCharge2)));
+        checkResultsAndTermsForLease(leaseHyper, BudgetCalculationType.BUDGETED, new ExpectedTestResult(2, Arrays.asList(U5_BVAL_1,U5_BVAL_2), Arrays.asList(null,null), Arrays.asList(invoiceCharge1, invoiceCharge2)));
+        checkResultsAndTermsForLease(leaseHello6, BudgetCalculationType.BUDGETED, new ExpectedTestResult(0, Arrays.asList(), Arrays.asList(), Arrays.asList()));
 
 
         // just to be explicit for lease with 2 occupancies
@@ -248,12 +246,6 @@ public class ServiceChargeBudgetScenario_IntegTest extends BudgetAssignmentModul
         final LeaseTermForServiceCharge term2 = (LeaseTermForServiceCharge) secondScItem.getTerms().first();
         assertThat(term2.getBudgetedValue()).isEqualTo(U4_BVAL_2.add(U7_BVAL_2));
         assertThat(budgetCalculationResultRepository.findByLeaseTerm(term2)).hasSize(2);
-
-    }
-
-    public void assignBudgetWhenUpdated() throws Exception {
-
-
 
     }
 
@@ -288,14 +280,14 @@ public class ServiceChargeBudgetScenario_IntegTest extends BudgetAssignmentModul
 
         final List<BudgetCalculation> auditedCalculations = calculations.stream().filter(c -> c.getCalculationType() == BudgetCalculationType.AUDITED).collect(Collectors.toList());
         assertThat(auditedCalculations).hasSize(33);
-        auditedCalculations.forEach(c->{
+            auditedCalculations.forEach(c->{
             assertThat(c.getStatus()==Status.NEW);
         });
 
 
     }
 
-    public void finalCalculation_audited() throws Exception {
+    public void reconcile_budget() throws Exception {
 
         // when
         wrap(mixin(Budget_reconcile.class, budget)).reconcile(false);
@@ -314,7 +306,7 @@ public class ServiceChargeBudgetScenario_IntegTest extends BudgetAssignmentModul
         final List<BudgetCalculationResult> auditedResults = allResults.stream().filter(r->r.getType()==BudgetCalculationType.AUDITED).collect(Collectors.toList());
         assertThat(auditedResults).hasSize(14);
 
-        // sample check of one lease
+        // check lease poison
         LeaseItem item1 = leasePoison.findFirstItemOfTypeAndCharge(LeaseItemType.SERVICE_CHARGE, invoiceCharge1);
         LeaseTermForServiceCharge term1 = (LeaseTermForServiceCharge) item1.getTerms().first();
         LeaseItem item2 = leasePoison.findFirstItemOfTypeAndCharge(LeaseItemType.SERVICE_CHARGE, invoiceCharge2);
@@ -324,9 +316,16 @@ public class ServiceChargeBudgetScenario_IntegTest extends BudgetAssignmentModul
         assertThat(term1.getAuditedValue()).isEqualTo(U1_BVAL_1.subtract(BigDecimal.valueOf(357.14))); // because partition on budget item 1 has fixed budgeted amount, but no fixed audited amount
         assertThat(term2.getBudgetedValue()).isEqualTo(U1_BVAL_2);
         assertThat(term2.getAuditedValue()).isEqualTo(U1_BVAL_2);
-    }
 
-    public void assignBudgetWhenAuditedAndUpdated() throws Exception {
+        checkResultsAndTermsForLease(leasePoison, BudgetCalculationType.AUDITED, new ExpectedTestResult(2, Arrays.asList(U1_BVAL_1,U1_BVAL_2), Arrays.asList(U1_BVAL_1.subtract(BigDecimal.valueOf(357.14)),U1_BVAL_2), Arrays.asList(invoiceCharge1, invoiceCharge2)));
+        checkResultsAndTermsForLease(leaseHello6, BudgetCalculationType.AUDITED, new ExpectedTestResult(0, Arrays.asList(), Arrays.asList(), Arrays.asList()));
+
+        // all other occupancies do no cover the budget period and therefore the lease terms are not touched
+        checkLeaseTermsNotTouchedForReconciliation(leaseMiracle,2);
+        checkLeaseTermsNotTouchedForReconciliation(leaseHello3, 2);
+        checkLeaseTermsNotTouchedForReconciliation(leaseDago, 4);
+        checkLeaseTermsNotTouchedForReconciliation(leaseNlBank, 2);
+        checkLeaseTermsNotTouchedForReconciliation(leaseHyper, 2);
 
     }
 
@@ -355,17 +354,20 @@ public class ServiceChargeBudgetScenario_IntegTest extends BudgetAssignmentModul
 
         private BigDecimal amount;
 
+
     }
+    private void checkResultsAndTermsForLease(final Lease lease, final BudgetCalculationType budgetCalculationType, final ExpectedTestResult result){
 
-    private void checkResultsAndTermsForLease(final Lease lease, final ExpectedTestResult result){
-
-        final List<BudgetCalculationResult> calcsForLease = budgetCalculationResultRepository.allBudgetCalculationResults().stream().filter(r -> r.getOccupancy().getLease().equals(lease)).collect(Collectors.toList());
+        final List<BudgetCalculationResult> calcsForLease = budgetCalculationResultRepository.allBudgetCalculationResults()
+                .stream()
+                .filter(r->r.getType()==budgetCalculationType)
+                .filter(r -> r.getOccupancy().getLease().equals(lease)).collect(Collectors.toList());
         assertThat(calcsForLease).hasSize(result.getNumberOfResults());
 
         for (int i=0; i < result.numberOfResults; i++){
             final LeaseTermForServiceCharge term = calcsForLease.get(i).getLeaseTerm();
             assertThat(term.getBudgetedValue()).isEqualTo(result.getBudgetedValues().get(i));
-            assertThat(term.getAuditedValue()).isNull();
+            assertThat(term.getAuditedValue()).isEqualTo(result.getAuditedValues().get(i));
             assertThat(term.getLeaseItem().getCharge()).isEqualTo(result.getInvoiceCharges().get(i));
             assertThat(term.getStartDate()).isEqualTo(budget.getStartDate());
             assertThat(term.getEndDate()).isEqualTo(budget.getEndDate());
@@ -373,13 +375,28 @@ public class ServiceChargeBudgetScenario_IntegTest extends BudgetAssignmentModul
 
     }
 
+    private void checkLeaseTermsNotTouchedForReconciliation(final Lease lease, final int numberOfResultsForAudited) {
+        final List<BudgetCalculationResult> calcsForLease = budgetCalculationResultRepository.allBudgetCalculationResults()
+                .stream()
+                .filter(r->r.getType()==BudgetCalculationType.AUDITED)
+                .filter(r -> r.getOccupancy().getLease().equals(lease)).collect(Collectors.toList());
+        assertThat(calcsForLease).hasSize(numberOfResultsForAudited);
+        for (int i=0; i < numberOfResultsForAudited; i++){
+            final LeaseTermForServiceCharge term = calcsForLease.get(i).getLeaseTerm();
+            assertThat(term).isNull();
+        }
+    }
+
     @Getter
     @AllArgsConstructor
     private class ExpectedTestResult {
 
+
         private int numberOfResults;
 
         private List<BigDecimal> budgetedValues;
+
+        private List<BigDecimal> auditedValues;
 
         private List<Charge> invoiceCharges;
 

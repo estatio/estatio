@@ -7,6 +7,9 @@ import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
@@ -37,6 +40,8 @@ import org.estatio.module.lease.dom.occupancy.OccupancyRepository;
 @DomainService(nature = NatureOfService.DOMAIN)
 public class BudgetAssignmentService {
 
+    public static Logger LOG = LoggerFactory.getLogger(BudgetAssignmentService.class);
+
     @Programmatic
     public List<BudgetCalculationResult> calculateResults(final Budget budget, final BudgetCalculationType type){
 
@@ -59,6 +64,7 @@ public class BudgetAssignmentService {
                 String message = String.format("Overlapping occupancies found for unit %s", unit.getReference());
                 message.concat(". No calculation results made for this unit.");
                 messageService.warnUser(message);
+                LOG.warn(message);
             } else {
 
                 List<BudgetCalculation> calculationsForUnitAndType = budgetCalculationRepository.findByBudgetAndUnitAndType(budget, unit, type);
@@ -121,14 +127,19 @@ public class BudgetAssignmentService {
                 String message = String.format("Multiple budget calculation results with same invoice charge found for occupancy %s.", occupancy.title());
                 message.concat(String.format("The calculation results were not assigned to lease %s.", lease.getReference()));
                 messageService.warnUser(message);
+                LOG.warn(message);
                 break;
             }
 
             for (BudgetCalculationResult result : resultsForOccupancy){
-
-                LeaseItem serviceChargeItem = findOrCreateLeaseItemForServiceCharge(lease, result);
-                upsertLeaseTermForServiceCharge(serviceChargeItem, result);
-
+                if (result.getType()==BudgetCalculationType.AUDITED && !result.getOccupancy().getEffectiveInterval().contains(result.getBudget().getInterval())){
+                    String message = String.format("Occupancy %s for lease %s needs custom assignment for AUDITED because the occupancy does not cover the entire budget period", occupancy.title(), occupancy.getLease().getReference());
+                    messageService.warnUser(message);
+                    LOG.warn(message);
+                } else {
+                    LeaseItem serviceChargeItem = findOrCreateLeaseItemForServiceCharge(lease, result);
+                    upsertLeaseTermForServiceCharge(serviceChargeItem, result);
+                }
             }
 
         }
