@@ -15,8 +15,8 @@ import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budget.Status;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationService;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
-import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResult;
 import org.estatio.module.budgetassignment.dom.BudgetAssignmentService;
+import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResult;
 
 /**
  * This currently could be inlined into Budget, however it is incomplete and my suspicion is that eventually it
@@ -33,19 +33,20 @@ public class Budget_reconcile {
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     @ActionLayout(contributed = Contributed.AS_ACTION)
     public Budget reconcile(
-            @ParameterLayout(describedAs = "Final calculation will make the calculations permanent and impact the leases")
-            final boolean finalCalculation) {
-            budgetCalculationService.calculate(budget, BudgetCalculationType.AUDITED, budget.getStartDate(), budget.getEndDate(), true);
-            if (finalCalculation){
-                List<BudgetCalculationResult> results = budgetAssignmentService.calculateResults(budget, BudgetCalculationType.AUDITED);
-                budgetAssignmentService.assignNonAssignedCalculationResultsToLeases(results);
-                budget.setStatus(Status.RECONCILED);
-            }
+            @ParameterLayout(describedAs = "When checked, this will persist the calculations and put the budget on Reconciled, but will NOT impact the lease terms")
+    final boolean doNotImpactLeaseTerms) {
+        budgetCalculationService.calculate(budget, BudgetCalculationType.AUDITED, budget.getStartDate(), budget.getEndDate(), true);
+        List<BudgetCalculationResult> results = budgetAssignmentService
+                .calculateResults(budget, BudgetCalculationType.AUDITED);
+        if (!doNotImpactLeaseTerms) {
+            budgetAssignmentService.assignNonAssignedCalculationResultsToLeases(results);
+        }
+        budget.setStatus(Status.RECONCILED);
         return budget;
     }
 
-    public String disableReconcile(){
-        return budget.getStatus()==Status.NEW ? "A budget with status new cannot be reconciled" : null;
+    public boolean hideReconcile(){
+        return budget.getStatus()!=Status.ASSIGNED;
     }
 
     @Inject

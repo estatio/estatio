@@ -203,12 +203,13 @@ public class DirectCostTable extends PartitioningTable {
             final LocalDate calculationEndDate) {
         List<InMemBudgetCalculation> results = new ArrayList<>();
         Lists.newArrayList(getItems()).stream().forEach(i->{
-            if (i.getBudgetedCost()!=null){
+            BigDecimal value = type==BudgetCalculationType.BUDGETED ? i.getBudgetedCost() : i.getAuditedCost();
+            if (value!=null){
                 results.add(
                         BudgetCalculationRepository.createInMemBudgetCalculation(
                                 partitionItem,
                                 i,
-                                type==BudgetCalculationType.BUDGETED ? i.getBudgetedCost() : i.getAuditedCost(),
+                                value,
                                 type,
                                 calculationStartDate,
                                 calculationEndDate

@@ -20,30 +20,30 @@ import org.estatio.module.budgetassignment.dom.BudgetAssignmentService;
 
 
 @Mixin
-public class Budget_calculate {
+public class Budget_assign {
 
     private final Budget budget;
-    public Budget_calculate(Budget budget){
+    public Budget_assign(Budget budget){
         this.budget = budget;
     }
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     @ActionLayout(contributed = Contributed.AS_ACTION)
-    public Budget calculate(
-            @ParameterLayout(describedAs = "Final calculation will make the calculations permanent and impact the leases")
-            final boolean finalCalculation
+    public Budget assign(
+            @ParameterLayout(describedAs = "When checked, this will persist the calculations and put the budget on Assigned, but will NOT impact the lease terms")
+            final boolean doNotImpactLeaseTerms
     ) {
         budgetCalculationService.calculate(budget, BudgetCalculationType.BUDGETED, budget.getStartDate(), budget.getEndDate(), true);
-        if (finalCalculation){
-            List<BudgetCalculationResult> results = budgetAssignmentService.calculateResults(budget, BudgetCalculationType.BUDGETED);
+        List<BudgetCalculationResult> results = budgetAssignmentService.calculateResults(budget, BudgetCalculationType.BUDGETED);
+        if (!doNotImpactLeaseTerms){
             budgetAssignmentService.assignNonAssignedCalculationResultsToLeases(results);
-            budget.setStatus(Status.ASSIGNED);
         }
+        budget.setStatus(Status.ASSIGNED);
         return budget;
     }
 
-    public String disableCalculate(){
-        return budget.getStatus()==Status.RECONCILED ? "A budget with status reconciled cannot be calculated" : null;
+    public boolean hideAssign(){
+        return budget.getStatus()!=Status.NEW;
     }
 
     @Inject

@@ -20,12 +20,13 @@ import org.estatio.module.asset.dom.UnitRepository;
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculation;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationRepository;
+import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationService;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.module.budget.dom.budgetcalculation.Status;
 import org.estatio.module.budget.dom.keytable.KeyTable;
 import org.estatio.module.budget.fixtures.budgets.enums.Budget_enum;
 import org.estatio.module.budget.fixtures.partitioning.enums.Partitioning_enum;
-import org.estatio.module.budgetassignment.contributions.Budget_calculate;
+import org.estatio.module.budgetassignment.contributions.Budget_assign;
 import org.estatio.module.budgetassignment.contributions.Budget_reconcile;
 import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResult;
 import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResultRepository;
@@ -140,7 +141,8 @@ public class ServiceChargeBudgetScenario_IntegTest extends BudgetAssignmentModul
 
         // given
         // when
-        wrap(mixin(Budget_calculate.class, budget)).calculate(false);
+        budgetCalculationService.calculate(budget, BudgetCalculationType.BUDGETED, budget.getStartDate(), budget.getEndDate(), true);
+
         calculations = budgetCalculationRepository.findByBudget(budget);
 
         // then
@@ -187,7 +189,8 @@ public class ServiceChargeBudgetScenario_IntegTest extends BudgetAssignmentModul
 
         // given
         // when
-        wrap(mixin(Budget_calculate.class, budget)).calculate(false);
+        budgetCalculationService.calculate(budget, BudgetCalculationType.BUDGETED, budget.getStartDate(), budget.getEndDate(), true);
+
         calculations = budgetCalculationRepository.findByBudget(budget);
 
         // then still
@@ -200,7 +203,7 @@ public class ServiceChargeBudgetScenario_IntegTest extends BudgetAssignmentModul
 
         // given
         // when
-        wrap(mixin(Budget_calculate.class, budget)).calculate(true);
+        wrap(mixin(Budget_assign.class, budget)).assign(false);
         transactionService.nextTransaction();
         calculations = budgetCalculationRepository.findByBudget(budget);
 
@@ -257,13 +260,13 @@ public class ServiceChargeBudgetScenario_IntegTest extends BudgetAssignmentModul
     public void calculate_audited() throws Exception {
 
         // given
-        wrap(mixin(Budget_reconcile.class, budget)).reconcile(false);
+        budgetCalculationService.calculate(budget, BudgetCalculationType.AUDITED, budget.getStartDate(), budget.getEndDate(), true);
         calculations = budgetCalculationRepository.findByBudget(budget);
         assertThat(calculations).hasSize(33);
 
         // when creating partitioning of type audited
         budget.newPartitioning();
-        wrap(mixin(Budget_reconcile.class, budget)).reconcile(false);
+        budgetCalculationService.calculate(budget, BudgetCalculationType.AUDITED, budget.getStartDate(), budget.getEndDate(), true);
         calculations = budgetCalculationRepository.findByBudget(budget);
 
         // then still
@@ -273,7 +276,7 @@ public class ServiceChargeBudgetScenario_IntegTest extends BudgetAssignmentModul
         Lists.newArrayList(budget.getItems()).forEach(i->{
             i.upsertValue(i.getBudgetedValue(), budget.getStartDate(), BudgetCalculationType.AUDITED);
         });
-        wrap(mixin(Budget_reconcile.class, budget)).reconcile(false);
+        budgetCalculationService.calculate(budget, BudgetCalculationType.AUDITED, budget.getStartDate(), budget.getEndDate(), true);
         calculations = budgetCalculationRepository.findByBudget(budget);
 
         // then
@@ -295,7 +298,7 @@ public class ServiceChargeBudgetScenario_IntegTest extends BudgetAssignmentModul
     public void finalCalculation_audited() throws Exception {
 
         // when
-        wrap(mixin(Budget_reconcile.class, budget)).reconcile(true);
+        wrap(mixin(Budget_reconcile.class, budget)).reconcile(false);
         transactionService.nextTransaction(); // done for rounding to be applied
 
         // then
@@ -381,5 +384,7 @@ public class ServiceChargeBudgetScenario_IntegTest extends BudgetAssignmentModul
         private List<Charge> invoiceCharges;
 
     }
+
+    @Inject BudgetCalculationService budgetCalculationService;
 
 }

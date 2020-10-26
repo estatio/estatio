@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 
 import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
 
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
@@ -38,7 +39,7 @@ public class Budget_downloadCalculationsForUnit {
 
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(cssClassFa = "fa-download")
-    public Blob $$(final String filename, final Unit unit, final BudgetCalculationType budgetCalculationType, final LocalDate calculationStartDate, final LocalDate calculationEndDate) {
+    public Blob $$(final Unit unit, final BudgetCalculationType budgetCalculationType, final LocalDate calculationStartDate, final LocalDate calculationEndDate) {
         final List<InMemBudgetCalculation> calculations= budgetCalculationService.calculateInMemForUnit(budget, budgetCalculationType, unit, calculationStartDate, calculationEndDate);
         List<CalculationVMForUnit> vmList = new ArrayList<>();
         for (InMemBudgetCalculation calculation : calculations){
@@ -90,14 +91,23 @@ public class Budget_downloadCalculationsForUnit {
                     )
             );
         }
-        final String fileNameToUse = withExtension(filename, ".xlsx");
+        StringBuffer fileNameBuffer = new StringBuffer();
+        fileNameBuffer.append(unit.getReference());
+        fileNameBuffer.append("-");
+        fileNameBuffer.append(calculationStartDate.toString("ddMM"));
+        fileNameBuffer.append("-");
+        fileNameBuffer.append(calculationEndDate.toString("ddMMyyyy"));
+        fileNameBuffer.append("-");
+        fileNameBuffer.append(budgetCalculationType.name());
+        fileNameBuffer.append(LocalDateTime.now().toString("yyyyMMddhhmm"));
+        fileNameBuffer.append(".xlsx");
         WorksheetSpec spec = new WorksheetSpec(CalculationVMForUnit.class, "summaryPerUnit");
         WorksheetContent worksheetContent = new WorksheetContent(vmList.stream().sorted(Comparator.comparing(CalculationVMForUnit::getBudgetItemChargeReferenceAndPartitioning)).collect(
                 Collectors.toList()), spec);
-        return excelService.toExcelPivot(worksheetContent, fileNameToUse);
+        return excelService.toExcelPivot(worksheetContent, fileNameBuffer.toString());
     }
 
-    public List<Unit> choices1$$(){
+    public List<Unit> choices0$$(){
         return unitRepository.findByProperty(budget.getProperty()).stream()
                 .filter(u->u.getEndDate()==null || !u.getEndDate().isBefore(budget.getStartDate()))
                 .filter(u->u.getStartDate()==null || !u.getStartDate().isAfter(budget.getEndDate()))
@@ -105,20 +115,16 @@ public class Budget_downloadCalculationsForUnit {
                 .collect(Collectors.toList());
     }
 
-    public BudgetCalculationType default2$$(){
+    public BudgetCalculationType default1$$(){
         return BudgetCalculationType.BUDGETED;
     }
 
-    public LocalDate default3$$(){
+    public LocalDate default2$$(){
         return budget.getStartDate();
     }
 
-    public LocalDate default4$$(){
+    public LocalDate default3$$(){
         return budget.getEndDate();
-    }
-
-    private static String withExtension(final String fileName, final String fileExtension) {
-        return fileName.endsWith(fileExtension) ? fileName : fileName + fileExtension;
     }
 
     @Inject BudgetCalculationService budgetCalculationService;

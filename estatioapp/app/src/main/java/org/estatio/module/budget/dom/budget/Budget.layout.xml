@@ -29,7 +29,7 @@
                         <bs3:row>
                             <bs3:col span="12">
                                 <cpt:fieldSet name="Budget Status" id="status">
-                                    <cpt:action id="calculate"/>
+                                    <cpt:action id="assign"/>
                                     <cpt:action id="reconcile"/>
                                     <cpt:property id="status">
                                         <cpt:action id="downloadCalculationSummary" position="BELOW"/>

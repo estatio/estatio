@@ -104,7 +104,7 @@ public class BudgetItemImportExport implements Importable, FixtureAwareRowHandle
         BudgetItem budgetItem = budget
                 .findOrCreateBudgetItem(incomingCharge)
                 .upsertValue(getBudgetedValue(), getBudgetStartDate(), BudgetCalculationType.BUDGETED)
-                .upsertValue(getAuditedValue(), getBudgetEndDate(), BudgetCalculationType.AUDITED);
+                .upsertValue(getAuditedValue(), getBudgetStartDate(), BudgetCalculationType.AUDITED);
         budgetItem.setCalculationDescription(getCalculationDescription());
         return budgetItem;
     }

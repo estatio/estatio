@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 
 import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
 
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
@@ -37,7 +38,7 @@ public class Budget_downloadCalculationSummary {
 
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(cssClassFa = "fa-download")
-    public Blob $$(final String filename, final BudgetCalculationType budgetCalculationType, final LocalDate calculationStartDate, final LocalDate calculationEndDate) {
+    public Blob $$(final BudgetCalculationType budgetCalculationType, final LocalDate calculationStartDate, final LocalDate calculationEndDate) {
         final List<InMemBudgetCalculation> calculations = budgetCalculationService
                 .calculateInMem(budget, budgetCalculationType, calculationStartDate, calculationEndDate);
         final List<PartitioningTable> distinctTables = calculations.stream().map(c -> c.getTableItem().getPartitioningTable())
@@ -58,7 +59,7 @@ public class Budget_downloadCalculationSummary {
 
                     final BigDecimal sumValueForUnitAndTable = calcsForTableAndUnit.stream().map(c -> c.getValue())
                             .reduce(BigDecimal.ZERO, BigDecimal::add);
-                    
+
                     vmList.add(new CalculationVM(
                             unit.getReference(),
                             leaseReference,
@@ -68,27 +69,32 @@ public class Budget_downloadCalculationSummary {
                 }
             }
         }
-        final String fileNameToUse = withExtension(filename, ".xlsx");
+        StringBuffer fileNameBuffer = new StringBuffer();
+        fileNameBuffer.append(budget.getProperty().getReference());
+        fileNameBuffer.append("-");
+        fileNameBuffer.append(calculationStartDate.toString("ddMM"));
+        fileNameBuffer.append("-");
+        fileNameBuffer.append(calculationEndDate.toString("ddMMyyyy"));
+        fileNameBuffer.append("-");
+        fileNameBuffer.append(budgetCalculationType.name());
+        fileNameBuffer.append(LocalDateTime.now().toString("yyyyMMddhhmm"));
+        fileNameBuffer.append(".xlsx");
         WorksheetSpec spec = new WorksheetSpec(CalculationVM.class, "summaryPerUnit");
         WorksheetContent worksheetContent = new WorksheetContent(vmList.stream().sorted(Comparator.comparing(CalculationVM::getUnitReference)).collect(
                 Collectors.toList()), spec);
-        return excelService.toExcelPivot(worksheetContent, fileNameToUse);
+        return excelService.toExcelPivot(worksheetContent, fileNameBuffer.toString());
     }
 
-    public BudgetCalculationType default1$$(){
+    public BudgetCalculationType default0$$(){
         return BudgetCalculationType.BUDGETED;
     }
 
-    public LocalDate default2$$(){
+    public LocalDate default1$$(){
         return budget.getStartDate();
     }
 
-    public LocalDate default3$$(){
+    public LocalDate default2$$(){
         return budget.getEndDate();
-    }
-
-    private static String withExtension(final String fileName, final String fileExtension) {
-        return fileName.endsWith(fileExtension) ? fileName : fileName + fileExtension;
     }
 
     @Inject ExcelService excelService;
