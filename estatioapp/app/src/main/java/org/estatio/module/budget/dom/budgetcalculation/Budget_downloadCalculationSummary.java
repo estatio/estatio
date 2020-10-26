@@ -1,5 +1,6 @@
 package org.estatio.module.budget.dom.budgetcalculation;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -19,7 +20,9 @@ import org.isisaddons.module.excel.dom.ExcelService;
 import org.isisaddons.module.excel.dom.WorksheetContent;
 import org.isisaddons.module.excel.dom.WorksheetSpec;
 
+import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.budget.dom.budget.Budget;
+import org.estatio.module.budget.dom.keytable.PartitioningTable;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
 import org.estatio.module.lease.dom.occupancy.OccupancyRepository;
 
@@ -37,19 +40,33 @@ public class Budget_downloadCalculationSummary {
     public Blob $$(final String filename, final BudgetCalculationType budgetCalculationType, final LocalDate calculationStartDate, final LocalDate calculationEndDate) {
         final List<InMemBudgetCalculation> calculations = budgetCalculationService
                 .calculateInMem(budget, budgetCalculationType, calculationStartDate, calculationEndDate);
+        final List<PartitioningTable> distinctTables = calculations.stream().map(c -> c.getTableItem().getPartitioningTable())
+                .distinct().collect(Collectors.toList());
+        final List<Unit> distinctUnits = calculations.stream().map(c -> c.getUnit()).distinct().collect(Collectors.toList());
         List<CalculationVM> vmList = new ArrayList<>();
-        for (InMemBudgetCalculation calculation : calculations){
-            final Occupancy occupancyIfAny = occupancyRepository
-                    .occupanciesByUnitAndInterval(calculation.getUnit(), calculation.getBudget().getInterval()).stream()
-                    .findFirst().orElse(null);
-            String leaseReference = occupancyIfAny!=null ? occupancyIfAny.getLease().getReference() : null;
-            vmList.add(
-                    new CalculationVM(
-                        calculation.getUnit().getReference(),
-                        leaseReference,
-                        calculation.getTableItem().getPartitioningTable().getName(),
-                        calculation.getValue())
-            );
+        for (PartitioningTable table : distinctTables){
+            for (Unit unit : distinctUnits){
+                final List<InMemBudgetCalculation> calcsForTableAndUnit = calculations.stream()
+                        .filter(c -> c.getTableItem().getPartitioningTable() == table && c.getUnit() == unit)
+                        .collect(Collectors.toList());
+                if (!calcsForTableAndUnit.isEmpty() ) {
+                    final Occupancy occupancyIfAny = occupancyRepository
+                            .occupanciesByUnitAndInterval(unit,
+                                    budget.getInterval()).stream()
+                            .findFirst().orElse(null);
+                    final String leaseReference = occupancyIfAny != null ? occupancyIfAny.getLease().getReference() : null;
+
+                    final BigDecimal sumValueForUnitAndTable = calcsForTableAndUnit.stream().map(c -> c.getValue())
+                            .reduce(BigDecimal.ZERO, BigDecimal::add);
+                    
+                    vmList.add(new CalculationVM(
+                            unit.getReference(),
+                            leaseReference,
+                            table.getName(),
+                            sumValueForUnitAndTable
+                    ));
+                }
+            }
         }
         final String fileNameToUse = withExtension(filename, ".xlsx");
         WorksheetSpec spec = new WorksheetSpec(CalculationVM.class, "summaryPerUnit");
