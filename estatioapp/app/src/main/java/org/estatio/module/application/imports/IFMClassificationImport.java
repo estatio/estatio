@@ -31,6 +31,9 @@ public class IFMClassificationImport implements Importable, ExcelFixtureRowHandl
     private String brandName;
 
     @Getter @Setter
+    private String sectorName;
+
+    @Getter @Setter
     private String activityName;
 
     @Getter @Setter
@@ -65,9 +68,14 @@ public class IFMClassificationImport implements Importable, ExcelFixtureRowHandl
                 throw new IllegalArgumentException(String.format("No brand found with name '%s' found", getBrandName()));
             }
 
-            final Activity activity = activityRepository.findBySectorAndName(sectorRepository.findByName("FASHION"), getActivityName());
+            final Sector sector = sectorRepository.findByName(getSectorName());
+            if (sector == null) {
+                throw new IllegalArgumentException(String.format("No sector found with name '%s'", getSectorName()));
+            }
+
+            final Activity activity = activityRepository.findBySectorAndName(sector, getActivityName());
             if (activity == null) {
-                throw new IllegalArgumentException(String.format("No activity found with name '%s' found", getActivityName()));
+                throw new IllegalArgumentException(String.format("No activity found with name '%s'", getActivityName()));
             }
 
             occupancies = occupancyRepository.findByBrand(brand, false).stream()
