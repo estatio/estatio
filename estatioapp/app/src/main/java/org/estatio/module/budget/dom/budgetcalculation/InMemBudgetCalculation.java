@@ -56,4 +56,6 @@ public class InMemBudgetCalculation {
 
     private Charge incomingCharge;
 
+    private BigDecimal auditedCostForBudgetPeriod;
+
 }

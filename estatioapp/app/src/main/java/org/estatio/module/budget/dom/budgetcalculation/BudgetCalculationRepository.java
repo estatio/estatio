@@ -66,7 +66,31 @@ public class BudgetCalculationRepository extends UdoDomainRepositoryAndFactory<B
                 partitionItem.getBudget(),
                 tableItem.getUnit(),
                 partitionItem.getCharge(),
-                partitionItem.getBudgetItem().getCharge()
+                partitionItem.getBudgetItem().getCharge(),
+                value
+        );
+    }
+
+    public static InMemBudgetCalculation createInMemBudgetCalculation(
+            final PartitionItem partitionItem,
+            final PartitioningTableItem tableItem,
+            final BigDecimal value,
+            final BudgetCalculationType calculationType,
+            final LocalDate calculationStartDate,
+            final LocalDate calculationEndDate,
+            final BigDecimal auditedCostForBudgetPeriod){
+        return new InMemBudgetCalculation(
+                value,
+                calculationStartDate,
+                calculationEndDate,
+                partitionItem,
+                tableItem,
+                calculationType,
+                partitionItem.getBudget(),
+                tableItem.getUnit(),
+                partitionItem.getCharge(),
+                partitionItem.getBudgetItem().getCharge(),
+                auditedCostForBudgetPeriod
         );
     }
 

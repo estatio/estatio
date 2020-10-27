@@ -22,7 +22,9 @@ import org.estatio.module.asset.dom.UnitRepository;
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculation;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationRepository;
+import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationService;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
+import org.estatio.module.budget.dom.budgetcalculation.InMemBudgetCalculation;
 import org.estatio.module.budget.dom.budgetcalculation.Status;
 import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResult;
 import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResultRepository;
@@ -213,6 +215,41 @@ public class BudgetAssignmentService {
         return itemToCopyFrom;
     }
 
+    /**
+     * This method assumes to be called AFTER a reconciliation of the budget has been made
+     * @param budget
+     * @param lease
+     * @return
+     */
+    @Programmatic
+    public List<BudgetCalculationResult> calculateAuditedResultsForLease(final Budget budget, final Lease lease){
+        List<BudgetCalculationResult> result = new ArrayList<>();
+        if (budget.getStatus()!= org.estatio.module.budget.dom.budget.Status.RECONCILED) return result;
+        for (Occupancy occupancy : lease.getOccupancies()){
+            // check if the occupancy effective interval contains budget interval
+            // if so, there should be calculation results already ...
+            if (occupancy.getEffectiveInterval().contains(budget.getInterval())) {
+
+                result.addAll(budgetCalculationResultRepository
+                        .findByBudgetAndOccupancyAndType(budget, occupancy, BudgetCalculationType.AUDITED));
+
+            } else {
+                if (occupancy.getEffectiveInterval().overlaps(budget.getInterval())){
+                    final List<InMemBudgetCalculation> inMemCalcs = budgetService
+                            .auditedCalculationsForBudgetAndUnitAndCalculationInterval(budget, occupancy.getUnit(),
+                                    occupancy.getEffectiveInterval());
+                    List<BudgetCalculation> calculations = new ArrayList<>();
+                    inMemCalcs.forEach(c->{
+                        calculations.add(budgetCalculationRepository.findOrCreateBudgetCalculation(c));
+                    });
+                    // TODO: create BudgetCalculationResults
+                    // TODO: set calculations to ASSIGNED
+                }
+            }
+        }
+        return result;
+    }
+
     @Inject UnitRepository unitRepository;
 
     @Inject OccupancyRepository occupancyRepository;
@@ -222,5 +259,9 @@ public class BudgetAssignmentService {
     @Inject MessageService messageService;
 
     @Inject BudgetCalculationResultRepository budgetCalculationResultRepository;
+
+    @Inject BudgetCalculationService budgetCalculationService;
+
+    @Inject BudgetService budgetService;
 
 }

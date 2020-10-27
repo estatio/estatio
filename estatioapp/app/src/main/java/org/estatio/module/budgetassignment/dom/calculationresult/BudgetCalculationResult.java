@@ -68,6 +68,13 @@ import lombok.Setter;
                         "FROM org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResult " +
                         "WHERE leaseTerm == :leaseTerm "),
         @Query(
+                name = "findByBudgetAndOccupancyAndType", language = "JDOQL",
+                value = "SELECT " +
+                        "FROM org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResult " +
+                        "WHERE budget == :budget && "
+                        + "occupancy == :occupancy && "
+                        + "type == :type "),
+        @Query(
                 name = "findByBudget", language = "JDOQL",
                 value = "SELECT " +
                         "FROM org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResult " +

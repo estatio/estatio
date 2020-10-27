@@ -94,6 +94,18 @@ public class BudgetCalculationService {
         return results;
     }
 
+    public List<InMemBudgetCalculation> calculateInMemForUnitPartitionItemAndAuditedPartitionItemValue(final PartitionItem partitionItem, final BigDecimal auditedPartitionItemValue, final Unit unit, final LocalDate calculationStartDate, final LocalDate calculationEndDate) {
+
+        List<InMemBudgetCalculation> results = new ArrayList<>();
+
+        if (auditedPartitionItemValue != null) {
+            results.addAll(
+                    calculateInMemForUnitTotalAndType(partitionItem, auditedPartitionItemValue, BudgetCalculationType.AUDITED, unit, calculationStartDate, calculationEndDate));
+        }
+
+        return results;
+    }
+
     private List<InMemBudgetCalculation> calculateInMemForUnit(final PartitionItem partitionItem, final BudgetCalculationType type, final Unit unit, final LocalDate calculationStartDate, final LocalDate calculationEndDate) {
 
         List<InMemBudgetCalculation> results = new ArrayList<>();

@@ -19,6 +19,8 @@
 package org.estatio.module.budget.dom.keytable;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedSet;
@@ -48,6 +50,8 @@ import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+
+import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.asset.dom.UnitRepository;
@@ -237,15 +241,29 @@ public class DirectCostTable extends PartitioningTable {
                     BudgetCalculationRepository.createInMemBudgetCalculation(
                             partitionItem,
                             directCostForUnitIfAny,
-                            type==BudgetCalculationType.BUDGETED ? directCostForUnitIfAny.getBudgetedCost() : directCostForUnitIfAny.getAuditedCost(),
+                            type==BudgetCalculationType.BUDGETED ? directCostForUnitIfAny.getBudgetedCost() : auditedCostForCalculationPeriod(directCostForUnitIfAny, LocalDateInterval.including(calculationStartDate, calculationEndDate)),
                             type,
                             calculationStartDate,
-                            calculationEndDate
+                            calculationEndDate,
+                            directCostForUnitIfAny.getAuditedCost()
                     )
             );
         }
         return results;
     }
+
+    // ECP-1263: when audited we take the prorata calculation of the audited value of the budget period for the calculation interval
+    @Programmatic
+    public static BigDecimal auditedCostForCalculationPeriod(final DirectCost directCost, final LocalDateInterval calculationInterval){
+        final LocalDateInterval budgetInterval = directCost.getPartitioningTable().getBudget().getInterval();
+        if (calculationInterval.contains(budgetInterval)) return directCost.getAuditedCost();
+        if (calculationInterval.overlaps(budgetInterval) && directCost.getAuditedCost()!=null){
+            return directCost.getAuditedCost().multiply(BigDecimal.valueOf(calculationInterval.overlap(budgetInterval).days())).divide(BigDecimal.valueOf(budgetInterval.days()),
+                    MathContext.DECIMAL64).setScale(6, RoundingMode.HALF_UP);
+        }
+        return null;
+    }
+
 
     @Inject
     DirectCostRepository directCostRepository;

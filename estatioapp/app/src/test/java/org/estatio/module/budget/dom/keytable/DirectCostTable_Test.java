@@ -7,6 +7,8 @@ import org.assertj.core.api.Assertions;
 import org.joda.time.LocalDate;
 import org.junit.Test;
 
+import org.incode.module.base.dom.valuetypes.LocalDateInterval;
+
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.module.budget.dom.budgetcalculation.InMemBudgetCalculation;
@@ -67,6 +69,71 @@ public class DirectCostTable_Test {
         Assertions.assertThat(secondCalc.getUnit()).isNull();
         Assertions.assertThat(secondCalc.getIncomingCharge()).isNull();
         Assertions.assertThat(secondCalc.getInvoiceCharge()).isNull();
+
+    }
+
+    @Test
+    public void auditedCostForCalculationPeriod_works() throws Exception {
+
+        LocalDateInterval calculationInterval;
+
+        //given
+        LocalDate budgetStartDate = new LocalDate(2020,1,1);
+        LocalDate budgetEndDate = new LocalDate(2020,12,31);
+        Budget budget = new Budget();
+        budget.setStartDate(budgetStartDate);
+        budget.setEndDate(budgetEndDate);
+        DirectCostTable directCostTable = new DirectCostTable();
+        directCostTable.setBudget(budget);
+        DirectCost directCost = new DirectCost();
+        directCost.setPartitioningTable(directCostTable);
+
+        // when overlap and no audited cost
+        calculationInterval = LocalDateInterval.including(budgetStartDate, budgetStartDate);
+        directCost.setAuditedCost(null);
+        // then
+        Assertions.assertThat(DirectCostTable.auditedCostForCalculationPeriod(directCost, calculationInterval)).isNull();
+
+        // when audited cost and one day overlap
+        directCost.setAuditedCost(new BigDecimal("366.00"));
+        calculationInterval = LocalDateInterval.including(budgetStartDate.minusDays(1), budgetStartDate);
+        // then
+        Assertions.assertThat(DirectCostTable.auditedCostForCalculationPeriod(directCost, calculationInterval)).isEqualTo(new BigDecimal("1.000000"));
+        // and when
+        directCost.setAuditedCost(new BigDecimal("366.01"));
+        calculationInterval = LocalDateInterval.including(budgetStartDate.minusDays(1), budgetStartDate);
+        // then
+        Assertions.assertThat(DirectCostTable.auditedCostForCalculationPeriod(directCost, calculationInterval)).isEqualTo(new BigDecimal("1.000027"));
+
+        // when audited cost and 365 day overlap
+        directCost.setAuditedCost(new BigDecimal("366.00"));
+        calculationInterval = LocalDateInterval.including(budgetStartDate.minusDays(1), budgetEndDate.minusDays(1));
+        // then
+        Assertions.assertThat(DirectCostTable.auditedCostForCalculationPeriod(directCost, calculationInterval)).isEqualTo(new BigDecimal("365.000000"));
+        // and when
+        directCost.setAuditedCost(new BigDecimal("366.01"));
+        calculationInterval = LocalDateInterval.including(budgetStartDate.minusDays(1), budgetEndDate.minusDays(1));
+        // then
+        Assertions.assertThat(DirectCostTable.auditedCostForCalculationPeriod(directCost, calculationInterval)).isEqualTo(new BigDecimal("365.009973"));
+        Assertions.assertThat(DirectCostTable.auditedCostForCalculationPeriod(directCost, calculationInterval)).isEqualTo(directCost.getAuditedCost().subtract(new BigDecimal("1.000027")));
+
+        // when no overlap
+        directCost.setAuditedCost(new BigDecimal("366.00"));
+        calculationInterval = LocalDateInterval.including(budgetStartDate.minusYears(1), budgetStartDate.minusDays(1));
+        // then
+        Assertions.assertThat(DirectCostTable.auditedCostForCalculationPeriod(directCost, calculationInterval)).isNull();
+
+        // when calculation interval contains budget interval
+        directCost.setAuditedCost(new BigDecimal("366.00"));
+        calculationInterval = LocalDateInterval.including(budgetStartDate.minusYears(1), budgetEndDate.plusYears(1));
+        // then
+        Assertions.assertThat(DirectCostTable.auditedCostForCalculationPeriod(directCost, calculationInterval)).isEqualTo(directCost.getAuditedCost());
+
+        // when budget interval contains calculation interval
+        directCost.setAuditedCost(new BigDecimal("366.00"));
+        calculationInterval = LocalDateInterval.including(budgetStartDate.plusDays(1), budgetEndDate.minusDays(1));
+        // then
+        Assertions.assertThat(DirectCostTable.auditedCostForCalculationPeriod(directCost, calculationInterval)).isEqualTo(new BigDecimal("364.000000"));
 
     }
 }

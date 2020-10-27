@@ -17,7 +17,12 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
+import org.estatio.module.asset.dom.Unit;
+import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationService;
+import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
+import org.estatio.module.budget.dom.partioning.PartitionItem;
+import org.estatio.module.budget.dom.partioning.Partitioning;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceItemRepository;
 
@@ -214,6 +219,67 @@ public class BudgetService_Test {
         final BigDecimal returnValue = service
                 .auditedValueForBudgetItemAndCalculationInterval(budgetItem, calculationStartDate, calculationEndDate);
         Assertions.assertThat(returnValue).isEqualTo(new BigDecimal("1246.912000"));
+
+    }
+
+    @Mock
+    BudgetCalculationService mockBudgetCalculationService;
+
+    @Test
+    public void auditedCalculationsForPartitionItemAndUnitAndCalculationInterval_works() throws Exception {
+
+        // given
+        final BigDecimal auditedPartitionItemValue = new BigDecimal("1234.560000");
+        final LocalDate calculationStartDate = new LocalDate(2020,1,2);
+        final LocalDate calculationEndDate = new LocalDate(2020,12,30);
+
+        BudgetService service = new BudgetService(){
+            @Override public BigDecimal auditedValueForBudgetItemAndCalculationInterval(
+                    final BudgetItem budgetItem, final LocalDate startDate, final LocalDate endDate) {
+                return auditedPartitionItemValue;
+            }
+        };
+        service.budgetCalculationService = mockBudgetCalculationService;
+
+        Partitioning partitioning = new Partitioning();
+        partitioning.setType(BudgetCalculationType.AUDITED);
+
+        PartitionItem partitionItem = new PartitionItem();
+        partitionItem.setPartitioning(partitioning);
+        partitionItem.setPercentage(new BigDecimal("100.00"));
+        Unit unit = new Unit();
+        LocalDateInterval calculationInterval = LocalDateInterval.including(calculationStartDate,calculationEndDate);
+
+        // expect
+        context.checking(new Expectations(){{
+            oneOf(mockBudgetCalculationService).calculateInMemForUnitPartitionItemAndAuditedPartitionItemValue(
+                    partitionItem,
+                    auditedPartitionItemValue,
+                    unit,
+                    calculationStartDate,
+                    calculationEndDate
+            );
+            oneOf(mockBudgetCalculationService).calculateInMemForUnitPartitionItemAndAuditedPartitionItemValue(
+                    partitionItem,
+                    BigDecimal.ZERO, //TODO: we do not know how to calculate yet
+                    unit,
+                    calculationStartDate,
+                    calculationEndDate
+            );
+        }});
+
+        // when, then
+        service.auditedCalculationsForPartitionItemAndUnitAndCalculationInterval(partitionItem, unit, calculationInterval);
+
+        // when
+        partitionItem.setFixedAuditedAmount(new BigDecimal("1111.11"));
+        // then
+        service.auditedCalculationsForPartitionItemAndUnitAndCalculationInterval(partitionItem, unit, calculationInterval);
+
+        // when
+        partitioning.setType(BudgetCalculationType.BUDGETED);
+        // then empty list is returned
+        Assertions.assertThat(service.auditedCalculationsForPartitionItemAndUnitAndCalculationInterval(partitionItem, unit, calculationInterval)).isEmpty();
 
     }
 }
