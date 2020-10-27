@@ -19,36 +19,36 @@ import java.util.List;
         nature = Nature.VIEW_MODEL,
         objectType = "org.estatio.dom.viewmodels.SectorAndActivityImport"
 )
-public class SectorAndActivityImport implements Importable, ExcelFixtureRowHandler {
+public class SectorAndActivityImportExport implements Importable, ExcelFixtureRowHandler {
 
-    @Getter @Setter @MemberOrder(sequence = "1")
+    @Getter @Setter
     private String sectorName;
 
-    @Getter @Setter @MemberOrder(sequence = "2")
+    @Getter @Setter
     private String sectorDescription;
 
-    @Getter @Setter @MemberOrder(sequence = "3")
+    @Getter @Setter
     private Integer sectorSortOrder;
 
-    @Getter @Setter @MemberOrder(sequence = "4")
+    @Getter @Setter
     private String activityName;
 
-    @Getter @Setter @MemberOrder(sequence = "5")
+    @Getter @Setter
     private String activityDescription;
 
-    @Getter @Setter @MemberOrder(sequence = "6")
+    @Getter @Setter
     private Integer activitySortOrder;
 
     @Override
     public List<Object> handleRow(final FixtureScript.ExecutionContext executionContext, final ExcelFixture excelFixture, final Object previousRow) {
-        SectorAndActivityImport previousImport = (SectorAndActivityImport) previousRow;
+        SectorAndActivityImportExport previousImport = (SectorAndActivityImportExport) previousRow;
         return importData(previousImport);
     }
 
     @Override
     public List<Object> importData(final Object previousRow) {
 
-        final SectorAndActivityImport previousSectorImport = (SectorAndActivityImport) previousRow;
+        final SectorAndActivityImportExport previousSectorImport = (SectorAndActivityImportExport) previousRow;
 
         final List<Object> createdSectorsAndActivities = Lists.newArrayList();
         if (getSectorName() != null && getSectorDescription() != null) {
