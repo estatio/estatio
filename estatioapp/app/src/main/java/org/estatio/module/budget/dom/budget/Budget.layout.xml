@@ -35,6 +35,8 @@
                                         <cpt:action id="downloadCalculationSummary" position="BELOW"/>
                                         <cpt:action id="downloadCalculationsForUnit" position="BELOW"/>
                                         <cpt:action id="downloadCalculationResults" position="BELOW"/>
+                                        <cpt:action id="downloadAuditedCalculationsForLease" position="BELOW"/>
+
                                     </cpt:property>
                                 </cpt:fieldSet>
                             </bs3:col>

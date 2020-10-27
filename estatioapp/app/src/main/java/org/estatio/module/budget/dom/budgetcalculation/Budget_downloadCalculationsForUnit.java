@@ -1,7 +1,5 @@
 package org.estatio.module.budget.dom.budgetcalculation;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -25,8 +23,6 @@ import org.isisaddons.module.excel.dom.WorksheetSpec;
 import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.asset.dom.UnitRepository;
 import org.estatio.module.budget.dom.budget.Budget;
-import org.estatio.module.budget.dom.keyitem.KeyItem;
-import org.estatio.module.budget.dom.keytable.KeyTable;
 
 @Mixin
 public class Budget_downloadCalculationsForUnit {
@@ -43,53 +39,7 @@ public class Budget_downloadCalculationsForUnit {
         final List<InMemBudgetCalculation> calculations= budgetCalculationService.calculateInMemForUnit(budget, budgetCalculationType, unit, calculationStartDate, calculationEndDate);
         List<CalculationVMForUnit> vmList = new ArrayList<>();
         for (InMemBudgetCalculation calculation : calculations){
-            StringBuffer buffer = new StringBuffer();
-            buffer.append(calculation.getIncomingCharge().getReference());
-            buffer.append("-");
-            if (budgetCalculationType==BudgetCalculationType.BUDGETED && calculation.getPartitionItem().getFixedBudgetedAmount()!=null){
-                buffer.append("fixed amount-");
-                buffer.append(calculation.getPartitionItem().getFixedBudgetedAmount());
-            } else {
-                if (budgetCalculationType == BudgetCalculationType.AUDITED
-                        && calculation.getPartitionItem().getFixedAuditedAmount() != null) {
-                    buffer.append("fixed amount-");
-                    buffer.append(calculation.getPartitionItem().getFixedAuditedAmount());
-                } else {
-                    buffer.append(calculation.getPartitionItem().getPercentage().setScale(2, RoundingMode.HALF_UP));
-                    buffer.append("%");
-                }
-            }
-            String incomingChargeReferenceAndPartitioning = buffer.toString();
-
-            final BigDecimal budgetItemAmount = budgetCalculationType==BudgetCalculationType.BUDGETED ? calculation.getPartitionItem().getBudgetItem().getBudgetedValue() : calculation.getPartitionItem().getBudgetItem().getAuditedValue();
-
-            StringBuffer buffer1 = new StringBuffer();
-            buffer1.append(calculation.getTableItem().getPartitioningTable().getName());
-            if (calculation.getTableItem().getClass().isAssignableFrom(KeyItem.class)){
-                KeyItem item = (KeyItem) calculation.getTableItem();
-                KeyTable keyTable = (KeyTable) item.getPartitioningTable();
-                switch (keyTable.getFoundationValueType()){
-                case AREA:
-                    buffer1.append("-m2-");
-                    buffer1.append(item.getSourceValue().setScale(2, RoundingMode.HALF_UP));
-                    break;
-                case COUNT:
-                case MANUAL:
-                        buffer1.append("-src val-");
-                        buffer1.append(item.getSourceValue().setScale(2, RoundingMode.HALF_UP));
-                }
-            }
-            final String tableNameAndSourceValue =
-                    buffer1.toString();
-            vmList.add(
-                    new CalculationVMForUnit(
-                            incomingChargeReferenceAndPartitioning,
-                            budgetItemAmount,
-                            calculation.getPartitionItem().getBudgetItem().getCalculationDescription(),
-                            tableNameAndSourceValue,
-                            calculation.getValue()
-                    )
-            );
+            vmList.add(budgetCalculationService.inMemCalculationToVMForUnit(calculation));
         }
         StringBuffer fileNameBuffer = new StringBuffer();
         fileNameBuffer.append(unit.getReference());

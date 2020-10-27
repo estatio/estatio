@@ -1,6 +1,7 @@
 package org.estatio.module.budget.dom.budgetcalculation;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,6 +15,8 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
+import org.estatio.module.budget.dom.keyitem.KeyItem;
+import org.estatio.module.budget.dom.keytable.KeyTable;
 import org.estatio.module.budget.dom.keytable.PartitioningTable;
 import org.estatio.module.budget.dom.partioning.PartitionItem;
 
@@ -141,6 +144,57 @@ public class BudgetCalculationService {
         final PartitioningTable partitioningTable = partitionItem.getPartitioningTable();
         results.addAll(partitioningTable.calculateInMemForUnit(partitionItem, partitionItemValue, calculationType, unit, calculationStartDate, calculationEndDate));
         return results;
+    }
+
+    public static CalculationVMForUnit inMemCalculationToVMForUnit(final InMemBudgetCalculation calculation){
+        final BigDecimal budgetItemAmount = calculation.getCalculationType()==BudgetCalculationType.BUDGETED ? calculation.getPartitionItem().getBudgetItem().getBudgetedValue() : calculation.getPartitionItem().getBudgetItem().getAuditedValue();
+        return new CalculationVMForUnit(
+                incomingChargeReferenceAndPartitioning(calculation),
+                budgetItemAmount,
+                calculation.getPartitionItem().getBudgetItem().getCalculationDescription(),
+                tableNameAndSourceValue(calculation),
+                calculation.getValue()
+        );
+    }
+
+    public static String incomingChargeReferenceAndPartitioning(final InMemBudgetCalculation calculation){
+        StringBuffer buffer = new StringBuffer();
+        buffer.append(calculation.getIncomingCharge().getReference());
+        buffer.append("-");
+        if (calculation.getCalculationType()==BudgetCalculationType.BUDGETED && calculation.getPartitionItem().getFixedBudgetedAmount()!=null){
+            buffer.append("fixed amount-");
+            buffer.append(calculation.getPartitionItem().getFixedBudgetedAmount());
+        } else {
+            if (calculation.getCalculationType() == BudgetCalculationType.AUDITED
+                    && calculation.getPartitionItem().getFixedAuditedAmount() != null) {
+                buffer.append("fixed amount-");
+                buffer.append(calculation.getPartitionItem().getFixedAuditedAmount());
+            } else {
+                buffer.append(calculation.getPartitionItem().getPercentage().setScale(2, RoundingMode.HALF_UP));
+                buffer.append("%");
+            }
+        }
+        return buffer.toString();
+    }
+
+    public static String tableNameAndSourceValue(final InMemBudgetCalculation calculation){
+        StringBuffer buffer1 = new StringBuffer();
+        buffer1.append(calculation.getTableItem().getPartitioningTable().getName());
+        if (calculation.getTableItem().getClass().isAssignableFrom(KeyItem.class)){
+            KeyItem item = (KeyItem) calculation.getTableItem();
+            KeyTable keyTable = (KeyTable) item.getPartitioningTable();
+            switch (keyTable.getFoundationValueType()){
+            case AREA:
+                buffer1.append("-m2-");
+                buffer1.append(item.getSourceValue().setScale(2, RoundingMode.HALF_UP));
+                break;
+            case COUNT:
+            case MANUAL:
+                buffer1.append("-src val-");
+                buffer1.append(item.getSourceValue().setScale(2, RoundingMode.HALF_UP));
+            }
+        }
+        return buffer1.toString();
     }
 
     @Inject

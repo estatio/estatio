@@ -23,6 +23,7 @@ import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budget.Status;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationService;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
+import org.estatio.module.budget.dom.budgetcalculation.CalculationVMForUnit2;
 import org.estatio.module.budget.dom.budgetcalculation.InMemBudgetCalculation;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.budget.dom.partioning.PartitionItem;
@@ -203,6 +204,26 @@ public class BudgetService {
                         unit,
                         calculationInterval.startDate(),
                         calculationInterval.endDate());
+    }
+
+    public CalculationVMForUnit2 inMemCalculationToVMForUnit2(final InMemBudgetCalculation calculation){
+        final BigDecimal budgetItemAmountForCalculationPeriod =
+                calculation.getCalculationType()==BudgetCalculationType.BUDGETED ?
+                        calculation.getPartitionItem().getBudgetItem().getBudgetedValue() :
+                        auditedValueForBudgetItemAndCalculationInterval(
+                                calculation.getPartitionItem().getBudgetItem(),
+                                calculation.getCalculationStartDate(),
+                                calculation.getCalculationEndDate());
+        return new CalculationVMForUnit2(
+                BudgetCalculationService.incomingChargeReferenceAndPartitioning(calculation),
+                budgetItemAmountForCalculationPeriod,
+                calculation.getPartitionItem().getBudgetItem().getCalculationDescription(),
+                BudgetCalculationService.tableNameAndSourceValue(calculation),
+                calculation.getValue(),
+                calculation.getAuditedCostForBudgetPeriod(),
+                calculation.getCalculationStartDate(),
+                calculation.getCalculationEndDate()
+        );
     }
 
 
