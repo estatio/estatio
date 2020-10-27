@@ -6,6 +6,10 @@ import javax.inject.Inject;
 
 import com.google.common.collect.Lists;
 
+import org.estatio.module.lease.dom.occupancy.tags.Activity;
+import org.estatio.module.lease.dom.occupancy.tags.ActivityRepository;
+import org.estatio.module.lease.dom.occupancy.tags.Sector;
+import org.estatio.module.lease.dom.occupancy.tags.SectorRepository;
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -111,8 +115,26 @@ public class OccupancyImport implements ExcelFixtureRowHandler, Importable {
         occupancy.setEndDate(endDate);
         occupancy.setUnitSizeName(size);
         occupancy.setBrandName(brand != null ? brand.replaceAll("\\p{C}", "").trim() : null, null, null);
-        occupancy.setSectorName(sector);
-        occupancy.setActivityName(activity);
+
+        if (sector != null) {
+            Sector sectorToFind = sectorRepository.findByName(sector);
+            if (sectorToFind == null) {
+                throw new ApplicationException(String.format("Sector with name %s not found.", sector));
+            } else {
+                occupancy.setSector(sectorToFind);
+
+                if (activity != null) {
+                    Activity activityToFind = activityRepository.findBySectorAndName(sectorToFind, activity);
+
+                    if (activityToFind == null) {
+                        throw new ApplicationException(String.format("Activity with name %s not found.", sector));
+                    } else {
+                        occupancy.setActivity(activityToFind);
+                    }
+                }
+            }
+        }
+
         occupancy.setReportTurnover(reportTurnover != null ? Occupancy.OccupancyReportingType.valueOf(reportTurnover) : Occupancy.OccupancyReportingType.NO);
         occupancy.setReportRent(reportRent != null ? Occupancy.OccupancyReportingType.valueOf(reportRent) : Occupancy.OccupancyReportingType.NO);
         occupancy.setReportOCR(reportOCR != null ? Occupancy.OccupancyReportingType.valueOf(reportOCR) : Occupancy.OccupancyReportingType.NO);
@@ -138,5 +160,11 @@ public class OccupancyImport implements ExcelFixtureRowHandler, Importable {
 
     @Inject
     LeaseRepository leaseRepository;
+
+    @Inject
+    private SectorRepository sectorRepository;
+
+    @Inject
+    private ActivityRepository activityRepository;
 
 }

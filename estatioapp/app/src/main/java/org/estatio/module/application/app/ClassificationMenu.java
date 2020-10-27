@@ -27,6 +27,7 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
+import org.estatio.module.application.imports.SectorAndActivityImportManager;
 import org.incode.module.classification.dom.impl.category.Category;
 import org.incode.module.classification.dom.impl.category.CategoryRepository;
 
@@ -45,6 +46,13 @@ public class ClassificationMenu {
     @MemberOrder(sequence = "1")
     public List<Category> allClassifications() {
         return categoryRepository.findByParent(null);
+    }
+
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(bookmarking = BookmarkPolicy.AS_ROOT)
+    @MemberOrder(sequence = "2")
+    public SectorAndActivityImportManager sectorAndActivityImportManager() {
+        return new SectorAndActivityImportManager();
     }
 
 

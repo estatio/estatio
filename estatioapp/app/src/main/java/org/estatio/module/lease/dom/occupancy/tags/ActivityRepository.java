@@ -70,6 +70,7 @@ public class ActivityRepository extends UdoDomainRepositoryAndFactory<Activity> 
             activity = newTransientInstance(Activity.class);
             activity.setSector(sector);
             activity.setName(name);
+            activity.setDescription(name);
         }
         return activity;
     }

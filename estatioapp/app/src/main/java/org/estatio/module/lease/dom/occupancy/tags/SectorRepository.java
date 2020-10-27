@@ -27,6 +27,7 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
+import org.estatio.module.party.dom.Person;
 
 @DomainService(menuOrder = "99", repositoryFor = Sector.class, nature = NatureOfService.DOMAIN)
 public class SectorRepository extends UdoDomainRepositoryAndFactory<Sector> {
@@ -54,8 +55,14 @@ public class SectorRepository extends UdoDomainRepositoryAndFactory<Sector> {
         if (sector == null) {
             sector = newTransientInstance(Sector.class);
             sector.setName(name);
+            sector.setDescription(name);
         }
         return sector;
+    }
+
+    @Programmatic
+    public List<Sector> allSectors() {
+        return allInstances();
     }
 
 }
