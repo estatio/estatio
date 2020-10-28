@@ -101,6 +101,20 @@ public class IncomingInvoiceRepository {
                         "toDate", toDate));
     }
 
+    @Programmatic
+    public List<IncomingInvoice> findByPropertyAndInvoiceDateBetween(
+            final Property property,
+            final LocalDate fromDate,
+            final LocalDate toDate) {
+        return repositoryService.allMatches(
+                new QueryDefault<>(
+                        IncomingInvoice.class,
+                        "findByPropertyAndInvoiceDateBetween",
+                        "property", property,
+                        "fromDate", fromDate,
+                        "toDate", toDate));
+    }
+
     ////////////////////////////////////////////////////////////////////
 
     List<IncomingInvoice> findByApprovalState(final IncomingInvoiceApprovalState approvalState) {

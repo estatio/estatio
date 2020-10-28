@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
+import org.assertj.core.util.Lists;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
@@ -26,6 +27,7 @@ import org.isisaddons.module.excel.dom.WorksheetSpec;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budget.BudgetRepository;
+import org.estatio.module.budget.dom.budget.Status;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.module.budget.dom.budgetcalculation.CalculationVMForLease;
 import org.estatio.module.budget.dom.partioning.PartitioningRepository;
@@ -116,6 +118,16 @@ public class BudgetMenu {
 
     public List<Budget> choices1DownloadAuditedCalculationsForLease(){
         return partitioningRepository.allPartitionings().stream().filter(p->p.getType()== BudgetCalculationType.AUDITED).map(p->p.getBudget()).collect(
+                Collectors.toList());
+    }
+
+    public InvoiceLinkManager linkUnlinkedIncomingInvoiceItemsToBudget(final Property property, final Budget budget){
+        return new InvoiceLinkManager(budget);
+    }
+
+    public List<Budget> choices1LinkUnlinkedIncomingInvoiceItemsToBudget(final Property property){
+        if (property==null) return Lists.emptyList();
+        return budgetRepository.findByProperty(property).stream().filter(b->b.getStatus()!= Status.RECONCILED).collect(
                 Collectors.toList());
     }
 
