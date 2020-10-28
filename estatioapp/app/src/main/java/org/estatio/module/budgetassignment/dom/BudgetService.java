@@ -23,13 +23,14 @@ import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budget.Status;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationService;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
-import org.estatio.module.budget.dom.budgetcalculation.CalculationVMForUnit2;
+import org.estatio.module.budget.dom.budgetcalculation.CalculationVMForLease;
 import org.estatio.module.budget.dom.budgetcalculation.InMemBudgetCalculation;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.budget.dom.partioning.PartitionItem;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceItemRepository;
 import org.estatio.module.capex.dom.order.OrderItemRepository;
+import org.estatio.module.lease.dom.Lease;
 
 @DomainService(nature = NatureOfService.DOMAIN)
 public class BudgetService {
@@ -151,7 +152,7 @@ public class BudgetService {
     }
 
     @Programmatic
-    public List<InvoiceItemValueForBudgetItemAndInterval> invoiceItemValuesForBudgetItemAndInterval(final BudgetItem budgetItem, final LocalDateInterval calculationInterval){
+    public List<InvoiceItemValueForBudgetItemAndInterval> invoiceItemValuesForBudgetItemAndInterval(final BudgetItem budgetItem, final LocalDateInterval calculationInterval, final String reference){
         List<InvoiceItemValueForBudgetItemAndInterval> result = new ArrayList<>();
         incomingInvoiceItemRepository.findByBudgetItem(budgetItem).forEach(ii->{
             result.add(
@@ -159,7 +160,8 @@ public class BudgetService {
                             ii,
                             budgetItem,
                             netamountForInvoiceItemAndCalculationInterval(ii, calculationInterval),
-                            calculationInterval)
+                            calculationInterval,
+                            reference)
             );
         });
         return result;
@@ -206,7 +208,7 @@ public class BudgetService {
                         calculationInterval.endDate());
     }
 
-    public CalculationVMForUnit2 inMemCalculationToVMForUnit2(final InMemBudgetCalculation calculation){
+    public CalculationVMForLease inMemCalculationToVMForLease(final Lease lease, final InMemBudgetCalculation calculation){
         final BigDecimal budgetItemAmountForCalculationPeriod =
                 calculation.getCalculationType()==BudgetCalculationType.BUDGETED ?
                         calculation.getPartitionItem().getBudgetItem().getBudgetedValue() :
@@ -214,7 +216,9 @@ public class BudgetService {
                                 calculation.getPartitionItem().getBudgetItem(),
                                 calculation.getCalculationStartDate(),
                                 calculation.getCalculationEndDate());
-        return new CalculationVMForUnit2(
+        return new CalculationVMForLease(
+                lease.getReference(),
+                calculation.getTableItem().getUnit().getReference(),
                 BudgetCalculationService.incomingChargeReferenceAndPartitioning(calculation),
                 budgetItemAmountForCalculationPeriod,
                 calculation.getPartitionItem().getBudgetItem().getCalculationDescription(),

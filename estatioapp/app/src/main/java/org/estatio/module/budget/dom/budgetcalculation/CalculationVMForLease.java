@@ -35,33 +35,39 @@ import lombok.Setter;
 @DomainObject(nature = Nature.VIEW_MODEL)
 @AllArgsConstructor
 @Getter @Setter
-public class CalculationVMForUnit2 {
+public class CalculationVMForLease {
 
     @MemberOrder(sequence = "1")
-    private String budgetItemChargeReferenceAndPartitioning;
+    private String leaseReference;
 
     @MemberOrder(sequence = "2")
+    private String unitReference;
+
+    @MemberOrder(sequence = "3")
+    private String budgetItemChargeReferenceAndPartitioning;
+
+    @MemberOrder(sequence = "4")
     @Digits(integer=13, fraction = 2)
     private BigDecimal budgetItemAmountForCalculationPeriod;
 
-    @MemberOrder(sequence = "3")
+    @MemberOrder(sequence = "5")
     private String calculationDescription;
 
-    @MemberOrder(sequence = "4")
+    @MemberOrder(sequence = "6")
     private String tableNameAndSourceValue;
 
-    @MemberOrder(sequence = "5")
+    @MemberOrder(sequence = "7")
     @Digits(integer=13, fraction = 6)
     private BigDecimal value;
 
-    @MemberOrder(sequence = "6")
+    @MemberOrder(sequence = "8")
     @Digits(integer=13, fraction = 2)
     private BigDecimal auditedCostForBudgetPeriod;
 
-    @MemberOrder(sequence = "7")
+    @MemberOrder(sequence = "9")
     private LocalDate calculationStartDate;
 
-    @MemberOrder(sequence = "8")
+    @MemberOrder(sequence = "10")
     private LocalDate calculationEndDate;
 
 }

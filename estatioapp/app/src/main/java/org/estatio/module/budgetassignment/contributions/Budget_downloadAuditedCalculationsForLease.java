@@ -2,7 +2,6 @@ package org.estatio.module.budgetassignment.contributions;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,14 +22,13 @@ import org.isisaddons.module.excel.dom.ExcelService;
 import org.isisaddons.module.excel.dom.WorksheetContent;
 import org.isisaddons.module.excel.dom.WorksheetSpec;
 
-import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.budget.dom.budget.Budget;
-import org.estatio.module.budget.dom.budgetcalculation.CalculationVMForUnit2;
-import org.estatio.module.budget.dom.budgetcalculation.InMemBudgetCalculation;
+import org.estatio.module.budget.dom.budgetcalculation.CalculationVMForLease;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.budgetassignment.dom.BudgetService;
 import org.estatio.module.budgetassignment.dom.InvoiceItemValueForBudgetItemAndInterval;
 import org.estatio.module.budgetassignment.imports.InvoiceItemValueForBudgetItem;
+import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
@@ -46,33 +44,41 @@ public class Budget_downloadAuditedCalculationsForLease {
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ACTION)
     public Blob act(
-            final Lease lease,
-            final Unit unit
+            final Lease lease
     ) {
-        Occupancy occupancy = Lists.newArrayList(lease.getOccupancies()).stream()
-                .filter(o->o.getUnit()==unit)
-                .filter(o->o.getEffectiveInterval().overlaps(budget.getInterval()))
-                .findFirst().orElse(null);
-        if (occupancy==null) return null;
-        final List<InMemBudgetCalculation> inMemBudgetCalculations = budgetService
-                .auditedCalculationsForBudgetAndUnitAndCalculationInterval(budget, unit,
-                        occupancy.getEffectiveInterval());
-        final List<CalculationVMForUnit2> calcVms = new ArrayList<>();
-        inMemBudgetCalculations.forEach(c->{
-            calcVms.add(budgetService.inMemCalculationToVMForUnit2(c));
-        });
+        final List<CalculationVMForLease> calcVmsForLease = new ArrayList<>();
+        for (Occupancy occupancy : lease.getOccupancies()){
+            budgetService.auditedCalculationsForBudgetAndUnitAndCalculationInterval(
+                    budget,
+                    occupancy.getUnit(),
+                    occupancy.getEffectiveInterval()
+            ).forEach(c->calcVmsForLease.add(budgetService.inMemCalculationToVMForLease(lease, c)));
+        }
 
-        final List<InvoiceItemValueForBudgetItemAndInterval> invoiceItemValues = new ArrayList<>();
-        Lists.newArrayList(budget.getItems()).stream().sorted(Comparator.comparing(BudgetItem::getCharge)).forEach(bi->{
-            invoiceItemValues.addAll(budgetService.invoiceItemValuesForBudgetItemAndInterval(bi, occupancy.getEffectiveInterval()));
-        });
+        final List<InvoiceItemValueForBudgetItemAndInterval> invoiceItemValuesForLease = new ArrayList<>();
+        for (Occupancy occupancy : lease.getOccupancies()) {
+            Lists.newArrayList(budget.getItems()).stream().sorted(Comparator.comparing(BudgetItem::getCharge))
+                    .forEach(bi -> {
+                        invoiceItemValuesForLease.addAll(budgetService
+                                .invoiceItemValuesForBudgetItemAndInterval(bi, occupancy.getEffectiveInterval(), occupancy.getUnit().getReference()));
+                    });
+        }
         List<InvoiceItemValueForBudgetItem> iiVms = new ArrayList<>();
-        invoiceItemValues.forEach(iv->{
-            iiVms.add(
+        invoiceItemValuesForLease
+                .stream()
+                .sorted(
+                        Comparator.comparing(InvoiceItemValueForBudgetItemAndInterval::getReference)
+                                .thenComparing(InvoiceItemValueForBudgetItemAndInterval::getBudgetItem))
+                .forEach(iv->{
+                    final IncomingInvoice invoice = (IncomingInvoice) iv.getInvoiceItem().getInvoice();
+                    iiVms.add(
                     new InvoiceItemValueForBudgetItem(
+                            iv.getReference(),
                             iv.getBudgetItem().getCharge().getReference(),
-                            iv.getInvoiceItem().getInvoice().getInvoiceNumber(),
-                            iv.getInvoiceItem().getInvoice().getInvoiceDate(),
+                            invoice.getInvoiceNumber(),
+                            invoice.getBarcode(),
+                            invoice.getSeller().getName(),
+                            invoice.getInvoiceDate(),
                             iv.getInvoiceItem().getNetAmount(),
                             iv.getCalculatedValue(),
                             iv.getInvoiceItem().getChargeStartDate(),
@@ -84,14 +90,16 @@ public class Budget_downloadAuditedCalculationsForLease {
         });
 
         StringBuffer fileNameBuffer = new StringBuffer();
+        fileNameBuffer.append("Audited Calculations for ");
         fileNameBuffer.append(lease.getReference());
         fileNameBuffer.append("-");
-        fileNameBuffer.append(unit.getReference());
+        fileNameBuffer.append(budget.getStartDate().year());
         fileNameBuffer.append(".xlsx");
 
-        WorksheetSpec calcSpec = new WorksheetSpec(CalculationVMForUnit2.class, "calculations");
+        WorksheetSpec calcSpec = new WorksheetSpec(CalculationVMForLease.class, "calculations");
         WorksheetSpec invoiceItemValuesSpec = new WorksheetSpec(InvoiceItemValueForBudgetItem.class, "invoice item values");
-        WorksheetContent calculationsContent = new WorksheetContent(calcVms, calcSpec);
+        WorksheetContent calculationsContent = new WorksheetContent(calcVmsForLease.stream().sorted(Comparator.comparing(CalculationVMForLease::getUnitReference)).collect(
+                Collectors.toList()), calcSpec);
         WorksheetContent invoiceItemValuesContent = new WorksheetContent(iiVms, invoiceItemValuesSpec);
         return excelService.toExcel(
                 Arrays.asList(calculationsContent, invoiceItemValuesContent), fileNameBuffer.toString());
@@ -102,15 +110,8 @@ public class Budget_downloadAuditedCalculationsForLease {
                 Collectors.toList());
     }
 
-    public List<Unit> choices1Act(final Lease lease){
-        if (lease==null) return Collections.EMPTY_LIST;
-        return Lists.newArrayList(lease.getOccupancies()).stream()
-                .filter(o->o.getUnit()!=null)
-                .map(o->o.getUnit()).collect(Collectors.toList());
-    }
 
-    @Inject
-    private BudgetService budgetService;
+    @Inject BudgetService budgetService;
 
     @Inject ExcelService excelService;
 

@@ -41,4 +41,6 @@ public class InvoiceItemValueForBudgetItemAndInterval {
 
     private LocalDateInterval calculationInterval;
 
+    private String reference;
+
 }

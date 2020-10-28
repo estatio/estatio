@@ -36,32 +36,41 @@ import lombok.Setter;
 public class InvoiceItemValueForBudgetItem {
 
     @MemberOrder(sequence = "1")
-    private String budgetItemChargeReference;
+    private String unitReference;
 
     @MemberOrder(sequence = "2")
-    private String invoiceNumber;
+    private String budgetItemChargeReference;
 
     @MemberOrder(sequence = "3")
-    private LocalDate invoiceDate;
+    private String invoiceNumber;
 
     @MemberOrder(sequence = "4")
+    private String barcode;
+
+    @MemberOrder(sequence = "5")
+    private String supplier;
+
+    @MemberOrder(sequence = "6")
+    private LocalDate invoiceDate;
+
+    @MemberOrder(sequence = "7")
     @Digits(integer=13, fraction = 2)
     private BigDecimal invoiceItemNetAmount;
 
-    @MemberOrder(sequence = "5")
+    @MemberOrder(sequence = "8")
     @Digits(integer=13, fraction = 6)
     private BigDecimal calculatedValue;
 
-    @MemberOrder(sequence = "6")
+    @MemberOrder(sequence = "9")
     private LocalDate invoiceItemChargeStartDate;
 
-    @MemberOrder(sequence = "7")
+    @MemberOrder(sequence = "10")
     private LocalDate invoiceItemChargeEndDate;
 
-    @MemberOrder(sequence = "8")
+    @MemberOrder(sequence = "11")
     private LocalDate calculationStartDate;
 
-    @MemberOrder(sequence = "9")
+    @MemberOrder(sequence = "12")
     private LocalDate calculationEndDate;
 
 }
