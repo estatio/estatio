@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -27,10 +28,13 @@ import org.estatio.module.budget.dom.budgetcalculation.CalculationVMForLease;
 import org.estatio.module.budget.dom.budgetcalculation.InMemBudgetCalculation;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.budget.dom.partioning.PartitionItem;
+import org.estatio.module.budgetassignment.imports.InvoiceItemValueForBudgetItem;
+import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceItemRepository;
 import org.estatio.module.capex.dom.order.OrderItemRepository;
 import org.estatio.module.lease.dom.Lease;
+import org.estatio.module.lease.dom.occupancy.Occupancy;
 
 @DomainService(nature = NatureOfService.DOMAIN)
 public class BudgetService {
@@ -152,22 +156,6 @@ public class BudgetService {
     }
 
     @Programmatic
-    public List<InvoiceItemValueForBudgetItemAndInterval> invoiceItemValuesForBudgetItemAndInterval(final BudgetItem budgetItem, final LocalDateInterval calculationInterval, final String reference){
-        List<InvoiceItemValueForBudgetItemAndInterval> result = new ArrayList<>();
-        incomingInvoiceItemRepository.findByBudgetItem(budgetItem).forEach(ii->{
-            result.add(
-                    new InvoiceItemValueForBudgetItemAndInterval(
-                            ii,
-                            budgetItem,
-                            netamountForInvoiceItemAndCalculationInterval(ii, calculationInterval),
-                            calculationInterval,
-                            reference)
-            );
-        });
-        return result;
-    }
-
-    @Programmatic
     public List<InMemBudgetCalculation> auditedCalculationsForBudgetAndUnitAndCalculationInterval(
             final Budget budget,
             final Unit unit,
@@ -208,7 +196,19 @@ public class BudgetService {
                         calculationInterval.endDate());
     }
 
-    public CalculationVMForLease inMemCalculationToVMForLease(final Lease lease, final InMemBudgetCalculation calculation){
+    public List<CalculationVMForLease> calculationVmsForLease(final Lease lease, final Budget budget){
+        final List<CalculationVMForLease> calcVmsForLease = new ArrayList<>();
+        for (Occupancy occupancy : lease.getOccupancies()){
+            auditedCalculationsForBudgetAndUnitAndCalculationInterval(
+                    budget,
+                    occupancy.getUnit(),
+                    occupancy.getEffectiveInterval()
+            ).forEach(c->calcVmsForLease.add(inMemCalculationToVMForLease(lease, c)));
+        }
+        return calcVmsForLease;
+    }
+
+    private CalculationVMForLease inMemCalculationToVMForLease(final Lease lease, final InMemBudgetCalculation calculation){
         final BigDecimal budgetItemAmountForCalculationPeriod =
                 calculation.getCalculationType()==BudgetCalculationType.BUDGETED ?
                         calculation.getPartitionItem().getBudgetItem().getBudgetedValue() :
@@ -230,7 +230,56 @@ public class BudgetService {
         );
     }
 
+    public List<InvoiceItemValueForBudgetItem> invoiceItemValuesForBudgetAndLease(final Lease lease, final Budget budget){
+        final List<InvoiceItemValueForBudgetItemAndInterval> invoiceItemValuesForLease = new ArrayList<>();
+        for (Occupancy occupancy : lease.getOccupancies()) {
+            com.google.common.collect.Lists.newArrayList(budget.getItems()).stream().sorted(Comparator.comparing(BudgetItem::getCharge))
+                    .forEach(bi -> {
+                        invoiceItemValuesForLease.addAll(invoiceItemValuesForBudgetItemAndInterval(bi, occupancy.getEffectiveInterval(), occupancy.getUnit().getReference()));
+                    });
+        }
+        List<InvoiceItemValueForBudgetItem> iiVms = new ArrayList<>();
+        invoiceItemValuesForLease
+                .stream()
+                .sorted(
+                        Comparator.comparing(InvoiceItemValueForBudgetItemAndInterval::getReference)
+                                .thenComparing(InvoiceItemValueForBudgetItemAndInterval::getBudgetItem))
+                .forEach(iv->{
+                    final IncomingInvoice invoice = (IncomingInvoice) iv.getInvoiceItem().getInvoice();
+                    iiVms.add(
+                            new InvoiceItemValueForBudgetItem(
+                                    iv.getReference(),
+                                    iv.getBudgetItem().getCharge().getReference(),
+                                    invoice.getInvoiceNumber(),
+                                    invoice.getBarcode(),
+                                    invoice.getSeller().getName(),
+                                    invoice.getInvoiceDate(),
+                                    iv.getInvoiceItem().getNetAmount(),
+                                    iv.getCalculatedValue(),
+                                    iv.getInvoiceItem().getChargeStartDate(),
+                                    iv.getInvoiceItem().getChargeEndDate(),
+                                    iv.getCalculationInterval().startDate(),
+                                    iv.getCalculationInterval().endDate()
+                            )
+                    );
+                });
+        return iiVms;
+    }
 
+    private List<InvoiceItemValueForBudgetItemAndInterval> invoiceItemValuesForBudgetItemAndInterval(final BudgetItem budgetItem, final LocalDateInterval calculationInterval, final String reference){
+        List<InvoiceItemValueForBudgetItemAndInterval> result = new ArrayList<>();
+        incomingInvoiceItemRepository.findByBudgetItem(budgetItem).forEach(ii->{
+            result.add(
+                    new InvoiceItemValueForBudgetItemAndInterval(
+                            ii,
+                            budgetItem,
+                            netamountForInvoiceItemAndCalculationInterval(ii, calculationInterval),
+                            calculationInterval,
+                            reference)
+            );
+        });
+        return result;
+    }
 
     @Inject OrderItemRepository orderItemRepository;
 
