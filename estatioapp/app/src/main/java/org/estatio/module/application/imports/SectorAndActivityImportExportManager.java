@@ -2,7 +2,9 @@ package org.estatio.module.application.imports;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -12,6 +14,7 @@ import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.value.Blob;
 
+import org.estatio.module.lease.dom.occupancy.OccupancyRepository;
 import org.estatio.module.lease.dom.occupancy.tags.Sector;
 import org.estatio.module.lease.dom.occupancy.tags.SectorRepository;
 import org.isisaddons.module.excel.dom.ExcelService;
@@ -77,8 +80,29 @@ public class SectorAndActivityImportExportManager {
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     public SectorAndActivityImportExportManager upload(final Blob spreadSheet){
-        excelService.fromExcel(spreadSheet, SectorAndActivityImportExport.class, "Sectors and Activities", Mode.RELAXED).forEach(imp->imp.importData(null));
+        List<SectorAndActivityImportExport> allSectorsAndActivities = getSectorAndActivityLines();
+        List<SectorAndActivityImportExport> newSectorsAndActivities = excelService.fromExcel(spreadSheet, SectorAndActivityImportExport.class, "Sectors and Activities", Mode.RELAXED);
+        newSectorsAndActivities.forEach(imp -> imp.importData(null));
+        tryToRemoveSectorsAndActivities(allSectorsAndActivities, newSectorsAndActivities);
+
         return new SectorAndActivityImportExportManager();
+    }
+
+    private void tryToRemoveSectorsAndActivities(List<SectorAndActivityImportExport> oldImps, List<SectorAndActivityImportExport> newImps) {
+        List<SectorAndActivityImportExport> toRemove = oldImps.stream()
+                .filter(imp -> newImps.stream().allMatch(newImp -> {
+                    if (newImp.getSectorName() == imp.getSectorName()) {
+                        return newImp.getActivityName() != imp.getActivityName();
+                    } else {
+                        return true;
+                    }
+                }))
+                .collect(Collectors.toList());
+
+//        List<SectorAndActivityImportExport> activitiesToRemove = toRemove.stream().filter(imp -> imp.getActivityName()!=null).collect(Collectors.toList());
+//        activitiesToRemove.forEach(imp -> {
+//            occupancyRepository.
+//        });
     }
 
     @Inject
@@ -89,5 +113,8 @@ public class SectorAndActivityImportExportManager {
 
     @Inject
     SectorRepository sectorRepository;
+
+    @Inject
+    OccupancyRepository occupancyRepository;
 
 }
