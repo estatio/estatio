@@ -30,7 +30,6 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.factory.FactoryService;
 import org.apache.isis.applib.services.repository.RepositoryService;
 import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
-import org.estatio.module.party.dom.Person;
 
 @DomainService(menuOrder = "99", repositoryFor = Sector.class, nature = NatureOfService.DOMAIN)
 public class SectorRepository extends UdoDomainRepositoryAndFactory<Sector> {
