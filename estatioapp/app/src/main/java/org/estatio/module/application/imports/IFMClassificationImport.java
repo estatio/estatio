@@ -78,7 +78,7 @@ public class IFMClassificationImport implements Importable, ExcelFixtureRowHandl
                 throw new IllegalArgumentException(String.format("No activity found with name '%s'", getActivityName()));
             }
 
-            occupancies = occupancyRepository.findByBrand(brand, false).stream()
+            occupancies = occupancyRepository.findByBrand(brand, true).stream()
                     .filter(occupancy -> occupancy.getApplicationTenancy().getPath().startsWith("/FRA") && occupancy.getActivity() == activity)
                     .collect(Collectors.toList());
 
