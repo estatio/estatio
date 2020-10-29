@@ -20,12 +20,15 @@ package org.estatio.module.lease.dom.occupancy.tags;
 
 import java.util.List;
 
+import javax.inject.Inject;
 import javax.jdo.Query;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 
+import org.apache.isis.applib.services.factory.FactoryService;
+import org.apache.isis.applib.services.repository.RepositoryService;
 import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.module.party.dom.Person;
 
@@ -53,9 +56,10 @@ public class SectorRepository extends UdoDomainRepositoryAndFactory<Sector> {
         }
         Sector sector = findByName(name);
         if (sector == null) {
-            sector = newTransientInstance(Sector.class);
+            sector = factoryService.instantiate(Sector.class);
             sector.setName(name);
             sector.setDescription(name);
+            repositoryService.persistAndFlush(sector);
         }
         return sector;
     }
@@ -64,5 +68,11 @@ public class SectorRepository extends UdoDomainRepositoryAndFactory<Sector> {
     public List<Sector> allSectors() {
         return allInstances();
     }
+
+    @Inject
+    FactoryService factoryService;
+
+    @Inject
+    RepositoryService repositoryService;
 
 }

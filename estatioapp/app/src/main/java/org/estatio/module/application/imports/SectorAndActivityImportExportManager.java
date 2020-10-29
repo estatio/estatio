@@ -10,11 +10,18 @@ import javax.inject.Inject;
 
 import com.google.common.collect.Lists;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.services.clock.ClockService;
+import org.apache.isis.applib.services.factory.FactoryService;
+import org.apache.isis.applib.services.message.MessageService;
+import org.apache.isis.applib.services.repository.RepositoryService;
 import org.apache.isis.applib.value.Blob;
 
+import org.estatio.module.lease.dom.occupancy.Occupancy;
 import org.estatio.module.lease.dom.occupancy.OccupancyRepository;
+import org.estatio.module.lease.dom.occupancy.tags.Activity;
+import org.estatio.module.lease.dom.occupancy.tags.ActivityRepository;
 import org.estatio.module.lease.dom.occupancy.tags.Sector;
 import org.estatio.module.lease.dom.occupancy.tags.SectorRepository;
 import org.isisaddons.module.excel.dom.ExcelService;
@@ -82,27 +89,45 @@ public class SectorAndActivityImportExportManager {
     public SectorAndActivityImportExportManager upload(final Blob spreadSheet){
         List<SectorAndActivityImportExport> allSectorsAndActivities = getSectorAndActivityLines();
         List<SectorAndActivityImportExport> newSectorsAndActivities = excelService.fromExcel(spreadSheet, SectorAndActivityImportExport.class, "Sectors and Activities", Mode.RELAXED);
+        tryToRemoveSectorsAndActivities(getSectorsAndActivitiesToRemove(allSectorsAndActivities, newSectorsAndActivities));
         newSectorsAndActivities.forEach(imp -> imp.importData(null));
-        tryToRemoveSectorsAndActivities(allSectorsAndActivities, newSectorsAndActivities);
 
         return new SectorAndActivityImportExportManager();
     }
 
-    private void tryToRemoveSectorsAndActivities(List<SectorAndActivityImportExport> oldImps, List<SectorAndActivityImportExport> newImps) {
-        List<SectorAndActivityImportExport> toRemove = oldImps.stream()
-                .filter(imp -> newImps.stream().allMatch(newImp -> {
-                    if (newImp.getSectorName() == imp.getSectorName()) {
-                        return newImp.getActivityName() != imp.getActivityName();
-                    } else {
-                        return true;
-                    }
-                }))
-                .collect(Collectors.toList());
+    private List<SectorAndActivityImportExport> getSectorsAndActivitiesToRemove(List<SectorAndActivityImportExport> oldImps, List<SectorAndActivityImportExport> newImps) {
+        return oldImps.stream().filter(imp -> newImps.stream().allMatch(newImp -> {
+            if (StringUtils.equals(newImp.getSectorName(), imp.getSectorName())) {
+                return !StringUtils.equals(newImp.getActivityName(), imp.getActivityName());
+            } else {
+                return true;
+            }
+        })).collect(Collectors.toList());
+    }
 
-//        List<SectorAndActivityImportExport> activitiesToRemove = toRemove.stream().filter(imp -> imp.getActivityName()!=null).collect(Collectors.toList());
-//        activitiesToRemove.forEach(imp -> {
-//            occupancyRepository.
-//        });
+    private void tryToRemoveSectorsAndActivities(List<SectorAndActivityImportExport> toRemove) {
+        // Try to remove activities first
+        List<SectorAndActivityImportExport> activitiesToRemove = toRemove.stream().filter(imp -> imp.getActivityName()!=null).collect(Collectors.toList());
+        activitiesToRemove.forEach(imp -> {
+            Sector sector = sectorRepository.findByName(imp.getSectorName());
+            Activity activity = activityRepository.findBySectorAndName(sector, imp.getActivityName());
+            if (occupancyRepository.findByActivity(activity).isEmpty()) {
+                repositoryService.remove(activity);
+            } else {
+                messageService.warnUser(String.format("Activity %s with sector %s cannot be removed; already in use", imp.getActivityName(), imp.getSectorName()));
+            }
+        });
+
+        // Then try to remove sectors
+        List<SectorAndActivityImportExport> sectorsToRemove = toRemove.stream().filter(imp -> imp.getActivityName()==null).collect(Collectors.toList());
+        sectorsToRemove.forEach(imp -> {
+            Sector sector = sectorRepository.findByName(imp.getSectorName());
+            if (occupancyRepository.findBySector(sector).isEmpty() && activityRepository.findBySector(sector).isEmpty()) {
+                repositoryService.remove(sector);
+            } else {
+                messageService.warnUser(String.format("Sector %s cannot be removed; already in use", imp.getSectorName()));
+            }
+        });
     }
 
     @Inject
@@ -112,7 +137,16 @@ public class SectorAndActivityImportExportManager {
     ClockService clockService;
 
     @Inject
+    MessageService messageService;
+
+    @Inject
+    RepositoryService repositoryService;
+
+    @Inject
     SectorRepository sectorRepository;
+
+    @Inject
+    ActivityRepository activityRepository;
 
     @Inject
     OccupancyRepository occupancyRepository;

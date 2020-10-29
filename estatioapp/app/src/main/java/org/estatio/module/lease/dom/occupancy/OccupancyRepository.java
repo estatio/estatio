@@ -24,6 +24,8 @@ import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
+import org.estatio.module.lease.dom.occupancy.tags.Activity;
+import org.estatio.module.lease.dom.occupancy.tags.Sector;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.DomainService;
@@ -136,6 +138,18 @@ public class OccupancyRepository extends UdoDomainRepositoryAndFactory<Occupancy
                 "brand", brand,
                 "includeTerminated", includeTerminated,
                 "date", clockService.now());
+    }
+
+    @Programmatic
+    public List<Occupancy> findBySector(
+            final Sector sector) {
+        return allMatches("findBySector", "sector", sector);
+    }
+
+    @Programmatic
+    public List<Occupancy> findByActivity(
+            final Activity activity) {
+        return allMatches("findByActivity", "activity", activity);
     }
 
     @Programmatic

@@ -21,6 +21,7 @@ package org.estatio.module.lease.dom.occupancy.tags;
 import java.util.Collections;
 import java.util.List;
 
+import javax.inject.Inject;
 import javax.jdo.Query;
 
 import com.google.common.collect.ImmutableMap;
@@ -29,6 +30,8 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 
+import org.apache.isis.applib.services.factory.FactoryService;
+import org.apache.isis.applib.services.repository.RepositoryService;
 import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
 
 @DomainService(menuOrder = "99", repositoryFor = Activity.class, nature = NatureOfService.DOMAIN)
@@ -67,13 +70,20 @@ public class ActivityRepository extends UdoDomainRepositoryAndFactory<Activity> 
         }
         Activity activity = findBySectorAndName(sector, name);
         if (activity == null) {
-            activity = newTransientInstance(Activity.class);
+            activity = factoryService.instantiate(Activity.class);
             activity.setSector(sector);
             activity.setName(name);
             activity.setDescription(name);
+            repositoryService.persistAndFlush(activity);
         }
         return activity;
     }
+
+    @Inject
+    FactoryService factoryService;
+
+    @Inject
+    RepositoryService repositoryService;
 
     
 }
