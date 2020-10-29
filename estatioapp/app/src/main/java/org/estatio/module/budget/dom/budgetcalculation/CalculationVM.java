@@ -34,7 +34,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-@DomainObject(nature = Nature.VIEW_MODEL)
+@DomainObject(nature = Nature.VIEW_MODEL, objectType = "budgetcalculation.CalculationVM")
 @AllArgsConstructor
 @Getter @Setter
 public class CalculationVM {

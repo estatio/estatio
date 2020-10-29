@@ -22,7 +22,7 @@ import org.estatio.module.invoice.dom.InvoiceItem;
 import lombok.Getter;
 import lombok.Setter;
 
-@DomainObject(nature = Nature.VIEW_MODEL)
+@DomainObject(nature = Nature.VIEW_MODEL, objectType = "budgetassignment.app.InvoiceLinkManager")
 public class InvoiceLinkManager {
 
     public InvoiceLinkManager(){}
