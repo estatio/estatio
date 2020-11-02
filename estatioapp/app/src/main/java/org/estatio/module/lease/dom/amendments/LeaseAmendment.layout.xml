@@ -23,8 +23,8 @@
                                         <ns2:action id="createOrRenewLeasePreview" position="PANEL"/>
                                         <ns2:property id="leasePreview"/>
                                     </ns2:fieldSet>
-                                    <ns2:fieldSet name="Amendment type" id="leaseAmendmentType">
-                                        <ns2:property id="leaseAmendmentType"/>
+                                    <ns2:fieldSet name="Amendment type" id="leaseAmendmentTemplate">
+                                        <ns2:property id="leaseAmendmentTemplate"/>
                                     </ns2:fieldSet>
                                     <ns2:fieldSet name="State" id="state">
                                         <ns2:action id="apply" position="PANEL"/>

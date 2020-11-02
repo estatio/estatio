@@ -39,7 +39,7 @@ public class LeaseAmendmentImportLine implements ExcelFixtureRowHandler, Importa
 
     public LeaseAmendmentImportLine(final LeaseAmendment leaseAmendment){
         this();
-        this.leaseAmendmentType = leaseAmendment.getLeaseAmendmentType();
+        this.leaseAmendmentTemplate = leaseAmendment.getLeaseAmendmentTemplate();
         this.leaseAmendmentState = leaseAmendment.getState();
         this.dateSigned = leaseAmendment.getDateSigned();
         this.leaseReference = leaseAmendment.getLease().getReference();
@@ -68,7 +68,7 @@ public class LeaseAmendmentImportLine implements ExcelFixtureRowHandler, Importa
 
     public LeaseAmendmentImportLine(final LeaseAmendment leaseAmendment, final LeaseAmendmentItemForDiscount item){
         this();
-        this.leaseAmendmentType = leaseAmendment.getLeaseAmendmentType();
+        this.leaseAmendmentTemplate = leaseAmendment.getLeaseAmendmentTemplate();
         this.leaseAmendmentState = leaseAmendment.getState();
         this.dateSigned = leaseAmendment.getDateSigned();
         this.leaseReference = leaseAmendment.getLease().getReference();
@@ -86,7 +86,7 @@ public class LeaseAmendmentImportLine implements ExcelFixtureRowHandler, Importa
 
     @Getter @Setter
     @MemberOrder(sequence = "1")
-    private LeaseAmendmentType leaseAmendmentType;
+    private LeaseAmendmentTemplate leaseAmendmentTemplate;
 
     @Getter @Setter
     @MemberOrder(sequence = "2")
@@ -170,7 +170,7 @@ public class LeaseAmendmentImportLine implements ExcelFixtureRowHandler, Importa
         if (leaseAmendmentState==LeaseAmendmentState.APPLIED){
             throw new ApplicationException(String.format("State %s for lease %s not allowed.", leaseAmendmentState, leaseReference));
         }
-        final LeaseAmendment amendment = leaseAmendmentRepository.upsert(lease, leaseAmendmentType, leaseAmendmentState, startDate, endDate);
+        final LeaseAmendment amendment = leaseAmendmentRepository.upsert(lease, leaseAmendmentTemplate, leaseAmendmentState, startDate, endDate);
         if (amendment.getState()==LeaseAmendmentState.APPLIED) return Lists.newArrayList(amendment);
         if (amendment.getState()==LeaseAmendmentState.SIGNED && dateSigned!=null) amendment.setDateSigned(dateSigned);
         
@@ -189,7 +189,7 @@ public class LeaseAmendmentImportLine implements ExcelFixtureRowHandler, Importa
                     frequencyChangeApplicableTo),
                     frequencyChangeStartDate, frequencyChangeEndDate);
         }
-        final LeaseAmendment leaseAmendment = leaseAmendmentRepository.findUnique(lease, leaseAmendmentType);
+        final LeaseAmendment leaseAmendment = leaseAmendmentRepository.findUnique(lease, leaseAmendmentTemplate);
         backgroundService2.execute(leaseAmendment).createOrRenewLeasePreview();
         return Lists.newArrayList(leaseAmendment);
     }

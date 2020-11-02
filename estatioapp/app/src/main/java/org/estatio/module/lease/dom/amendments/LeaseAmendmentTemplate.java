@@ -11,7 +11,7 @@ import org.estatio.module.lease.dom.LeaseItemType;
 
 import lombok.Getter;
 
-public enum LeaseAmendmentType {
+public enum LeaseAmendmentTemplate {
 
     COVID_BEL(
             new LocalDate(2020,3,18), // min date because of lease selection
@@ -260,7 +260,7 @@ public enum LeaseAmendmentType {
     @Getter
     private Boolean allowsBulkApply;
 
-    LeaseAmendmentType(
+    LeaseAmendmentTemplate(
             final LocalDate amendmentStartDate,
             final BigDecimal discountPercentage,
             final List<LeaseItemType> discountAppliesTo,

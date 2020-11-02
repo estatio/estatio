@@ -19,10 +19,10 @@
             </cpt:fieldSet>
         </bs3:col>
         <bs3:col span="6">
-            <cpt:fieldSet name="Type and state selection" id="leaseAmendmentType">
+            <cpt:fieldSet name="Type and state selection" id="leaseAmendmentTemplate">
                 <cpt:action id="filterByType" position="PANEL"/>
                 <cpt:action id="filterByState" position="PANEL"/>
-                <cpt:property id="leaseAmendmentType"/>
+                <cpt:property id="leaseAmendmentTemplate"/>
                 <cpt:property id="state"/>
             </cpt:fieldSet>
         </bs3:col>

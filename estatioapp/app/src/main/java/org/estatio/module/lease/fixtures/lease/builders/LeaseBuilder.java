@@ -60,7 +60,7 @@ import org.estatio.module.lease.dom.LeaseTypeRepository;
 import org.estatio.module.lease.dom.amendments.LeaseAmendment;
 import org.estatio.module.lease.dom.amendments.LeaseAmendmentItemRepository;
 import org.estatio.module.lease.dom.amendments.LeaseAmendmentState;
-import org.estatio.module.lease.dom.amendments.LeaseAmendmentType;
+import org.estatio.module.lease.dom.amendments.LeaseAmendmentTemplate;
 import org.estatio.module.lease.dom.amendments.LeaseAmendmentRepository;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
 import org.estatio.module.lease.dom.occupancy.OccupancyRepository;
@@ -121,7 +121,7 @@ public final class LeaseBuilder
     @AllArgsConstructor
     @Data
     public static class AmendmentSpec {
-        LeaseAmendmentType leaseAmendmentType;
+        LeaseAmendmentTemplate leaseAmendmentTemplate;
     }
     @Getter @Setter
     List<AmendmentSpec> amendmentSpecs = Lists.newArrayList();
@@ -199,11 +199,18 @@ public final class LeaseBuilder
         }
         for (final AmendmentSpec spec : amendmentSpecs) {
             final LeaseAmendment leaseAmendment = leaseAmendmentRepository
-                    .create(lease, spec.leaseAmendmentType, LeaseAmendmentState.PROPOSED, spec.leaseAmendmentType.getAmendmentStartDate(), null);
+                    .create(lease, spec.leaseAmendmentTemplate, LeaseAmendmentState.PROPOSED, spec.leaseAmendmentTemplate
+                            .getAmendmentStartDate(), null);
             leaseAmendmentItemRepository
-                    .create(leaseAmendment, spec.leaseAmendmentType.getDiscountPercentage(), null, spec.leaseAmendmentType.getDiscountAppliesTo(), spec.leaseAmendmentType.getDiscountStartDate(), spec.leaseAmendmentType.getDiscountEndDate());
+                    .create(leaseAmendment, spec.leaseAmendmentTemplate
+                            .getDiscountPercentage(), null, spec.leaseAmendmentTemplate
+                            .getDiscountAppliesTo(), spec.leaseAmendmentTemplate
+                            .getDiscountStartDate(), spec.leaseAmendmentTemplate.getDiscountEndDate());
             leaseAmendmentItemRepository
-                    .create(leaseAmendment, spec.leaseAmendmentType.getFrequencyChanges().get(0).oldValue, spec.leaseAmendmentType.getFrequencyChanges().get(0).newValue, spec.leaseAmendmentType.getFrequencyChangeAppliesTo(), spec.leaseAmendmentType.getFrequencyChangeStartDate(), spec.leaseAmendmentType.getFrequencyChangeEndDate());
+                    .create(leaseAmendment, spec.leaseAmendmentTemplate
+                            .getFrequencyChanges().get(0).oldValue, spec.leaseAmendmentTemplate.getFrequencyChanges().get(0).newValue, spec.leaseAmendmentTemplate
+                            .getFrequencyChangeAppliesTo(), spec.leaseAmendmentTemplate.getFrequencyChangeStartDate(), spec.leaseAmendmentTemplate
+                            .getFrequencyChangeEndDate());
             executionContext.addResult(this, leaseAmendment);
         }
 
