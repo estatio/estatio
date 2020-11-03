@@ -183,7 +183,11 @@ public class LeaseAmendmentManager {
     public LeaseAmendmentManager importAmendments(final Blob excelsheet){
         final List<LeaseAmendmentImportLine> lines = excelService
                 .fromExcel(excelsheet, LeaseAmendmentImportLine.class, "lines");
-        lines.forEach(l->l.importData());
+        LeaseAmendmentImportLine previous = null;
+        for (LeaseAmendmentImportLine line : lines){
+            line.importData(previous);
+            previous = line;
+        }
         return this;
     }
 
