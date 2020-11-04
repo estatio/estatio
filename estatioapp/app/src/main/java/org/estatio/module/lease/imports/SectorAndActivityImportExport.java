@@ -1,4 +1,4 @@
-package org.estatio.module.application.imports;
+package org.estatio.module.lease.imports;
 
 import com.google.common.collect.Lists;
 import lombok.Getter;

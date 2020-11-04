@@ -1,4 +1,4 @@
-package org.estatio.module.application.imports;
+package org.estatio.module.lease.imports;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +27,7 @@ import org.isisaddons.module.excel.dom.util.Mode;
 
 @DomainObject(
         nature = Nature.VIEW_MODEL,
-        objectType = "org.estatio.module.application.imports.SectorAndActivityImportExportManager"
+        objectType = "org.estatio.module.lease.imports.SectorAndActivityImportExportManager"
 )
 public class SectorAndActivityImportExportManager {
 
@@ -85,8 +85,9 @@ public class SectorAndActivityImportExportManager {
     public SectorAndActivityImportExportManager upload(final Blob spreadSheet){
         List<SectorAndActivityImportExport> allSectorsAndActivities = getSectorAndActivityLines();
         List<SectorAndActivityImportExport> newSectorsAndActivities = excelService.fromExcel(spreadSheet, SectorAndActivityImportExport.class, "Sectors and Activities", Mode.RELAXED);
-        tryToRemoveSectorsAndActivities(getSectorsAndActivitiesToRemove(allSectorsAndActivities, newSectorsAndActivities));
-        newSectorsAndActivities.forEach(imp -> imp.importData(null));
+        if (tryToRemoveSectorsAndActivities(getSectorsAndActivitiesToRemove(allSectorsAndActivities, newSectorsAndActivities))) {
+            newSectorsAndActivities.forEach(imp -> imp.importData(null));
+        }
 
         return new SectorAndActivityImportExportManager();
     }
@@ -101,8 +102,11 @@ public class SectorAndActivityImportExportManager {
         })).collect(Collectors.toList());
     }
 
-    private void tryToRemoveSectorsAndActivities(List<SectorAndActivityImportExport> toRemove) {
+    private boolean tryToRemoveSectorsAndActivities(List<SectorAndActivityImportExport> toRemove) {
+        boolean success = true;
+
         // Try to remove activities first
+        List<String> nonremovableActivities = new ArrayList<>();
         List<SectorAndActivityImportExport> activitiesToRemove = toRemove.stream().filter(imp -> imp.getActivityName()!=null).collect(Collectors.toList());
         activitiesToRemove.forEach(imp -> {
             Sector sector = sectorRepository.findByName(imp.getSectorName());
@@ -110,20 +114,34 @@ public class SectorAndActivityImportExportManager {
             if (occupancyRepository.findByActivity(activity).isEmpty()) {
                 repositoryService.remove(activity);
             } else {
-                messageService.warnUser(String.format("Activity %s with sector %s cannot be removed; already in use", imp.getActivityName(), imp.getSectorName()));
+                nonremovableActivities.add(imp.getActivityName());
             }
         });
-
+        if (!nonremovableActivities.isEmpty()) {
+            success = false;
+            messageService.raiseError(String.format("The following activities are already in use, cannot be removed: %s",
+                    nonremovableActivities.stream().collect(Collectors.joining(", "))));
+        }
+        
         // Then try to remove sectors
+        List<String> nonremovableSectors = new ArrayList<>();
         List<SectorAndActivityImportExport> sectorsToRemove = toRemove.stream().filter(imp -> imp.getActivityName()==null).collect(Collectors.toList());
         sectorsToRemove.forEach(imp -> {
             Sector sector = sectorRepository.findByName(imp.getSectorName());
             if (occupancyRepository.findBySector(sector).isEmpty() && activityRepository.findBySector(sector).isEmpty()) {
                 repositoryService.remove(sector);
             } else {
-                messageService.warnUser(String.format("Sector %s cannot be removed; already in use", imp.getSectorName()));
+                nonremovableSectors.add(imp.getSectorName());
             }
         });
+
+        if (!nonremovableSectors.isEmpty()) {
+            success = false;
+            messageService.raiseError(String.format("The following sectors are already in use, cannot be removed: %s",
+                    nonremovableSectors.stream().collect(Collectors.joining(", "))));
+        }
+
+        return success;
     }
 
     @Inject

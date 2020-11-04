@@ -27,7 +27,7 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.estatio.module.application.imports.SectorAndActivityImportExportManager;
+import org.estatio.module.lease.imports.SectorAndActivityImportExportManager;
 import org.incode.module.classification.dom.impl.category.Category;
 import org.incode.module.classification.dom.impl.category.CategoryRepository;
 

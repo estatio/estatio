@@ -42,7 +42,7 @@ public class ActivityRepository extends UdoDomainRepositoryAndFactory<Activity> 
     }
 
     // //////////////////////////////////////
-    
+
     public List<String> findUniqueNames(final Sector sector) {
         if(sector == null) {
             return Collections.emptyList();
@@ -77,6 +77,11 @@ public class ActivityRepository extends UdoDomainRepositoryAndFactory<Activity> 
             repositoryService.persistAndFlush(activity);
         }
         return activity;
+    }
+
+    @Programmatic
+    public List<Activity> allActivities()  {
+        return allInstances();
     }
 
     @Inject
