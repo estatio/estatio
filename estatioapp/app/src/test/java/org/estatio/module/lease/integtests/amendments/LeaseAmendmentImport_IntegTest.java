@@ -173,7 +173,7 @@ public class LeaseAmendmentImport_IntegTest extends LeaseModuleIntegTestAbstract
         manager.importAmendments(excelSheet2);
 
         // then
-        Assertions.assertThat(leaseAmendmentRepository.findByType(LeaseAmendmentType.DEMO_TYPE2)).hasSize(4);
+        Assertions.assertThat(leaseAmendmentRepository.findByType(LeaseAmendmentTemplate.DEMO_TYPE2)).hasSize(4);
         Assertions.assertThat(amendmentForTopmodel.getState()).isEqualTo(LeaseAmendmentState.APPLY);
         Assertions.assertThat(amendmentForTopmodel.getStartDate()).isEqualTo(new LocalDate(2020,6,1));
         Assertions.assertThat(amendmentForTopmodel.getDateSigned()).isNull();
