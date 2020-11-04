@@ -22,7 +22,7 @@ public class Lease_createLeaseAmendment {
     public Lease $$(
             final LeaseAmendmentTemplate leaseAmendmentTemplate
     ) {
-        final LeaseAmendment amendment = leaseAmendmentRepository.create(lease, leaseAmendmentTemplate, LeaseAmendmentState.PROPOSED, leaseAmendmentTemplate
+        final LeaseAmendment amendment = leaseAmendmentRepository.create(lease, leaseAmendmentTemplate, leaseAmendmentTemplate.getLeaseAmendmentType(), LeaseAmendmentState.PROPOSED, leaseAmendmentTemplate
                 .getAmendmentStartDate(), null);
         if (leaseAmendmentTemplate.getDiscountPercentage()!=null && leaseAmendmentTemplate.getDiscountAppliesTo()!=null && leaseAmendmentTemplate
                 .getDiscountStartDate()!=null && leaseAmendmentTemplate.getDiscountEndDate()!=null) {

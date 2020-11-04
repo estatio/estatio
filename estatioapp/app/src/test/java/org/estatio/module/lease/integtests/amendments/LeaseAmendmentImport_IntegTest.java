@@ -95,7 +95,7 @@ public class LeaseAmendmentImport_IntegTest extends LeaseModuleIntegTestAbstract
         Blob excelSheet2 = (Blob) fixtureResults.get(1).getObject();
         Assertions.assertThat(excelSheet2).isNotNull();
         Property oxf = Property_enum.OxfGb.findUsing(serviceRegistry);
-        Assertions.assertThat(leaseAmendmentRepository.findByType(LeaseAmendmentTemplate.DEMO_TYPE2)).isEmpty();
+        Assertions.assertThat(leaseAmendmentRepository.findByTemplate(LeaseAmendmentTemplate.DEMO_TYPE2)).isEmpty();
 
 
         // when
@@ -105,7 +105,7 @@ public class LeaseAmendmentImport_IntegTest extends LeaseModuleIntegTestAbstract
         manager.importAmendments(excelSheet);
 
         // then
-        Assertions.assertThat(leaseAmendmentRepository.findByType(LeaseAmendmentTemplate.DEMO_TYPE2)).hasSize(4);
+        Assertions.assertThat(leaseAmendmentRepository.findByTemplate(LeaseAmendmentTemplate.DEMO_TYPE2)).hasSize(4);
         final Lease topmodelLease = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
         final LeaseAmendment amendmentForTopmodel = leaseAmendmentRepository.findUnique(topmodelLease, LeaseAmendmentTemplate.DEMO_TYPE2);
         Assertions.assertThat(amendmentForTopmodel.getState()).isEqualTo(LeaseAmendmentState.APPLY);
@@ -173,7 +173,7 @@ public class LeaseAmendmentImport_IntegTest extends LeaseModuleIntegTestAbstract
         manager.importAmendments(excelSheet2);
 
         // then
-        Assertions.assertThat(leaseAmendmentRepository.findByType(LeaseAmendmentTemplate.DEMO_TYPE2)).hasSize(4);
+        Assertions.assertThat(leaseAmendmentRepository.findByTemplate(LeaseAmendmentTemplate.DEMO_TYPE2)).hasSize(4);
         Assertions.assertThat(amendmentForTopmodel.getState()).isEqualTo(LeaseAmendmentState.APPLY);
         Assertions.assertThat(amendmentForTopmodel.getStartDate()).isEqualTo(new LocalDate(2020,6,1));
         Assertions.assertThat(amendmentForTopmodel.getDateSigned()).isNull();

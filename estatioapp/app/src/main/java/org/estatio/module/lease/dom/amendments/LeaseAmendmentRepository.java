@@ -43,7 +43,7 @@ public class LeaseAmendmentRepository {
     }
 
     @Programmatic
-    public List<LeaseAmendment> findByType(final LeaseAmendmentTemplate leaseAmendmentTemplate) {
+    public List<LeaseAmendment> findByTemplate(final LeaseAmendmentTemplate leaseAmendmentTemplate) {
         return repositoryService.allMatches(
                 new QueryDefault<>(
                         LeaseAmendment.class,
@@ -52,7 +52,7 @@ public class LeaseAmendmentRepository {
     }
 
     @Programmatic
-    public List<LeaseAmendment> findByTypeAndState(final LeaseAmendmentTemplate leaseAmendmentTemplate, final LeaseAmendmentState state) {
+    public List<LeaseAmendment> findByTemplateAndState(final LeaseAmendmentTemplate leaseAmendmentTemplate, final LeaseAmendmentState state) {
         return repositoryService.allMatches(
                 new QueryDefault<>(
                         LeaseAmendment.class,
@@ -109,7 +109,7 @@ public class LeaseAmendmentRepository {
         final LeaseAmendment amendment = findUnique(lease, leaseAmendmentTemplate);
         LeaseAmendmentState stateToUse = state !=null ? state : LeaseAmendmentState.PROPOSED;
         if (amendment ==null){
-            return create(lease, leaseAmendmentTemplate, stateToUse, startDate, endDate);
+            return create(lease, leaseAmendmentTemplate, leaseAmendmentTemplate.getLeaseAmendmentType(), stateToUse, startDate, endDate);
         } else {
             if (amendment.getState()==LeaseAmendmentState.APPLIED) return amendment;
             amendment.setState(stateToUse);
@@ -124,6 +124,7 @@ public class LeaseAmendmentRepository {
     public LeaseAmendment create(
             final Lease lease,
             final LeaseAmendmentTemplate leaseAmendmentTemplate,
+            final LeaseAmendmentType leaseAmendmentType,
             final LeaseAmendmentState state,
             final LocalDate startDate,
             final LocalDate endDate) {
@@ -134,6 +135,7 @@ public class LeaseAmendmentRepository {
         leaseAmendment.setType(agreementTypeRepository.find(LeaseAmendmentAgreementTypeEnum.LEASE_AMENDMENT));
         leaseAmendment.setLease(lease);
         leaseAmendment.setLeaseAmendmentTemplate(leaseAmendmentTemplate);
+        leaseAmendment.setLeaseAmendmentType(leaseAmendmentType);
         leaseAmendment.setState(state);
         leaseAmendment.setStartDate(startDate);
         leaseAmendment.setEndDate(endDate);
@@ -151,8 +153,8 @@ public class LeaseAmendmentRepository {
     }
 
     @Programmatic
-    public List<LeaseAmendment> findByTypeAndProperty(final LeaseAmendmentTemplate leaseAmendmentTemplate, final Property property){
-        return findByType(leaseAmendmentTemplate).stream()
+    public List<LeaseAmendment> findByTemplateAndProperty(final LeaseAmendmentTemplate leaseAmendmentTemplate, final Property property){
+        return findByTemplate(leaseAmendmentTemplate).stream()
                 .filter(a->a.getLease()!=null)
                 .filter(a->a.getLease().getProperty()!=null)
                 .filter(a->a.getLease().getProperty()==property)
@@ -161,7 +163,7 @@ public class LeaseAmendmentRepository {
 
     @Programmatic
     public List<LeaseAmendment> findByTypeAndStateAndProperty(final LeaseAmendmentTemplate leaseAmendmentTemplate, final LeaseAmendmentState state, final Property property){
-        return findByTypeAndState(leaseAmendmentTemplate, state).stream()
+        return findByTemplateAndState(leaseAmendmentTemplate, state).stream()
                 .filter(a->a.getLease()!=null)
                 .filter(a->a.getLease().getProperty()!=null)
                 .filter(a->a.getLease().getProperty()==property)

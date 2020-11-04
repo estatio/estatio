@@ -92,18 +92,18 @@ public class LeaseAmendmentRepository_IntegTest extends LeaseModuleIntegTestAbst
         assertThat(resultForState.get(0)).isEqualTo(leaseAmendment);
 
         // and when
-        final List<LeaseAmendment> resultsForDemoType = leaseAmendmentRepository.findByType(LeaseAmendmentTemplate.DEMO_TYPE);
-        final List<LeaseAmendment> resultsForDemoTypeOxf = leaseAmendmentRepository.findByTypeAndProperty(
+        final List<LeaseAmendment> resultsForDemoType = leaseAmendmentRepository.findByTemplate(LeaseAmendmentTemplate.DEMO_TYPE);
+        final List<LeaseAmendment> resultsForDemoTypeOxf = leaseAmendmentRepository.findByTemplateAndProperty(
                 LeaseAmendmentTemplate.DEMO_TYPE, Property_enum.OxfGb.findUsing(serviceRegistry));
-        final List<LeaseAmendment> resultsForDemoTypeRon = leaseAmendmentRepository.findByTypeAndProperty(
+        final List<LeaseAmendment> resultsForDemoTypeRon = leaseAmendmentRepository.findByTemplateAndProperty(
                 LeaseAmendmentTemplate.DEMO_TYPE, Property_enum.RonIt.findUsing(serviceRegistry));
         final List<LeaseAmendment> resultsForOxf = leaseAmendmentRepository.findByProperty(Property_enum.OxfGb.findUsing(serviceRegistry));
         final List<LeaseAmendment> resultsForRon = leaseAmendmentRepository.findByProperty(Property_enum.RonIt.findUsing(serviceRegistry));
         final List<LeaseAmendment> resultsForOxfProposed = leaseAmendmentRepository.findByPropertyAndState(Property_enum.OxfGb.findUsing(serviceRegistry), LeaseAmendmentState.PROPOSED);
         final List<LeaseAmendment> resultsForOxfSigned = leaseAmendmentRepository.findByPropertyAndState(Property_enum.OxfGb.findUsing(serviceRegistry), LeaseAmendmentState.SIGNED);
-        final List<LeaseAmendment> resultsForDemoTypeAndProposed = leaseAmendmentRepository.findByTypeAndState(
+        final List<LeaseAmendment> resultsForDemoTypeAndProposed = leaseAmendmentRepository.findByTemplateAndState(
                 LeaseAmendmentTemplate.DEMO_TYPE, LeaseAmendmentState.PROPOSED);
-        final List<LeaseAmendment> resultsForDemoTypeAndSigned = leaseAmendmentRepository.findByTypeAndState(
+        final List<LeaseAmendment> resultsForDemoTypeAndSigned = leaseAmendmentRepository.findByTemplateAndState(
                 LeaseAmendmentTemplate.DEMO_TYPE, LeaseAmendmentState.SIGNED);
         final List<LeaseAmendment> resultsForDemoTypeAndProposedForOxf = leaseAmendmentRepository.findByTypeAndStateAndProperty(
                 LeaseAmendmentTemplate.DEMO_TYPE, LeaseAmendmentState.PROPOSED,
@@ -111,7 +111,7 @@ public class LeaseAmendmentRepository_IntegTest extends LeaseModuleIntegTestAbst
         final List<LeaseAmendment> resultsForDemoTypeAndProposedForRon = leaseAmendmentRepository.findByTypeAndStateAndProperty(
                 LeaseAmendmentTemplate.DEMO_TYPE, LeaseAmendmentState.PROPOSED,
                 Property_enum.RonIt.findUsing(serviceRegistry));
-        final List<LeaseAmendment> resultsForOtherType = leaseAmendmentRepository.findByType(LeaseAmendmentTemplate.COVID_ITA_FREQ_CHANGE_ONLY);
+        final List<LeaseAmendment> resultsForOtherType = leaseAmendmentRepository.findByTemplate(LeaseAmendmentTemplate.COVID_ITA_FREQ_CHANGE_ONLY);
         // then
         assertThat(resultsForDemoType).hasSize(1);
         assertThat(resultsForDemoTypeOxf).hasSize(1);

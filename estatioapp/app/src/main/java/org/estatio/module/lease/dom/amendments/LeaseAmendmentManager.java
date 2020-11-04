@@ -77,7 +77,7 @@ public class LeaseAmendmentManager {
         if (getProperty()==null) return result; // Should not be possible
         if (getLeaseAmendmentTemplate()!=null){
             if (getState()==null) {
-                createLinesAndAddToResult(result, leaseAmendmentRepository.findByTypeAndProperty(
+                createLinesAndAddToResult(result, leaseAmendmentRepository.findByTemplateAndProperty(
                         getLeaseAmendmentTemplate(), getProperty()));
             } else {
                 createLinesAndAddToResult(result, leaseAmendmentRepository.findByTypeAndStateAndProperty(

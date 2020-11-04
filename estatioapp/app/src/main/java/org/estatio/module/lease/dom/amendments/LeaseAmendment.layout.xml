@@ -19,12 +19,9 @@
                                         <ns2:property id="name"/>
                                         <ns2:property id="lease" hidden="PARENTED_TABLES"/>
                                     </ns2:fieldSet>
-                                    <ns2:fieldSet name="Preview" id="preview">
-                                        <ns2:action id="createOrRenewLeasePreview" position="PANEL"/>
-                                        <ns2:property id="leasePreview"/>
-                                    </ns2:fieldSet>
-                                    <ns2:fieldSet name="Amendment type" id="leaseAmendmentTemplate">
-                                        <ns2:property id="leaseAmendmentTemplate"/>
+                                    <ns2:fieldSet name="Amendment type" id="leaseAmendmentType">
+                                        <ns2:property id="leaseAmendmentType"/>
+                                        <ns2:property id="leaseAmendmentTemplate" hidden="ALL_EXCEPT_STANDALONE_TABLES"/>
                                     </ns2:fieldSet>
                                     <ns2:fieldSet name="State" id="state">
                                         <ns2:action id="apply" position="PANEL"/>
@@ -43,8 +40,8 @@
                             <row>
                                 <col span="12">
                                     <ns2:fieldSet name="Application Level" id="applicationLevel">
-                                        <ns2:property id="applicationTenancy"/>
-                                        <ns2:property id="atPath"/>
+                                        <ns2:property id="applicationTenancy" hidden="ALL_TABLES"   />
+                                        <ns2:property id="atPath" hidden="ALL_TABLES"/>
                                     </ns2:fieldSet>
                                 </col>
                             </row>
@@ -87,10 +84,14 @@
             </row>
         </col>
         <col span="3">
+            <ns2:fieldSet name="Preview" id="preview">
+                <ns2:action id="createOrRenewLeasePreview" position="PANEL"/>
+                <ns2:property id="leasePreview"/>
+            </ns2:fieldSet>
             <ns2:fieldSet name="Dates" id="dates">
-                <ns2:property id="startDate"/>
-                <ns2:property id="endDate">
-                    <ns2:action id="changeDates" position="BELOW"/>
+                <ns2:property id="startDate" hidden="EVERYWHERE"/>
+                <ns2:property id="endDate" hidden="EVERYWHERE">
+                    <ns2:action id="changeDates" position="BELOW" hidden="EVERYWHERE"/>
                 </ns2:property>
             </ns2:fieldSet>
             <ns2:fieldSet name="Related" id="related">

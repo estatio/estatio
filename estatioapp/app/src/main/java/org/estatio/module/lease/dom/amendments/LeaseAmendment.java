@@ -122,6 +122,10 @@ public class LeaseAmendment extends Agreement {
 
     @Column(allowsNull = "false")
     @Getter @Setter
+    private LeaseAmendmentType leaseAmendmentType;
+
+    @Column(allowsNull = "false")
+    @Getter @Setter
     private LeaseAmendmentState state;
 
     public abstract static class ActionDomainEvent<S>

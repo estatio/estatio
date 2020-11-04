@@ -199,7 +199,7 @@ public final class LeaseBuilder
         }
         for (final AmendmentSpec spec : amendmentSpecs) {
             final LeaseAmendment leaseAmendment = leaseAmendmentRepository
-                    .create(lease, spec.leaseAmendmentTemplate, LeaseAmendmentState.PROPOSED, spec.leaseAmendmentTemplate
+                    .create(lease, spec.leaseAmendmentTemplate, spec.leaseAmendmentTemplate.getLeaseAmendmentType(), LeaseAmendmentState.PROPOSED, spec.leaseAmendmentTemplate
                             .getAmendmentStartDate(), null);
             leaseAmendmentItemRepository
                     .create(leaseAmendment, spec.leaseAmendmentTemplate

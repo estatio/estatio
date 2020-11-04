@@ -14,6 +14,7 @@ import lombok.Getter;
 public enum LeaseAmendmentTemplate {
 
     COVID_BEL(
+            LeaseAmendmentType.COVID_WAVE_1,
             new LocalDate(2020,3,18), // min date because of lease selection
             new BigDecimal("50.00"),
             Arrays.asList(
@@ -35,6 +36,7 @@ public enum LeaseAmendmentTemplate {
             new LocalDate(2020,12,31),
             false),
     COVID_FRA_50_PERC(
+            LeaseAmendmentType.COVID_WAVE_1,
             new LocalDate(2020,3,16), // min date because of lease selection
             new BigDecimal("50.00"),
             Arrays.asList(
@@ -66,6 +68,7 @@ public enum LeaseAmendmentTemplate {
             new LocalDate(2020,12,31),
             false),
     COVID_FRA_100_PERC(
+            LeaseAmendmentType.COVID_WAVE_1,
             new LocalDate(2020,4,1),
             new BigDecimal("100.00"),
             Arrays.asList(
@@ -97,6 +100,7 @@ public enum LeaseAmendmentTemplate {
             new LocalDate(2020,12,31),
             false),
     COVID_ITA_100_PERC_1M(
+            LeaseAmendmentType.COVID_WAVE_1,
             new LocalDate(2020,7,1),
             new BigDecimal("100.00"),
             Arrays.asList(
@@ -122,6 +126,7 @@ public enum LeaseAmendmentTemplate {
             new LocalDate(2020,12,31),
             false),
     COVID_ITA_100_PERC_2M(
+            LeaseAmendmentType.COVID_WAVE_1,
             new LocalDate(2020,7,1),
             new BigDecimal("100.00"),
             Arrays.asList(
@@ -147,6 +152,7 @@ public enum LeaseAmendmentTemplate {
             new LocalDate(2020,12,31),
             false),
     COVID_ITA_FREQ_CHANGE_ONLY(
+            LeaseAmendmentType.COVID_WAVE_1,
             new LocalDate(2020,7,1),
             null,
             null,
@@ -174,6 +180,7 @@ public enum LeaseAmendmentTemplate {
             new LocalDate(2020,12,31),
             true),
     DEMO_TYPE(
+            LeaseAmendmentType.COVID_WAVE_1,
             new LocalDate(2020,1,1),
             new BigDecimal("50"),
             Arrays.asList(LeaseItemType.RENT, LeaseItemType.RENT_DISCOUNT, LeaseItemType.RENT_DISCOUNT_FIXED),
@@ -194,6 +201,7 @@ public enum LeaseAmendmentTemplate {
             new LocalDate(2020,12,31),
             false),
     DEMO_TYPE2(
+            LeaseAmendmentType.COVID_WAVE_1,
             new LocalDate(2020,7,1),
             new BigDecimal("100"),
             Arrays.asList(LeaseItemType.RENT, LeaseItemType.RENT_DISCOUNT, LeaseItemType.RENT_DISCOUNT_FIXED),
@@ -214,6 +222,9 @@ public enum LeaseAmendmentTemplate {
             new LocalDate(2020,12,31),
             false)
     ;
+
+    @Getter
+    private final LeaseAmendmentType leaseAmendmentType;
 
     @Getter
     private final LocalDate amendmentStartDate;
@@ -261,6 +272,7 @@ public enum LeaseAmendmentTemplate {
     private Boolean allowsBulkApply;
 
     LeaseAmendmentTemplate(
+            final LeaseAmendmentType leaseAmendmentType,
             final LocalDate amendmentStartDate,
             final BigDecimal discountPercentage,
             final List<LeaseItemType> discountAppliesTo,
@@ -276,6 +288,7 @@ public enum LeaseAmendmentTemplate {
             final LocalDate previewInvoicingStartDate,
             final LocalDate previewInvoicingEndDate,
             final boolean allowsBulkApply) {
+        this.leaseAmendmentType = leaseAmendmentType;
         this.amendmentStartDate = amendmentStartDate;
         this.discountPercentage = discountPercentage;
         this.discountAppliesTo = discountAppliesTo;
