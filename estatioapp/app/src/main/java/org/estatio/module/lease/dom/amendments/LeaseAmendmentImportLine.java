@@ -159,14 +159,12 @@ public class LeaseAmendmentImportLine implements ExcelFixtureRowHandler, Importa
         return importData(previousRow);
     }
 
-    public List<Object> importData() {
-        return importData(null);
-    }
-
     @Programmatic
     @Override
     public List<Object> importData(final Object previousRow) {
         final Lease lease = fetchLease(leaseReference);
+        LeaseAmendmentImportLine previousLine = previousRow!=null ? (LeaseAmendmentImportLine) previousRow : null;
+        final Lease leasePreviousLine = previousLine!=null ? fetchLease(previousLine.getLeaseReference()) : null;
         if (leaseAmendmentState==LeaseAmendmentState.APPLIED){
             throw new ApplicationException(String.format("State %s for lease %s not allowed.", leaseAmendmentState, leaseReference));
         }
@@ -175,6 +173,14 @@ public class LeaseAmendmentImportLine implements ExcelFixtureRowHandler, Importa
         if (amendment.getState()==LeaseAmendmentState.SIGNED && dateSigned!=null) amendment.setDateSigned(dateSigned);
         
         if (discountPercentage!=null && discountApplicableTo!=null && discountStartDate!=null && discountEndDate!=null) {
+            if (!lease.equals(leasePreviousLine)) {
+                // ECP-1283: delete any items for discount created earlier in the process
+                for (LeaseAmendmentItem item : amendment.getItems()) {
+                    if (item.getType() == LeaseAmendmentItemType.DISCOUNT) {
+                        item.remove();
+                    }
+                }
+            }
             try {
                 amendment.upsertItem(discountPercentage, manualDiscountAmount,
                         LeaseAmendmentItem.applicableToFromString(discountApplicableTo), discountStartDate,
@@ -185,6 +191,14 @@ public class LeaseAmendmentImportLine implements ExcelFixtureRowHandler, Importa
         }
         if (invoicingFrequencyOnLease!=null && amendedInvoicingFrequency !=null && frequencyChangeApplicableTo !=null && frequencyChangeStartDate
                 !=null && frequencyChangeEndDate !=null) {
+            if (!lease.equals(leasePreviousLine)) {
+                // ECP-1283: delete any items for discount created earlier in the process
+                for (LeaseAmendmentItem item : amendment.getItems()) {
+                    if (item.getType() == LeaseAmendmentItemType.INVOICING_FREQUENCY_CHANGE) {
+                        item.remove();
+                    }
+                }
+            }
             amendment.upsertItem(invoicingFrequencyOnLease, amendedInvoicingFrequency, LeaseAmendmentItem.applicableToFromString(
                     frequencyChangeApplicableTo),
                     frequencyChangeStartDate, frequencyChangeEndDate);
