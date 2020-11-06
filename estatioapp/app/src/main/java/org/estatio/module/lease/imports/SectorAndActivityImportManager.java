@@ -26,27 +26,27 @@ import org.isisaddons.module.excel.dom.util.Mode;
 
 @DomainObject(
         nature = Nature.VIEW_MODEL,
-        objectType = "org.estatio.module.lease.imports.SectorAndActivityImportExportManager"
+        objectType = "org.estatio.module.lease.imports.SectorAndActivityImportManager"
 )
-public class SectorAndActivityImportExportManager {
+public class SectorAndActivityImportManager {
 
-    public SectorAndActivityImportExportManager() {
+    public SectorAndActivityImportManager() {
     }
 
     public String title(){
-        return "Sector And Activity Import Export Manager";
+        return "Sector And Activity Import Manager";
     }
 
-    public List<SectorAndActivityImportExport> getSectorAndActivityLines(){
-        List<SectorAndActivityImportExport> result = new ArrayList<>();
+    public List<SectorAndActivityImport> getSectorAndActivityLines(){
+        List<SectorAndActivityImport> result = new ArrayList<>();
         List<Sector> sectors = sectorRepository.allSectors();
         sectors.forEach(sector -> result.addAll(getSectorAndActivityImports(sector)));
         return result;
     }
 
-    private List<SectorAndActivityImportExport> getSectorAndActivityImports(final Sector s) {
-        List<SectorAndActivityImportExport> result = new ArrayList<>();
-        SectorAndActivityImportExport impSector = new SectorAndActivityImportExport();
+    private List<SectorAndActivityImport> getSectorAndActivityImports(final Sector s) {
+        List<SectorAndActivityImport> result = new ArrayList<>();
+        SectorAndActivityImport impSector = new SectorAndActivityImport();
         impSector.setSectorName(s.getName());
         impSector.setSectorDescription(s.getDescription());
         impSector.setSectorSortOrder(s.getSortOrder());
@@ -54,7 +54,7 @@ public class SectorAndActivityImportExportManager {
 
         if (!s.getActivities().isEmpty()) {
             Lists.newArrayList(s.getActivities()).forEach(a -> {
-                SectorAndActivityImportExport imp = new SectorAndActivityImportExport();
+                SectorAndActivityImport imp = new SectorAndActivityImport();
                 imp.setSectorName(s.getName());
                 imp.setSectorDescription(s.getDescription());
                 imp.setSectorSortOrder(s.getSortOrder());
@@ -71,7 +71,7 @@ public class SectorAndActivityImportExportManager {
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(cssClassFa = "fa-download")
     public Blob download(final String filename){
-        WorksheetSpec sectorAndActivityLineSpec = new WorksheetSpec(SectorAndActivityImportExport.class, "Sectors and Activities");
+        WorksheetSpec sectorAndActivityLineSpec = new WorksheetSpec(SectorAndActivityImport.class, "Sectors and Activities");
         WorksheetContent sectorAndActivityLineContent = new WorksheetContent(getSectorAndActivityLines(), sectorAndActivityLineSpec);
         return excelService.toExcel(sectorAndActivityLineContent, filename);
     }
@@ -81,21 +81,21 @@ public class SectorAndActivityImportExportManager {
     }
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
-    public SectorAndActivityImportExportManager upload(final Blob spreadSheet){
-        List<SectorAndActivityImportExport> newSectorsAndActivities = excelService.fromExcel(spreadSheet, SectorAndActivityImportExport.class, "Sectors and Activities", Mode.RELAXED);
+    public SectorAndActivityImportManager upload(final Blob spreadSheet){
+        List<SectorAndActivityImport> newSectorsAndActivities = excelService.fromExcel(spreadSheet, SectorAndActivityImport.class, "Sectors and Activities", Mode.RELAXED);
         newSectorsAndActivities.forEach(imp -> imp.importData(null));
 
-        return new SectorAndActivityImportExportManager();
+        return new SectorAndActivityImportManager();
     }
 
     public String validateUpload(final Blob spreadSheet) {
-        List<SectorAndActivityImportExport> newSectorsAndActivities = excelService.fromExcel(spreadSheet, SectorAndActivityImportExport.class, "Sectors and Activities", Mode.RELAXED);
+        List<SectorAndActivityImport> newSectorsAndActivities = excelService.fromExcel(spreadSheet, SectorAndActivityImport.class, "Sectors and Activities", Mode.RELAXED);
         List<String> errors = tryToRemoveSectorsAndActivities(getSectorsAndActivitiesToRemove(getSectorAndActivityLines(), newSectorsAndActivities));
 
         return errors.isEmpty() ? null : errors.stream().collect(Collectors.joining("\n"));
     }
 
-    private List<SectorAndActivityImportExport> getSectorsAndActivitiesToRemove(List<SectorAndActivityImportExport> oldImps, List<SectorAndActivityImportExport> newImps) {
+    private List<SectorAndActivityImport> getSectorsAndActivitiesToRemove(List<SectorAndActivityImport> oldImps, List<SectorAndActivityImport> newImps) {
         return oldImps.stream().filter(imp -> newImps.stream().allMatch(newImp -> {
             if (StringUtils.equals(newImp.getSectorName(), imp.getSectorName())) {
                 return !StringUtils.equals(newImp.getActivityName(), imp.getActivityName());
@@ -105,12 +105,12 @@ public class SectorAndActivityImportExportManager {
         })).collect(Collectors.toList());
     }
 
-    private List<String> tryToRemoveSectorsAndActivities(List<SectorAndActivityImportExport> toRemove) {
+    private List<String> tryToRemoveSectorsAndActivities(List<SectorAndActivityImport> toRemove) {
         List<String> errors = new ArrayList<>();
 
         // Try to remove activities first
         List<String> nonremovableActivities = new ArrayList<>();
-        List<SectorAndActivityImportExport> activitiesToRemove = toRemove.stream().filter(imp -> imp.getActivityName()!=null).collect(Collectors.toList());
+        List<SectorAndActivityImport> activitiesToRemove = toRemove.stream().filter(imp -> imp.getActivityName()!=null).collect(Collectors.toList());
         activitiesToRemove.forEach(imp -> {
             Sector sector = sectorRepository.findByName(imp.getSectorName());
             Activity activity = activityRepository.findBySectorAndName(sector, imp.getActivityName());
@@ -127,7 +127,7 @@ public class SectorAndActivityImportExportManager {
         
         // Then try to remove sectors
         List<String> nonremovableSectors = new ArrayList<>();
-        List<SectorAndActivityImportExport> sectorsToRemove = toRemove.stream().filter(imp -> imp.getActivityName()==null).collect(Collectors.toList());
+        List<SectorAndActivityImport> sectorsToRemove = toRemove.stream().filter(imp -> imp.getActivityName()==null).collect(Collectors.toList());
         sectorsToRemove.forEach(imp -> {
             Sector sector = sectorRepository.findByName(imp.getSectorName());
             if (occupancyRepository.findBySector(sector).isEmpty() && activityRepository.findBySector(sector).isEmpty()) {

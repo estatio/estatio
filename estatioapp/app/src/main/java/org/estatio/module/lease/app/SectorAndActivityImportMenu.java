@@ -19,33 +19,30 @@ package org.estatio.module.lease.app;
 import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.services.user.UserService;
 import org.estatio.module.base.dom.EstatioRole;
-import org.estatio.module.lease.imports.SectorAndActivityImportExportManager;
+import org.estatio.module.lease.imports.SectorAndActivityImportManager;
 import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.PersonRepository;
 import org.estatio.module.party.dom.role.PartyRoleTypeEnum;
 import org.estatio.module.party.dom.role.PartyRoleTypeRepository;
-import org.incode.module.classification.dom.impl.category.Category;
-import org.incode.module.classification.dom.impl.category.CategoryRepository;
 
 import javax.inject.Inject;
-import java.util.List;
 
 @DomainService(
         nature = NatureOfService.VIEW_MENU_ONLY,
-        objectType = "org.estatio.app.menus.invoice.SectorAndActivityImportExportMenu"
+        objectType = "org.estatio.app.menus.invoice.SectorAndActivityImportMenu"
 )
 @DomainServiceLayout(
         named = "Other", menuBar = DomainServiceLayout.MenuBar.PRIMARY, menuOrder = "900.1"
 )
-public class SectorAndActivityImportExportMenu {
+public class SectorAndActivityImportMenu {
 
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(bookmarking = BookmarkPolicy.AS_ROOT)
-    public SectorAndActivityImportExportManager sectorAndActivityImportExportManager() {
-        return new SectorAndActivityImportExportManager();
+    public SectorAndActivityImportManager sectorAndActivityImportManager() {
+        return new SectorAndActivityImportManager();
     }
 
-    public boolean hideSectorAndActivityImportExportManager() {
+    public boolean hideSectorAndActivityImportManager() {
         Person meAsPerson = personRepository.me();
         if (meAsPerson != null && meAsPerson.hasPartyRoleType(PartyRoleTypeEnum.SECTOR_MAINTAINER.findUsing(partyRoleTypeRepository))) {
             return false;

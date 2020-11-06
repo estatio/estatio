@@ -18,7 +18,7 @@ import java.util.List;
         nature = Nature.VIEW_MODEL,
         objectType = "org.estatio.dom.viewmodels.SectorAndActivityImport"
 )
-public class SectorAndActivityImportExport implements Importable, ExcelFixtureRowHandler {
+public class SectorAndActivityImport implements Importable, ExcelFixtureRowHandler {
 
     @Getter @Setter
     private String sectorName;
@@ -40,14 +40,14 @@ public class SectorAndActivityImportExport implements Importable, ExcelFixtureRo
 
     @Override
     public List<Object> handleRow(final FixtureScript.ExecutionContext executionContext, final ExcelFixture excelFixture, final Object previousRow) {
-        SectorAndActivityImportExport previousImport = (SectorAndActivityImportExport) previousRow;
+        SectorAndActivityImport previousImport = (SectorAndActivityImport) previousRow;
         return importData(previousImport);
     }
 
     @Override
     public List<Object> importData(final Object previousRow) {
 
-        final SectorAndActivityImportExport previousSectorImport = (SectorAndActivityImportExport) previousRow;
+        final SectorAndActivityImport previousSectorImport = (SectorAndActivityImport) previousRow;
 
         final List<Object> createdSectorsAndActivities = Lists.newArrayList();
         if (getSectorName() != null && getSectorDescription() != null) {

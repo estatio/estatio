@@ -10,7 +10,7 @@ import org.estatio.module.lease.dom.occupancy.tags.Sector;
 import org.estatio.module.lease.dom.occupancy.tags.SectorRepository;
 import org.estatio.module.lease.fixtures.imports.SectorAndActivityImportFixture;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
-import org.estatio.module.lease.imports.SectorAndActivityImportExportManager;
+import org.estatio.module.lease.imports.SectorAndActivityImportManager;
 import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,7 +20,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
 
-public class SectorAndActivityImportExportManager_IntegTest extends LeaseModuleIntegTestAbstract {
+public class SectorAndActivityImportManager_IntegTest extends LeaseModuleIntegTestAbstract {
 
     List<FixtureResult> fixtureResults;
 
@@ -41,7 +41,7 @@ public class SectorAndActivityImportExportManager_IntegTest extends LeaseModuleI
     public void importWorks() throws Exception {
 
         // given
-        SectorAndActivityImportExportManager manager = new SectorAndActivityImportExportManager();
+        SectorAndActivityImportManager manager = new SectorAndActivityImportManager();
         Blob excelSheetOld = wrap(manager).download("test");
         transactionService2.nextTransaction();
         Blob excelSheetNew = (Blob) fixtureResults.get(0).getObject();
