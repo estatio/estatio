@@ -5,6 +5,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.xactn.TransactionService2;
 import org.apache.isis.applib.value.Blob;
 import org.estatio.module.lease.dom.occupancy.tags.ActivityRepository;
+import org.estatio.module.lease.dom.occupancy.tags.Sector;
 import org.estatio.module.lease.dom.occupancy.tags.SectorRepository;
 import org.estatio.module.lease.fixtures.imports.SectorAndActivityImportFixture;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
@@ -46,6 +47,8 @@ public class SectorAndActivityImportExportManager_IntegTest extends LeaseModuleI
         Blob excelSheetWrong = (Blob) fixtureResults.get(1).getObject();
         assertThat(sectorRepository.allSectors()).hasSize(2);
         assertThat(activityRepository.allActivities()).hasSize(2);
+        assertThat(sectorRepository.findByName("TEST1")).isNull();
+        assertThat(sectorRepository.findByName("TEST2")).isNull();
 
         // when
         wrap(manager).upload(excelSheetNew);
@@ -54,6 +57,13 @@ public class SectorAndActivityImportExportManager_IntegTest extends LeaseModuleI
         // then
         assertThat(sectorRepository.allSectors()).hasSize(4);
         assertThat(activityRepository.allActivities()).hasSize(3);
+        Sector newSector1 = sectorRepository.findByName("TEST1");
+        assertThat(newSector1).isNotNull();
+        assertThat(newSector1.getDescription()).isEqualTo("Test");
+        assertThat(activityRepository.findBySectorAndName(newSector1, "TEST")).isNotNull();
+        Sector newSector2 = sectorRepository.findByName("TEST2");
+        assertThat(newSector2).isNotNull();
+        assertThat(newSector2.getDescription()).isEqualTo("Test");
 
         // and when
         wrap(manager).upload(excelSheetOld);
@@ -62,6 +72,8 @@ public class SectorAndActivityImportExportManager_IntegTest extends LeaseModuleI
         // then
         assertThat(sectorRepository.allSectors()).hasSize(2);
         assertThat(activityRepository.allActivities()).hasSize(2);
+        assertThat(sectorRepository.findByName("TEST1")).isNull();
+        assertThat(sectorRepository.findByName("TEST2")).isNull();
 
         // expected
         expectedExceptions.expectMessage("The following activities are already in use, cannot be removed: ALL, ELECTRIC");
@@ -71,6 +83,8 @@ public class SectorAndActivityImportExportManager_IntegTest extends LeaseModuleI
         transactionService2.nextTransaction();
         assertThat(sectorRepository.allSectors()).hasSize(2);
         assertThat(activityRepository.allActivities()).hasSize(2);
+        assertThat(sectorRepository.findByName("TEST1")).isNull();
+        assertThat(sectorRepository.findByName("TEST2")).isNull();
 
     }
 
