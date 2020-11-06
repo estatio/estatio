@@ -2,6 +2,7 @@ package org.estatio.module.lease.integtests.imports;
 
 import org.apache.isis.applib.fixturescripts.FixtureResult;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
+import org.apache.isis.applib.services.wrapper.InvalidException;
 import org.apache.isis.applib.services.xactn.TransactionService2;
 import org.apache.isis.applib.value.Blob;
 import org.estatio.module.lease.dom.occupancy.tags.ActivityRepository;
@@ -76,7 +77,9 @@ public class SectorAndActivityImportExportManager_IntegTest extends LeaseModuleI
         assertThat(sectorRepository.findByName("TEST2")).isNull();
 
         // expected
-        expectedExceptions.expectMessage("The following activities are already in use, cannot be removed: ALL, ELECTRIC");
+        expectedExceptions.expect(InvalidException.class);
+        expectedExceptions.expectMessage("The following activities are already in use, cannot be removed: ALL, ELECTRIC\n" +
+                        "The following sectors are already in use, cannot be removed: FASHION, ELECTRIC");
 
         // when
         wrap(manager).upload(excelSheetWrong);

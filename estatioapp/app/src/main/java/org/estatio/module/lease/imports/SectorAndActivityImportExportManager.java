@@ -11,7 +11,6 @@ import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.services.clock.ClockService;
-import org.apache.isis.applib.services.message.MessageService;
 import org.apache.isis.applib.services.repository.RepositoryService;
 import org.apache.isis.applib.value.Blob;
 
@@ -83,13 +82,17 @@ public class SectorAndActivityImportExportManager {
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     public SectorAndActivityImportExportManager upload(final Blob spreadSheet){
-        List<SectorAndActivityImportExport> allSectorsAndActivities = getSectorAndActivityLines();
         List<SectorAndActivityImportExport> newSectorsAndActivities = excelService.fromExcel(spreadSheet, SectorAndActivityImportExport.class, "Sectors and Activities", Mode.RELAXED);
-        if (tryToRemoveSectorsAndActivities(getSectorsAndActivitiesToRemove(allSectorsAndActivities, newSectorsAndActivities))) {
-            newSectorsAndActivities.forEach(imp -> imp.importData(null));
-        }
+        newSectorsAndActivities.forEach(imp -> imp.importData(null));
 
         return new SectorAndActivityImportExportManager();
+    }
+
+    public String validateUpload(final Blob spreadSheet) {
+        List<SectorAndActivityImportExport> newSectorsAndActivities = excelService.fromExcel(spreadSheet, SectorAndActivityImportExport.class, "Sectors and Activities", Mode.RELAXED);
+        List<String> errors = tryToRemoveSectorsAndActivities(getSectorsAndActivitiesToRemove(getSectorAndActivityLines(), newSectorsAndActivities));
+
+        return errors.isEmpty() ? null : errors.stream().collect(Collectors.joining("\n"));
     }
 
     private List<SectorAndActivityImportExport> getSectorsAndActivitiesToRemove(List<SectorAndActivityImportExport> oldImps, List<SectorAndActivityImportExport> newImps) {
@@ -102,8 +105,8 @@ public class SectorAndActivityImportExportManager {
         })).collect(Collectors.toList());
     }
 
-    private boolean tryToRemoveSectorsAndActivities(List<SectorAndActivityImportExport> toRemove) {
-        boolean success = true;
+    private List<String> tryToRemoveSectorsAndActivities(List<SectorAndActivityImportExport> toRemove) {
+        List<String> errors = new ArrayList<>();
 
         // Try to remove activities first
         List<String> nonremovableActivities = new ArrayList<>();
@@ -118,8 +121,7 @@ public class SectorAndActivityImportExportManager {
             }
         });
         if (!nonremovableActivities.isEmpty()) {
-            success = false;
-            messageService.raiseError(String.format("The following activities are already in use, cannot be removed: %s",
+            errors.add(String.format("The following activities are already in use, cannot be removed: %s",
                     nonremovableActivities.stream().collect(Collectors.joining(", "))));
         }
         
@@ -134,14 +136,12 @@ public class SectorAndActivityImportExportManager {
                 nonremovableSectors.add(imp.getSectorName());
             }
         });
-
         if (!nonremovableSectors.isEmpty()) {
-            success = false;
-            messageService.raiseError(String.format("The following sectors are already in use, cannot be removed: %s",
+            errors.add(String.format("The following sectors are already in use, cannot be removed: %s",
                     nonremovableSectors.stream().collect(Collectors.joining(", "))));
         }
 
-        return success;
+        return errors;
     }
 
     @Inject
@@ -149,9 +149,6 @@ public class SectorAndActivityImportExportManager {
 
     @Inject
     ClockService clockService;
-
-    @Inject
-    MessageService messageService;
 
     @Inject
     RepositoryService repositoryService;
