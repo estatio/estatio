@@ -60,6 +60,7 @@ import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 import org.incode.module.country.dom.impl.Country;
 import org.incode.module.slack.impl.SlackService;
 
+import org.estatio.module.application.app.dashboard.TenantReferenceMappingLine;
 import org.estatio.module.application.contributions.Organisation_syncToCoda;
 import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.capex.app.taskreminder.TaskReminderService;
@@ -799,6 +800,18 @@ public class AdminDashboard implements ViewModel {
                     });
                 }
         );
+    }
+
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
+    public void uploadTenantReferenceMappingWo(final Blob sheet){
+
+        excelService.fromExcel(sheet, TenantReferenceMappingLine.class, "Sheet1").forEach(
+                l->{
+                    l.importData();
+                }
+        );
+
+
     }
 
     @Inject PropertyRepository propertyRepository;
