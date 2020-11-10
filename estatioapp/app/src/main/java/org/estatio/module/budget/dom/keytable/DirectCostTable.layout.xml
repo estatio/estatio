@@ -15,6 +15,7 @@
                     <ns2:action id="changeName" position="BELOW"/>
                 </ns2:property>
                 <ns2:property id="budget"/>
+                <ns2:property id="atPath" hidden="ALL_TABLES"/>
             </ns2:fieldSet>
             <ns2:fieldSet name="Metadata" id="metadata">
                 <ns2:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
@@ -30,7 +31,6 @@
             <ns2:collection id="items">
                 <ns2:action id="newDirectCost"/>
                 <ns2:action id="generateItems"/>
-                <ns2:action id="deleteItems"/>
             </ns2:collection>
         </col>
     </row>

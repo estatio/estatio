@@ -4,7 +4,6 @@
         <col span="12" unreferencedActions="true">
             <ns2:domainObject/>
             <ns2:action id="recentChanges"/>
-            <ns2:action id="createBudgetItemAllocation"/>
             <ns2:action id="links"/>
         </col>
     </row>
@@ -16,24 +15,16 @@
                     <ns2:action id="changeName" position="BELOW"/>
                 </ns2:property>
                 <ns2:property id="applicationTenancy"/>
+                <ns2:property id="atPath" hidden="ALL_TABLES"/>
                 <ns2:property id="budget"/>
             </ns2:fieldSet>
             <ns2:fieldSet name="Dates" id="dates"/>
             <ns2:fieldSet name="Values" id="values">
-                <ns2:property id="foundationValueType">
-                    <ns2:action id="changeFoundationValueType" position="BELOW"/>
-                </ns2:property>
-                <ns2:property id="keyValueMethod">
-                    <ns2:action id="changeKeyValueMethod" position="BELOW"/>
-                </ns2:property>
-                <ns2:property id="precision">
-                    <ns2:action id="changePrecision" position="BELOW"/>
-                </ns2:property>
+                <ns2:property id="foundationValueType"/>
+                <ns2:property id="keyValueMethod"/>
             </ns2:fieldSet>
             <ns2:fieldSet name="Validation" id="validation">
-                <ns2:property id="valid"/>
                 <ns2:property id="validForKeyValues"/>
-                <ns2:property id="validForUnits"/>
             </ns2:fieldSet>
             <ns2:fieldSet name="Metadata" id="metadata">
                 <ns2:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
@@ -47,12 +38,8 @@
         </col>
         <col span="8" unreferencedCollections="true">
             <ns2:collection id="items">
-                <ns2:action id="newItem"/>
-                <ns2:action id="distributeSourceValues"/>
                 <ns2:action id="generateItems"/>
-                <ns2:action id="deleteItems"/>
             </ns2:collection>
-            <ns2:collection id="budgetItemAllocations"/>
         </col>
     </row>
 </grid>

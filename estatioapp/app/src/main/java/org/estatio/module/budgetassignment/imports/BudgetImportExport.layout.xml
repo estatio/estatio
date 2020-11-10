@@ -8,6 +8,7 @@
     <row>
         <col span="4">
             <ns2:fieldSet name="General" id="general" unreferencedProperties="true">
+                <ns2:property id="budgetCalculationType"/>
                 <ns2:property id="budgetStartDate"/>
                 <ns2:property id="budgetEndDate"/>
                 <ns2:property id="incomingChargeReference"/>
@@ -22,6 +23,7 @@
                 <ns2:property id="outgoingChargeReference"/>
                 <ns2:property id="percentage"/>
                 <ns2:property id="propertyReference"/>
+                <ns2:property id="tableType"/>
             </ns2:fieldSet>
         </col>
         <col span="8" unreferencedCollections="true"/>

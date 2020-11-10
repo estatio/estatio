@@ -39,6 +39,7 @@ import org.incode.module.docrendering.stringinterpolator.StringInterpolatorDocRe
 import org.incode.module.docrendering.xdocreport.XDocReportDocRenderingModule;
 
 import org.estatio.module.assetfinancial.EstatioAssetFinancialModule;
+import org.estatio.module.base.EstatioBaseModule;
 import org.estatio.module.event.EstatioEventModule;
 import org.estatio.module.index.EstatioIndexModule;
 import org.estatio.module.invoice.EstatioInvoiceModule;
@@ -55,6 +56,11 @@ import org.estatio.module.lease.dom.amendments.LeaseAmendment;
 import org.estatio.module.lease.dom.amendments.LeaseAmendmentItemForDiscount;
 import org.estatio.module.lease.dom.amendments.LeaseAmendmentItemForFrequencyChange;
 import org.estatio.module.lease.dom.amendments.PersistedCalculationResult;
+import org.estatio.module.lease.dom.amortisation.AmortisationEntry;
+import org.estatio.module.lease.dom.amortisation.AmortisationSchedule;
+import org.estatio.module.lease.dom.amortisation.AmortisationScheduleAmendmentItemLink;
+import org.estatio.module.lease.dom.amortisation.AmortisationScheduleInvoiceLink;
+import org.estatio.module.lease.dom.amortisation.AmortisationScheduleLeaseItemLink;
 import org.estatio.module.lease.dom.breaks.BreakOption;
 import org.estatio.module.lease.dom.breaks.BreakOptionRepository;
 import org.estatio.module.lease.dom.breaks.EventSourceLinkForBreakOption;
@@ -82,6 +88,7 @@ public final class EstatioLeaseModule extends ModuleAbstract {
                 new EstatioIndexModule(),
                 new EstatioEventModule(),
                 new EstatioSettingsModule(),
+                new EstatioBaseModule(),
 
                 // stuff from incode platform, but which we're going to inline back into Estatio
                 new CommunicationsModule(),
@@ -137,8 +144,15 @@ public final class EstatioLeaseModule extends ModuleAbstract {
 
                 deleteFrom(PersistedCalculationResult.class);
 
+                deleteFrom(AmortisationScheduleInvoiceLink.class);
+                deleteFrom(AmortisationScheduleAmendmentItemLink.class);
+                deleteFrom(AmortisationScheduleLeaseItemLink.class);
+
                 deleteFrom(InvoiceItemForLease.class);
                 deleteFrom(InvoiceForLease.class);
+
+                deleteFrom(AmortisationEntry.class);
+                deleteFrom(AmortisationSchedule.class);
 
                 deleteFrom(BreakOption.class); // superclass handles the subclasses
                 deleteFrom(LeaseItemSource.class);

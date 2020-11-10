@@ -17,6 +17,8 @@ import javax.jdo.annotations.Unique;
 import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
 
+import org.joda.time.LocalDate;
+
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Programmatic;
@@ -26,12 +28,14 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.incode.module.base.dom.utils.TitleBuilder;
 
+import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.base.dom.UdoDomainObject2;
 import org.estatio.module.base.dom.apptenancy.WithApplicationTenancyProperty;
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
-import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationViewmodel;
+import org.estatio.module.budget.dom.budgetcalculation.InMemBudgetCalculation;
 import org.estatio.module.budget.dom.partioning.PartitionItem;
+import org.estatio.module.budget.dom.partioning.Partitioning;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -122,10 +126,49 @@ public abstract class PartitioningTable extends UdoDomainObject2<Budget> impleme
     }
 
     @Programmatic
-    public abstract List<BudgetCalculationViewmodel> calculateFor(final PartitionItem partitionItem, final BigDecimal partitionItemValue, final BudgetCalculationType budgetCalculationType);
+    public boolean usedInPartitionItem(){
+        for (Partitioning partitioning : getBudget().getPartitionings()) {
+            for (PartitionItem partitionItem : partitioning.getItems()) {
+                if (partitionItem.getPartitioningTable()==this){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    @Programmatic
+    public boolean usedInPartitionItemForBudgeted(){
+        for (Partitioning partitioning : getBudget().getPartitionings()) {
+            if (partitioning.getType()==BudgetCalculationType.BUDGETED) {
+                for (PartitionItem partitionItem : partitioning.getItems()) {
+                    if (partitionItem.getPartitioningTable() == this) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    @Programmatic
+    public abstract List<InMemBudgetCalculation> calculateInMemFor(
+            final PartitionItem partitionItem,
+            final BigDecimal partitionItemValue,
+            final BudgetCalculationType budgetCalculationType,
+            final LocalDate calculationStartDate,
+            final LocalDate calculationEndDate);
+
+    @Programmatic
+    public abstract List<InMemBudgetCalculation> calculateInMemForUnit(
+            final PartitionItem partitionItem,
+            final BigDecimal partitionItemValue,
+            final BudgetCalculationType budgetCalculationType,
+            final Unit unit,
+            final LocalDate calculationStartDate,
+            final LocalDate calculationEndDate);
 
     @Inject
     PartitioningTableRepository partitioningTableRepository;
-
 
 }

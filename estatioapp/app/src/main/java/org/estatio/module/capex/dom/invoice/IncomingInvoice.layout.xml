@@ -159,6 +159,7 @@
                             <cpt:named>Reverse Item</cpt:named>
                         </cpt:action>
                         <cpt:action id="editBudgetItem" />
+                        <cpt:action id="editChargePeriod" />
                     </cpt:collection>
                 </bs3:col>
             </bs3:row>

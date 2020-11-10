@@ -20,15 +20,17 @@ package org.estatio.module.budget.dom.budgetcalculation;
 import java.math.BigDecimal;
 import java.util.List;
 
-import org.apache.isis.applib.services.factory.FactoryService;
-import org.apache.isis.applib.services.repository.RepositoryService;
+import org.assertj.core.api.Assertions;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
+import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
 import org.apache.isis.applib.query.Query;
+import org.apache.isis.applib.services.factory.FactoryService;
+import org.apache.isis.applib.services.repository.RepositoryService;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
 import org.incode.module.unittestsupport.dom.repo.FinderInteraction;
@@ -87,7 +89,9 @@ public class BudgetCalculationRepository_Test {
             PartitionItem partitionItem = new PartitionItem();
             KeyItem keyItem = new KeyItem();
             BudgetCalculationType calculationType = BudgetCalculationType.BUDGETED;
-            budgetCalculationRepository.findUnique(partitionItem, keyItem, calculationType);
+            LocalDate calculationStartDate = new LocalDate();
+            LocalDate calculationEndDate = new LocalDate();
+            budgetCalculationRepository.findUnique(partitionItem, keyItem, calculationType, calculationStartDate, calculationEndDate);
 
             assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderInteraction.FinderMethod.UNIQUE_MATCH);
             assertThat(finderInteraction.getResultType()).isEqualTo(BudgetCalculation.class);
@@ -95,7 +99,9 @@ public class BudgetCalculationRepository_Test {
             assertThat(finderInteraction.getArgumentsByParameterName().get("partitionItem")).isEqualTo((Object) partitionItem);
             assertThat(finderInteraction.getArgumentsByParameterName().get("tableItem")).isEqualTo((Object) keyItem);
             assertThat(finderInteraction.getArgumentsByParameterName().get("calculationType")).isEqualTo((Object) calculationType);
-            assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(3);
+            assertThat(finderInteraction.getArgumentsByParameterName().get("calculationStartDate")).isEqualTo((Object) calculationStartDate);
+            assertThat(finderInteraction.getArgumentsByParameterName().get("calculationEndDate")).isEqualTo((Object) calculationEndDate);
+            assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(5);
         }
 
     }
@@ -159,7 +165,9 @@ public class BudgetCalculationRepository_Test {
                 public BudgetCalculation findUnique(
                         final PartitionItem partitionItem,
                         final PartitioningTableItem keyItem,
-                        final BudgetCalculationType calculationType
+                        final BudgetCalculationType calculationType,
+                        final LocalDate calculationStartDate,
+                        final LocalDate calculationEndDate
                 ) {
                     return null;
                 }
@@ -205,13 +213,59 @@ public class BudgetCalculationRepository_Test {
             });
 
             //when
-            BudgetCalculation newBudgetCalculation = budgetCalculationRepository.createBudgetCalculation(partitionItem, keyItem, value, null);
+            BudgetCalculation newBudgetCalculation = budgetCalculationRepository.createBudgetCalculation(partitionItem, keyItem, value, null, null,null );
 
             //then
             assertThat(newBudgetCalculation.getPartitionItem()).isEqualTo(partitionItem);
             assertThat(newBudgetCalculation.getTableItem()).isEqualTo(keyItem);
             assertThat(newBudgetCalculation.getValue()).isEqualTo(value);
         }
+    }
+
+    public static class OtherTests extends BudgetCalculationRepository_Test {
+
+        @Test
+        public void createInMemBudgetCalculation_works() throws Exception {
+
+            // given
+            Charge invoiceCharge = new Charge();
+            Charge incomingCharge = new Charge();
+
+            Budget budget = new Budget();
+            BudgetItem budgetItem = new BudgetItem();
+            budgetItem.setBudget(budget);
+            budgetItem.setCharge(incomingCharge);
+
+            PartitionItem partitionItem = new PartitionItem();
+            partitionItem.setBudgetItem(budgetItem);
+            partitionItem.setCharge(invoiceCharge);
+
+            Unit unit = new Unit();
+            KeyItem tableItem = new KeyItem();
+            tableItem.setUnit(unit);
+
+            BigDecimal value = new BigDecimal("1234.5678");
+            BudgetCalculationType calculationType = BudgetCalculationType.BUDGETED;
+            LocalDate startDate = new LocalDate(2020,1,1);
+            LocalDate endDate = new LocalDate(2020,10,15);
+
+            // when
+            final InMemBudgetCalculation inMemCalc = BudgetCalculationRepository
+                    .createInMemBudgetCalculation(partitionItem, tableItem, value, calculationType, startDate, endDate);
+            // then
+            Assertions.assertThat(inMemCalc.getValue()).isEqualTo(value);
+            Assertions.assertThat(inMemCalc.getCalculationStartDate()).isEqualTo(startDate);
+            Assertions.assertThat(inMemCalc.getCalculationEndDate()).isEqualTo(endDate);
+            Assertions.assertThat(inMemCalc.getPartitionItem()).isEqualTo(partitionItem);
+            Assertions.assertThat(inMemCalc.getTableItem()).isEqualTo(tableItem);
+            Assertions.assertThat(inMemCalc.getCalculationType()).isEqualTo(calculationType);
+            Assertions.assertThat(inMemCalc.getBudget()).isEqualTo(budget);
+            Assertions.assertThat(inMemCalc.getUnit()).isEqualTo(unit);
+            Assertions.assertThat(inMemCalc.getInvoiceCharge()).isEqualTo(invoiceCharge);
+            Assertions.assertThat(inMemCalc.getIncomingCharge()).isEqualTo(incomingCharge);
+
+        }
+
     }
 
 }

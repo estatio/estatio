@@ -21,17 +21,20 @@ package org.estatio.module.lease.dom.invoicing;
 import java.math.BigInteger;
 
 import javax.inject.Inject;
+import javax.jdo.annotations.Column;
 import javax.jdo.annotations.InheritanceStrategy;
 
 import com.google.common.collect.Ordering;
 
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
+import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 
 import org.incode.module.base.dom.utils.TitleBuilder;
@@ -181,6 +184,21 @@ public class InvoiceItemForLease
     @PropertyLayout(hidden = Where.EVERYWHERE)
     @Getter @Setter
     private LocalDate calculationEndDate;
+
+    @PropertyLayout(hidden = Where.ALL_TABLES)
+    @Column(allowsNull = "true")
+    @Getter @Setter
+    private Boolean noAmortisation;
+
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
+    public InvoiceItemForLease toggleNoAmortisation(){
+        if (getNoAmortisation()==null || getNoAmortisation()==false){
+            setNoAmortisation(true);
+        } else {
+            setNoAmortisation(null);
+        }
+        return this;
+    }
 
 
     public final static Ordering<InvoiceItemForLease> ORDERING_BY_LEASE_TERM = new Ordering<InvoiceItemForLease>() {

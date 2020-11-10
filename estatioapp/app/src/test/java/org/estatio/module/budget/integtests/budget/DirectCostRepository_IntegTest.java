@@ -53,8 +53,8 @@ public class DirectCostRepository_IntegTest extends BudgetModuleIntegTestAbstrac
         Unit unitOnFirstItem = firstItem.getUnit();
 
         // then
-        assertThat(directCostRepository.findByDirectCostTableAndUnit(table, unitOnFirstItem)).isSameAs(firstItem);
-        assertThat(directCostRepository.findByDirectCostTableAndUnit(tableWithOutItems, unitOnFirstItem)).isNull();
+        assertThat(directCostRepository.findUnique(table, unitOnFirstItem)).isSameAs(firstItem);
+        assertThat(directCostRepository.findUnique(tableWithOutItems, unitOnFirstItem)).isNull();
     }
 
 }

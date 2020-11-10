@@ -25,7 +25,7 @@ import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.module.budget.dom.keytable.PartitioningTable;
 
-@DomainService(repositoryFor = KeyItem.class, nature = NatureOfService.DOMAIN)
+@DomainService(nature = NatureOfService.DOMAIN)
 @DomainServiceLayout()
 public class PartitioningTableItemRepository extends UdoDomainRepositoryAndFactory<PartitioningTableItem> {
 
@@ -34,8 +34,8 @@ public class PartitioningTableItemRepository extends UdoDomainRepositoryAndFacto
     }
 
     @Programmatic
-    public PartitioningTableItem findByPartitioningTableAndUnit(PartitioningTable keyTable, Unit unit){
-        return uniqueMatch("findByPartitioningTableAndUnit", "partitioningTable", keyTable, "unit", unit);
+    public PartitioningTableItem findUnique(PartitioningTable partitioningTable, Unit unit){
+        return uniqueMatch("findByPartitioningTableAndUnit", "partitioningTable", partitioningTable, "unit", unit);
     }
 
 

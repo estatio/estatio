@@ -91,15 +91,10 @@ public class KeyTable_IntegTest extends BudgetModuleIntegTestAbstract {
 
             //when
             keyTable.changeName("something else");
-            keyTable.changeFoundationValueType(FoundationValueType.COUNT);
-            keyTable.changeKeyValueMethod(KeyValueMethod.PERCENT);
 
             //then
             assertThat(keyTable.getName()).isEqualTo("something else");
-            assertThat(keyTable.getFoundationValueType()).isEqualTo(FoundationValueType.COUNT);
-            assertThat(keyTable.getKeyValueMethod()).isEqualTo(KeyValueMethod.PERCENT);
-            //due to changing foundation value and key value method
-            assertThat(keyTable.isValidForKeyValues()).isEqualTo(false);
+
         }
 
     }

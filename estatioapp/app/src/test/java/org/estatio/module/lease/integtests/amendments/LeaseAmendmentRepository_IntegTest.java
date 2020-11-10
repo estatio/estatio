@@ -28,11 +28,12 @@ import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
+import org.estatio.module.asset.fixtures.property.enums.Property_enum;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.amendments.LeaseAmendment;
 import org.estatio.module.lease.dom.amendments.LeaseAmendmentAgreementTypeEnum;
 import org.estatio.module.lease.dom.amendments.LeaseAmendmentState;
-import org.estatio.module.lease.dom.amendments.LeaseAmendmentType;
+import org.estatio.module.lease.dom.amendments.LeaseAmendmentTemplate;
 import org.estatio.module.lease.dom.amendments.LeaseAmendmentRepository;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
@@ -62,7 +63,7 @@ public class LeaseAmendmentRepository_IntegTest extends LeaseModuleIntegTestAbst
 
         // when
         LeaseAmendment leaseAmendment = leaseAmendmentRepository
-                .upsert(lease, LeaseAmendmentType.DEMO_TYPE, state, startDate, endDate);
+                .upsert(lease, LeaseAmendmentTemplate.DEMO_TYPE, state, startDate, endDate);
 
         // then
         assertThat(leaseAmendment.getLease()).isEqualTo(lease);
@@ -70,8 +71,8 @@ public class LeaseAmendmentRepository_IntegTest extends LeaseModuleIntegTestAbst
         assertThat(leaseAmendment.getStartDate()).isEqualTo(startDate);
         assertThat(leaseAmendment.getEndDate()).isEqualTo(endDate);
         assertThat(leaseAmendment.getType().getTitle()).isEqualTo(LeaseAmendmentAgreementTypeEnum.LEASE_AMENDMENT.getTitle());
-        assertThat(leaseAmendment.getReference()).isEqualTo(lease.getReference().concat(LeaseAmendmentType.DEMO_TYPE.getRef_suffix()));
-        assertThat(leaseAmendment.getName()).isEqualTo(lease.getReference().concat(LeaseAmendmentType.DEMO_TYPE.getRef_suffix()));
+        assertThat(leaseAmendment.getReference()).isEqualTo(lease.getReference().concat(LeaseAmendmentTemplate.DEMO_TYPE.getRef_suffix()));
+        assertThat(leaseAmendment.getName()).isEqualTo(lease.getReference().concat(LeaseAmendmentTemplate.DEMO_TYPE.getRef_suffix()));
         assertThat(leaseAmendment.getAtPath()).isEqualTo(lease.getApplicationTenancyPath());
         assertThat(leaseAmendment.getApplicationTenancy()).isEqualTo(lease.getApplicationTenancy());
         assertThat(leaseAmendment.getRoles()).hasSize(2);
@@ -91,18 +92,46 @@ public class LeaseAmendmentRepository_IntegTest extends LeaseModuleIntegTestAbst
         assertThat(resultForState.get(0)).isEqualTo(leaseAmendment);
 
         // and when
-        final List<LeaseAmendment> resultsForDemoType = leaseAmendmentRepository.findByType(LeaseAmendmentType.DEMO_TYPE);
-        final List<LeaseAmendment> resultsForOtherType = leaseAmendmentRepository.findByType(LeaseAmendmentType.COVID_ITA_FREQ_CHANGE_ONLY);
+        final List<LeaseAmendment> resultsForDemoType = leaseAmendmentRepository.findByTemplate(LeaseAmendmentTemplate.DEMO_TYPE);
+        final List<LeaseAmendment> resultsForDemoTypeOxf = leaseAmendmentRepository.findByTemplateAndProperty(
+                LeaseAmendmentTemplate.DEMO_TYPE, Property_enum.OxfGb.findUsing(serviceRegistry));
+        final List<LeaseAmendment> resultsForDemoTypeRon = leaseAmendmentRepository.findByTemplateAndProperty(
+                LeaseAmendmentTemplate.DEMO_TYPE, Property_enum.RonIt.findUsing(serviceRegistry));
+        final List<LeaseAmendment> resultsForOxf = leaseAmendmentRepository.findByProperty(Property_enum.OxfGb.findUsing(serviceRegistry));
+        final List<LeaseAmendment> resultsForRon = leaseAmendmentRepository.findByProperty(Property_enum.RonIt.findUsing(serviceRegistry));
+        final List<LeaseAmendment> resultsForOxfProposed = leaseAmendmentRepository.findByPropertyAndState(Property_enum.OxfGb.findUsing(serviceRegistry), LeaseAmendmentState.PROPOSED);
+        final List<LeaseAmendment> resultsForOxfSigned = leaseAmendmentRepository.findByPropertyAndState(Property_enum.OxfGb.findUsing(serviceRegistry), LeaseAmendmentState.SIGNED);
+        final List<LeaseAmendment> resultsForDemoTypeAndProposed = leaseAmendmentRepository.findByTemplateAndState(
+                LeaseAmendmentTemplate.DEMO_TYPE, LeaseAmendmentState.PROPOSED);
+        final List<LeaseAmendment> resultsForDemoTypeAndSigned = leaseAmendmentRepository.findByTemplateAndState(
+                LeaseAmendmentTemplate.DEMO_TYPE, LeaseAmendmentState.SIGNED);
+        final List<LeaseAmendment> resultsForDemoTypeAndProposedForOxf = leaseAmendmentRepository.findByTypeAndStateAndProperty(
+                LeaseAmendmentTemplate.DEMO_TYPE, LeaseAmendmentState.PROPOSED,
+                Property_enum.OxfGb.findUsing(serviceRegistry));
+        final List<LeaseAmendment> resultsForDemoTypeAndProposedForRon = leaseAmendmentRepository.findByTypeAndStateAndProperty(
+                LeaseAmendmentTemplate.DEMO_TYPE, LeaseAmendmentState.PROPOSED,
+                Property_enum.RonIt.findUsing(serviceRegistry));
+        final List<LeaseAmendment> resultsForOtherType = leaseAmendmentRepository.findByTemplate(LeaseAmendmentTemplate.COVID_ITA_FREQ_CHANGE_ONLY);
         // then
         assertThat(resultsForDemoType).hasSize(1);
+        assertThat(resultsForDemoTypeOxf).hasSize(1);
+        assertThat(resultsForDemoTypeRon).isEmpty();
+        assertThat(resultsForOxf).hasSize(1);
+        assertThat(resultsForRon).isEmpty();
+        assertThat(resultsForOxfProposed).hasSize(1);
+        assertThat(resultsForOxfSigned).isEmpty();
+        assertThat(resultsForDemoTypeAndProposed).hasSize(1);
+        assertThat(resultsForDemoTypeAndProposedForOxf).hasSize(1);
         assertThat(resultsForDemoType.get(0)).isEqualTo(leaseAmendment);
+        assertThat(resultsForDemoTypeAndSigned).isEmpty();
+        assertThat(resultsForDemoTypeAndProposedForRon).isEmpty();
         assertThat(resultsForOtherType).isEmpty();
 
         // and when
         final LeaseAmendmentState adaptedState = LeaseAmendmentState.SIGNED;
         final LocalDate adaptedStartDate = new LocalDate(2020, 1, 16);
         final LocalDate adaptedEndDate = new LocalDate(2020, 4, 1);
-        leaseAmendment = leaseAmendmentRepository.upsert(lease, LeaseAmendmentType.DEMO_TYPE,
+        leaseAmendment = leaseAmendmentRepository.upsert(lease, LeaseAmendmentTemplate.DEMO_TYPE,
                 adaptedState, adaptedStartDate, adaptedEndDate);
         // then
         assertThat(leaseAmendment.getState()).isEqualTo(adaptedState);

@@ -108,11 +108,11 @@ public class InvoiceImportManager {
                     paymentMethod = lease.getItems().first().getPaymentMethod();
                 }
 
-                result.add(new InvoiceImportLine(lease.getReference(), null, paymentMethod.name(), null, null, null, null, null, unit.getReference()));
+                result.add(new InvoiceImportLine(lease.getReference(), null, paymentMethod.name(), null, null, null, null, null, unit.getReference(), null));
 
             } else {
 
-                result.add(new InvoiceImportLine(lease.getReference(), null, null, null, null, null, null, null, unit.getReference()));
+                result.add(new InvoiceImportLine(lease.getReference(), null, null, null, null, null, null, null, unit.getReference(), null));
 
             }
 

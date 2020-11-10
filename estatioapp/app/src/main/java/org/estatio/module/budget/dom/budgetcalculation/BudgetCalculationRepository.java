@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.joda.time.LocalDate;
+
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 
@@ -26,7 +28,9 @@ public class BudgetCalculationRepository extends UdoDomainRepositoryAndFactory<B
             final PartitionItem partitionItem,
             final PartitioningTableItem tableItem,
             final BigDecimal value,
-            final BudgetCalculationType calculationType){
+            final BudgetCalculationType calculationType,
+            final LocalDate calculationStartDate,
+            final LocalDate calculationEndDate){
 
         BudgetCalculation budgetCalculation = factoryService.instantiate(BudgetCalculation.class);
         budgetCalculation.setPartitionItem(partitionItem);
@@ -37,32 +41,108 @@ public class BudgetCalculationRepository extends UdoDomainRepositoryAndFactory<B
         budgetCalculation.setInvoiceCharge(partitionItem.getCharge());
         budgetCalculation.setIncomingCharge(partitionItem.getBudgetItem().getCharge());
         budgetCalculation.setUnit(tableItem.getUnit());
+        budgetCalculation.setCalculationStartDate(calculationStartDate);
+        budgetCalculation.setCalculationEndDate(calculationEndDate);
 
         repositoryService.persist(budgetCalculation);
 
         return budgetCalculation;
     }
 
+    public static InMemBudgetCalculation createInMemBudgetCalculation(
+            final PartitionItem partitionItem,
+            final PartitioningTableItem tableItem,
+            final BigDecimal value,
+            final BudgetCalculationType calculationType,
+            final LocalDate calculationStartDate,
+            final LocalDate calculationEndDate){
+        return new InMemBudgetCalculation(
+                value,
+                calculationStartDate,
+                calculationEndDate,
+                partitionItem,
+                tableItem,
+                calculationType,
+                partitionItem.getBudget(),
+                tableItem.getUnit(),
+                partitionItem.getCharge(),
+                partitionItem.getBudgetItem().getCharge(),
+                value
+        );
+    }
+
+    public static InMemBudgetCalculation createInMemBudgetCalculation(
+            final PartitionItem partitionItem,
+            final PartitioningTableItem tableItem,
+            final BigDecimal value,
+            final BudgetCalculationType calculationType,
+            final LocalDate calculationStartDate,
+            final LocalDate calculationEndDate,
+            final BigDecimal auditedCostForBudgetPeriod){
+        return new InMemBudgetCalculation(
+                value,
+                calculationStartDate,
+                calculationEndDate,
+                partitionItem,
+                tableItem,
+                calculationType,
+                partitionItem.getBudget(),
+                tableItem.getUnit(),
+                partitionItem.getCharge(),
+                partitionItem.getBudgetItem().getCharge(),
+                auditedCostForBudgetPeriod
+        );
+    }
+
     public BudgetCalculation findOrCreateBudgetCalculation(
             final PartitionItem partitionItem,
             final PartitioningTableItem keyItem,
             final BigDecimal value,
-            final BudgetCalculationType calculationType) {
-        return findUnique(partitionItem, keyItem, calculationType)==null ?
-                createBudgetCalculation(partitionItem, keyItem, value, calculationType) :
-                findUnique(partitionItem, keyItem, calculationType);
+            final BudgetCalculationType calculationType,
+            final LocalDate calculationStartDate,
+            final LocalDate calculationEndDate
+            ) {
+        final BudgetCalculation uniqueCalcuationIfAny = findUnique(partitionItem, keyItem, calculationType, calculationStartDate,
+                calculationEndDate);
+        return uniqueCalcuationIfAny ==null ?
+                createBudgetCalculation(partitionItem, keyItem, value, calculationType, calculationStartDate, calculationEndDate) :
+                uniqueCalcuationIfAny;
+    }
+
+    public BudgetCalculation findOrCreateBudgetCalculation(
+            final InMemBudgetCalculation inMemBudgetCalculation
+    ) {
+        final BudgetCalculation uniqueCalcuationIfAny = findUnique(
+                inMemBudgetCalculation.getPartitionItem(),
+                inMemBudgetCalculation.getTableItem(),
+                inMemBudgetCalculation.getCalculationType(),
+                inMemBudgetCalculation.getCalculationStartDate(),
+                inMemBudgetCalculation.getCalculationEndDate());
+        return uniqueCalcuationIfAny ==null ?
+                createBudgetCalculation(
+                        inMemBudgetCalculation.getPartitionItem(),
+                        inMemBudgetCalculation.getTableItem(),
+                        inMemBudgetCalculation.getValue(),
+                        inMemBudgetCalculation.getCalculationType(),
+                        inMemBudgetCalculation.getCalculationStartDate(),
+                        inMemBudgetCalculation.getCalculationEndDate()) :
+                uniqueCalcuationIfAny;
     }
 
     public BudgetCalculation findUnique(
             final PartitionItem partitionItem,
             final PartitioningTableItem tableItem,
-            final BudgetCalculationType calculationType
+            final BudgetCalculationType calculationType,
+            final LocalDate calculationStartDate,
+            final LocalDate calculationEndDate
             ){
         return uniqueMatch(
                 "findUnique",
                 "partitionItem", partitionItem,
                 "tableItem", tableItem,
-                "calculationType", calculationType);
+                "calculationType", calculationType,
+                "calculationStartDate", calculationStartDate,
+                "calculationEndDate", calculationEndDate);
     }
 
     public List<BudgetCalculation> findByPartitionItemAndCalculationType(PartitionItem partitionItem, BudgetCalculationType calculationType) {
@@ -86,6 +166,10 @@ public class BudgetCalculationRepository extends UdoDomainRepositoryAndFactory<B
 
         }
         return result;
+    }
+
+    public List<BudgetCalculation> findByBudgetAndStatus(final Budget budget, final Status status){
+        return allMatches("findByBudgetAndStatus", "budget", budget, "status", status);
     }
 
     public List<BudgetCalculation> findByBudgetAndTypeAndStatus(final Budget budget, final BudgetCalculationType type, final Status status){

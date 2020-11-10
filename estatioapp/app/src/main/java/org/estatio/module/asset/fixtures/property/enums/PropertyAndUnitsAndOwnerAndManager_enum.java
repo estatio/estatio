@@ -64,6 +64,11 @@ public enum PropertyAndUnitsAndOwnerAndManager_enum implements
             Organisation_enum.HelloWorldGb, ld(1999, 1, 1), ld(2000, 1, 1),
             Person_enum.GinoVannelliGb, null, null
     ),
+    LuwBe   (Property_enum.LuwBe,
+            25,
+            Organisation_enum.HelloWorldBe, ld(1999, 1, 1), ld(2000, 1, 1),
+            Person_enum.GinoVannelliBe, null, null
+    ),
     VivFr   (Property_enum.VivFr,
             5,
             Organisation_enum.HelloWorldFr, ld(1999, 1, 1), ld(2000, 1, 1),

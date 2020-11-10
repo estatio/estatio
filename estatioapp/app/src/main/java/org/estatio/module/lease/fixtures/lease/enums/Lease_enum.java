@@ -17,7 +17,7 @@ import org.estatio.module.asset.fixtures.person.enums.Person_enum;
 import org.estatio.module.asset.fixtures.property.enums.PropertyAndUnitsAndOwnerAndManager_enum;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseRepository;
-import org.estatio.module.lease.dom.amendments.LeaseAmendmentType;
+import org.estatio.module.lease.dom.amendments.LeaseAmendmentTemplate;
 import org.estatio.module.lease.dom.occupancy.tags.BrandCoverage;
 import org.estatio.module.lease.fixtures.lease.builders.LeaseBuilder;
 import org.estatio.module.lease.fixtures.numerators.enums.PropertyOwnerNumerator_enum;
@@ -33,6 +33,7 @@ import static org.estatio.module.lease.dom.occupancy.tags.BrandCoverage.NATIONAL
 import static org.estatio.module.lease.fixtures.lease.builders.LeaseBuilder.AddressesCreationPolicy;
 import static org.estatio.module.lease.fixtures.lease.builders.LeaseBuilder.InvoiceAddressCreationPolicy;
 import static org.incode.module.base.integtests.VT.ld;
+import static org.incode.module.country.fixtures.enums.Country_enum.BEL;
 import static org.incode.module.country.fixtures.enums.Country_enum.GBR;
 import static org.incode.module.country.fixtures.enums.Country_enum.ITA;
 import static org.incode.module.country.fixtures.enums.Country_enum.NLD;
@@ -148,7 +149,7 @@ public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderSc
                 new OccupancySpec("001", "Topmodel", NATIONAL, GBR, "FASHION", "WOMEN", ld(2010, 7, 15), null, new BigDecimal("200.25"), null, null)
             },
             new AmendmentSpec[]{
-                new AmendmentSpec(LeaseAmendmentType.DEMO_TYPE)
+                new AmendmentSpec(LeaseAmendmentTemplate.DEMO_TYPE)
             },
             Person_enum.GinoVannelliGb,
             InvoiceAddressCreationPolicy.DONT_CREATE, AddressesCreationPolicy.CREATE
@@ -390,6 +391,19 @@ public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderSc
             },
             Person_enum.JohnDoeNl,
             InvoiceAddressCreationPolicy.CREATE, AddressesCreationPolicy.DONT_CREATE),
+    LuwTopModel001Be(
+            "LUW-TOPMODEL-001", null, "Topmodel Lease", PropertyAndUnitsAndOwnerAndManager_enum.LuwBe,
+            OrganisationAndComms_enum.HelloWorldBe, Organisation_enum.TopModelBe,
+            ld(2010, 7, 15), ld(2022, 7, 14),
+            new OccupancySpec[] {
+                    new OccupancySpec("001", "Topmodel", NATIONAL, BEL, "FASHION", "WOMEN", ld(2010, 7, 15), null, new BigDecimal("200.25"), null, null)
+            },
+            new AmendmentSpec[]{
+                    new AmendmentSpec(LeaseAmendmentTemplate.DEMO_TYPE)
+            },
+            Person_enum.GinoVannelliBe,
+            InvoiceAddressCreationPolicy.DONT_CREATE, AddressesCreationPolicy.DONT_CREATE
+    ),
     ;
 
     @AllArgsConstructor
@@ -411,7 +425,7 @@ public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderSc
     @AllArgsConstructor
     @Data
     public static class AmendmentSpec {
-        LeaseAmendmentType leaseAmendmentType;
+        LeaseAmendmentTemplate leaseAmendmentTemplate;
     }
 
     private final String ref;
@@ -483,7 +497,7 @@ public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderSc
                     f.setAmendmentSpecs(
                             Arrays.stream(Lease_enum.this.getAmendmentSpecs())
                                     .map(x -> new LeaseBuilder.AmendmentSpec(
-                                            x.leaseAmendmentType)
+                                            x.leaseAmendmentTemplate)
                                     )
                                     .collect(Collectors.toList()));
                 })

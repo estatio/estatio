@@ -3,7 +3,6 @@
     <row>
         <col span="12" unreferencedActions="true">
             <ns2:domainObject/>
-            <ns2:action id="deleteBudgetKeyItem"/>
             <ns2:action id="export"/>
             <ns2:action id="recentChanges"/>
             <ns2:action id="links"/>
@@ -12,8 +11,9 @@
     <row>
         <col span="4">
             <ns2:fieldSet name="General" id="general" unreferencedProperties="true">
-                <ns2:property id="keyTable"/>
+                <ns2:property id="partitioningTable"/>
                 <ns2:property id="applicationTenancy"/>
+                <ns2:property id="applicationLevelPath" hidden="EVERYWHERE"/>
             </ns2:fieldSet>
             <ns2:fieldSet name="Unit" id="unit">
                 <ns2:property id="unit"/>
@@ -22,12 +22,8 @@
                 <ns2:property id="sourceValue">
                     <ns2:action id="changeSourceValue" position="BELOW"/>
                 </ns2:property>
-                <ns2:property id="divCalculatedSourceValue"/>
                 <ns2:property id="value">
                     <ns2:action id="changeValue" position="BELOW"/>
-                </ns2:property>
-                <ns2:property id="auditedValue">
-                    <ns2:action id="changeAuditedValue" position="BELOW"/>
                 </ns2:property>
             </ns2:fieldSet>
             <ns2:fieldSet name="Metadata" id="metadata">

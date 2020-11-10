@@ -19,6 +19,8 @@
 package org.estatio.module.budget.dom.keytable;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedSet;
@@ -32,6 +34,8 @@ import javax.jdo.annotations.Persistent;
 
 import com.google.common.collect.Lists;
 
+import org.joda.time.LocalDate;
+
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.CollectionLayout;
@@ -41,23 +45,24 @@ import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.PropertyLayout;
-import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
+import org.incode.module.base.dom.valuetypes.LocalDateInterval;
+
 import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.asset.dom.UnitRepository;
 import org.estatio.module.budget.dom.budget.Budget;
+import org.estatio.module.budget.dom.budget.Status;
+import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationRepository;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
-import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationViewmodel;
+import org.estatio.module.budget.dom.budgetcalculation.InMemBudgetCalculation;
 import org.estatio.module.budget.dom.keyitem.DirectCost;
 import org.estatio.module.budget.dom.keyitem.DirectCostRepository;
 import org.estatio.module.budget.dom.partioning.PartitionItem;
-import org.estatio.module.budget.dom.partioning.PartitionItemRepository;
-import org.estatio.module.budget.dom.partioning.Partitioning;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -99,7 +104,7 @@ public class DirectCostTable extends PartitioningTable {
     }
 
     public String disableNewDirectCost(){
-        return isAssignedReason();
+        return isImmutableForBudgetedValueReason();
     }
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
@@ -123,7 +128,7 @@ public class DirectCostTable extends PartitioningTable {
     }
 
     public String disableGenerateItems(){
-        return isAssignedReason();
+        return isImmutableForBudgetedValueReason();
     }
 
 
@@ -163,27 +168,13 @@ public class DirectCostTable extends PartitioningTable {
         return newKeyTableCopy;
     }
 
-    // //////////////////////////////////////
-
-    @Action(restrictTo = RestrictTo.PROTOTYPING, semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
+    @Programmatic
     public DirectCostTable deleteItems() {
         for (DirectCost directCost : getItems()) {
+            getBudget().removeNewCalculations();
             repositoryService.removeAndFlush(directCost);
         }
         return this;
-    }
-
-    @Programmatic
-    public List<PartitionItem> usedInPartitionItems(){
-        List<PartitionItem> result = new ArrayList<>();
-        for (Partitioning partitioning : getBudget().getPartitionings()) {
-            for (PartitionItem partitionItem : partitioning.getItems()) {
-                if (partitionItem.getPartitioningTable()==this){
-                    result.add(partitionItem);
-                }
-            }
-        }
-        return result;
     }
 
     @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
@@ -194,58 +185,85 @@ public class DirectCostTable extends PartitioningTable {
     }
 
     public String disableRemove(){
-        if (!usedInPartitionItems().isEmpty()){
+        if (super.usedInPartitionItem()){
             return "Please remove partition items that use this table first";
         }
         return null;
     }
 
-    private String isAssignedReason(){
-        if (isAssignedForTypeReason(BudgetCalculationType.AUDITED)!=null){
-            return isAssignedForTypeReason(BudgetCalculationType.AUDITED);
-        }
-        return isAssignedForTypeReason(BudgetCalculationType.BUDGETED);
-    }
-
-    String isAssignedForTypeReason(final BudgetCalculationType budgetCalculationType){
-        for (PartitionItem partitionItem : partitionItemRepository.findByPartitioningTable(this)){
-            if (partitionItem.getBudgetItem().isAssignedForType(budgetCalculationType)){
-                return partitionItem.getBudgetItem().isAssignedForTypeReason(budgetCalculationType);
-            }
-        }
+    private String isImmutableForBudgetedValueReason(){
+        if (getBudget().getStatus()== Status.RECONCILED) return "The budget is reconciled";
+        if (getBudget().getStatus()== Status.ASSIGNED && usedInPartitionItemForBudgeted()) return "The budget is assigned";
         return null;
     }
 
     @Programmatic
     @Override
-    public List<BudgetCalculationViewmodel> calculateFor(final PartitionItem partitionItem, final BigDecimal partitionItemValue, final BudgetCalculationType type) {
-        List<BudgetCalculationViewmodel> results = new ArrayList<>();
+    public List<InMemBudgetCalculation> calculateInMemFor(
+            final PartitionItem partitionItem,
+            final BigDecimal partitionItemValue,
+            final BudgetCalculationType type,
+            final LocalDate calculationStartDate,
+            final LocalDate calculationEndDate) {
+        List<InMemBudgetCalculation> results = new ArrayList<>();
         Lists.newArrayList(getItems()).stream().forEach(i->{
-            switch (type){
-            case BUDGETED:
-                if (i.getBudgetedCost()!=null){
-                    results.add(new BudgetCalculationViewmodel(
-                            partitionItem,
-                            i,
-                            i.getBudgetedCost(),
-                            type
-                    ));
-                }
-            case AUDITED:
-                if (i.getAuditedCost()!=null){
-                    results.add(new BudgetCalculationViewmodel(
-                            partitionItem,
-                            i,
-                            i.getAuditedCost(),
-                            type
-                    ));
-                }
-
+            BigDecimal value = type==BudgetCalculationType.BUDGETED ? i.getBudgetedCost() : i.getAuditedCost();
+            if (value!=null){
+                results.add(
+                        BudgetCalculationRepository.createInMemBudgetCalculation(
+                                partitionItem,
+                                i,
+                                value,
+                                type,
+                                calculationStartDate,
+                                calculationEndDate
+                        )
+                );
             }
-
         });
         return results;
     }
+
+    @Programmatic
+    @Override
+    public List<InMemBudgetCalculation> calculateInMemForUnit(
+            final PartitionItem partitionItem,
+            final BigDecimal partitionItemValue,
+            final BudgetCalculationType type,
+            final Unit unit,
+            final LocalDate calculationStartDate,
+            final LocalDate calculationEndDate) {
+        List<InMemBudgetCalculation> results = new ArrayList<>();
+        final DirectCost directCostForUnitIfAny = Lists.newArrayList(getItems()).stream().filter(i -> i.getUnit() == unit).findFirst()
+                .orElse(null);
+        if (directCostForUnitIfAny!=null){
+            results.add(
+                    BudgetCalculationRepository.createInMemBudgetCalculation(
+                            partitionItem,
+                            directCostForUnitIfAny,
+                            type==BudgetCalculationType.BUDGETED ? directCostForUnitIfAny.getBudgetedCost() : auditedCostForCalculationPeriod(directCostForUnitIfAny, LocalDateInterval.including(calculationStartDate, calculationEndDate)),
+                            type,
+                            calculationStartDate,
+                            calculationEndDate,
+                            directCostForUnitIfAny.getAuditedCost()
+                    )
+            );
+        }
+        return results;
+    }
+
+    // ECP-1263: when audited we take the prorata calculation of the audited value of the budget period for the calculation interval
+    @Programmatic
+    public static BigDecimal auditedCostForCalculationPeriod(final DirectCost directCost, final LocalDateInterval calculationInterval){
+        final LocalDateInterval budgetInterval = directCost.getPartitioningTable().getBudget().getInterval();
+        if (calculationInterval.contains(budgetInterval)) return directCost.getAuditedCost();
+        if (calculationInterval.overlaps(budgetInterval) && directCost.getAuditedCost()!=null){
+            return directCost.getAuditedCost().multiply(BigDecimal.valueOf(calculationInterval.overlap(budgetInterval).days())).divide(BigDecimal.valueOf(budgetInterval.days()),
+                    MathContext.DECIMAL64).setScale(6, RoundingMode.HALF_UP);
+        }
+        return null;
+    }
+
 
     @Inject
     DirectCostRepository directCostRepository;
@@ -254,9 +272,7 @@ public class DirectCostTable extends PartitioningTable {
     RepositoryService repositoryService;
 
     @Inject
-    PartitionItemRepository partitionItemRepository;
-
-    @Inject
     UnitRepository unitRepository;
+
 
 }

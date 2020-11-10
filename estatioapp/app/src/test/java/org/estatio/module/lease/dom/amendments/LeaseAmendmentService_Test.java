@@ -145,8 +145,8 @@ public class LeaseAmendmentService_Test {
         Lease lease = new Lease();
 
         // when
-        final LeaseAmendmentType.Tuple<InvoicingFrequency, InvoicingFrequency> tuple = service
-                .findInvoiceFrequencyTupleOnfirstFrequencyChangeCandidate(lease, LeaseAmendmentType.COVID_FRA_50_PERC);
+        final LeaseAmendmentTemplate.Tuple<InvoicingFrequency, InvoicingFrequency> tuple = service
+                .findInvoiceFrequencyTupleOnfirstFrequencyChangeCandidate(lease, LeaseAmendmentTemplate.COVID_FRA_50_PERC);
 
         // then
         assertThat(tuple).isNull();
@@ -160,11 +160,11 @@ public class LeaseAmendmentService_Test {
         LeaseAmendmentService service = new LeaseAmendmentService();
         LeaseItem rentItem = new LeaseItem(){
             @Override public LocalDateInterval getEffectiveInterval() {
-                return LocalDateInterval.including(LeaseAmendmentType.COVID_FRA_50_PERC.getDiscountStartDate(), LeaseAmendmentType.COVID_FRA_50_PERC.getFrequencyChangeEndDate());
+                return LocalDateInterval.including(LeaseAmendmentTemplate.COVID_FRA_50_PERC.getDiscountStartDate(), LeaseAmendmentTemplate.COVID_FRA_50_PERC.getFrequencyChangeEndDate());
             }
         };
         rentItem.setType(LeaseItemType.RENT);
-        rentItem.setInvoicingFrequency(LeaseAmendmentType.COVID_FRA_50_PERC.getFrequencyChanges().get(1).oldValue);
+        rentItem.setInvoicingFrequency(LeaseAmendmentTemplate.COVID_FRA_50_PERC.getFrequencyChanges().get(1).oldValue);
         Lease lease = new Lease(){
             @Override public SortedSet<LeaseItem> getItems() {
                 return new TreeSet<>(Arrays.asList(
@@ -174,10 +174,10 @@ public class LeaseAmendmentService_Test {
         };
 
         // when
-        final LeaseAmendmentType.Tuple<InvoicingFrequency, InvoicingFrequency> tuple = service
-                .findInvoiceFrequencyTupleOnfirstFrequencyChangeCandidate(lease, LeaseAmendmentType.COVID_FRA_50_PERC);
+        final LeaseAmendmentTemplate.Tuple<InvoicingFrequency, InvoicingFrequency> tuple = service
+                .findInvoiceFrequencyTupleOnfirstFrequencyChangeCandidate(lease, LeaseAmendmentTemplate.COVID_FRA_50_PERC);
         // then
-        assertThat(tuple).isEqualTo(LeaseAmendmentType.COVID_FRA_50_PERC.getFrequencyChanges().get(1));
+        assertThat(tuple).isEqualTo(LeaseAmendmentTemplate.COVID_FRA_50_PERC.getFrequencyChanges().get(1));
 
     }
 
@@ -202,19 +202,24 @@ public class LeaseAmendmentService_Test {
 
         // expect
         context.checking(new Expectations(){{
-            oneOf(mockChargeRepository).findByReference(LeaseAmendmentType.COVID_ITA_100_PERC_1M.getChargeReferenceForDiscountItem().get(0).newValue);
-            oneOf(mockChargeRepository).findByReference(LeaseAmendmentType.COVID_ITA_100_PERC_1M.getChargeReferenceForDiscountItem().get(1).newValue);
-            oneOf(mockChargeRepository).findByReference(LeaseAmendmentType.COVID_ITA_100_PERC_1M.getChargeReferenceForDiscountItem().get(2).newValue);
-            oneOf(mockChargeRepository).findByReference(LeaseAmendmentType.COVID_ITA_100_PERC_1M.getChargeReferenceForDiscountItem().get(3).newValue);
-            oneOf(mockChargeRepository).findByReference(LeaseAmendmentType.COVID_ITA_100_PERC_1M.getChargeReferenceForDiscountItem().get(4).newValue);
+            oneOf(mockChargeRepository).findByReference(
+                    LeaseAmendmentTemplate.COVID_ITA_100_PERC_1M.getChargeReferenceForDiscountItem().get(0).newValue);
+            oneOf(mockChargeRepository).findByReference(
+                    LeaseAmendmentTemplate.COVID_ITA_100_PERC_1M.getChargeReferenceForDiscountItem().get(1).newValue);
+            oneOf(mockChargeRepository).findByReference(
+                    LeaseAmendmentTemplate.COVID_ITA_100_PERC_1M.getChargeReferenceForDiscountItem().get(2).newValue);
+            oneOf(mockChargeRepository).findByReference(
+                    LeaseAmendmentTemplate.COVID_ITA_100_PERC_1M.getChargeReferenceForDiscountItem().get(3).newValue);
+            oneOf(mockChargeRepository).findByReference(
+                    LeaseAmendmentTemplate.COVID_ITA_100_PERC_1M.getChargeReferenceForDiscountItem().get(4).newValue);
         }});
 
         // when
-        service.chargeDerivedFromAmendmentTypeAndChargeSourceItem(sourceCharge1, LeaseAmendmentType.COVID_ITA_100_PERC_1M);
-        service.chargeDerivedFromAmendmentTypeAndChargeSourceItem(sourceCharge2, LeaseAmendmentType.COVID_ITA_100_PERC_1M);
-        service.chargeDerivedFromAmendmentTypeAndChargeSourceItem(sourceCharge3, LeaseAmendmentType.COVID_ITA_100_PERC_1M);
-        service.chargeDerivedFromAmendmentTypeAndChargeSourceItem(sourceCharge4, LeaseAmendmentType.COVID_ITA_100_PERC_1M);
-        service.chargeDerivedFromAmendmentTypeAndChargeSourceItem(unmentionedCharge, LeaseAmendmentType.COVID_ITA_100_PERC_1M);
+        service.chargeDerivedFromAmendmentTypeAndChargeSourceItem(sourceCharge1, LeaseAmendmentTemplate.COVID_ITA_100_PERC_1M);
+        service.chargeDerivedFromAmendmentTypeAndChargeSourceItem(sourceCharge2, LeaseAmendmentTemplate.COVID_ITA_100_PERC_1M);
+        service.chargeDerivedFromAmendmentTypeAndChargeSourceItem(sourceCharge3, LeaseAmendmentTemplate.COVID_ITA_100_PERC_1M);
+        service.chargeDerivedFromAmendmentTypeAndChargeSourceItem(sourceCharge4, LeaseAmendmentTemplate.COVID_ITA_100_PERC_1M);
+        service.chargeDerivedFromAmendmentTypeAndChargeSourceItem(unmentionedCharge, LeaseAmendmentTemplate.COVID_ITA_100_PERC_1M);
 
     }
 

@@ -64,7 +64,7 @@
                 </col>
             </row>
         </col>
-        <col span="3">
+        <col span="6">
             <ns2:fieldSet name="Dates" id="dates">
                 <ns2:property id="startDate"/>
                 <ns2:property id="endDate">
@@ -73,7 +73,9 @@
                 <ns2:property id="amortisationEndDate"/>
             </ns2:fieldSet>
         </col>
-        <col span="3" unreferencedCollections="true">
+    </row>
+    <row>
+        <col span="12" unreferencedCollections="true">
         </col>
     </row>
 </grid>

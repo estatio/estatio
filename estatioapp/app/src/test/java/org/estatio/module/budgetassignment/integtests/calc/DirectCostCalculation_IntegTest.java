@@ -23,6 +23,7 @@ import javax.inject.Inject;
 
 import com.google.common.collect.Lists;
 
+import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -41,7 +42,7 @@ import org.estatio.module.budget.dom.partioning.PartitionItem;
 import org.estatio.module.budget.fixtures.budgets.enums.Budget_enum;
 import org.estatio.module.budget.fixtures.keytables.enums.DirectCostTable_enum;
 import org.estatio.module.budget.fixtures.partitioning.enums.Partitioning_enum;
-import org.estatio.module.budgetassignment.contributions.Budget_Calculate;
+import org.estatio.module.budgetassignment.contributions.Budget_assign;
 import org.estatio.module.budgetassignment.integtests.BudgetAssignmentModuleIntegTestAbstract;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -83,8 +84,10 @@ public class DirectCostCalculation_IntegTest extends BudgetAssignmentModuleInteg
 
         // given
         final Budget budget = Budget_enum.OxfDirectCostBudget2015.findUsing(serviceRegistry);
+        final LocalDate calculationStartDate = budget.getStartDate();
+        final LocalDate calculationEndDate = budget.getEndDate();
         // when
-        wrap(mixin(Budget_Calculate.class, budget)).calculate(false);
+        wrap(mixin(Budget_assign.class, budget)).assign(false);
         // then
         List<BudgetCalculation> calculations = budgetCalculationRepository.allBudgetCalculations();
         assertThat(calculations).hasSize(24); // in fixture the budgeted value for unit OXF-011 is set to null
@@ -99,7 +102,7 @@ public class DirectCostCalculation_IntegTest extends BudgetAssignmentModuleInteg
         final DirectCost directCost = Lists.newArrayList(budget.getDirectCostTables().first().getItems()).get(2);
         assertThat(directCost.getBudgetedCost()).isNull();
 
-        BudgetCalculation nonCalculated = budgetCalculationRepository.findUnique(budget.getItems().first().getPartitionItems().get(0), directCost, BudgetCalculationType.BUDGETED);
+        BudgetCalculation nonCalculated = budgetCalculationRepository.findUnique(budget.getItems().first().getPartitionItems().get(0), directCost, BudgetCalculationType.BUDGETED, calculationStartDate, calculationEndDate);
         assertThat(nonCalculated).isNull();
     }
 
