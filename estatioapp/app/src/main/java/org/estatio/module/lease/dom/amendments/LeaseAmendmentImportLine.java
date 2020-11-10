@@ -39,7 +39,7 @@ public class LeaseAmendmentImportLine implements ExcelFixtureRowHandler, Importa
 
     public LeaseAmendmentImportLine(final LeaseAmendment leaseAmendment){
         this();
-        this.leaseAmendmentType = leaseAmendment.getLeaseAmendmentType();
+        this.leaseAmendmentTemplate = leaseAmendment.getLeaseAmendmentTemplate();
         this.leaseAmendmentState = leaseAmendment.getState();
         this.dateSigned = leaseAmendment.getDateSigned();
         this.leaseReference = leaseAmendment.getLease().getReference();
@@ -68,7 +68,7 @@ public class LeaseAmendmentImportLine implements ExcelFixtureRowHandler, Importa
 
     public LeaseAmendmentImportLine(final LeaseAmendment leaseAmendment, final LeaseAmendmentItemForDiscount item){
         this();
-        this.leaseAmendmentType = leaseAmendment.getLeaseAmendmentType();
+        this.leaseAmendmentTemplate = leaseAmendment.getLeaseAmendmentTemplate();
         this.leaseAmendmentState = leaseAmendment.getState();
         this.dateSigned = leaseAmendment.getDateSigned();
         this.leaseReference = leaseAmendment.getLease().getReference();
@@ -86,7 +86,7 @@ public class LeaseAmendmentImportLine implements ExcelFixtureRowHandler, Importa
 
     @Getter @Setter
     @MemberOrder(sequence = "1")
-    private LeaseAmendmentType leaseAmendmentType;
+    private LeaseAmendmentTemplate leaseAmendmentTemplate;
 
     @Getter @Setter
     @MemberOrder(sequence = "2")
@@ -159,22 +159,28 @@ public class LeaseAmendmentImportLine implements ExcelFixtureRowHandler, Importa
         return importData(previousRow);
     }
 
-    public List<Object> importData() {
-        return importData(null);
-    }
-
     @Programmatic
     @Override
     public List<Object> importData(final Object previousRow) {
         final Lease lease = fetchLease(leaseReference);
+        LeaseAmendmentImportLine previousLine = previousRow!=null ? (LeaseAmendmentImportLine) previousRow : null;
+        final Lease leasePreviousLine = previousLine!=null ? fetchLease(previousLine.getLeaseReference()) : null;
         if (leaseAmendmentState==LeaseAmendmentState.APPLIED){
             throw new ApplicationException(String.format("State %s for lease %s not allowed.", leaseAmendmentState, leaseReference));
         }
-        final LeaseAmendment amendment = leaseAmendmentRepository.upsert(lease, leaseAmendmentType, leaseAmendmentState, startDate, endDate);
+        final LeaseAmendment amendment = leaseAmendmentRepository.upsert(lease, leaseAmendmentTemplate, leaseAmendmentState, startDate, endDate);
         if (amendment.getState()==LeaseAmendmentState.APPLIED) return Lists.newArrayList(amendment);
         if (amendment.getState()==LeaseAmendmentState.SIGNED && dateSigned!=null) amendment.setDateSigned(dateSigned);
         
         if (discountPercentage!=null && discountApplicableTo!=null && discountStartDate!=null && discountEndDate!=null) {
+            if (!lease.equals(leasePreviousLine)) {
+                // ECP-1283: delete any items for discount created earlier in the process
+                for (LeaseAmendmentItem item : amendment.getItems()) {
+                    if (item.getType() == LeaseAmendmentItemType.DISCOUNT) {
+                        item.remove();
+                    }
+                }
+            }
             try {
                 amendment.upsertItem(discountPercentage, manualDiscountAmount,
                         LeaseAmendmentItem.applicableToFromString(discountApplicableTo), discountStartDate,
@@ -185,11 +191,19 @@ public class LeaseAmendmentImportLine implements ExcelFixtureRowHandler, Importa
         }
         if (invoicingFrequencyOnLease!=null && amendedInvoicingFrequency !=null && frequencyChangeApplicableTo !=null && frequencyChangeStartDate
                 !=null && frequencyChangeEndDate !=null) {
+            if (!lease.equals(leasePreviousLine)) {
+                // ECP-1283: delete any items for discount created earlier in the process
+                for (LeaseAmendmentItem item : amendment.getItems()) {
+                    if (item.getType() == LeaseAmendmentItemType.INVOICING_FREQUENCY_CHANGE) {
+                        item.remove();
+                    }
+                }
+            }
             amendment.upsertItem(invoicingFrequencyOnLease, amendedInvoicingFrequency, LeaseAmendmentItem.applicableToFromString(
                     frequencyChangeApplicableTo),
                     frequencyChangeStartDate, frequencyChangeEndDate);
         }
-        final LeaseAmendment leaseAmendment = leaseAmendmentRepository.findUnique(lease, leaseAmendmentType);
+        final LeaseAmendment leaseAmendment = leaseAmendmentRepository.findUnique(lease, leaseAmendmentTemplate);
         backgroundService2.execute(leaseAmendment).createOrRenewLeasePreview();
         return Lists.newArrayList(leaseAmendment);
     }

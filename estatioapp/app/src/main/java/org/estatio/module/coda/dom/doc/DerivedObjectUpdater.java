@@ -609,7 +609,7 @@ public class DerivedObjectUpdater {
     BudgetItem deriveBudgetItem(final Property property, final LocalDate invoiceDate, final Charge charge){
         if (property==null || charge ==null || invoiceDate==null) return null;
         final Budget budgetIfAny = budgetRepository.findByPropertyAndDate(property, invoiceDate);
-        if (budgetIfAny==null || budgetIfAny.getStatus() != Status.ASSIGNED ||budgetIfAny.getItems().size()==0) return null;
+        if (budgetIfAny==null || budgetIfAny.getStatus() == Status.RECONCILED || budgetIfAny.getItems().size()==0) return null;
         return Lists.newArrayList(budgetIfAny.getItems())
                 .stream()
                 .filter(i->i.getCharge().equals(charge))

@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.assertj.core.api.Assertions;
+import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -17,6 +19,7 @@ import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculation;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationRepository;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationService;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
+import org.estatio.module.budget.dom.budgetcalculation.InMemBudgetCalculation;
 import org.estatio.module.budget.dom.keyitem.KeyItem;
 import org.estatio.module.budget.dom.keytable.KeyTable;
 import org.estatio.module.budget.dom.partioning.PartitionItem;
@@ -54,13 +57,18 @@ public class BudgetCalculationRepository_IntegTest extends BudgetModuleIntegTest
         @Test
         public void happyCase() throws Exception {
             // given
+            Budget oxfBudget2015 = OxfBudget2015.findUsing(serviceRegistry);
+            final LocalDate calculationStartDate = oxfBudget2015.getStartDate();
+            final LocalDate calculationEndDate = oxfBudget2015.getEndDate();
+
             PartitionItem partitionItem = partitionItemRepository.allPartitionItems().get(0);
             final KeyTable keyTable = (KeyTable) partitionItem.getPartitioningTable();
             KeyItem keyItem = keyTable.getItems().first();
-            BudgetCalculation newBudgetCalculation = budgetCalculationRepository.createBudgetCalculation(partitionItem, keyItem, BigDecimal.ZERO, BudgetCalculationType.BUDGETED);
+            BudgetCalculation newBudgetCalculation = budgetCalculationRepository.createBudgetCalculation(partitionItem, keyItem, BigDecimal.ZERO, BudgetCalculationType.BUDGETED,
+                    calculationStartDate, calculationEndDate);
 
             // when
-            BudgetCalculation budgetCalculation = budgetCalculationRepository.findUnique(partitionItem, keyItem, BudgetCalculationType.BUDGETED);
+            BudgetCalculation budgetCalculation = budgetCalculationRepository.findUnique(partitionItem, keyItem, BudgetCalculationType.BUDGETED, calculationStartDate, calculationEndDate);
 
             // then
             assertThat(budgetCalculation).isEqualTo(newBudgetCalculation);
@@ -78,7 +86,7 @@ public class BudgetCalculationRepository_IntegTest extends BudgetModuleIntegTest
             Property property = Property_enum.OxfGb.findUsing(serviceRegistry);
             Budget budget = OxfBudget2015.findUsing(serviceRegistry);
             PartitionItem partitionItem = budget.getItems().first().getPartitionItems().get(0);
-            budgetCalculationService.calculate(budget, BudgetCalculationType.BUDGETED);
+            budgetCalculationService.calculate(budget, BudgetCalculationType.BUDGETED, budget.getStartDate(), budget.getEndDate(), true);
 
             // when
             List<BudgetCalculation> budgetCalculations = budgetCalculationRepository.findByBudgetAndUnitAndInvoiceChargeAndType(budget, property.getUnits().first(), partitionItem.getCharge(), BudgetCalculationType.BUDGETED);
@@ -99,7 +107,7 @@ public class BudgetCalculationRepository_IntegTest extends BudgetModuleIntegTest
             Property property = Property_enum.OxfGb.findUsing(serviceRegistry);
             Budget budget = OxfBudget2015.findUsing(serviceRegistry);
             PartitionItem partitionItem = budget.getItems().first().getPartitionItems().get(0);
-            budgetCalculationService.calculate(budget, BudgetCalculationType.BUDGETED);
+            budgetCalculationService.calculate(budget, BudgetCalculationType.BUDGETED, budget.getStartDate(), budget.getEndDate(), true);
 
             // when
             List<BudgetCalculation> budgetCalculations = budgetCalculationRepository.findByBudgetAndUnitAndInvoiceChargeAndIncomingChargeAndType(budget, property.getUnits().first(), partitionItem.getCharge(), partitionItem.getBudgetItem().getCharge(), BudgetCalculationType.BUDGETED);
@@ -109,5 +117,52 @@ public class BudgetCalculationRepository_IntegTest extends BudgetModuleIntegTest
 
         }
     }
+
+    public static class OtherTests extends BudgetCalculationRepository_IntegTest {
+
+        @Test
+        public void findOrCreateBudgetCalculation_works() throws Exception {
+
+            Budget budget = OxfBudget2015.findUsing(serviceRegistry);
+            PartitionItem partitionItem = budget.getItems().first().getPartitionItems().get(0);
+            final KeyTable keyTable = (KeyTable) partitionItem.getPartitioningTable();
+            KeyItem keyItem = keyTable.getItems().first();
+
+            final BigDecimal value = new BigDecimal("1234.56");
+            final LocalDate calculationStartDate = new LocalDate(2020, 1, 1);
+            final LocalDate calculationEndDate = new LocalDate(2020, 10, 15);
+            final BudgetCalculationType budgetCalculationType = BudgetCalculationType.BUDGETED;
+            InMemBudgetCalculation inMemCalc = new InMemBudgetCalculation(
+                    value,
+                    calculationStartDate,
+                    calculationEndDate,
+                    partitionItem,
+                    keyItem,
+                    budgetCalculationType,
+                    null,
+                    null,
+                   null,
+                    null,
+                    null
+            );
+            Assertions.assertThat(budgetCalculationRepository.allBudgetCalculations()).isEmpty();
+
+            // when
+            final BudgetCalculation calculation = budgetCalculationRepository
+                    .findOrCreateBudgetCalculation(inMemCalc);
+
+            // then
+            Assertions.assertThat(budgetCalculationRepository.allBudgetCalculations()).hasSize(1);
+            Assertions.assertThat(budgetCalculationRepository.allBudgetCalculations()).contains(calculation);
+            Assertions.assertThat(calculation.getValue()).isEqualTo(value);
+            Assertions.assertThat(calculation.getCalculationStartDate()).isEqualTo(calculationStartDate);
+            Assertions.assertThat(calculation.getCalculationEndDate()).isEqualTo(calculationEndDate);
+            Assertions.assertThat(calculation.getPartitionItem()).isEqualTo(partitionItem);
+            Assertions.assertThat(calculation.getTableItem()).isEqualTo(keyItem);
+            Assertions.assertThat(calculation.getCalculationType()).isEqualTo(budgetCalculationType);
+        }
+    }
+
+
 
 }

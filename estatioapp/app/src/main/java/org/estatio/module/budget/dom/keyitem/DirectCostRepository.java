@@ -39,6 +39,44 @@ public class DirectCostRepository extends UdoDomainRepositoryAndFactory<DirectCo
         super(DirectCostRepository.class, DirectCost.class);
     }
 
+    public DirectCost upsertValuesUsingBusinessLogicOrCreate(
+            final DirectCostTable directCostTable,
+            final Unit unit,
+            final BigDecimal budgetedValue,
+            final BigDecimal auditedValue) {
+        final DirectCost directCostIfAny = findUnique(directCostTable, unit);
+        if (directCostIfAny!=null) {
+            switch (directCostTable.getBudget().getStatus()){
+                case RECONCILED:
+                    return directCostIfAny;
+                case ASSIGNED:
+                    directCostIfAny.setAuditedCost(auditedValue);
+                    return directCostIfAny;
+                case NEW:
+                    directCostIfAny.setBudgetedCost(budgetedValue);
+                    directCostIfAny.setAuditedCost(auditedValue);
+                    return directCostIfAny;
+            default:
+                return directCostIfAny;
+            }
+        } else {
+            switch (directCostTable.getBudget().getStatus()){
+                case RECONCILED:
+                    return null;
+                case ASSIGNED:
+                    if (!directCostTable.usedInPartitionItemForBudgeted()){
+                        return newDirectCost(directCostTable, unit, budgetedValue, auditedValue);
+                    } else {
+                        return null;
+                    }
+                case NEW:
+                    return newDirectCost(directCostTable, unit, budgetedValue, auditedValue);
+            default:
+                return null;
+            }
+        }
+    }
+
     public DirectCost newDirectCost(
             final DirectCostTable directCostTable,
             final Unit unit,
@@ -70,7 +108,7 @@ public class DirectCostRepository extends UdoDomainRepositoryAndFactory<DirectCo
             return "audited value cannot be less than zero";
         }
 
-        if (findByDirectCostTableAndUnit(directCostTable, unit)!=null) {
+        if (findUnique(directCostTable, unit)!=null) {
             return "there is already a direct cost for this unit";
         }
 
@@ -78,8 +116,8 @@ public class DirectCostRepository extends UdoDomainRepositoryAndFactory<DirectCo
     }
 
     @Programmatic
-    public DirectCost findByDirectCostTableAndUnit(DirectCostTable directCostTable, Unit unit){
-        final PartitioningTableItem item = partitioningTableItemRepository.findByPartitioningTableAndUnit(directCostTable, unit);
+    public DirectCost findUnique(DirectCostTable directCostTable, Unit unit){
+        final PartitioningTableItem item = partitioningTableItemRepository.findUnique(directCostTable, unit);
         return item!=null && item.getClass().isAssignableFrom(DirectCost.class) ? (DirectCost) item : null;
     }
 
@@ -89,5 +127,4 @@ public class DirectCostRepository extends UdoDomainRepositoryAndFactory<DirectCo
     @Inject ServiceRegistry2 serviceRegistry2;
 
     @Inject RepositoryService repositoryService;
-
 }

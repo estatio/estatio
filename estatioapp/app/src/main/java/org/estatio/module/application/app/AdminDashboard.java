@@ -5,7 +5,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -18,12 +17,6 @@ import javax.servlet.http.HttpSession;
 import com.google.common.collect.Lists;
 
 import org.apache.commons.lang3.StringUtils;
-import org.estatio.module.application.exports.ActiveDelegatedUserExportLine;
-import org.estatio.module.party.dom.role.PartyRole;
-import org.isisaddons.module.security.dom.user.AccountType;
-import org.isisaddons.module.security.dom.user.ApplicationUser;
-import org.isisaddons.module.security.dom.user.ApplicationUserRepository;
-import org.isisaddons.module.security.dom.user.ApplicationUserStatus;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
@@ -61,6 +54,9 @@ import org.apache.isis.core.metamodel.specloader.ServiceInitializer;
 import org.isisaddons.module.excel.dom.ExcelService;
 import org.isisaddons.module.publishmq.dom.servicespi.PublisherServiceUsingActiveMq;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+import org.isisaddons.module.security.dom.user.AccountType;
+import org.isisaddons.module.security.dom.user.ApplicationUserRepository;
+import org.isisaddons.module.security.dom.user.ApplicationUserStatus;
 import org.isisaddons.module.servletapi.dom.HttpSessionProvider;
 import org.isisaddons.module.stringinterpolator.dom.StringInterpolatorService;
 
@@ -68,7 +64,9 @@ import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 import org.incode.module.country.dom.impl.Country;
 import org.incode.module.slack.impl.SlackService;
 
+import org.estatio.module.application.app.dashboard.TenantReferenceMappingLine;
 import org.estatio.module.application.contributions.Organisation_syncToCoda;
+import org.estatio.module.application.exports.ActiveDelegatedUserExportLine;
 import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.capex.app.taskreminder.TaskReminderService;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
@@ -774,47 +772,6 @@ public class AdminDashboard implements ViewModel {
         return result;
     }
 
-    @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
-    public void closePropertyTaxItemsInvoicedByManager(final org.estatio.module.asset.dom.Property property, final LocalDate currentEndDate){
-        final LocalDate end2019 = new LocalDate(2019, 12, 31);
-        final List<Lease> leasesForProperty = leaseRepository.findLeasesByProperty(property);
-        for (Lease lease : leasesForProperty){
-            for (LeaseItem leaseItem : lease.getItems()){
-                if (leaseItem.getType()==LeaseItemType.PROPERTY_TAX && leaseItem.getInvoicedBy()==LeaseAgreementRoleTypeEnum.MANAGER && (leaseItem.getEndDate()==null || leaseItem.getEndDate().equals(currentEndDate))){
-                    LOG.info(String.format("Closing property tax item invoiced by manager for %s with endDate %s on %s", leaseItem.getLease().getReference(), leaseItem.getEndDate(), end2019));
-                    leaseItem.setEndDate(end2019);
-                }
-            }
-        }
-    }
-
-    public List<org.estatio.module.asset.dom.Property> choices0ClosePropertyTaxItemsInvoicedByManager(){
-        List<org.estatio.module.asset.dom.Property> result = new ArrayList<>();
-        result.add(propertyRepository.findPropertyByReference("AM"));
-        result.add(propertyRepository.findPropertyByReference("AT"));
-        result.add(propertyRepository.findPropertyByReference("AZ"));
-        result.add(propertyRepository.findPropertyByReference("BP"));
-        result.add(propertyRepository.findPropertyByReference("BT"));
-        result.add(propertyRepository.findPropertyByReference("CH"));
-        result.add(propertyRepository.findPropertyByReference("HA"));
-        result.add(propertyRepository.findPropertyByReference("MO"));
-        result.add(propertyRepository.findPropertyByReference("PH"));
-        result.add(propertyRepository.findPropertyByReference("PT"));
-        result.add(propertyRepository.findPropertyByReference("RC"));
-        result.add(propertyRepository.findPropertyByReference("SL"));
-        result.add(propertyRepository.findPropertyByReference("TD"));
-        result.add(propertyRepository.findPropertyByReference("VT"));
-        return result.stream().sorted(Comparator.comparing(org.estatio.module.asset.dom.Property::getReference)).collect(
-                Collectors.toList());
-    }
-
-    public List<LocalDate> choices1ClosePropertyTaxItemsInvoicedByManager(){
-        return Arrays.asList(new LocalDate(2020,6,30));
-    }
-
-    public LocalDate default1ClosePropertyTaxItemsInvoicedByManager(){
-        return new LocalDate(2020,6,30);
-    }
 
     @Action(semantics = SemanticsOf.SAFE)
     public Blob createInvoiceImportSheetForPropertyAndCharge(final org.estatio.module.asset.dom.Property property, final Charge charge){
@@ -850,14 +807,15 @@ public class AdminDashboard implements ViewModel {
         );
     }
 
+
     @Action(semantics = SemanticsOf.SAFE)
-    public Blob downloadActiveDelegatedUsers(){
+    public Blob downloadActiveDelegatedUsers() {
         List<ActiveDelegatedUserExportLine> exportLines = new ArrayList<>();
         applicationUserRepository.allUsers().stream()
                 .filter(user ->
                         user.getAccountType() == AccountType.DELEGATED &&
-                        user.getStatus() == ApplicationUserStatus.ENABLED)
-                .forEach(l->{
+                                user.getStatus() == ApplicationUserStatus.ENABLED)
+                .forEach(l -> {
                     ActiveDelegatedUserExportLine line = new ActiveDelegatedUserExportLine();
                     line.setUsername(l.getUsername());
                     line.setStatus(l.getStatus().toString());
@@ -865,15 +823,28 @@ public class AdminDashboard implements ViewModel {
                     line.setFamilyName(l.getFamilyName());
                     line.setGivenName(l.getGivenName());
                     Person person = personRepository.findByUsername(l.getUsername());
-                    if (person!=null) {
+                    if (person != null) {
                         line.setPersonRef(person.getReference());
-                        List<String> roles = person.getRoles().stream().map(role -> role.getRoleType().getTitle()).distinct().collect(Collectors.toList());
+                        List<String> roles = person.getRoles().stream().map(role -> role.getRoleType().getTitle())
+                                .distinct().collect(Collectors.toList());
                         line.setPartyRoles(StringUtils.join(roles, ", "));
                     }
                     exportLines.add(line);
                 });
 
-        return excelService.toExcel(exportLines, ActiveDelegatedUserExportLine.class, "ActiveDelegatedUsers", String.format("AD-users-Estatio-per-%s.xlsx", LocalDate.now().toString()));
+        return excelService.toExcel(exportLines, ActiveDelegatedUserExportLine.class, "ActiveDelegatedUsers",
+                String.format("AD-users-Estatio-per-%s.xlsx", LocalDate.now().toString()));
+    }
+
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
+    public void uploadTenantReferenceMappingWo(final Blob sheet){
+
+        excelService.fromExcel(sheet, TenantReferenceMappingLine.class, "Sheet1").forEach(
+                l->{
+                    l.importData();
+                }
+        );
+
     }
 
     @Inject PropertyRepository propertyRepository;

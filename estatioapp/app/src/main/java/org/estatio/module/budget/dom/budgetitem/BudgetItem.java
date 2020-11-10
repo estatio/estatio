@@ -65,6 +65,7 @@ import org.estatio.module.budget.dom.keytable.PartitioningTable;
 import org.estatio.module.budget.dom.keytable.PartitioningTableRepository;
 import org.estatio.module.budget.dom.partioning.PartitionItem;
 import org.estatio.module.budget.dom.partioning.PartitionItemRepository;
+import org.estatio.module.budget.dom.partioning.Partitioning;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
 
@@ -140,29 +141,6 @@ public class BudgetItem extends UdoDomainObject2<BudgetItem>
     @CollectionLayout(hidden = Where.EVERYWHERE)
     @Getter @Setter
     private SortedSet<BudgetItemValue> values = new TreeSet<>();
-
-    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
-    public BudgetItem newValue(final BigDecimal value, final LocalDate date){
-        return newValue(value, date, BudgetCalculationType.AUDITED);
-    }
-
-    public LocalDate default1NewValue(final BigDecimal value, final LocalDate date){
-        return getBudget().getStartDate();
-    }
-
-    public String validateNewValue(final BigDecimal value, final LocalDate date){
-        return budgetItemValueRepository.validateNewBudgetItemValue(this, value, date, BudgetCalculationType.AUDITED);
-    }
-
-    public String disableNewValue(){
-        return budgetItemValueRepository.findByBudgetItemAndType(this, BudgetCalculationType.AUDITED).size()>0 ? "Audited value already entered" : null;
-    }
-
-    @Programmatic
-    public BudgetItem newValue(final BigDecimal value, final LocalDate date, final BudgetCalculationType type){
-        budgetItemValueRepository.newBudgetItemValue(this, value, date, type);
-        return this;
-    }
 
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
@@ -290,16 +268,32 @@ public class BudgetItem extends UdoDomainObject2<BudgetItem>
     }
 
     @Programmatic
-    public BudgetItem updateOrCreateBudgetItemValue(final BigDecimal value, final LocalDate date, final BudgetCalculationType type){
-        if (value!=null && !isAssignedForType(type)) {
-            budgetItemValueRepository.updateOrCreateBudgetItemValue(value, this, date, type);
+    public BudgetItem upsertValue(final BigDecimal value, final LocalDate date, final BudgetCalculationType type){
+        if (isAssignedForType(type)) return this;
+        if (value!=null) {
+            budgetItemValueRepository.upsert( this, value, date, type);
+        }
+        if (value == null && type == BudgetCalculationType.AUDITED){
+            final BudgetItemValue auditedValueIfAny = budgetItemValueRepository.findUnique(this, date, type);
+            if (auditedValueIfAny!=null) budgetItemValueRepository.remove(auditedValueIfAny);
         }
         return this;
     }
 
     @Programmatic
-    public PartitionItem updateOrCreatePartitionItem(final Charge charge, final PartitioningTable partitioningTable, final BigDecimal percentage, final BigDecimal fixedBudgetedAmount, final BigDecimal fixedAuditedAmount){
-        return partitionItemRepository.updateOrCreatePartitionItem(getBudget().getPartitioningForBudgeting(), this, charge, partitioningTable, percentage, fixedBudgetedAmount, fixedAuditedAmount);
+    public PartitionItem updateOrCreatePartitionItem(final BudgetCalculationType budgetCalculationType, final Charge charge, final PartitioningTable partitioningTable, final BigDecimal percentage, final BigDecimal fixedBudgetedAmount, final BigDecimal fixedAuditedAmount){
+        Partitioning partitioning;
+        switch (budgetCalculationType){
+        case BUDGETED:
+            partitioning = getBudget().getPartitioningForBudgeting();
+            break;
+        case AUDITED:
+            partitioning = getBudget().findOrCreatePartitioningForReconciliation();
+            break;
+        default:
+            partitioning = getBudget().getPartitioningForBudgeting();
+        }
+        return partitionItemRepository.updateOrCreatePartitionItem(partitioning, this, charge, partitioningTable, percentage, fixedBudgetedAmount, fixedAuditedAmount);
     }
 
     @Programmatic

@@ -17,22 +17,23 @@
 
 package org.estatio.module.budget.dom.keytable;
 
-import java.util.Arrays;
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.util.List;
 
-import org.jmock.Expectations;
-import org.jmock.auto.Mock;
-import org.junit.Rule;
+import org.assertj.core.api.Assertions;
+import org.joda.time.LocalDate;
 import org.junit.Test;
-
-import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
 import org.incode.module.unittestsupport.dom.bean.AbstractBeanPropertiesTest;
 
 import org.estatio.module.budget.dom.budget.Budget;
+import org.estatio.module.budget.dom.budget.Status;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
+import org.estatio.module.budget.dom.budgetcalculation.InMemBudgetCalculation;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
+import org.estatio.module.budget.dom.keyitem.KeyItem;
 import org.estatio.module.budget.dom.partioning.PartitionItem;
-import org.estatio.module.budget.dom.partioning.PartitionItemRepository;
 import org.estatio.module.budget.dom.partioning.Partitioning;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -54,7 +55,7 @@ public class KeyTable_Test {
     public static class OtherTests extends KeyTable_Test {
 
         @Test
-        public void used_in_partition_items_works() throws Exception {
+        public void used_in_partition_item_works() throws Exception {
 
             // given
             Budget budget = new Budget();
@@ -75,88 +76,107 @@ public class KeyTable_Test {
             budget.getPartitionings().add(partitioning);
 
             // when, then
-            assertThat(keyTable.usedInPartitionItems().size()).isEqualTo(1);
-            assertThat(keyTable.usedInPartitionItems()).contains(partitionItemUsingKeyTable);
+            assertThat(keyTable.usedInPartitionItem()).isTrue();
 
         }
 
-        @Rule
-        public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(JUnitRuleMockery2.Mode.INTERFACES_AND_CLASSES);
-
-        @Mock PartitionItemRepository mockPartitionItemRepository;
-
-        @Mock BudgetItem mockBudgetItem;
-
         @Test
-        public void is_assigned_for_type_works_when_no_partition_items() throws Exception {
+        public void is_immutable_reason_works() throws Exception {
 
             // given
             KeyTable keyTable = new KeyTable();
-            keyTable.partitionItemRepository = mockPartitionItemRepository;
-
-            // expect
-            context.checking(new Expectations() {{
-                allowing(mockPartitionItemRepository).findByPartitioningTable(keyTable);
-            }});
+            Budget budget = new Budget();
+            keyTable.setBudget(budget);
 
             // when
-            assertThat(keyTable.isAssignedForTypeReason(BudgetCalculationType.BUDGETED)).isNull();
-            assertThat(keyTable.isAssignedForTypeReason(BudgetCalculationType.AUDITED)).isNull();
+            budget.setStatus(Status.RECONCILED);
+            // then
+            assertThat(keyTable.isImmutableReason()).isEqualTo("The budget is reconciled");
+
+            // when
+            budget.setStatus(Status.ASSIGNED);
+            // then
+            assertThat(keyTable.isImmutableReason()).isNull();
+
+            // when
+            budget.setStatus(Status.ASSIGNED);
+            Partitioning partioning = new Partitioning();
+            partioning.setType(BudgetCalculationType.BUDGETED);
+            PartitionItem partitionItem = new PartitionItem();
+            partitionItem.setPartitioningTable(keyTable);
+            partioning.getItems().add(partitionItem);
+            budget.getPartitionings().add(partioning);
+            // then
+            assertThat(keyTable.isImmutableReason()).isEqualTo("The budget is assigned");
+
+
         }
 
+
         @Test
-        public void is_assigned_for_type_works_for_budgeted() throws Exception {
+        public void calculateInMemFor_works() throws Exception {
 
             // given
-            KeyTable keyTable = new KeyTable();
-            keyTable.partitionItemRepository = mockPartitionItemRepository;
+            Budget budget = new Budget();
+            BudgetItem budgetItem = new BudgetItem();
+            budgetItem.setBudget(budget);
 
-            PartitionItem partitionItemBudgeted = new PartitionItem();
-            partitionItemBudgeted.setBudgetItem(mockBudgetItem);
+            final BigDecimal partitionItemValue = new BigDecimal("1234.56");
+            final BudgetCalculationType budgetCalculationType = BudgetCalculationType.BUDGETED;
+            final KeyTable keyTable = new KeyTable();
+            keyTable.setKeyValueMethod(KeyValueMethod.PROMILLE);
+            keyTable.setPrecision(6);
 
-            // expect
-            context.checking(new Expectations() {{
-                oneOf(mockPartitionItemRepository).findByPartitioningTable(keyTable);
-                will(returnValue(Arrays.asList(partitionItemBudgeted)));
-                oneOf(mockBudgetItem).isAssignedForType(BudgetCalculationType.BUDGETED);
-                will(returnValue(true));
-                oneOf(mockBudgetItem).isAssignedForTypeReason(BudgetCalculationType.BUDGETED);
-                will(returnValue("some reason"));
-            }});
+            KeyItem keyItem1 = new KeyItem();
+            keyItem1.setValue(new BigDecimal("1.00"));
+            keyTable.getItems().add(keyItem1);
+
+            KeyItem keyItem2 = new KeyItem();
+            keyItem2.setValue(new BigDecimal("2.00"));
+            keyTable.getItems().add(keyItem2);
+
+            PartitionItem partitionItem = new PartitionItem();
+            partitionItem.setBudgetItem(budgetItem);
+
+            LocalDate calcStartDate = new LocalDate(2019,1,1);
+            LocalDate calcEndDate = new LocalDate(2019,12,31);
 
             // when
-            String reason = keyTable.isAssignedForTypeReason(BudgetCalculationType.BUDGETED);
+            final List<InMemBudgetCalculation> calculations = keyTable.calculateInMemFor(partitionItem, partitionItemValue, budgetCalculationType, calcStartDate, calcEndDate);
 
             // then
-            assertThat(reason).isEqualTo("some reason");
-        }
+            Assertions.assertThat(calculations).hasSize(2);
+            BigDecimal divider = keyTable.getKeyValueMethod().divider(keyTable);
 
-        @Test
-        public void is_assigned_for_type_works_for_actual() throws Exception {
+            final InMemBudgetCalculation firstCalc = calculations.get(0);
+            Assertions.assertThat(firstCalc.getValue()).isEqualTo(new BigDecimal("1.234560"));
+            Assertions.assertThat(firstCalc.getValue()).isEqualTo(partitionItemValue.multiply(keyItem1.getValue())
+                    .divide(divider, MathContext.DECIMAL64)
+                    .setScale(keyTable.getPrecision(), BigDecimal.ROUND_HALF_UP));
+            Assertions.assertThat(firstCalc.getCalculationStartDate()).isEqualTo(calcStartDate);
+            Assertions.assertThat(firstCalc.getCalculationEndDate()).isEqualTo(calcEndDate);
+            Assertions.assertThat(firstCalc.getCalculationType()).isEqualTo(BudgetCalculationType.BUDGETED);
+            Assertions.assertThat(firstCalc.getBudget()).isEqualTo(budget);
+            Assertions.assertThat(firstCalc.getPartitionItem()).isEqualTo(partitionItem);
+            Assertions.assertThat(firstCalc.getTableItem()).isEqualTo(keyItem1);
+            Assertions.assertThat(firstCalc.getUnit()).isNull();
+            Assertions.assertThat(firstCalc.getIncomingCharge()).isNull();
+            Assertions.assertThat(firstCalc.getInvoiceCharge()).isNull();
 
-            // given
-            KeyTable keyTable = new KeyTable();
-            keyTable.partitionItemRepository = mockPartitionItemRepository;
-
-            PartitionItem partitionItemActual = new PartitionItem();
-            partitionItemActual.setBudgetItem(mockBudgetItem);
-
-            // expect
-            context.checking(new Expectations() {{
-                oneOf(mockPartitionItemRepository).findByPartitioningTable(keyTable);
-                will(returnValue(Arrays.asList(partitionItemActual)));
-                oneOf(mockBudgetItem).isAssignedForType(BudgetCalculationType.AUDITED);
-                will(returnValue(true));
-                oneOf(mockBudgetItem).isAssignedForTypeReason(BudgetCalculationType.AUDITED);
-                will(returnValue("some reason"));
-            }});
-
-            // when
-            String reason =  keyTable.isAssignedForTypeReason(BudgetCalculationType.AUDITED);
-
-            // then
-            assertThat(reason).isEqualTo("some reason");
-
+            final InMemBudgetCalculation secondCalc = calculations.get(1);
+            Assertions.assertThat(secondCalc.getValue()).isEqualTo(new BigDecimal("2.469120"));
+            Assertions.assertThat(secondCalc.getValue()).isEqualTo(partitionItemValue.multiply(keyItem2.getValue())
+                    .divide(divider, MathContext.DECIMAL64)
+                    .setScale(keyTable.getPrecision(), BigDecimal.ROUND_HALF_UP));
+            Assertions.assertThat(secondCalc.getCalculationStartDate()).isEqualTo(calcStartDate);
+            Assertions.assertThat(secondCalc.getCalculationEndDate()).isEqualTo(calcEndDate);
+            Assertions.assertThat(secondCalc.getCalculationType()).isEqualTo(BudgetCalculationType.BUDGETED);
+            Assertions.assertThat(secondCalc.getBudget()).isEqualTo(budget);
+            Assertions.assertThat(secondCalc.getPartitionItem()).isEqualTo(partitionItem);
+            Assertions.assertThat(secondCalc.getTableItem()).isEqualTo(keyItem2);
+            Assertions.assertThat(secondCalc.getUnit()).isNull();
+            Assertions.assertThat(secondCalc.getIncomingCharge()).isNull();
+            Assertions.assertThat(secondCalc.getInvoiceCharge()).isNull();
         }
 
     }

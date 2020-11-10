@@ -17,7 +17,7 @@ import org.junit.rules.ExpectedException;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.repository.RepositoryService;
 import org.apache.isis.applib.services.sudo.SudoService;
-import org.apache.isis.applib.services.wrapper.DisabledException;
+import org.apache.isis.applib.services.wrapper.HiddenException;
 import org.apache.isis.applib.services.wrapper.InvalidException;
 
 import org.estatio.module.asset.dom.Property;
@@ -27,6 +27,7 @@ import org.estatio.module.base.fixtures.security.users.personas.EstatioAdmin;
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budget.BudgetRepository;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationRepository;
+import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationService;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.module.budget.dom.budgetitem.BudgetItem;
 import org.estatio.module.budget.dom.keytable.FoundationValueType;
@@ -36,8 +37,8 @@ import org.estatio.module.budget.dom.partioning.PartitionItem;
 import org.estatio.module.budget.dom.partioning.Partitioning;
 import org.estatio.module.budget.fixtures.budgets.enums.Budget_enum;
 import org.estatio.module.budget.fixtures.partitioning.enums.Partitioning_enum;
-import org.estatio.module.budgetassignment.contributions.Budget_Calculate;
-import org.estatio.module.budgetassignment.contributions.Budget_Remove;
+import org.estatio.module.budgetassignment.contributions.Budget_assign;
+import org.estatio.module.budgetassignment.contributions.Budget_remove;
 import org.estatio.module.budgetassignment.integtests.BudgetAssignmentModuleIntegTestAbstract;
 import org.estatio.module.lease.dom.LeaseTermForServiceCharge;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
@@ -232,7 +233,7 @@ public class Budget_IntegTest extends BudgetAssignmentModuleIntegTestAbstract {
             topmodelBudget2015 = Budget_enum.OxfBudget2015.findUsing(serviceRegistry);
             Assertions.assertThat(topmodelBudget2015).isNotNull();
 
-            wrap(mixin(Budget_Calculate.class, topmodelBudget2015)).calculate(false);
+            budgetCalculationService.calculate(topmodelBudget2015, BudgetCalculationType.BUDGETED, topmodelBudget2015.getStartDate(), topmodelBudget2015.getEndDate(), true);
 
             assertThat(budgetCalculationRepository.findByBudget(topmodelBudget2015)).isNotEmpty();
             assertThat(budgetCalculationRepository.allBudgetCalculations()).isNotEmpty();
@@ -247,7 +248,7 @@ public class Budget_IntegTest extends BudgetAssignmentModuleIntegTestAbstract {
             sudoService.sudo(EstatioAdmin.USER_NAME, Lists.newArrayList(EstatioRole.ADMINISTRATOR.getRoleName()),
                     new Runnable() {
                         @Override public void run() {
-                            wrap(mixin(Budget_Remove.class, topmodelBudget2015)).removeBudget(true);
+                            wrap(mixin(Budget_remove.class, topmodelBudget2015)).removeBudget(true);
                         }
                     });
 
@@ -269,14 +270,13 @@ public class Budget_IntegTest extends BudgetAssignmentModuleIntegTestAbstract {
             topmodelBudget2015 = Budget_enum.OxfBudget2015.findUsing(serviceRegistry);
             Assertions.assertThat(topmodelBudget2015).isNotNull();
 
-            wrap(mixin(Budget_Calculate.class, topmodelBudget2015)).calculate(true);
+            wrap(mixin(Budget_assign.class, topmodelBudget2015)).assign(false);
 
             // expect
-            expectedExceptions.expect(DisabledException.class);
-            expectedExceptions.expectMessage("This budget is not in a state of new");
+            expectedExceptions.expect(HiddenException.class);
 
             // when
-            wrap(mixin(Budget_Remove.class, topmodelBudget2015)).removeBudget(true);
+            wrap(mixin(Budget_remove.class, topmodelBudget2015)).removeBudget(true);
 
         }
 
@@ -288,5 +288,7 @@ public class Budget_IntegTest extends BudgetAssignmentModuleIntegTestAbstract {
 
 
     }
+
+    @Inject BudgetCalculationService budgetCalculationService;
 
 }

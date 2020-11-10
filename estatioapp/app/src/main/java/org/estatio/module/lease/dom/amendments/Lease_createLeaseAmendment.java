@@ -20,24 +20,30 @@ public class Lease_createLeaseAmendment {
 
     @Action()
     public Lease $$(
-            final LeaseAmendmentType leaseAmendmentType
+            final LeaseAmendmentTemplate leaseAmendmentTemplate
     ) {
-        final LeaseAmendment amendment = leaseAmendmentRepository.create(lease, leaseAmendmentType, LeaseAmendmentState.PROPOSED, leaseAmendmentType.getAmendmentStartDate(), null);
-        if (leaseAmendmentType.getDiscountPercentage()!=null && leaseAmendmentType.getDiscountAppliesTo()!=null && leaseAmendmentType.getDiscountStartDate()!=null && leaseAmendmentType.getDiscountEndDate()!=null) {
-            leaseAmendmentItemRepository.create(amendment, leaseAmendmentType.getDiscountPercentage(), null, leaseAmendmentType.getDiscountAppliesTo(), leaseAmendmentType.getDiscountStartDate(), leaseAmendmentType.getDiscountEndDate());
+        final LeaseAmendment amendment = leaseAmendmentRepository.create(lease, leaseAmendmentTemplate, leaseAmendmentTemplate.getLeaseAmendmentType(), LeaseAmendmentState.PROPOSED, leaseAmendmentTemplate
+                .getAmendmentStartDate(), null);
+        if (leaseAmendmentTemplate.getDiscountPercentage()!=null && leaseAmendmentTemplate.getDiscountAppliesTo()!=null && leaseAmendmentTemplate
+                .getDiscountStartDate()!=null && leaseAmendmentTemplate.getDiscountEndDate()!=null) {
+            leaseAmendmentItemRepository.create(amendment, leaseAmendmentTemplate.getDiscountPercentage(), null, leaseAmendmentTemplate
+                    .getDiscountAppliesTo(), leaseAmendmentTemplate.getDiscountStartDate(), leaseAmendmentTemplate.getDiscountEndDate());
         }
-        final LeaseAmendmentType.Tuple<InvoicingFrequency, InvoicingFrequency> frequencyTuple = leaseAmendmentService
+        final LeaseAmendmentTemplate.Tuple<InvoicingFrequency, InvoicingFrequency> frequencyTuple = leaseAmendmentService
                 .findInvoiceFrequencyTupleOnfirstFrequencyChangeCandidate(amendment);
-        if (frequencyTuple!=null && leaseAmendmentType.getFrequencyChanges()!=null && leaseAmendmentType.getFrequencyChangeAppliesTo()!=null && leaseAmendmentType.getFrequencyChangeStartDate()!=null && leaseAmendmentType.getFrequencyChangeEndDate()!=null) {
-            leaseAmendmentItemRepository.create(amendment, frequencyTuple.oldValue, frequencyTuple.newValue, leaseAmendmentType.getFrequencyChangeAppliesTo(),
-                    leaseAmendmentType.getFrequencyChangeStartDate(), leaseAmendmentType.getFrequencyChangeEndDate());
+        if (frequencyTuple!=null && leaseAmendmentTemplate.getFrequencyChanges()!=null && leaseAmendmentTemplate.getFrequencyChangeAppliesTo()!=null && leaseAmendmentTemplate
+                .getFrequencyChangeStartDate()!=null && leaseAmendmentTemplate.getFrequencyChangeEndDate()!=null) {
+            leaseAmendmentItemRepository.create(amendment, frequencyTuple.oldValue, frequencyTuple.newValue, leaseAmendmentTemplate
+                            .getFrequencyChangeAppliesTo(),
+                    leaseAmendmentTemplate.getFrequencyChangeStartDate(), leaseAmendmentTemplate.getFrequencyChangeEndDate());
         }
         return lease;
     }
 
     public String validate$$(
-            final LeaseAmendmentType leaseAmendmentType){
-        return leaseAmendmentRepository.findUnique(lease, leaseAmendmentType)==null ? null : String.format("There is already an amendment for type %s", leaseAmendmentType);
+            final LeaseAmendmentTemplate leaseAmendmentTemplate){
+        return leaseAmendmentRepository.findUnique(lease, leaseAmendmentTemplate)==null ? null : String.format("There is already an amendment for type %s",
+                leaseAmendmentTemplate);
     }
 
     public boolean hide$$(){

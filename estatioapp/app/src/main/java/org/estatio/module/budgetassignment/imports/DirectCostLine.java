@@ -21,16 +21,12 @@ import java.math.BigDecimal;
 import javax.inject.Inject;
 import javax.jdo.annotations.Column;
 
-import org.apache.commons.lang3.ObjectUtils;
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainObject;
-import org.apache.isis.applib.annotation.InvokeOn;
+import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Nature;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.Publishing;
-import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.message.MessageService;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
@@ -48,8 +44,6 @@ import org.estatio.module.party.dom.Party;
 
 import lombok.Getter;
 import lombok.Setter;
-import static org.estatio.module.budget.dom.budget.Status.NEW;
-import static org.estatio.module.budget.dom.budget.Status.RECONCILED;
 
 @DomainObject(
         nature = Nature.VIEW_MODEL,
@@ -77,7 +71,6 @@ public class DirectCostLine
         this.directCost = item.directCost;
         this.propertyReference = item.propertyReference;
         this.unitReference = item.unitReference;
-        this.status = item.status;
         this.budgetedCost = item.budgetedCost!= null ? item.budgetedCost.setScale(2, BigDecimal.ROUND_HALF_UP) : BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_UP);
         this.auditedCost = item.auditedCost!= null ? item.auditedCost.setScale(2, BigDecimal.ROUND_HALF_UP) : null;
         this.directCostTableName = item.directCostTableName;
@@ -91,100 +84,34 @@ public class DirectCostLine
     //endregion
 
     @Getter @Setter
+    @MemberOrder(sequence = "1")
     private String propertyReference;
 
     @Getter @Setter
+    @MemberOrder(sequence = "2")
     private String directCostTableName;
 
     @Getter @Setter
+    @MemberOrder(sequence = "3")
     private LocalDate startDate;
 
     @Getter @Setter
+    @MemberOrder(sequence = "4")
     private String unitReference;
 
     @Column(scale = 2)
     @Getter @Setter
+    @MemberOrder(sequence = "5")
     private BigDecimal budgetedCost;
 
     @Column(scale = 2)
     @Getter @Setter
+    @MemberOrder(sequence = "6")
     private BigDecimal auditedCost;
 
     @Getter @Setter
-    private Status status;
-
-    @Getter @Setter
+    @MemberOrder(sequence = "7")
     private String tenantOnBudgetStartDate;
-
-    //region > apply (action)
-    @Action(
-            semantics = SemanticsOf.IDEMPOTENT,
-            invokeOn = InvokeOn.OBJECT_AND_COLLECTION,
-            publishing = Publishing.DISABLED
-    )
-    public DirectCost apply() {
-
-        switch (getStatus()) {
-
-            case ADDED:
-                DirectCost directCost = new DirectCost();
-                directCost.setPartitioningTable(getDirectCostTable());
-                directCost.setUnit(getUnit());
-                directCost.setBudgetedCost(getBudgetedCost());
-                directCost.setAuditedCost(getAuditedCost());
-                repositoryService.persistAndFlush(directCost);
-                break;
-
-            case UPDATED:
-                DirectCost dc = getDirectCost();
-                org.estatio.module.budget.dom.budget.Status budgetStatus = dc.getPartitioningTable().getBudget().getStatus();
-                if (budgetStatus==NEW) dc.changeBudgetedCost(this.getBudgetedCost());
-                if (budgetStatus!=RECONCILED) dc.changeAuditedCost(this.getAuditedCost()); // redundant, but just to be sure
-                break;
-
-            case DELETED:
-                dc = getDirectCost();
-                budgetStatus = dc.getPartitioningTable().getBudget().getStatus();
-                if (budgetStatus==NEW) {
-                    String message = "DirectCost for unit " + dc.getUnit().getReference() + " deleted";
-                    dc.delete();
-                    messageService.informUser(message);
-                }
-                return null;
-
-            case NOT_FOUND:
-                messageService.informUser("DirectCost not found");
-                return null;
-
-            default:
-                break;
-
-        }
-
-        return getDirectCost();
-    }
-
-    @Programmatic
-    public void validate() {
-        setStatus(calculateStatus());
-    }
-
-    private Status calculateStatus() {
-        if (getProperty() == null || getUnit() == null || getDirectCostTable() == null) {
-            return Status.NOT_FOUND;
-        }
-        if (getDirectCost() == null) {
-            return Status.ADDED;
-        }
-        if (ObjectUtils.notEqual(getDirectCost().getBudgetedCost(), getBudgetedCost()) || ObjectUtils.notEqual(getDirectCost().getAuditedCost(), getAuditedCost())) {
-            return Status.UPDATED;
-        }
-        // added for newly created lines for deleted items
-        if (getStatus() == Status.DELETED) {
-            return Status.DELETED;
-        }
-        return Status.UNCHANGED;
-    }
 
     private Unit unit;
 
@@ -212,7 +139,7 @@ public class DirectCostLine
     @Programmatic
     public DirectCost getDirectCost() {
         if (directCost == null) {
-            directCost = directCostRepository.findByDirectCostTableAndUnit(getDirectCostTable(), getUnit());
+            directCost = directCostRepository.findUnique(getDirectCostTable(), getUnit());
         }
         return directCost;
     }
@@ -227,6 +154,27 @@ public class DirectCostLine
         return property;
     }
 
+    @Programmatic
+    public String reasonInValid() {
+        if (getPropertyReference()==null) return "Property reference is mandatory";
+        if (getProperty()==null) {
+            return String.format("Property not found for property reference %s", getPropertyReference());
+        }
+        if (getDirectCostTableName()==null) return "DirectCostTable name is mandatory";
+        if (getStartDate()==null) return "Startdate is mandatory";
+        final Budget budget = budgetRepository.findByPropertyAndStartDate(getProperty(), getStartDate());
+        if (budget==null) return String.format("Budget could not be found for property %s and startDate %s", getPropertyReference(), getStartDate());
+        if (getDirectCostTable()==null) return String.format("DirectCostTable could not be found for name %s and startDate %s", getDirectCostTable(), getStartDate());
+        if (getUnitReference()==null) return "Unit reference is mandatory";
+        if (getUnit()==null) return String.format("Unit with reference %s not found", getUnitReference());
+        if (getBudgetedCost()==null) return "Budgeted cost is mandatory";
+        return null;
+    }
+
+    @Programmatic
+    public void importData() {
+        directCostRepository.upsertValuesUsingBusinessLogicOrCreate(getDirectCostTable(), getUnit(), getBudgetedCost(), getAuditedCost());
+    }
 
     @Override
     public int compareTo(final DirectCostLine other) {
@@ -253,5 +201,4 @@ public class DirectCostLine
 
     @Inject
     RepositoryService repositoryService;
-
 }

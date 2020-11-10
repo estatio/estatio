@@ -109,7 +109,7 @@ public class CreditTransfer  {
 
         PaymentIdentification1 pmtId = new PaymentIdentification1();
         cdtTrfTxInf.setPmtId(pmtId);
-        pmtId.setEndToEndId(getEndToEndId());
+        pmtId.setEndToEndId(truncateFieldToMaxLength(getEndToEndId(), 35));
 
         AmountType3Choice amt = new AmountType3Choice();
         cdtTrfTxInf.setAmt(amt);
@@ -136,6 +136,11 @@ public class CreditTransfer  {
         ustrdList.add(getRemittanceInformation());
 
         return cdtTrfTxInf;
+    }
+
+    @Programmatic
+    private String truncateFieldToMaxLength(String field, Integer maxLength) {
+        return field.substring(0, Math.min(field.length(), maxLength));
     }
 
     @DomainService(nature = NatureOfService.DOMAIN)

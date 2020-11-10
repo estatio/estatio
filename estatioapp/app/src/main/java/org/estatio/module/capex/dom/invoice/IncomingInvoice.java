@@ -30,7 +30,6 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.Lists;
 
-import org.apache.isis.applib.services.message.MessageService;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
@@ -49,6 +48,7 @@ import org.apache.isis.applib.annotation.PromptStyle;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.services.message.MessageService;
 import org.apache.isis.applib.services.metamodel.MetaModelService2;
 import org.apache.isis.applib.services.metamodel.MetaModelService3;
 import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
@@ -207,6 +207,13 @@ import lombok.Setter;
                         + "WHERE property == :property "
                         + "   && dateReceived >= :fromDate "
                         + "   && dateReceived <= :toDate "),
+        @Query(
+                name = "findByPropertyAndInvoiceDateBetween", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.module.capex.dom.invoice.IncomingInvoice "
+                        + "WHERE property == :property "
+                        + "   && invoiceDate >= :fromDate "
+                        + "   && invoiceDate <= :toDate "),
         @Query(
                 name = "findNotInAnyPaymentBatchByApprovalStateAndPaymentMethod", language = "JDOQL",
                 value = "SELECT "
