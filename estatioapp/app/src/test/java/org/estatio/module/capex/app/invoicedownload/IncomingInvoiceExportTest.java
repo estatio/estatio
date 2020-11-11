@@ -20,7 +20,7 @@ public class IncomingInvoiceExportTest {
         Assertions.assertThat(IncomingInvoiceExport.getCodaElement6FromSellerReference(frenchSupplierRef)).isEqualTo("FRFO12345");
 
         // given
-        String belgianSupplierRef = "BE123456";
+        String belgianSupplierRef = "BEFO123456";
         // when then
         Assertions.assertThat(IncomingInvoiceExport.getCodaElement6FromSellerReference(belgianSupplierRef)).isEqualTo("BEFO123456");
 

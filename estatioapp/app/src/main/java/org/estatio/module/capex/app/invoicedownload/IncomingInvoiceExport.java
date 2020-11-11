@@ -135,7 +135,7 @@ public class IncomingInvoiceExport {
             return "FRFO".concat(sellerReference.substring(2));
         }
         if (sellerReference.startsWith("BE")){
-            return "BEFO".concat(sellerReference.substring(2));
+            return sellerReference;
         }
         return null;
     }
