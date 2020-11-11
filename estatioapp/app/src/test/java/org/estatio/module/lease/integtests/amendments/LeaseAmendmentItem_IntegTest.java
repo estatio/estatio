@@ -37,7 +37,7 @@ import org.estatio.module.lease.dom.amendments.LeaseAmendmentItemForDiscount;
 import org.estatio.module.lease.dom.amendments.LeaseAmendmentItemRepository;
 import org.estatio.module.lease.dom.amendments.LeaseAmendmentItemType;
 import org.estatio.module.lease.dom.amendments.LeaseAmendmentRepository;
-import org.estatio.module.lease.dom.amendments.LeaseAmendmentType;
+import org.estatio.module.lease.dom.amendments.LeaseAmendmentTemplate;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 
@@ -61,9 +61,9 @@ public class LeaseAmendmentItem_IntegTest extends LeaseModuleIntegTestAbstract {
         // given
         final Lease lease = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
         final LeaseAmendment leaseAmendment = leaseAmendmentRepository
-                .findUnique(lease, LeaseAmendmentType.DEMO_TYPE);
-        LocalDate discountItemStartDate = LeaseAmendmentType.DEMO_TYPE.getDiscountStartDate();
-        LocalDate discountItemEndDate =  LeaseAmendmentType.DEMO_TYPE.getDiscountEndDate();
+                .findUnique(lease, LeaseAmendmentTemplate.DEMO_TYPE);
+        LocalDate discountItemStartDate = LeaseAmendmentTemplate.DEMO_TYPE.getDiscountStartDate();
+        LocalDate discountItemEndDate =  LeaseAmendmentTemplate.DEMO_TYPE.getDiscountEndDate();
         LeaseAmendmentItemForDiscount amendmentItemForDiscount = (LeaseAmendmentItemForDiscount) leaseAmendment.findItemsOfType(LeaseAmendmentItemType.DISCOUNT).stream().findFirst().orElse(null);
 
         assertThat(amendmentItemForDiscount.getStartDate()).isEqualTo(discountItemStartDate);

@@ -16,6 +16,7 @@ import javax.servlet.http.HttpSession;
 
 import com.google.common.collect.Lists;
 
+import org.apache.commons.lang3.StringUtils;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
@@ -53,6 +54,9 @@ import org.apache.isis.core.metamodel.specloader.ServiceInitializer;
 import org.isisaddons.module.excel.dom.ExcelService;
 import org.isisaddons.module.publishmq.dom.servicespi.PublisherServiceUsingActiveMq;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+import org.isisaddons.module.security.dom.user.AccountType;
+import org.isisaddons.module.security.dom.user.ApplicationUserRepository;
+import org.isisaddons.module.security.dom.user.ApplicationUserStatus;
 import org.isisaddons.module.servletapi.dom.HttpSessionProvider;
 import org.isisaddons.module.stringinterpolator.dom.StringInterpolatorService;
 
@@ -60,7 +64,9 @@ import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 import org.incode.module.country.dom.impl.Country;
 import org.incode.module.slack.impl.SlackService;
 
+import org.estatio.module.application.app.dashboard.TenantReferenceMappingLine;
 import org.estatio.module.application.contributions.Organisation_syncToCoda;
+import org.estatio.module.application.exports.ActiveDelegatedUserExportLine;
 import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.capex.app.taskreminder.TaskReminderService;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
@@ -801,6 +807,46 @@ public class AdminDashboard implements ViewModel {
         );
     }
 
+
+    @Action(semantics = SemanticsOf.SAFE)
+    public Blob downloadActiveDelegatedUsers() {
+        List<ActiveDelegatedUserExportLine> exportLines = new ArrayList<>();
+        applicationUserRepository.allUsers().stream()
+                .filter(user ->
+                        user.getAccountType() == AccountType.DELEGATED &&
+                                user.getStatus() == ApplicationUserStatus.ENABLED)
+                .forEach(l -> {
+                    ActiveDelegatedUserExportLine line = new ActiveDelegatedUserExportLine();
+                    line.setUsername(l.getUsername());
+                    line.setStatus(l.getStatus().toString());
+                    line.setAtPath(l.getAtPath());
+                    line.setFamilyName(l.getFamilyName());
+                    line.setGivenName(l.getGivenName());
+                    Person person = personRepository.findByUsername(l.getUsername());
+                    if (person != null) {
+                        line.setPersonRef(person.getReference());
+                        List<String> roles = person.getRoles().stream().map(role -> role.getRoleType().getTitle())
+                                .distinct().collect(Collectors.toList());
+                        line.setPartyRoles(StringUtils.join(roles, ", "));
+                    }
+                    exportLines.add(line);
+                });
+
+        return excelService.toExcel(exportLines, ActiveDelegatedUserExportLine.class, "ActiveDelegatedUsers",
+                String.format("AD-users-Estatio-per-%s.xlsx", LocalDate.now().toString()));
+    }
+
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
+    public void uploadTenantReferenceMappingWo(final Blob sheet){
+
+        excelService.fromExcel(sheet, TenantReferenceMappingLine.class, "Sheet1").forEach(
+                l->{
+                    l.importData();
+                }
+        );
+
+    }
+
     @Inject PropertyRepository propertyRepository;
 
     @Inject LeaseItemRepository leaseItemRepository;
@@ -901,5 +947,8 @@ public class AdminDashboard implements ViewModel {
 
     @Inject
     ExcelService excelService;
+
+    @Inject
+    ApplicationUserRepository applicationUserRepository;
 
 }

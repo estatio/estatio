@@ -63,22 +63,22 @@ import lombok.Setter;
                         + "FROM org.estatio.module.lease.dom.amendments.LeaseAmendment "
                         + "WHERE lease == :lease "),
         @Query(
-                name = "findByType", language = "JDOQL",
+                name = "findByTemplate", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.module.lease.dom.amendments.LeaseAmendment "
-                        + "WHERE leaseAmendmentType == :leaseAmendmentType"),
+                        + "WHERE leaseAmendmentTemplate == :leaseAmendmentTemplate"),
         @Query(
-                name = "findByTypeAndState", language = "JDOQL",
+                name = "findByTemplateAndState", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.module.lease.dom.amendments.LeaseAmendment "
-                        + "WHERE leaseAmendmentType == :leaseAmendmentType && "
+                        + "WHERE leaseAmendmentTemplate == :leaseAmendmentTemplate && "
                         + "state == :state "),
         @Query(
                 name = "findUnique", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.module.lease.dom.amendments.LeaseAmendment "
                         + "WHERE lease == :lease && "
-                        + "leaseAmendmentType == :leaseAmendmentType"),
+                        + "leaseAmendmentTemplate == :leaseAmendmentTemplate"),
         @Query(
                 name = "findByLeasePreview", language = "JDOQL",
                 value = "SELECT "
@@ -95,7 +95,7 @@ import lombok.Setter;
                         + "FROM org.estatio.module.lease.dom.amendments.LeaseAmendment "
                         + "WHERE reference == :reference ")
 })
-@Unique(name = "LeaseAmendment_lease_leaseAmendmentType_UNQ", members = {"lease", "leaseAmendmentType"})
+@Unique(name = "LeaseAmendment_lease_leaseAmendmentTemplate_UNQ", members = {"lease", "leaseAmendmentTemplate"})
 @DomainObject(editing = Editing.DISABLED)
 public class LeaseAmendment extends Agreement {
 
@@ -115,6 +115,10 @@ public class LeaseAmendment extends Agreement {
     @Column(name = "leaseId", allowsNull = "false")
     @Getter @Setter
     private Lease lease;
+
+    @Column(allowsNull = "false")
+    @Getter @Setter
+    private LeaseAmendmentTemplate leaseAmendmentTemplate;
 
     @Column(allowsNull = "false")
     @Getter @Setter

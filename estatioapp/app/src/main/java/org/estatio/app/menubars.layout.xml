@@ -338,6 +338,9 @@
                 <mb3:serviceAction objectType="incomingInvoice.IncomingInvoiceMenu" id="findInvoicesPayableByBankTransferWithDifferentHistoricalPaymentMethods">
                     <cpt:named>Find Invoices Payable By Bank Transfer With Different Historical Payment Methods</cpt:named>
                 </mb3:serviceAction>
+                <mb3:serviceAction objectType="incomingInvoice.IncomingInvoiceMenu" id="findInvoicesBySupplierAndApprovalStateAndProperties">
+                    <cpt:named>Find Invoices By Supplier, Approval State And Properties</cpt:named>
+                </mb3:serviceAction>
                 <mb3:serviceAction objectType="incomingInvoice.IncomingInvoiceMenu" id="allInvoices">
                     <cpt:named>All Invoices</cpt:named>
                 </mb3:serviceAction>
