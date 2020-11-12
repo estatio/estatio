@@ -36,6 +36,7 @@ import com.google.common.collect.Ordering;
 import com.google.common.collect.Sets;
 
 import org.apache.isis.applib.services.clock.ClockService;
+import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
@@ -449,9 +450,11 @@ public abstract class Agreement
             return "There is already a role for this type and period";
         }
 
-//        if (endDate == null && getRoles().first().getEndDate().isBefore(getEndDate())) {
-//            return "End date cannot be empty when end date of last role is before end date of lease";
-//        }
+        AgreementRoleType artTenant = agreementRoleTypeRepository.find(LeaseAgreementRoleTypeEnum.TENANT);
+        if (newParty.getAtPath().startsWith("/BEL") && art.equals(artTenant) && !newParty.getReference().startsWith("BECL")) {
+            return String.format("Reference [%s] of Party %s should start with 'BECL' when adding as tenant", newParty.getReference(), newParty.getName());
+        }
+
         return null;
     }
 

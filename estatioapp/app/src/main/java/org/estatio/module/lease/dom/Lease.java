@@ -38,6 +38,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 import org.apache.commons.lang3.ObjectUtils;
+import org.estatio.module.party.dom.PartyRepository;
 import org.joda.time.LocalDate;
 import org.joda.time.Period;
 import org.joda.time.PeriodType;
@@ -1092,6 +1093,19 @@ public class Lease
         return getClockService().now();
     }
 
+    public List<Party> choices2Assign() {
+        return partyRepository.allParties()
+                .stream()
+                .filter(party -> {
+                    if (party.getAtPath().startsWith("/BEL")) {
+                        return party.getReference().startsWith("BECL");
+                    } else {
+                        return true;
+                    }
+                })
+                .collect(Collectors.toList());
+    }
+
     public String validateAssign(
             final String reference,
             final String name,
@@ -1364,6 +1378,9 @@ public class Lease
 
     @Inject
     ChargeRepository chargeRepository;
+
+    @Inject
+    PartyRepository partyRepository;
 
     @Inject
     private WrapperFactory wrapperFactory;
