@@ -6,11 +6,11 @@ import java.util.List;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 
-import org.estatio.canonical.codadocument.v2.CodaDocumentDto;
-import org.estatio.canonical.codadocument.v2.CodaDocumentLineType;
-import org.estatio.canonical.codadocument.v2.DocumentType;
-import org.estatio.canonical.codadocument.v2.LineSense;
-import org.estatio.canonical.codadocument.v2.LineType;
+import org.estatio.canonical.codadocumentproposal.v2.CodaDocumentLineType;
+import org.estatio.canonical.codadocumentproposal.v2.CodaDocumentProposalDto;
+import org.estatio.canonical.codadocumentproposal.v2.DocumentType;
+import org.estatio.canonical.codadocumentproposal.v2.LineSense;
+import org.estatio.canonical.codadocumentproposal.v2.LineType;
 import org.estatio.module.base.platform.applib.DtoFactoryAbstract;
 import org.estatio.module.coda.dom.CodaDocumentType;
 import org.estatio.module.coda.dom.codadocument.CodaDocument;
@@ -18,16 +18,16 @@ import org.estatio.module.coda.dom.codadocument.CodaDocumentLine;
 
 @DomainService(
         nature = NatureOfService.DOMAIN,
-        objectType = "coda.canonical.v2.CodaDocumentDtoFactory"
+        objectType = "coda.canonical.v2.CodaDocumentProposalDtoFactory"
 )
-public class CodaDocumentDtoFactory extends DtoFactoryAbstract<CodaDocument, CodaDocumentDto> {
+public class CodaDocumentProposalDtoFactory extends DtoFactoryAbstract<CodaDocument, CodaDocumentProposalDto> {
 
-    public CodaDocumentDtoFactory() {
-        super(CodaDocument.class, CodaDocumentDto.class);
+    public CodaDocumentProposalDtoFactory() {
+        super(CodaDocument.class, CodaDocumentProposalDto.class);
     }
 
-    protected CodaDocumentDto newDto(final CodaDocument codaDocument) {
-        final CodaDocumentDto dto = new CodaDocumentDto();
+    protected CodaDocumentProposalDto newDto(final CodaDocument codaDocument) {
+        final CodaDocumentProposalDto dto = new CodaDocumentProposalDto();
         dto.setMajorVersion("2");
         dto.setMinorVersion("0");
 
@@ -51,7 +51,6 @@ public class CodaDocumentDtoFactory extends DtoFactoryAbstract<CodaDocument, Cod
             lineType.setElement4(line.getElement4());
             lineType.setElement5(line.getElement5());
             lineType.setElement6(line.getElement6());
-            lineType.setDocumentDate(asXMLGregorianCalendar(line.getDocumentDate())); // TODO: move up using on doc level and delete here...
             lineType.setValueDate(asXMLGregorianCalendar(line.getValueDate()));
             lineType.setHomeValue(line.getHomeValue());
             lineType.setDocValue(line.getDocValue());
