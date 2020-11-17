@@ -46,10 +46,8 @@ import org.incode.module.document.dom.impl.docs.Document;
 import org.incode.module.document.dom.impl.paperclips.PaperclipRepository;
 import org.incode.module.document.dom.impl.types.DocumentType;
 
-import org.estatio.module.asset.dom.OwnershipType;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.PropertyRepository;
-import org.estatio.module.asset.dom.ownership.FixedAssetOwnership;
 import org.estatio.module.asset.dom.role.FixedAssetRole;
 import org.estatio.module.asset.dom.role.FixedAssetRoleRepository;
 import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
@@ -151,13 +149,6 @@ public abstract class IncomingDocViewModel<T> implements HintStore.HintIdProvide
     private void deriveBuyer(){
         Party ownerCandidate = null;
         if (hasProperty()){
-            for (FixedAssetOwnership fos: getProperty().getOwners()){
-                if (fos.getOwnershipType()== OwnershipType.FULL){
-                    ownerCandidate = fos.getOwner();
-                    continue;
-                }
-            }
-            // temporary extra search until fixed asset ownership is fully in use
             if (ownerCandidate == null && getProperty().ownerCandidates().size() > 0) {
                 ownerCandidate = getProperty().ownerCandidates().get(0).getParty();
             }

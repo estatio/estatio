@@ -27,6 +27,8 @@ import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.Where;
 
+import org.apache.isis.applib.types.DescriptionType;
+import org.estatio.module.base.dom.EstatioRole;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.base.dom.types.NameType;
@@ -100,6 +102,14 @@ public class Activity
     @Getter @Setter
     private String name;
 
+    @javax.jdo.annotations.Column(allowsNull = "false", length= DescriptionType.Meta.MAX_LEN)
+    @Getter @Setter
+    private String description;
+
+    @javax.jdo.annotations.Column(allowsNull = "true")
+    @Getter @Setter
+    private Integer sortOrder;
+
     public Activity change(
             final String name,
             final Sector sector) {
@@ -114,5 +124,9 @@ public class Activity
 
     public Sector default1Change() {
         return getSector();
+    }
+
+    public String disableChange() {
+        return EstatioRole.ADMINISTRATOR.isApplicableFor(getUser()) ? null : "Users cannot change sectors or activities.";
     }
 }

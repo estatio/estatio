@@ -42,6 +42,7 @@ public class LeaseAmendmentImportLine implements ExcelFixtureRowHandler, Importa
         this.leaseAmendmentTemplate = leaseAmendment.getLeaseAmendmentTemplate();
         this.leaseAmendmentState = leaseAmendment.getState();
         this.dateSigned = leaseAmendment.getDateSigned();
+        this.dateApplied = leaseAmendment.getDateApplied();
         this.leaseReference = leaseAmendment.getLease().getReference();
         this.startDate = leaseAmendment.getStartDate();
         this.endDate = leaseAmendment.getEndDate();
@@ -71,6 +72,7 @@ public class LeaseAmendmentImportLine implements ExcelFixtureRowHandler, Importa
         this.leaseAmendmentTemplate = leaseAmendment.getLeaseAmendmentTemplate();
         this.leaseAmendmentState = leaseAmendment.getState();
         this.dateSigned = leaseAmendment.getDateSigned();
+        this.dateApplied = leaseAmendment.getDateApplied();
         this.leaseReference = leaseAmendment.getLease().getReference();
         this.startDate = leaseAmendment.getStartDate();
         this.endDate = leaseAmendment.getEndDate();
@@ -98,58 +100,62 @@ public class LeaseAmendmentImportLine implements ExcelFixtureRowHandler, Importa
 
     @Getter @Setter
     @MemberOrder(sequence = "4")
-    private String leaseReference;
+    private LocalDate dateApplied;
 
     @Getter @Setter
     @MemberOrder(sequence = "5")
-    private LocalDate startDate;
+    private String leaseReference;
 
     @Getter @Setter
     @MemberOrder(sequence = "6")
-    private LocalDate endDate;
+    private LocalDate startDate;
 
     @Getter @Setter
     @MemberOrder(sequence = "7")
-    private BigDecimal discountPercentage;
+    private LocalDate endDate;
 
     @Getter @Setter
     @MemberOrder(sequence = "8")
-    private BigDecimal manualDiscountAmount;
+    private BigDecimal discountPercentage;
 
     @Getter @Setter
     @MemberOrder(sequence = "9")
-    private BigDecimal calculatedDiscountAmount;
+    private BigDecimal manualDiscountAmount;
 
     @Getter @Setter
     @MemberOrder(sequence = "10")
-    private String discountApplicableTo;
+    private BigDecimal calculatedDiscountAmount;
 
     @Getter @Setter
     @MemberOrder(sequence = "11")
-    private LocalDate discountStartDate;
+    private String discountApplicableTo;
 
     @Getter @Setter
     @MemberOrder(sequence = "12")
-    private LocalDate discountEndDate;
+    private LocalDate discountStartDate;
 
     @Getter @Setter
     @MemberOrder(sequence = "13")
-    private InvoicingFrequency invoicingFrequencyOnLease;
+    private LocalDate discountEndDate;
 
     @Getter @Setter
     @MemberOrder(sequence = "14")
-    private InvoicingFrequency amendedInvoicingFrequency;
+    private InvoicingFrequency invoicingFrequencyOnLease;
 
     @Getter @Setter
     @MemberOrder(sequence = "15")
-    private String frequencyChangeApplicableTo;
+    private InvoicingFrequency amendedInvoicingFrequency;
 
     @Getter @Setter
     @MemberOrder(sequence = "16")
-    private LocalDate frequencyChangeStartDate;
+    private String frequencyChangeApplicableTo;
 
     @Getter @Setter
     @MemberOrder(sequence = "17")
+    private LocalDate frequencyChangeStartDate;
+
+    @Getter @Setter
+    @MemberOrder(sequence = "18")
     private LocalDate frequencyChangeEndDate;
 
 
