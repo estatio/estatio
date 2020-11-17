@@ -94,6 +94,10 @@ public class BankMandateRepository extends UdoDomainRepositoryAndFactory<BankMan
         return allMatches("findBankMandatesFor", "bankAccount", bankAccount);
     }
 
+    public BankMandate findFirstBankMandateFor(final BankAccount bankAccount) {
+        return firstMatch("findBankMandatesFor", "bankAccount", bankAccount);
+    }
+
     public BankMandate findByReference(final String reference){
         return (BankMandate) agreementRepository.findAgreementByTypeAndReference(agreementTypeRepository.find(
                 BankMandateAgreementTypeEnum.MANDATE), reference);
