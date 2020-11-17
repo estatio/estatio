@@ -52,7 +52,7 @@ public class BudgetItemRepository extends UdoDomainRepositoryAndFactory<BudgetIt
             final BigDecimal budgetedValue,
             final Charge charge) {
         BudgetItem budgetItem = newBudgetItem(budget, charge);
-        budgetItem.newValue(budgetedValue, budget.getStartDate(), BudgetCalculationType.BUDGETED);
+        budgetItem.upsertValue(budgetedValue, budget.getStartDate(), BudgetCalculationType.BUDGETED);
         return budgetItem;
     }
 

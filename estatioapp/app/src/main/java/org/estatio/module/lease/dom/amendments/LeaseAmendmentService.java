@@ -57,17 +57,17 @@ public class LeaseAmendmentService {
 
         // Extra guard for supported types
         if (!Arrays.asList(
-                LeaseAmendmentType.COVID_BEL,
-                LeaseAmendmentType.COVID_FRA_50_PERC,
-                LeaseAmendmentType.COVID_FRA_100_PERC,
-                LeaseAmendmentType.COVID_ITA_100_PERC_1M,
-                LeaseAmendmentType.COVID_ITA_100_PERC_2M,
-                LeaseAmendmentType.COVID_ITA_FREQ_CHANGE_ONLY,
-                LeaseAmendmentType.DEMO_TYPE,
-                LeaseAmendmentType.DEMO_TYPE2).
-                contains(leaseAmendment.getLeaseAmendmentType())
+                LeaseAmendmentTemplate.COVID_BEL,
+                LeaseAmendmentTemplate.COVID_FRA_50_PERC,
+                LeaseAmendmentTemplate.COVID_FRA_100_PERC,
+                LeaseAmendmentTemplate.COVID_ITA_100_PERC_1M,
+                LeaseAmendmentTemplate.COVID_ITA_100_PERC_2M,
+                LeaseAmendmentTemplate.COVID_ITA_FREQ_CHANGE_ONLY,
+                LeaseAmendmentTemplate.DEMO_TYPE,
+                LeaseAmendmentTemplate.DEMO_TYPE2).
+                contains(leaseAmendment.getLeaseAmendmentTemplate())
         ) {
-            messageService.warnUser(String.format("Amendment type %s is not implemented (yet...)", leaseAmendment.getLeaseAmendmentType()));
+            messageService.warnUser(String.format("Amendment type %s is not implemented (yet...)", leaseAmendment.getLeaseAmendmentTemplate()));
             return;
         }
 
@@ -115,9 +115,9 @@ public class LeaseAmendmentService {
             LOG.info(message3);
             leaseAmendment.setState(LeaseAmendmentState.APPLIED);
         }
-        if (preview && leaseAmendment.getLeaseAmendmentType().getPreviewInvoicingStartDate()!=null && leaseAmendment.getLeaseAmendmentType().getPreviewInvoicingEndDate()!=null){
+        if (preview && leaseAmendment.getLeaseAmendmentTemplate().getPreviewInvoicingStartDate()!=null && leaseAmendment.getLeaseAmendmentTemplate().getPreviewInvoicingEndDate()!=null){
             List<LeaseItemType> typesForCalculation = Arrays.asList(LeaseItemType.RENT, LeaseItemType.RENT_DISCOUNT, LeaseItemType.RENT_DISCOUNT_FIXED, LeaseItemType.SERVICE_CHARGE, LeaseItemType.MARKETING, LeaseItemType.SERVICE_CHARGE_INDEXABLE, LeaseItemType.SERVICE_CHARGE_DISCOUNT_FIXED);
-            factoryService.mixin(Lease_calculate.class, lease).exec(InvoiceRunType.NORMAL_RUN, typesForCalculation, leaseAmendment.getLeaseAmendmentType().getPreviewInvoicingStartDate(), leaseAmendment.getLeaseAmendmentType().getPreviewInvoicingStartDate(), leaseAmendment.getLeaseAmendmentType().getPreviewInvoicingEndDate().plusDays(1));
+            factoryService.mixin(Lease_calculate.class, lease).exec(InvoiceRunType.NORMAL_RUN, typesForCalculation, leaseAmendment.getLeaseAmendmentTemplate().getPreviewInvoicingStartDate(), leaseAmendment.getLeaseAmendmentTemplate().getPreviewInvoicingStartDate(), leaseAmendment.getLeaseAmendmentTemplate().getPreviewInvoicingEndDate().plusDays(1));
             if (leaseAmendmentItemsForDiscount.size()>0){
                 for (LeaseAmendmentItemForDiscount itemForDiscount : leaseAmendmentItemsForDiscount) {
                     final BigDecimal calculatedValue = itemForDiscount
@@ -152,7 +152,7 @@ public class LeaseAmendmentService {
 
     void createDiscountItemAndTermsFromManualValue(final LeaseItem sourceItem, final LeaseAmendmentItemForDiscount leaseAmendmentItemForDiscount){
         final Lease lease = sourceItem.getLease();
-        final Charge chargeFromAmendmentType = chargeDerivedFromAmendmentTypeAndChargeSourceItem(sourceItem.getCharge(), leaseAmendmentItemForDiscount.getLeaseAmendment().getLeaseAmendmentType());
+        final Charge chargeFromAmendmentType = chargeDerivedFromAmendmentTypeAndChargeSourceItem(sourceItem.getCharge(), leaseAmendmentItemForDiscount.getLeaseAmendment().getLeaseAmendmentTemplate());
         final LeaseItem newDiscountItem = createFixedDiscountItem(
                 lease,
                 sourceItem.getInvoicedBy(),
@@ -184,7 +184,7 @@ public class LeaseAmendmentService {
         // prevent an item copy from being created when no terms for the discount period
         if (!sourceItem.hasTermsOverlapping(LocalDateInterval.including(leaseAmendmentItemForDiscount.getStartDate(), leaseAmendmentItemForDiscount.getEndDate()))) return;
 
-        final Charge chargeFromAmendmentType = chargeDerivedFromAmendmentTypeAndChargeSourceItem(sourceItem.getCharge(), leaseAmendmentItemForDiscount.getLeaseAmendment().getLeaseAmendmentType());
+        final Charge chargeFromAmendmentType = chargeDerivedFromAmendmentTypeAndChargeSourceItem(sourceItem.getCharge(), leaseAmendmentItemForDiscount.getLeaseAmendment().getLeaseAmendmentTemplate());
         final LeaseItemType newItemType = sourceItem.getType()==LeaseItemType.RENT ? LeaseItemType.RENT_DISCOUNT : sourceItem.getType(); // for current discounts we leave the types as they are
         final LeaseItem newDiscountItem = lease
                 .newItem(newItemType, sourceItem.getInvoicedBy(), chargeFromAmendmentType, sourceItem.getInvoicingFrequency(), sourceItem.getPaymentMethod(), startDateToUse);
@@ -208,15 +208,15 @@ public class LeaseAmendmentService {
         }
     }
 
-    Charge chargeDerivedFromAmendmentTypeAndChargeSourceItem(final Charge sourceCharge, final LeaseAmendmentType leaseAmendmentType){
-        String chargeRefToUse = leaseAmendmentType.getChargeReferenceForDiscountItem()
+    Charge chargeDerivedFromAmendmentTypeAndChargeSourceItem(final Charge sourceCharge, final LeaseAmendmentTemplate leaseAmendmentTemplate){
+        String chargeRefToUse = leaseAmendmentTemplate.getChargeReferenceForDiscountItem()
                 .stream()
                 .filter(t->t.oldValue!=null)
                 .filter(t -> t.oldValue.equals(sourceCharge.getReference()))
                 .map(t -> t.newValue)
                 .findFirst().orElse(null);
         if (chargeRefToUse==null) {
-            chargeRefToUse = leaseAmendmentType.getChargeReferenceForDiscountItem()
+            chargeRefToUse = leaseAmendmentTemplate.getChargeReferenceForDiscountItem()
                     .stream()
                     .filter(t -> t.oldValue == null)
                     .map(t -> t.newValue)
@@ -373,34 +373,35 @@ public class LeaseAmendmentService {
         return newItem;
     }
 
-    public LeaseAmendmentType.Tuple<InvoicingFrequency, InvoicingFrequency> findInvoiceFrequencyTupleOnfirstFrequencyChangeCandidate(final LeaseAmendment amendment){
-        return findInvoiceFrequencyTupleOnfirstFrequencyChangeCandidate(amendment.getLease(), amendment.getLeaseAmendmentType());
+    public LeaseAmendmentTemplate.Tuple<InvoicingFrequency, InvoicingFrequency> findInvoiceFrequencyTupleOnfirstFrequencyChangeCandidate(final LeaseAmendment amendment){
+        return findInvoiceFrequencyTupleOnfirstFrequencyChangeCandidate(amendment.getLease(), amendment.getLeaseAmendmentTemplate());
     }
 
-    public LeaseAmendmentType.Tuple<InvoicingFrequency, InvoicingFrequency> findInvoiceFrequencyTupleOnfirstFrequencyChangeCandidate(final Lease lease, final LeaseAmendmentType leaseAmendmentType){
+    public LeaseAmendmentTemplate.Tuple<InvoicingFrequency, InvoicingFrequency> findInvoiceFrequencyTupleOnfirstFrequencyChangeCandidate(final Lease lease, final LeaseAmendmentTemplate leaseAmendmentTemplate){
         final LeaseItem firstFrequencyChangeCandidateItem = Lists.newArrayList(lease.getItems()).stream()
-                .filter(i->leaseAmendmentType.getFrequencyChangeAppliesTo()!=null)
-                .filter(i-> leaseAmendmentType.getFrequencyChangeAppliesTo().contains(i.getType()))
-                .filter(i->hasChangingFrequency(i, leaseAmendmentType))
+                .filter(i-> leaseAmendmentTemplate.getFrequencyChangeAppliesTo()!=null)
+                .filter(i-> leaseAmendmentTemplate.getFrequencyChangeAppliesTo().contains(i.getType()))
+                .filter(i->hasChangingFrequency(i, leaseAmendmentTemplate))
                 .filter(i->i.getEffectiveInterval()!=null)
                 .filter(i->i.getEffectiveInterval().overlaps(
                         LocalDateInterval
-                                .including(leaseAmendmentType.getFrequencyChangeStartDate(),leaseAmendmentType
+                                .including(leaseAmendmentTemplate.getFrequencyChangeStartDate(), leaseAmendmentTemplate
                                         .getFrequencyChangeEndDate())))
                 .findFirst().orElse(null);
-        return firstFrequencyChangeCandidateItem!=null ? getTuple(firstFrequencyChangeCandidateItem, leaseAmendmentType) : null;
+        return firstFrequencyChangeCandidateItem!=null ? getTuple(firstFrequencyChangeCandidateItem,
+                leaseAmendmentTemplate) : null;
     }
 
-    boolean hasChangingFrequency(final LeaseItem i, final LeaseAmendmentType leaseAmendmentType){
-        final LeaseAmendmentType.Tuple<InvoicingFrequency, InvoicingFrequency> tuple = leaseAmendmentType.getFrequencyChanges()
+    boolean hasChangingFrequency(final LeaseItem i, final LeaseAmendmentTemplate leaseAmendmentTemplate){
+        final LeaseAmendmentTemplate.Tuple<InvoicingFrequency, InvoicingFrequency> tuple = leaseAmendmentTemplate.getFrequencyChanges()
                 .stream()
                 .filter(t -> t.oldValue == i.getInvoicingFrequency())
                 .findFirst().orElse(null);
         return tuple != null;
     }
 
-    LeaseAmendmentType.Tuple<InvoicingFrequency, InvoicingFrequency>  getTuple(final LeaseItem i, final LeaseAmendmentType leaseAmendmentType){
-        return leaseAmendmentType.getFrequencyChanges()
+    LeaseAmendmentTemplate.Tuple<InvoicingFrequency, InvoicingFrequency>  getTuple(final LeaseItem i, final LeaseAmendmentTemplate leaseAmendmentTemplate){
+        return leaseAmendmentTemplate.getFrequencyChanges()
                 .stream()
                 .filter(t -> t.oldValue == i.getInvoicingFrequency())
                 .findFirst().orElse(null);
@@ -408,7 +409,7 @@ public class LeaseAmendmentService {
 
     public LocalDate getAmortisationEndDateFor(final LeaseAmendmentItemForDiscount amendmentItem) {
         final LeaseAmendment leaseAmendment = amendmentItem.getLeaseAmendment();
-        final LocalDate minimalAmortisationReferenceDate = leaseAmendment.getLeaseAmendmentType()
+        final LocalDate minimalAmortisationReferenceDate = leaseAmendment.getLeaseAmendmentTemplate()
                 .getMinimalAmortisationReferenceDate();
         final LocalDate dateSigned = leaseAmendment.getDateSigned();
         if (minimalAmortisationReferenceDate==null) return null; // shoud not be possible but types are not enforced ...

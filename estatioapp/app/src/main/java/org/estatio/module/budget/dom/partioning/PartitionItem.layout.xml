@@ -12,6 +12,7 @@
         <col span="4">
             <ns2:fieldSet name="General" id="general" unreferencedProperties="true">
                 <ns2:property id="applicationTenancy"/>
+                <ns2:property id="atPath" hidden="ALL_TABLES"/>
             </ns2:fieldSet>
             <ns2:fieldSet name="Partition item" id="partitionItem">
                 <ns2:property id="partitioning"/>

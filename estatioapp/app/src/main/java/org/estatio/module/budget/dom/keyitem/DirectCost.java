@@ -24,13 +24,9 @@ import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
 
-import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.PropertyLayout;
-import org.apache.isis.applib.annotation.RestrictTo;
-import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
@@ -38,7 +34,6 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.incode.module.base.dom.utils.TitleBuilder;
 
 import org.estatio.module.asset.dom.Unit;
-import org.estatio.module.budget.dom.budget.Status;
 import org.estatio.module.budget.dom.keytable.DirectCostTable;
 
 import lombok.Getter;
@@ -76,69 +71,13 @@ public class DirectCost extends PartitioningTableItem {
                 .toString();
     }
 
-
     @Column(allowsNull = "false", scale = 2)
     @Getter @Setter
     private BigDecimal budgetedCost;
 
-    @ActionLayout(hidden = Where.EVERYWHERE)
-    public DirectCost changeBudgetedCost(final BigDecimal budgetedCost) {
-        setBudgetedCost(budgetedCost);
-        return this;
-    }
-
-    public BigDecimal default0ChangeBudgetedCost() {
-        if (getBudgetedCost()!=null) {
-            return getBudgetedCost();
-        } else {
-            return BigDecimal.ZERO;
-        }
-    }
-
-    public String validateChangeBudgetedCost(final BigDecimal budgetedCost) {
-        if (budgetedCost.compareTo(BigDecimal.ZERO) < 0) {
-            return "Value cannot be less than zero";
-        }
-        return null;
-    }
-
-    public String disableChangeBudgetedCost(){
-        if (getPartitioningTable().getBudget().getStatus() != Status.NEW) return "The budget status is not new";
-        return null;
-    }
-
     @Column(allowsNull = "true", scale = 2)
     @Getter @Setter
     private BigDecimal auditedCost;
-
-    @ActionLayout()
-    public DirectCost changeAuditedCost(final BigDecimal auditedCost) {
-        setAuditedCost(auditedCost);
-        return this;
-    }
-
-    public BigDecimal default0ChangeAuditedCost() {
-        return getAuditedCost();
-    }
-
-    public String validateChangeAuditedCost(final BigDecimal auditedCost) {
-        if (auditedCost!=null && auditedCost.compareTo(BigDecimal.ZERO) < 0) {
-            return "Value cannot be less than zero";
-        }
-        return null;
-    }
-
-    public String disableChangeAuditedCost(){
-        if (getPartitioningTable().getBudget().getStatus()==Status.RECONCILED) return "The budget is reconciled";
-        return null;
-    }
-
-    //endregion
-
-    @Action(restrictTo = RestrictTo.PROTOTYPING, semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
-    public void delete() {
-        removeIfNotAlready(this);
-    }
 
     @Override
     @PropertyLayout(hidden = Where.EVERYWHERE)

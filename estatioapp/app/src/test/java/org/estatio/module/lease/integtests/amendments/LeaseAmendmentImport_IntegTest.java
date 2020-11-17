@@ -46,9 +46,10 @@ import org.estatio.module.lease.dom.amendments.LeaseAmendmentItemType;
 import org.estatio.module.lease.dom.amendments.LeaseAmendmentManager;
 import org.estatio.module.lease.dom.amendments.LeaseAmendmentRepository;
 import org.estatio.module.lease.dom.amendments.LeaseAmendmentState;
-import org.estatio.module.lease.dom.amendments.LeaseAmendmentType;
+import org.estatio.module.lease.dom.amendments.LeaseAmendmentTemplate;
 import org.estatio.module.lease.dom.amendments.Property_maintainLeaseAmendments;
 import org.estatio.module.lease.fixtures.imports.LeaseAmendmentImportFixture;
+import org.estatio.module.lease.fixtures.imports.LeaseAmendmentImportFixture2;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForRent_enum;
 import org.estatio.module.lease.fixtures.leaseitems.enums.LeaseItemForServiceCharge_enum;
@@ -67,6 +68,7 @@ public class LeaseAmendmentImport_IntegTest extends LeaseModuleIntegTestAbstract
             @Override
             protected void execute(ExecutionContext executionContext) {
                 executionContext.executeChild(this, new LeaseAmendmentImportFixture());
+                executionContext.executeChild(this, new LeaseAmendmentImportFixture2());
                 executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.builder());
                 executionContext.executeChild(this, LeaseItemForRent_enum.OxfTopModel001Gb.builder());
                 executionContext.executeChild(this, LeaseItemForServiceCharge_enum.OxfTopModel001Gb.builder());
@@ -90,20 +92,22 @@ public class LeaseAmendmentImport_IntegTest extends LeaseModuleIntegTestAbstract
         // given
         Blob excelSheet = (Blob) fixtureResults.get(0).getObject();
         Assertions.assertThat(excelSheet).isNotNull();
+        Blob excelSheet2 = (Blob) fixtureResults.get(1).getObject();
+        Assertions.assertThat(excelSheet2).isNotNull();
         Property oxf = Property_enum.OxfGb.findUsing(serviceRegistry);
-        Assertions.assertThat(leaseAmendmentRepository.findByType(LeaseAmendmentType.DEMO_TYPE2)).isEmpty();
+        Assertions.assertThat(leaseAmendmentRepository.findByTemplate(LeaseAmendmentTemplate.DEMO_TYPE2)).isEmpty();
 
 
         // when
         final LeaseAmendmentManager manager = mixin(Property_maintainLeaseAmendments.class, oxf)
-                .$$(LeaseAmendmentType.DEMO_TYPE2,null);
+                .$$(LeaseAmendmentTemplate.DEMO_TYPE2,null);
         serviceRegistry2.injectServicesInto(manager);
         manager.importAmendments(excelSheet);
 
         // then
-        Assertions.assertThat(leaseAmendmentRepository.findByType(LeaseAmendmentType.DEMO_TYPE2)).hasSize(4);
+        Assertions.assertThat(leaseAmendmentRepository.findByTemplate(LeaseAmendmentTemplate.DEMO_TYPE2)).hasSize(4);
         final Lease topmodelLease = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
-        final LeaseAmendment amendmentForTopmodel = leaseAmendmentRepository.findUnique(topmodelLease, LeaseAmendmentType.DEMO_TYPE2);
+        final LeaseAmendment amendmentForTopmodel = leaseAmendmentRepository.findUnique(topmodelLease, LeaseAmendmentTemplate.DEMO_TYPE2);
         Assertions.assertThat(amendmentForTopmodel.getState()).isEqualTo(LeaseAmendmentState.APPLY);
         Assertions.assertThat(amendmentForTopmodel.getStartDate()).isEqualTo(new LocalDate(2020,6,1));
         Assertions.assertThat(amendmentForTopmodel.getDateSigned()).isNull();
@@ -114,7 +118,7 @@ public class LeaseAmendmentImport_IntegTest extends LeaseModuleIntegTestAbstract
         Assertions.assertThat(amendmentItemForTopmodel.getEndDate()).isEqualTo(new LocalDate(2020,8,30));
 
         final Lease poisonLease = Lease_enum.OxfPoison003Gb.findUsing(serviceRegistry);
-        final LeaseAmendment amendmentForPoison = leaseAmendmentRepository.findUnique(poisonLease, LeaseAmendmentType.DEMO_TYPE2);
+        final LeaseAmendment amendmentForPoison = leaseAmendmentRepository.findUnique(poisonLease, LeaseAmendmentTemplate.DEMO_TYPE2);
         Assertions.assertThat(amendmentForPoison.getState()).isEqualTo(LeaseAmendmentState.SIGNED);
         Assertions.assertThat(amendmentForPoison.getStartDate()).isEqualTo(new LocalDate(2020,7,1));
         Assertions.assertThat(amendmentForPoison.getDateSigned()).isEqualTo(new LocalDate(2020,6, 20));
@@ -148,7 +152,7 @@ public class LeaseAmendmentImport_IntegTest extends LeaseModuleIntegTestAbstract
         Assertions.assertThat(lastPoisonAmendmentItem.getEndDate()).isEqualTo(new LocalDate(2020,12,31));
 
         final Lease miracleLease = Lease_enum.OxfMiracl005Gb.findUsing(serviceRegistry);
-        final LeaseAmendment amendmentForMiracle = leaseAmendmentRepository.findUnique(miracleLease, LeaseAmendmentType.DEMO_TYPE2);
+        final LeaseAmendment amendmentForMiracle = leaseAmendmentRepository.findUnique(miracleLease, LeaseAmendmentTemplate.DEMO_TYPE2);
         Assertions.assertThat(amendmentForMiracle.getState()).isEqualTo(LeaseAmendmentState.PROPOSED);
         Assertions.assertThat(amendmentForMiracle.getStartDate()).isEqualTo(new LocalDate(2020,7,1));
         Assertions.assertThat(amendmentForMiracle.getDateSigned()).isNull();
@@ -156,9 +160,71 @@ public class LeaseAmendmentImport_IntegTest extends LeaseModuleIntegTestAbstract
         final LeaseAmendmentItemForDiscount firstMiracleAmendmentItem = (LeaseAmendmentItemForDiscount) amendmentForMiracle.getItems().first();
         Assertions.assertThat(firstMiracleAmendmentItem.getManualDiscountAmount()).isNull();
         Assertions.assertThat(firstMiracleAmendmentItem.getDiscountPercentage()).isEqualTo(new BigDecimal("55.55"));
+        Assertions.assertThat(firstMiracleAmendmentItem.getStartDate()).isEqualTo(new LocalDate(2020,7,1));
+        Assertions.assertThat(firstMiracleAmendmentItem.getEndDate()).isEqualTo(new LocalDate(2020,8,31));
 
         final Lease mediaLease = Lease_enum.OxfMediaX002Gb.findUsing(serviceRegistry);
-        final LeaseAmendment amendmentForMedia = leaseAmendmentRepository.findUnique(mediaLease, LeaseAmendmentType.DEMO_TYPE2);
+        final LeaseAmendment amendmentForMedia = leaseAmendmentRepository.findUnique(mediaLease, LeaseAmendmentTemplate.DEMO_TYPE2);
+        Assertions.assertThat(amendmentForMedia.getState()).isEqualTo(LeaseAmendmentState.PROPOSED);
+        Assertions.assertThat(amendmentForMedia.getDateSigned()).isNull();
+        Assertions.assertThat(amendmentForMedia.getItems()).isEmpty();
+
+        // and when
+        manager.importAmendments(excelSheet2);
+
+        // then
+        Assertions.assertThat(leaseAmendmentRepository.findByTemplate(LeaseAmendmentTemplate.DEMO_TYPE2)).hasSize(4);
+        Assertions.assertThat(amendmentForTopmodel.getState()).isEqualTo(LeaseAmendmentState.APPLY);
+        Assertions.assertThat(amendmentForTopmodel.getStartDate()).isEqualTo(new LocalDate(2020,6,1));
+        Assertions.assertThat(amendmentForTopmodel.getDateSigned()).isNull();
+        Assertions.assertThat(amendmentForTopmodel.getItems()).hasSize(1);
+        final LeaseAmendmentItemForDiscount amendmentItemForTopmodel2 = (LeaseAmendmentItemForDiscount) amendmentForTopmodel.getItems().first();
+        Assertions.assertThat(amendmentItemForTopmodel2.getManualDiscountAmount()).isEqualTo(new BigDecimal("-3500.12"));
+        Assertions.assertThat(amendmentItemForTopmodel2.getStartDate()).isEqualTo(new LocalDate(2020,7,2));
+        Assertions.assertThat(amendmentItemForTopmodel2.getEndDate()).isEqualTo(new LocalDate(2020,8,30));
+
+        Assertions.assertThat(amendmentForPoison.getState()).isEqualTo(LeaseAmendmentState.SIGNED);
+        Assertions.assertThat(amendmentForPoison.getStartDate()).isEqualTo(new LocalDate(2020,7,1));
+        Assertions.assertThat(amendmentForPoison.getDateSigned()).isEqualTo(new LocalDate(2020,6, 20));
+        Assertions.assertThat(amendmentForPoison.getItems()).hasSize(4);
+        final LeaseAmendmentItemForDiscount firstPoisonAmendmentItem2 = (LeaseAmendmentItemForDiscount) amendmentForPoison.findItemsOfType(
+                LeaseAmendmentItemType.DISCOUNT).stream().sorted(Comparator.comparing(LeaseAmendmentItem::getStartDate)).collect(
+                Collectors.toList()).get(0);
+        final LeaseAmendmentItemForDiscount secondPoisonAmendmentItem2 = (LeaseAmendmentItemForDiscount) amendmentForPoison.findItemsOfType(
+                LeaseAmendmentItemType.DISCOUNT).stream().sorted(Comparator.comparing(LeaseAmendmentItem::getStartDate)).collect(
+                Collectors.toList()).get(1);
+        final LeaseAmendmentItemForDiscount thirdPoisonAmendmentItem2 = (LeaseAmendmentItemForDiscount) amendmentForPoison.findItemsOfType(
+                LeaseAmendmentItemType.DISCOUNT).stream().sorted(Comparator.comparing(LeaseAmendmentItem::getStartDate)).collect(
+                Collectors.toList()).get(2);
+        final LeaseAmendmentItemForFrequencyChange lastPoisonAmendmentItem2 = (LeaseAmendmentItemForFrequencyChange) amendmentForPoison.getItems().last();
+        Assertions.assertThat(firstPoisonAmendmentItem2.getManualDiscountAmount()).isNull();
+        Assertions.assertThat(firstPoisonAmendmentItem2.getDiscountPercentage()).isEqualTo(new BigDecimal("100.0"));
+        Assertions.assertThat(firstPoisonAmendmentItem2.getStartDate()).isEqualTo(new LocalDate(2020,8,1));
+        Assertions.assertThat(firstPoisonAmendmentItem2.getEndDate()).isEqualTo(new LocalDate(2020,8,31));
+        Assertions.assertThat(secondPoisonAmendmentItem2.getManualDiscountAmount()).isNull();
+        Assertions.assertThat(secondPoisonAmendmentItem2.getDiscountPercentage()).isEqualTo(new BigDecimal("50.0"));
+        Assertions.assertThat(secondPoisonAmendmentItem2.getStartDate()).isEqualTo(new LocalDate(2020,9,1));
+        Assertions.assertThat(secondPoisonAmendmentItem2.getEndDate()).isEqualTo(new LocalDate(2020,9,30));
+        Assertions.assertThat(thirdPoisonAmendmentItem2.getManualDiscountAmount()).isNull();
+        Assertions.assertThat(thirdPoisonAmendmentItem2.getDiscountPercentage()).isEqualTo(new BigDecimal("30.0"));
+        Assertions.assertThat(thirdPoisonAmendmentItem2.getStartDate()).isEqualTo(new LocalDate(2020,10,1));
+        Assertions.assertThat(thirdPoisonAmendmentItem2.getEndDate()).isEqualTo(new LocalDate(2020,11,30));
+
+        Assertions.assertThat(lastPoisonAmendmentItem2.getAmendedInvoicingFrequency()).isEqualTo(MONTHLY_IN_ADVANCE);
+        Assertions.assertThat(lastPoisonAmendmentItem2.getInvoicingFrequencyOnLease()).isEqualTo(QUARTERLY_IN_ADVANCE);
+        Assertions.assertThat(lastPoisonAmendmentItem2.getStartDate()).isEqualTo(new LocalDate(2020,7,1));
+        Assertions.assertThat(lastPoisonAmendmentItem2.getEndDate()).isEqualTo(new LocalDate(2020,12,31));
+
+        Assertions.assertThat(amendmentForMiracle.getState()).isEqualTo(LeaseAmendmentState.SIGNED);
+        Assertions.assertThat(amendmentForMiracle.getStartDate()).isEqualTo(new LocalDate(2020,7,1));
+        Assertions.assertThat(amendmentForMiracle.getDateSigned()).isEqualTo(new LocalDate(2020,7,21));
+        Assertions.assertThat(amendmentForMiracle.getItems()).hasSize(2);
+        final LeaseAmendmentItemForDiscount firstMiracleAmendmentItem2 = (LeaseAmendmentItemForDiscount) amendmentForMiracle.getItems().first();
+        Assertions.assertThat(firstMiracleAmendmentItem2.getManualDiscountAmount()).isNull();
+        Assertions.assertThat(firstMiracleAmendmentItem2.getDiscountPercentage()).isEqualTo(new BigDecimal("60.0"));
+        Assertions.assertThat(firstMiracleAmendmentItem2.getStartDate()).isEqualTo(new LocalDate(2020,7,2));
+        Assertions.assertThat(firstMiracleAmendmentItem2.getEndDate()).isEqualTo(new LocalDate(2020,8,30));
+
         Assertions.assertThat(amendmentForMedia.getState()).isEqualTo(LeaseAmendmentState.PROPOSED);
         Assertions.assertThat(amendmentForMedia.getDateSigned()).isNull();
         Assertions.assertThat(amendmentForMedia.getItems()).isEmpty();

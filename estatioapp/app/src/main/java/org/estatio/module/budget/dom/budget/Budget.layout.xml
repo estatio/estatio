@@ -1,65 +1,78 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<grid xsi:schemaLocation="http://isis.apache.org/applib/layout/component http://isis.apache.org/applib/layout/component/component.xsd http://isis.apache.org/applib/layout/grid/bootstrap3 http://isis.apache.org/applib/layout/grid/bootstrap3/bootstrap3.xsd" xmlns="http://isis.apache.org/applib/layout/grid/bootstrap3" xmlns:ns2="http://isis.apache.org/applib/layout/component" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-    <row>
-        <col span="12" unreferencedActions="true">
-            <ns2:domainObject/>
-            <ns2:action id="Calculate"/>
-            <ns2:action id="Reconcile"/>
-            <ns2:action id="createNextBudget" />
-            <ns2:action id="DownloadCalculations"/>
-            <ns2:action id="DownloadCalculationsForLease"/>
-            <ns2:action id="importExportBudget" />
-            <ns2:action id="Remove" />
-        </col>
-    </row>
-    <row>
-        <col span="4">
-            <ns2:tabGroup>
-                <ns2:tab name="Budget">
-                    <row>
-                        <col span="12">
-                            <ns2:fieldSet name="Budget" id="budget" unreferencedProperties="true">
-                                <ns2:property id="property"/>
-                                <ns2:property id="budgetYear"/>
-                                <ns2:property id="startDate"/>
-                                <ns2:property id="endDate" />
-                                <ns2:property id="status" />
-                                <ns2:property id="applicationTenancy"/>
-                            </ns2:fieldSet>
-                        </col>
-                    </row>
-                </ns2:tab>
-                <ns2:tab name="Metadata">
-                    <row>
-                        <col span="12">
-                            <ns2:fieldSet name="Metadata" id="metadata">
-                                <ns2:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
-                                <ns2:action id="downloadJdoMetadata" position="PANEL_DROPDOWN"/>
-                                <ns2:property id="id"/>
-                                <ns2:property id="versionSequence"/>
-                                <ns2:property id="datanucleusId"/>
-                                <ns2:property id="datanucleusVersionLong"/>
-                                <ns2:property id="datanucleusVersionTimestamp"/>
-                            </ns2:fieldSet>
-                        </col>
-                    </row>
-                </ns2:tab>
-            </ns2:tabGroup>
-        </col>
-        <col span="8" unreferencedCollections="true">
-            <ns2:collection id="items" defaultView="table">
-                <ns2:action id="newBudgetItem"/>
-                <ns2:action id="removeAllBudgetItems"/>
-            </ns2:collection>
-            <ns2:collection id="keyTables" defaultView="table">
-                <ns2:action id="createKeyTable"/>
-                <ns2:action id="distributeAllInvalidKeytables"/>
-            </ns2:collection>
-            <ns2:collection id="directCostTables" defaultView="table">
-                <ns2:action id="createDirectCostTable"/>
-            </ns2:collection>
-            <ns2:collection id="BudgetCalculationRuns" defaultView="hide"/>
-            <ns2:collection id="partitionings" defaultView="table"/>
-        </col>
-    </row>
-</grid>
+<bs3:grid xsi:schemaLocation="http://isis.apache.org/applib/layout/component http://isis.apache.org/applib/layout/component/component.xsd http://isis.apache.org/applib/layout/grid/bootstrap3 http://isis.apache.org/applib/layout/grid/bootstrap3/bootstrap3.xsd"
+          xmlns:bs3="http://isis.apache.org/applib/layout/grid/bootstrap3" xmlns:cpt="http://isis.apache.org/applib/layout/component" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    
+    <bs3:row>
+        <bs3:col span="12" unreferencedActions="true">
+            <cpt:domainObject/>
+            <cpt:action id="createNextBudget" />
+        </bs3:col>
+    </bs3:row>
+    <bs3:row>
+        <bs3:col span="4">
+                <bs3:tabGroup>
+                    <bs3:tab name="Budget">
+                        <bs3:row>
+                            <bs3:col span="12">
+                                <cpt:fieldSet name="Budget" id="budget" unreferencedProperties="true">
+                                    <cpt:action id="remove" position="PANEL"/>
+                                    <cpt:action id="exportBudget" position="PANEL"/>
+                                    <cpt:action id="importBudget" position="PANEL"/>
+                                    <cpt:property id="property"/>
+                                    <cpt:property id="budgetYear"/>
+                                    <cpt:property id="startDate"/>
+                                    <cpt:property id="endDate" />
+                                    <cpt:property id="applicationTenancy"/>
+                                </cpt:fieldSet>
+                            </bs3:col>
+                        </bs3:row>
+                        <bs3:row>
+                            <bs3:col span="12">
+                                <cpt:fieldSet name="Budget Status" id="status">
+                                    <cpt:action id="assign"/>
+                                    <cpt:action id="reconcile"/>
+                                    <cpt:property id="status">
+                                        <cpt:action id="downloadCalculationSummary" position="BELOW"/>
+                                        <cpt:action id="downloadCalculationsForUnit" position="BELOW"/>
+                                        <cpt:action id="downloadCalculationResults" position="BELOW"/>
+                                        <cpt:action id="downloadAuditedCalculationsForLease" position="BELOW"/>
+
+                                    </cpt:property>
+                                </cpt:fieldSet>
+                            </bs3:col>
+                        </bs3:row>
+                    </bs3:tab>
+                    <bs3:tab name="Metadata">
+                        <bs3:row>
+                            <bs3:col span="12">
+                                <cpt:fieldSet name="Metadata" id="metadata">
+                                    <cpt:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
+                                    <cpt:action id="downloadJdoMetadata" position="PANEL_DROPDOWN"/>
+                                    <cpt:property id="id"/>
+                                    <cpt:property id="versionSequence"/>
+                                    <cpt:property id="datanucleusId"/>
+                                    <cpt:property id="datanucleusVersionLong"/>
+                                    <cpt:property id="datanucleusVersionTimestamp"/>
+                                </cpt:fieldSet>
+                            </bs3:col>
+                        </bs3:row>
+                    </bs3:tab>
+
+                </bs3:tabGroup>
+        </bs3:col>
+        <bs3:col span="8" unreferencedCollections="true">
+            <cpt:collection id="items" defaultView="table">
+                <cpt:action id="newBudgetItem"/>
+                <cpt:action id="updateAuditedValues"/>
+            </cpt:collection>
+            <cpt:collection id="keyTables" defaultView="table">
+                <cpt:action id="createKeyTable"/>
+            </cpt:collection>
+            <cpt:collection id="directCostTables" defaultView="table">
+                <cpt:action id="createDirectCostTable"/>
+            </cpt:collection>
+            <cpt:collection id="BudgetCalculationRuns" defaultView="hide"/>
+            <cpt:collection id="partitionings" defaultView="table"/>
+        </bs3:col>
+    </bs3:row>
+</bs3:grid>

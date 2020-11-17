@@ -353,6 +353,11 @@ public class Budget extends UdoDomainObject2<Budget>
     }
 
     @Programmatic
+    public void removeNewCalculations() {
+        budgetCalculationRepository.findByBudgetAndStatus(this, org.estatio.module.budget.dom.budgetcalculation.Status.NEW).forEach(c->repositoryService.removeAndFlush(c));
+    }
+
+    @Programmatic
     public Budget removeNewCalculationsOfType(final BudgetCalculationType type){
         budgetCalculationService.removeNewCalculationsOfType(this, type);
         return this;
@@ -372,26 +377,21 @@ public class Budget extends UdoDomainObject2<Budget>
     }
 
     @Programmatic
-    public Budget findOrCreatePartitioningForBudgeting(){
+    public Partitioning findOrCreatePartitioningForBudgeting(){
         Partitioning partitioningForBudgeting = getPartitioningForBudgeting();
         if (partitioningForBudgeting==null){
-            partitioningRepository.newPartitioning(this, getStartDate(), getEndDate(), BudgetCalculationType.BUDGETED);
+            partitioningForBudgeting = partitioningRepository.newPartitioning(this, getStartDate(), getEndDate(), BudgetCalculationType.BUDGETED);
         }
-        return this;
+        return partitioningForBudgeting;
     }
 
-    @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
-    public Budget distributeAllInvalidKeytables(){
-        Lists.newArrayList(getKeyTables()).stream().forEach(kt->{
-            if (!kt.isValidForKeyValues()){
-                kt.distributeSourceValues();
-            }
-        });
-        return this;
-    }
-
-    public boolean hideDistributeAllInvalidKeytables(){
-        return getStatus()!=Status.NEW;
+    @Programmatic
+    public Partitioning findOrCreatePartitioningForReconciliation(){
+        Partitioning partitioningForReconciliation = getPartitioningForReconciliation();
+        if (partitioningForReconciliation==null){
+            partitioningForReconciliation = partitioningRepository.newPartitioning(this, getStartDate(), getEndDate(), BudgetCalculationType.AUDITED);
+        }
+        return partitioningForReconciliation;
     }
 
     @Override
@@ -427,5 +427,4 @@ public class Budget extends UdoDomainObject2<Budget>
 
     @Inject
     BudgetCalculationService budgetCalculationService;
-
 }

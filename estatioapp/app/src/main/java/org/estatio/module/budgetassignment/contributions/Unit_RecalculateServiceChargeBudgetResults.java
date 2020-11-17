@@ -15,10 +15,9 @@ import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budget.BudgetRepository;
 import org.estatio.module.budget.dom.budget.Status;
-import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationService;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
+import org.estatio.module.budgetassignment.dom.BudgetAssignmentService;
 import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResult;
-import org.estatio.module.budgetassignment.dom.service.BudgetAssignmentService;
 
 @Mixin
 public class Unit_RecalculateServiceChargeBudgetResults {
@@ -39,9 +38,6 @@ public class Unit_RecalculateServiceChargeBudgetResults {
     public List<Budget> choices0ReCalculateServiceChargeBudgetResults(){
         return budgetRepository.findByProperty(unit.getProperty()).stream().filter(b->b.getStatus()==Status.ASSIGNED).collect(Collectors.toList());
     }
-
-    @Inject
-    private BudgetCalculationService budgetCalculationService;
 
     @Inject
     private BudgetAssignmentService budgetAssignmentService;

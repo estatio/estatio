@@ -3,6 +3,7 @@ package org.estatio.module.capex.app;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -10,15 +11,18 @@ import java.util.stream.Collectors;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 
+import org.apache.isis.applib.annotation.*;
+import org.apache.isis.applib.services.factory.FactoryService;
+import org.estatio.module.asset.contributions.Person_fixedAssetRoles;
+import org.estatio.module.asset.dom.FixedAsset;
+import org.estatio.module.asset.dom.role.FixedAssetRole;
+import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
+import org.estatio.module.invoice.dom.InvoiceStatus;
+import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
+import org.estatio.module.party.dom.*;
+import org.isisaddons.module.security.dom.user.ApplicationUserRepository;
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.DomainServiceLayout;
-import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.ParameterLayout;
-import org.apache.isis.applib.annotation.RestrictTo;
-import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.clock.ClockService;
 
 import org.isisaddons.module.security.app.user.MeService;
@@ -29,9 +33,6 @@ import org.estatio.module.asset.dom.Property;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceRepository;
 import org.estatio.module.invoice.dom.InvoiceRepository;
-import org.estatio.module.party.dom.Organisation;
-import org.estatio.module.party.dom.Party;
-import org.estatio.module.party.dom.PartyRepository;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -317,11 +318,51 @@ public class IncomingInvoiceMenu {
 
     ///////////////////////////////////////////
 
+    @Action(semantics = SemanticsOf.SAFE)
+    public List<IncomingInvoice> findInvoicesBySupplierAndApprovalStateAndProperties(
+            final Party supplier,
+            final List<IncomingInvoiceApprovalState> approvalStates,
+            final List<Property> properties) {
+        return incomingInvoiceRepository.findBySellerAndApprovalStates(supplier, approvalStates)
+                .stream()
+                .filter(invoice -> properties.contains(invoice.getProperty()))
+                .collect(Collectors.toList());
+    }
+
+    public boolean hideFindInvoicesBySupplierAndApprovalStateAndProperties() {
+        return personRepository.me()==null;
+    }
+
+    public List<IncomingInvoiceApprovalState> default1FindInvoicesBySupplierAndApprovalStateAndProperties() {
+        return Collections.singletonList(IncomingInvoiceApprovalState.COMPLETED);
+    }
+
+    public List<Property> default2FindInvoicesBySupplierAndApprovalStateAndProperties() {
+        return choices2FindInvoicesBySupplierAndApprovalStateAndProperties();
+    }
+
+    public List<Property> choices2FindInvoicesBySupplierAndApprovalStateAndProperties() {
+        if (personRepository.me()!=null) {
+            return factoryService.mixin(Person_fixedAssetRoles.class, personRepository.me()).act()
+                    .stream()
+                    .map(FixedAssetRole::getAsset)
+                    .filter(fixedAsset -> fixedAsset instanceof Property)
+                    .map(fixedAsset -> (Property) fixedAsset)
+                    .collect(Collectors.toList());
+        } else {
+            return new ArrayList<>();
+        }
+    }
+
+    ///////////////////////////////////////////
+
     @Inject
     ClockService clockService;
     @Inject PartyRepository partyRepository;
     @Inject InvoiceRepository invoiceRepository;
     @Inject IncomingInvoiceRepository incomingInvoiceRepository;
     @Inject MeService meService;
+    @Inject FactoryService factoryService;
+    @Inject PersonRepository personRepository;
 
 }

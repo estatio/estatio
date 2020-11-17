@@ -3,7 +3,6 @@
     <row>
         <col span="12" unreferencedActions="true">
             <ns2:domainObject/>
-            <ns2:action id="delete"/>
             <ns2:action id="export"/>
             <ns2:action id="recentChanges"/>
             <ns2:action id="links"/>
@@ -14,6 +13,7 @@
             <ns2:fieldSet name="General" id="general" unreferencedProperties="true">
                 <ns2:property id="directCostTable"/>
                 <ns2:property id="applicationTenancy"/>
+                <ns2:property id="atPath" hidden="ALL_TABLES"/>
             </ns2:fieldSet>
             <ns2:fieldSet name="Unit" id="unit">
                 <ns2:property id="unit"/>

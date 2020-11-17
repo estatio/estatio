@@ -40,7 +40,7 @@ import org.estatio.module.lease.dom.amendments.LeaseAmendmentItemForFrequencyCha
 import org.estatio.module.lease.dom.amendments.LeaseAmendmentItemRepository;
 import org.estatio.module.lease.dom.amendments.LeaseAmendmentItemType;
 import org.estatio.module.lease.dom.amendments.LeaseAmendmentRepository;
-import org.estatio.module.lease.dom.amendments.LeaseAmendmentType;
+import org.estatio.module.lease.dom.amendments.LeaseAmendmentTemplate;
 import org.estatio.module.lease.dom.amendments.Lease_createLeaseAmendment;
 import org.estatio.module.lease.dom.amendments.Lease_invoiceCalculations;
 import org.estatio.module.lease.dom.indexation.IndexationMethod;
@@ -74,7 +74,7 @@ public class LeaseAmendmentScenario_IntegTest extends LeaseModuleIntegTestAbstra
 
         Lease oxf = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
 
-        final LeaseAmendment amendment = leaseAmendmentRepository.findUnique(oxf, LeaseAmendmentType.DEMO_TYPE);
+        final LeaseAmendment amendment = leaseAmendmentRepository.findUnique(oxf, LeaseAmendmentTemplate.DEMO_TYPE);
         assertThat(amendment).isNotNull();
         assertThat(amendment.getLeasePreview()).isNull();
 
@@ -142,7 +142,7 @@ public class LeaseAmendmentScenario_IntegTest extends LeaseModuleIntegTestAbstra
                 .filter(li -> li.getStartDate().equals(discountAmendmentItem.getStartDate()))
                 .findFirst().orElse(null);
         assertThat(discountRentItem1.getEndDate()).isEqualTo(discountAmendmentItem.getEndDate());
-        assertThat(discountRentItem1.getCharge().getReference()).isEqualTo(amendment.getLeaseAmendmentType().getChargeReferenceForDiscountItem().get(0).newValue);
+        assertThat(discountRentItem1.getCharge().getReference()).isEqualTo(amendment.getLeaseAmendmentTemplate().getChargeReferenceForDiscountItem().get(0).newValue);
         assertThat(discountRentItem1.getTerms()).hasSize(1);
         final LeaseTermForIndexable firstOnDiscountItem1 = (LeaseTermForIndexable) discountRentItem1.getTerms().first();
         assertThat(firstOnDiscountItem1.getEffectiveValue()).isEqualTo(new BigDecimal("-10652.51"));
@@ -151,7 +151,7 @@ public class LeaseAmendmentScenario_IntegTest extends LeaseModuleIntegTestAbstra
                 .filter(li -> li.getStartDate().equals(discountAmendmentItem2.getStartDate()))
                 .findFirst().orElse(null);
         assertThat(discountRentItem2.getEndDate()).isEqualTo(discountAmendmentItem2.getEndDate());
-        assertThat(discountRentItem2.getCharge().getReference()).isEqualTo(amendment.getLeaseAmendmentType().getChargeReferenceForDiscountItem().get(0).newValue);
+        assertThat(discountRentItem2.getCharge().getReference()).isEqualTo(amendment.getLeaseAmendmentTemplate().getChargeReferenceForDiscountItem().get(0).newValue);
         assertThat(discountRentItem2.getTerms()).hasSize(1);
         final LeaseTermForIndexable firstOnDiscountItem2 = (LeaseTermForIndexable) discountRentItem2.getTerms().first();
         assertThat(firstOnDiscountItem2.getEffectiveValue()).isEqualTo(new BigDecimal("-10652.51"));
@@ -160,7 +160,7 @@ public class LeaseAmendmentScenario_IntegTest extends LeaseModuleIntegTestAbstra
                 .filter(li -> li.getStartDate().equals(discountAmendmentItem3.getStartDate()))
                 .findFirst().orElse(null);
         assertThat(discountRentItem3.getEndDate()).isEqualTo(discountAmendmentItem3.getEndDate());
-        assertThat(discountRentItem3.getCharge().getReference()).isEqualTo(amendment.getLeaseAmendmentType().getChargeReferenceForDiscountItem().get(0).newValue);
+        assertThat(discountRentItem3.getCharge().getReference()).isEqualTo(amendment.getLeaseAmendmentTemplate().getChargeReferenceForDiscountItem().get(0).newValue);
         assertThat(discountRentItem3.getTerms()).hasSize(2);
         final LeaseTermForIndexable firstOnDiscountItem3 = (LeaseTermForIndexable) discountRentItem3.getTerms().first();
         assertThat(firstOnDiscountItem3.getEffectiveValue()).isEqualTo(new BigDecimal("-5326.26"));
@@ -187,9 +187,9 @@ public class LeaseAmendmentScenario_IntegTest extends LeaseModuleIntegTestAbstra
 
         Lease oxf = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
 
-        mixin(Lease_createLeaseAmendment.class, oxf).$$(LeaseAmendmentType.DEMO_TYPE2);
+        mixin(Lease_createLeaseAmendment.class, oxf).$$(LeaseAmendmentTemplate.DEMO_TYPE2);
         transactionService.nextTransaction();
-        final LeaseAmendment amendment = leaseAmendmentRepository.findUnique(oxf, LeaseAmendmentType.DEMO_TYPE2);
+        final LeaseAmendment amendment = leaseAmendmentRepository.findUnique(oxf, LeaseAmendmentTemplate.DEMO_TYPE2);
         assertThat(amendment).isNotNull();
         assertThat(amendment.getLeasePreview()).isNull();
 
@@ -213,7 +213,7 @@ public class LeaseAmendmentScenario_IntegTest extends LeaseModuleIntegTestAbstra
                 .filter(li -> li.getStartDate().equals(discountAmendmentItem.getStartDate()))
                 .findFirst().orElse(null);
         assertThat(discountRentItem.getEndDate()).isEqualTo(discountAmendmentItem.getEndDate());
-        assertThat(discountRentItem.getCharge().getReference()).isEqualTo(amendment.getLeaseAmendmentType().getChargeReferenceForDiscountItem().get(0).newValue);
+        assertThat(discountRentItem.getCharge().getReference()).isEqualTo(amendment.getLeaseAmendmentTemplate().getChargeReferenceForDiscountItem().get(0).newValue);
         assertThat(discountRentItem.getTerms()).hasSize(2);
         final LeaseTermForIndexable first = (LeaseTermForIndexable) discountRentItem.getTerms().first();
         assertThat(first.getEffectiveValue()).isEqualTo(new BigDecimal("-21305.02"));
@@ -231,7 +231,7 @@ public class LeaseAmendmentScenario_IntegTest extends LeaseModuleIntegTestAbstra
         // then
         leasePreview = amendment.getLeasePreview();
         final LeaseItem firstNewRentItem = leasePreview.findItemsOfType(LeaseItemType.RENT_DISCOUNT_FIXED).stream()
-                .filter(li -> li.getCharge().getReference().equals( LeaseAmendmentType.DEMO_TYPE2.getChargeReferenceForDiscountItem().get(0).newValue))
+                .filter(li -> li.getCharge().getReference().equals( LeaseAmendmentTemplate.DEMO_TYPE2.getChargeReferenceForDiscountItem().get(0).newValue))
                 .findFirst().orElse(null);
         assertThat(firstNewRentItem.getInvoicingFrequency()).isEqualTo(InvoicingFrequency.FIXED_IN_ADVANCE);
         assertThat(discountAmendmentItem.calculateDiscountAmountUsingLeasePreview()).isEqualTo(manualDiscountAmount);
@@ -258,7 +258,7 @@ public class LeaseAmendmentScenario_IntegTest extends LeaseModuleIntegTestAbstra
         term1.setIndexationMethod(IndexationMethod.BASE_INDEX);
 
         // when
-        final LeaseAmendment amendment = leaseAmendmentRepository.findUnique(oxfLease, LeaseAmendmentType.DEMO_TYPE);
+        final LeaseAmendment amendment = leaseAmendmentRepository.findUnique(oxfLease, LeaseAmendmentTemplate.DEMO_TYPE);
         amendment.createOrRenewLeasePreview();
 
         // then

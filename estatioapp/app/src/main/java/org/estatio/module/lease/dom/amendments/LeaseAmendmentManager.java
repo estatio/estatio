@@ -51,10 +51,10 @@ public class LeaseAmendmentManager {
         this.property = property;
     }
 
-    public LeaseAmendmentManager(final Property property, final LeaseAmendmentType leaseAmendmentType, final LeaseAmendmentState leaseAmendmentState){
+    public LeaseAmendmentManager(final Property property, final LeaseAmendmentTemplate leaseAmendmentTemplate, final LeaseAmendmentState leaseAmendmentState){
         this();
         this.property = property;
-        this.leaseAmendmentType = leaseAmendmentType;
+        this.leaseAmendmentTemplate = leaseAmendmentTemplate;
         this.state = leaseAmendmentState;
     }
 
@@ -66,7 +66,7 @@ public class LeaseAmendmentManager {
     private Property property;
 
     @Getter @Setter
-    private LeaseAmendmentType leaseAmendmentType;
+    private LeaseAmendmentTemplate leaseAmendmentTemplate;
 
     @Getter @Setter
     private LeaseAmendmentState state;
@@ -75,11 +75,13 @@ public class LeaseAmendmentManager {
     public List<LeaseAmendmentImportLine> getLines(){
         List<LeaseAmendmentImportLine> result = new ArrayList<>();
         if (getProperty()==null) return result; // Should not be possible
-        if (getLeaseAmendmentType()!=null){
+        if (getLeaseAmendmentTemplate()!=null){
             if (getState()==null) {
-                createLinesAndAddToResult(result, leaseAmendmentRepository.findByTypeAndProperty(getLeaseAmendmentType(), getProperty()));
+                createLinesAndAddToResult(result, leaseAmendmentRepository.findByTemplateAndProperty(
+                        getLeaseAmendmentTemplate(), getProperty()));
             } else {
-                createLinesAndAddToResult(result, leaseAmendmentRepository.findByTypeAndStateAndProperty(getLeaseAmendmentType(), getState(), getProperty()));
+                createLinesAndAddToResult(result, leaseAmendmentRepository.findByTypeAndStateAndProperty(
+                        getLeaseAmendmentTemplate(), getState(), getProperty()));
             }
         } else {
             if (getState()!=null) {
@@ -92,7 +94,7 @@ public class LeaseAmendmentManager {
                 .stream()
                 .sorted(Comparator.comparing(
                         LeaseAmendmentImportLine::getLeaseReference)
-                        .thenComparing(LeaseAmendmentImportLine::getLeaseAmendmentType))
+                        .thenComparing(LeaseAmendmentImportLine::getLeaseAmendmentTemplate))
                 .collect(Collectors.toList());
     }
 
@@ -119,13 +121,13 @@ public class LeaseAmendmentManager {
     }
 
     @Action(semantics = SemanticsOf.SAFE)
-    public LeaseAmendmentManager filterByType(@Nullable final LeaseAmendmentType leaseAmendmentType){
-        return new LeaseAmendmentManager(getProperty(), leaseAmendmentType, getState());
+    public LeaseAmendmentManager filterByType(@Nullable final LeaseAmendmentTemplate leaseAmendmentTemplate){
+        return new LeaseAmendmentManager(getProperty(), leaseAmendmentTemplate, getState());
     }
 
     @Action(semantics = SemanticsOf.SAFE)
     public LeaseAmendmentManager filterByState(@Nullable final LeaseAmendmentState leaseAmendmentState){
-        return new LeaseAmendmentManager(getProperty(), getLeaseAmendmentType(), leaseAmendmentState);
+        return new LeaseAmendmentManager(getProperty(), getLeaseAmendmentTemplate(), leaseAmendmentState);
     }
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
@@ -135,7 +137,7 @@ public class LeaseAmendmentManager {
                 final Lease lease = leaseRepository.findLeaseByReference(line.getLeaseReference());
                 if (lease != null) {
                     final LeaseAmendment amendment = leaseAmendmentRepository
-                            .findUnique(lease, line.getLeaseAmendmentType());
+                            .findUnique(lease, line.getLeaseAmendmentTemplate());
                     if (amendment != null && amendment.getState() != LeaseAmendmentState.APPLIED) {
                         if (amendment.getDateSigned()==null){
                             amendment.sign(clockService.now());
@@ -146,7 +148,7 @@ public class LeaseAmendmentManager {
                 }
             }
         }
-        return new LeaseAmendmentManager(getProperty(), getLeaseAmendmentType(), getState());
+        return new LeaseAmendmentManager(getProperty(), getLeaseAmendmentTemplate(), getState());
     }
 
     public String disableApplyAllWithStatusApply(){
@@ -155,7 +157,7 @@ public class LeaseAmendmentManager {
         if (optional.isPresent()) {
             return null;
         } else {
-            return String.format("No amendments with status APPLY present for property %s and type %s", getProperty().getReference(), getLeaseAmendmentType()!=null ? getLeaseAmendmentType() : "all types");
+            return String.format("No amendments with status APPLY present for property %s and type %s", getProperty().getReference(), getLeaseAmendmentTemplate()!=null ? getLeaseAmendmentTemplate() : "all types");
         }
     }
 
@@ -165,17 +167,17 @@ public class LeaseAmendmentManager {
         for (LeaseAmendmentImportLine line : getLines()){
             final Lease lease = leaseRepository.findLeaseByReference(line.getLeaseReference());
             if (lease!=null) {
-                final LeaseAmendment amendment = leaseAmendmentRepository.findUnique(lease, getLeaseAmendmentType());
+                final LeaseAmendment amendment = leaseAmendmentRepository.findUnique(lease, getLeaseAmendmentTemplate());
                 if (amendment!=null && amendment.getState()!=LeaseAmendmentState.APPLIED){
                     backgroundService2.execute(amendment).apply(); // we do not wrap on purpose here; when type has allowsBulkApply==true we do not care for the state of the amendment
                 }
             }
         }
-        return new LeaseAmendmentManager(getProperty(), getLeaseAmendmentType(), getState());
+        return new LeaseAmendmentManager(getProperty(), getLeaseAmendmentTemplate(), getState());
     }
 
     public boolean hideApplyAll(){
-        if (getLeaseAmendmentType()!=null && getLeaseAmendmentType().getAllowsBulkApply()==true) return false;
+        if (getLeaseAmendmentTemplate()!=null && getLeaseAmendmentTemplate().getAllowsBulkApply()==true) return false;
         return true;
     }
 
@@ -183,21 +185,25 @@ public class LeaseAmendmentManager {
     public LeaseAmendmentManager importAmendments(final Blob excelsheet){
         final List<LeaseAmendmentImportLine> lines = excelService
                 .fromExcel(excelsheet, LeaseAmendmentImportLine.class, "lines");
-        lines.forEach(l->l.importData());
+        LeaseAmendmentImportLine previous = null;
+        for (LeaseAmendmentImportLine line : lines){
+            line.importData(previous);
+            previous = line;
+        }
         return this;
     }
 
     @Action(commandPersistence = CommandPersistence.NOT_PERSISTED)
-    public Blob downloadNewAmendmentProposalsForType(final LeaseAmendmentType leaseAmendmentType, @Nullable final String fileName){
+    public Blob downloadNewAmendmentProposalsForType(final LeaseAmendmentTemplate leaseAmendmentTemplate, @Nullable final String fileName){
         List<LeaseAmendmentImportLine> newLines = new ArrayList<>();
-        for (Lease lease : activeLeasesOnAmendmentStartdateForProperty(leaseAmendmentType)){
-            final LeaseAmendment amendment = leaseAmendmentRepository.findUnique(lease, leaseAmendmentType);
-            if (amendment==null) newLines.addAll(newLinesForLease(lease, leaseAmendmentType));
+        for (Lease lease : activeLeasesOnAmendmentStartdateForProperty(leaseAmendmentTemplate)){
+            final LeaseAmendment amendment = leaseAmendmentRepository.findUnique(lease, leaseAmendmentTemplate);
+            if (amendment==null) newLines.addAll(newLinesForLease(lease, leaseAmendmentTemplate));
         }
         String fileNameToUse;
         if (fileName==null) {
             fileNameToUse = "New amendments-" + property.getReference();
-            fileNameToUse = fileNameToUse + "-" + leaseAmendmentType.toString();
+            fileNameToUse = fileNameToUse + "-" + leaseAmendmentTemplate.toString();
             fileNameToUse = fileNameToUse + "-" +  clockService.now().toString() +".xlsx";
         } else {
             if (!fileName.endsWith(".xlsx") && !fileName.endsWith(".xls")) {
@@ -209,45 +215,45 @@ public class LeaseAmendmentManager {
         return excelService.toExcel(newLines, LeaseAmendmentImportLine.class, "lines", fileNameToUse);
     }
 
-    public LeaseAmendmentType default0DownloadNewAmendmentProposalsForType(){
-        return this.getLeaseAmendmentType();
+    public LeaseAmendmentTemplate default0DownloadNewAmendmentProposalsForType(){
+        return this.getLeaseAmendmentTemplate();
     }
 
-    List<LeaseAmendmentImportLine> newLinesForLease(final Lease lease, final LeaseAmendmentType leaseAmendmentType){
+    List<LeaseAmendmentImportLine> newLinesForLease(final Lease lease, final LeaseAmendmentTemplate leaseAmendmentTemplate){
         List<LeaseAmendmentImportLine> result = new ArrayList<>();
         final List<LeaseItem> discountCandidates = Lists.newArrayList(lease.getItems()).stream()
-                .filter(i->leaseAmendmentType.getDiscountAppliesTo()!=null)
-                .filter(i -> leaseAmendmentType.getDiscountAppliesTo().contains(i.getType()))
+                .filter(i-> leaseAmendmentTemplate.getDiscountAppliesTo()!=null)
+                .filter(i -> leaseAmendmentTemplate.getDiscountAppliesTo().contains(i.getType()))
                 .filter(i->i.getEffectiveInterval()!= null) // guard for 'inconsistent' data
-                .filter(i->i.getEffectiveInterval().overlaps(LocalDateInterval.including(leaseAmendmentType.getDiscountStartDate(), leaseAmendmentType
+                .filter(i->i.getEffectiveInterval().overlaps(LocalDateInterval.including(leaseAmendmentTemplate.getDiscountStartDate(), leaseAmendmentTemplate
                         .getDiscountEndDate())))
                 .collect(Collectors.toList());
         final List<LeaseItem> frequencyChangeCandidates = Lists.newArrayList(lease.getItems()).stream()
-                .filter(i->leaseAmendmentType.getFrequencyChangeAppliesTo()!=null)
-                .filter(i-> leaseAmendmentType.getFrequencyChangeAppliesTo().contains(i.getType()))
-                .filter(i->hasChangingFrequency(i, leaseAmendmentType))
+                .filter(i-> leaseAmendmentTemplate.getFrequencyChangeAppliesTo()!=null)
+                .filter(i-> leaseAmendmentTemplate.getFrequencyChangeAppliesTo().contains(i.getType()))
+                .filter(i->hasChangingFrequency(i, leaseAmendmentTemplate))
                 .filter(i->i.getEffectiveInterval()!=null)
-                .filter(i->i.getEffectiveInterval().overlaps(LocalDateInterval.including(leaseAmendmentType.getFrequencyChangeStartDate(), leaseAmendmentType
+                .filter(i->i.getEffectiveInterval().overlaps(LocalDateInterval.including(leaseAmendmentTemplate.getFrequencyChangeStartDate(), leaseAmendmentTemplate
                         .getFrequencyChangeEndDate())))
                 .collect(Collectors.toList());
         LeaseAmendmentImportLine newLine = new LeaseAmendmentImportLine();
         newLine.setLeaseAmendmentState(LeaseAmendmentState.PROPOSED);
         newLine.setLeaseReference(lease.getReference());
-        newLine.setLeaseAmendmentType(leaseAmendmentType);
-        newLine.setStartDate(leaseAmendmentType.getAmendmentStartDate());
+        newLine.setLeaseAmendmentTemplate(leaseAmendmentTemplate);
+        newLine.setStartDate(leaseAmendmentTemplate.getAmendmentStartDate());
         if (!discountCandidates.isEmpty()){
-            newLine.setDiscountPercentage(leaseAmendmentType.getDiscountPercentage());
-            newLine.setDiscountStartDate(leaseAmendmentType.getDiscountStartDate());
-            newLine.setDiscountEndDate(leaseAmendmentType.getDiscountEndDate());
-            newLine.setDiscountApplicableTo(LeaseAmendmentItem.applicableToToString(leaseAmendmentType.getDiscountAppliesTo()));
+            newLine.setDiscountPercentage(leaseAmendmentTemplate.getDiscountPercentage());
+            newLine.setDiscountStartDate(leaseAmendmentTemplate.getDiscountStartDate());
+            newLine.setDiscountEndDate(leaseAmendmentTemplate.getDiscountEndDate());
+            newLine.setDiscountApplicableTo(LeaseAmendmentItem.applicableToToString(leaseAmendmentTemplate.getDiscountAppliesTo()));
         }
         if (!frequencyChangeCandidates.isEmpty()){
-            newLine.setFrequencyChangeStartDate(leaseAmendmentType.getFrequencyChangeStartDate());
-            newLine.setFrequencyChangeEndDate(leaseAmendmentType.getFrequencyChangeEndDate());
-            newLine.setFrequencyChangeApplicableTo(LeaseAmendmentItem.applicableToToString(leaseAmendmentType.getFrequencyChangeAppliesTo()));
+            newLine.setFrequencyChangeStartDate(leaseAmendmentTemplate.getFrequencyChangeStartDate());
+            newLine.setFrequencyChangeEndDate(leaseAmendmentTemplate.getFrequencyChangeEndDate());
+            newLine.setFrequencyChangeApplicableTo(LeaseAmendmentItem.applicableToToString(leaseAmendmentTemplate.getFrequencyChangeAppliesTo()));
             // TODO: now we pick the invoicing frequency from the first item encountered; .. this is cosmetics only and when we use the amendment proposal for import
-            final LeaseAmendmentType.Tuple<InvoicingFrequency, InvoicingFrequency> tuple = leaseAmendmentService
-                    .findInvoiceFrequencyTupleOnfirstFrequencyChangeCandidate(lease, leaseAmendmentType);
+            final LeaseAmendmentTemplate.Tuple<InvoicingFrequency, InvoicingFrequency> tuple = leaseAmendmentService
+                    .findInvoiceFrequencyTupleOnfirstFrequencyChangeCandidate(lease, leaseAmendmentTemplate);
             newLine.setInvoicingFrequencyOnLease(tuple.oldValue);
             newLine.setAmendedInvoicingFrequency(tuple.newValue);
         }
@@ -260,10 +266,10 @@ public class LeaseAmendmentManager {
         String fileNameToUse;
         if (fileName==null) {
             fileNameToUse = "Amendments-" + property.getReference();
-            if (getLeaseAmendmentType()==null) {
+            if (getLeaseAmendmentTemplate()==null) {
                 fileNameToUse = fileNameToUse + "-all-types";
             } else {
-                fileNameToUse = fileNameToUse + "-" + getLeaseAmendmentType().toString();
+                fileNameToUse = fileNameToUse + "-" + getLeaseAmendmentTemplate().toString();
             }
             fileNameToUse = fileNameToUse + "-" +  clockService.now().toString() +".xlsx";
         } else {
@@ -276,8 +282,8 @@ public class LeaseAmendmentManager {
         return excelService.toExcel(getLines(), LeaseAmendmentImportLine.class, "lines", fileNameToUse);
     }
 
-    private boolean hasChangingFrequency(final LeaseItem i, final LeaseAmendmentType leaseAmendmentType){
-        final LeaseAmendmentType.Tuple<InvoicingFrequency, InvoicingFrequency> tuple = leaseAmendmentType.getFrequencyChanges()
+    private boolean hasChangingFrequency(final LeaseItem i, final LeaseAmendmentTemplate leaseAmendmentTemplate){
+        final LeaseAmendmentTemplate.Tuple<InvoicingFrequency, InvoicingFrequency> tuple = leaseAmendmentTemplate.getFrequencyChanges()
                 .stream()
                 .filter(t -> t.oldValue == i.getInvoicingFrequency())
                 .findFirst().orElse(null);
@@ -285,9 +291,9 @@ public class LeaseAmendmentManager {
     }
 
     @Programmatic
-    public List<Lease> activeLeasesOnAmendmentStartdateForProperty(final LeaseAmendmentType leaseAmendmentType){
+    public List<Lease> activeLeasesOnAmendmentStartdateForProperty(final LeaseAmendmentTemplate leaseAmendmentTemplate){
         return property==null ?
-                Collections.EMPTY_LIST :  leaseRepository.findByAssetAndActiveOnDate(property, leaseAmendmentType.getAmendmentStartDate());
+                Collections.EMPTY_LIST :  leaseRepository.findByAssetAndActiveOnDate(property, leaseAmendmentTemplate.getAmendmentStartDate());
     }
 
     @Inject

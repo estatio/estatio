@@ -43,21 +43,21 @@ public class LeaseAmendmentRepository {
     }
 
     @Programmatic
-    public List<LeaseAmendment> findByType(final LeaseAmendmentType leaseAmendmentType) {
+    public List<LeaseAmendment> findByTemplate(final LeaseAmendmentTemplate leaseAmendmentTemplate) {
         return repositoryService.allMatches(
                 new QueryDefault<>(
                         LeaseAmendment.class,
-                        "findByType",
-                        "leaseAmendmentType", leaseAmendmentType));
+                        "findByTemplate",
+                        "leaseAmendmentTemplate", leaseAmendmentTemplate));
     }
 
     @Programmatic
-    public List<LeaseAmendment> findByTypeAndState(final LeaseAmendmentType leaseAmendmentType, final LeaseAmendmentState state) {
+    public List<LeaseAmendment> findByTemplateAndState(final LeaseAmendmentTemplate leaseAmendmentTemplate, final LeaseAmendmentState state) {
         return repositoryService.allMatches(
                 new QueryDefault<>(
                         LeaseAmendment.class,
-                        "findByTypeAndState",
-                        "leaseAmendmentType", leaseAmendmentType,
+                        "findByTemplateAndState",
+                        "leaseAmendmentTemplate", leaseAmendmentTemplate,
                         "state", state));
     }
 
@@ -71,13 +71,13 @@ public class LeaseAmendmentRepository {
     }
 
     @Programmatic
-    public LeaseAmendment findUnique(final Lease lease, final LeaseAmendmentType leaseAmendmentType) {
+    public LeaseAmendment findUnique(final Lease lease, final LeaseAmendmentTemplate leaseAmendmentTemplate) {
         return repositoryService.uniqueMatch(
                 new QueryDefault<>(
                         LeaseAmendment.class,
                         "findUnique",
                         "lease", lease,
-                        "leaseAmendmentType", leaseAmendmentType));
+                        "leaseAmendmentTemplate", leaseAmendmentTemplate));
     }
 
     @Programmatic
@@ -101,15 +101,15 @@ public class LeaseAmendmentRepository {
     @Programmatic
     public LeaseAmendment upsert(
             final Lease lease,
-            final LeaseAmendmentType leaseAmendmentType,
+            final LeaseAmendmentTemplate leaseAmendmentTemplate,
             final LeaseAmendmentState state,
             final LocalDate startDate,
             final LocalDate endDate
     ){
-        final LeaseAmendment amendment = findUnique(lease, leaseAmendmentType);
+        final LeaseAmendment amendment = findUnique(lease, leaseAmendmentTemplate);
         LeaseAmendmentState stateToUse = state !=null ? state : LeaseAmendmentState.PROPOSED;
         if (amendment ==null){
-            return create(lease, leaseAmendmentType, stateToUse, startDate, endDate);
+            return create(lease, leaseAmendmentTemplate, leaseAmendmentTemplate.getLeaseAmendmentType(), stateToUse, startDate, endDate);
         } else {
             if (amendment.getState()==LeaseAmendmentState.APPLIED) return amendment;
             amendment.setState(stateToUse);
@@ -123,16 +123,18 @@ public class LeaseAmendmentRepository {
     @Programmatic
     public LeaseAmendment create(
             final Lease lease,
+            final LeaseAmendmentTemplate leaseAmendmentTemplate,
             final LeaseAmendmentType leaseAmendmentType,
             final LeaseAmendmentState state,
             final LocalDate startDate,
             final LocalDate endDate) {
 
         final LeaseAmendment leaseAmendment = new LeaseAmendment();
-        leaseAmendment.setReference(lease.getReference().concat(leaseAmendmentType.getRef_suffix()));
-        leaseAmendment.setName(lease.getReference().concat(leaseAmendmentType.getRef_suffix()));
+        leaseAmendment.setReference(lease.getReference().concat(leaseAmendmentTemplate.getRef_suffix()));
+        leaseAmendment.setName(lease.getReference().concat(leaseAmendmentTemplate.getRef_suffix()));
         leaseAmendment.setType(agreementTypeRepository.find(LeaseAmendmentAgreementTypeEnum.LEASE_AMENDMENT));
         leaseAmendment.setLease(lease);
+        leaseAmendment.setLeaseAmendmentTemplate(leaseAmendmentTemplate);
         leaseAmendment.setLeaseAmendmentType(leaseAmendmentType);
         leaseAmendment.setState(state);
         leaseAmendment.setStartDate(startDate);
@@ -151,8 +153,8 @@ public class LeaseAmendmentRepository {
     }
 
     @Programmatic
-    public List<LeaseAmendment> findByTypeAndProperty(final LeaseAmendmentType leaseAmendmentType, final Property property){
-        return findByType(leaseAmendmentType).stream()
+    public List<LeaseAmendment> findByTemplateAndProperty(final LeaseAmendmentTemplate leaseAmendmentTemplate, final Property property){
+        return findByTemplate(leaseAmendmentTemplate).stream()
                 .filter(a->a.getLease()!=null)
                 .filter(a->a.getLease().getProperty()!=null)
                 .filter(a->a.getLease().getProperty()==property)
@@ -160,8 +162,8 @@ public class LeaseAmendmentRepository {
     }
 
     @Programmatic
-    public List<LeaseAmendment> findByTypeAndStateAndProperty(final LeaseAmendmentType leaseAmendmentType, final LeaseAmendmentState state, final Property property){
-        return findByTypeAndState(leaseAmendmentType, state).stream()
+    public List<LeaseAmendment> findByTypeAndStateAndProperty(final LeaseAmendmentTemplate leaseAmendmentTemplate, final LeaseAmendmentState state, final Property property){
+        return findByTemplateAndState(leaseAmendmentTemplate, state).stream()
                 .filter(a->a.getLease()!=null)
                 .filter(a->a.getLease().getProperty()!=null)
                 .filter(a->a.getLease().getProperty()==property)
