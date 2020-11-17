@@ -9,20 +9,26 @@ import javax.inject.Inject;
 import com.google.common.collect.Lists;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.isis.applib.annotation.*;
+
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
+import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.Nature;
+import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.repository.RepositoryService;
 import org.apache.isis.applib.value.Blob;
+
+import org.isisaddons.module.excel.dom.ExcelService;
+import org.isisaddons.module.excel.dom.WorksheetContent;
+import org.isisaddons.module.excel.dom.WorksheetSpec;
+import org.isisaddons.module.excel.dom.util.Mode;
 
 import org.estatio.module.lease.dom.occupancy.OccupancyRepository;
 import org.estatio.module.lease.dom.occupancy.tags.Activity;
 import org.estatio.module.lease.dom.occupancy.tags.ActivityRepository;
 import org.estatio.module.lease.dom.occupancy.tags.Sector;
 import org.estatio.module.lease.dom.occupancy.tags.SectorRepository;
-import org.isisaddons.module.excel.dom.ExcelService;
-import org.isisaddons.module.excel.dom.WorksheetContent;
-import org.isisaddons.module.excel.dom.WorksheetSpec;
-import org.isisaddons.module.excel.dom.util.Mode;
 
 @DomainObject(
         nature = Nature.VIEW_MODEL,
@@ -83,7 +89,11 @@ public class SectorAndActivityImportManager {
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     public SectorAndActivityImportManager upload(final Blob spreadSheet){
         List<SectorAndActivityImport> newSectorsAndActivities = excelService.fromExcel(spreadSheet, SectorAndActivityImport.class, "Sectors and Activities", Mode.RELAXED);
-        newSectorsAndActivities.forEach(imp -> imp.importData(null));
+        SectorAndActivityImport prev = null;
+        for (SectorAndActivityImport imp : newSectorsAndActivities){
+            imp.importData(prev);
+            prev = imp;
+        }
 
         return new SectorAndActivityImportManager();
     }

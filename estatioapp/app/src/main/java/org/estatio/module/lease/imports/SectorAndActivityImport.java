@@ -1,18 +1,26 @@
 package org.estatio.module.lease.imports;
 
+import java.util.List;
+
+import javax.inject.Inject;
+
 import com.google.common.collect.Lists;
-import lombok.Getter;
-import lombok.Setter;
+
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Nature;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
-import org.estatio.module.base.dom.Importable;
-import org.estatio.module.lease.dom.occupancy.tags.*;
+
 import org.isisaddons.module.excel.dom.ExcelFixture;
 import org.isisaddons.module.excel.dom.ExcelFixtureRowHandler;
 
-import javax.inject.Inject;
-import java.util.List;
+import org.estatio.module.base.dom.Importable;
+import org.estatio.module.lease.dom.occupancy.tags.Activity;
+import org.estatio.module.lease.dom.occupancy.tags.ActivityRepository;
+import org.estatio.module.lease.dom.occupancy.tags.Sector;
+import org.estatio.module.lease.dom.occupancy.tags.SectorRepository;
+
+import lombok.Getter;
+import lombok.Setter;
 
 @DomainObject(
         nature = Nature.VIEW_MODEL,
