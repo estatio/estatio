@@ -9,10 +9,12 @@ import java.util.List;
 
 import com.google.common.collect.Lists;
 
+import org.apache.isis.applib.services.factory.FactoryService;
 import org.apache.isis.applib.services.message.MessageService2;
 import org.apache.isis.applib.value.Blob;
 
 import org.incode.module.document.dom.impl.docs.Document;
+import org.incode.module.document.dom.impl.docs.minio.Document_cacheBlob;
 import org.incode.module.document.spi.minio.ExternalUrlDownloadService;
 
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
@@ -20,6 +22,9 @@ import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStat
 import org.estatio.module.capex.platform.pdfmanipulator.ExtractSpec;
 import org.estatio.module.capex.platform.pdfmanipulator.PdfManipulator;
 import org.estatio.module.capex.platform.pdfmanipulator.Stamp;
+import org.joda.time.LocalDateTime;
+
+import javax.inject.Inject;
 
 /**
  * Wraps a document and is able (using a provided {@link PdfManipulator} object) to extract a selection of pages
@@ -69,7 +74,10 @@ class DocumentPreparer {
                 leftLineTexts.add(String.format(
                         "approved by: %s",
                         completedBy != null ? completedBy : "(unknown)"));
-                leftLineTexts.add("approved on: " + transitionIfAny.getCompletedOn().toString("dd-MMM-yyyy HH:mm"));
+                final LocalDateTime completedOn = transitionIfAny.getCompletedOn();
+                leftLineTexts.add(String.format(
+                        "approved on: %s",
+                        completedOn != null ? completedOn.toString("dd-MMM-yyyy HH:mm") : "(unknown)"));
             } else {
                 leftLineTexts.add("not yet approved");
             }
