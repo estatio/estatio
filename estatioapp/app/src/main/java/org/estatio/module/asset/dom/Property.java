@@ -61,7 +61,6 @@ import org.estatio.module.asset.dom.counts.Count;
 import org.estatio.module.asset.dom.counts.CountRepository;
 import org.estatio.module.asset.dom.erv.EstimatedRentalValueRepository;
 import org.estatio.module.asset.dom.location.LocationLookupService;
-import org.estatio.module.asset.dom.ownership.FixedAssetOwnershipRepository;
 import org.estatio.module.asset.dom.role.FixedAssetRole;
 import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
 import org.estatio.module.base.dom.apptenancy.WithApplicationTenancyPathPersisted;
@@ -349,9 +348,6 @@ public class Property
 
     @Inject
     LocationLookupService locationLookupService;
-
-    @Inject
-    FixedAssetOwnershipRepository fixedAssetOwnershipRepository;
 
     @Inject EstimatedRentalValueRepository estimatedRentalValueRepository;
 

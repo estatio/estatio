@@ -18,6 +18,7 @@
  */
 package org.estatio.module.asset.dom.role;
 
+import java.math.BigDecimal;
 import java.util.SortedSet;
 
 import javax.annotation.Nullable;
@@ -176,6 +177,10 @@ public class FixedAssetRole
     @javax.jdo.annotations.Persistent
     @Getter @Setter
     private LocalDate endDate;
+
+    @Property(optionality = Optionality.OPTIONAL)
+    @Getter @Setter
+    private BigDecimal ownershipShare;
 
 
 

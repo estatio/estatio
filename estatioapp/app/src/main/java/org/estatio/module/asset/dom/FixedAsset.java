@@ -21,7 +21,6 @@ package org.estatio.module.asset.dom;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -56,8 +55,6 @@ import org.incode.module.base.dom.with.WithNameComparable;
 import org.incode.module.base.dom.with.WithReferenceUnique;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelOwner;
 
-import org.estatio.module.asset.dom.ownership.FixedAssetOwnership;
-import org.estatio.module.asset.dom.ownership.FixedAssetOwnershipRepository;
 import org.estatio.module.asset.dom.role.FixedAssetRole;
 import org.estatio.module.asset.dom.role.FixedAssetRoleRepository;
 import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
@@ -183,49 +180,16 @@ public abstract class FixedAsset<X extends FixedAsset<X>>
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Persistent(mappedBy = "fixedAsset")
-    @CollectionLayout(defaultView = "table")
-    @Getter @Setter
-    private SortedSet<FixedAssetOwnership> owners = new TreeSet<>();
-
-    @MemberOrder(name = "owners", sequence = "1")
-    public FixedAsset addOwner(final Party newOwner, final OwnershipType type) {
-        FixedAssetOwnership fixedAssetOwnership = fixedAssetOwnershipRepository.newOwnership(newOwner, type, this);
-        getOwners().add(fixedAssetOwnership);
-        return this;
-    }
-
-    public List<Party> choices0AddOwner() {
-        return ownerCandidates().stream().map(FixedAssetRole::getParty).collect(Collectors.toList());
-    }
-
     @Programmatic
     public List<FixedAssetRole> ownerCandidates() {
         return fixedAssetRoleRepository.findByAssetAndType(this, FixedAssetRoleTypeEnum.PROPERTY_OWNER);
     }
 
-    public String validateAddOwner(final Party newOwner, final OwnershipType type) {
-        if (getOwners().stream().filter(owner -> owner.getOwner().equals(newOwner)).toArray().length > 0) {
-            return "This owner already has its share defined";
-        } else if (type.equals(OwnershipType.FULL) && getOwners().size() != 0 && (getOwners().stream().filter(owner -> owner.getOwnershipType().equals(OwnershipType.FULL)).toArray().length == 0)) {
-            return "This owner can not be a full owner as there is already a shared owner defined";
-        } else {
-            return null;
-        }
-    }
-
-    public String disableAddOwner() {
-        if (getOwners().stream().filter(owner -> owner.getOwnershipType().equals(OwnershipType.FULL)).toArray().length > 0) {
-            return "This property is fully owned. To add another owner, first change the ownership type of the current owner to 'shared'";
-        } else {
-            return null;
-        }
-    }
 
     @Action(hidden = Where.ALL_TABLES)
     public boolean getFullOwnership() {
-        final SortedSet<FixedAssetOwnership> owners = getOwners();
-        return (owners.size() == 1 && owners.first().getOwnershipType().equals(OwnershipType.FULL));
+        final List<FixedAssetRole> owners = ownerCandidates();
+        return (owners.size() == 1 && owners.get(0).getOwnershipShare() == null);
     }
 
     // //////////////////////////////////////
@@ -287,6 +251,4 @@ public abstract class FixedAsset<X extends FixedAsset<X>>
         return role;
     }
 
-    @Inject
-    FixedAssetOwnershipRepository fixedAssetOwnershipRepository;
 }
