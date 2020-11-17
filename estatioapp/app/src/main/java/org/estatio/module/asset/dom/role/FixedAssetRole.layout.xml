@@ -68,6 +68,9 @@
                             <ns2:action id="precededBy" position="BELOW"/>
                         </ns2:property>
                     </ns2:fieldSet>
+                    <ns2:fieldSet name="Ownership Share" id="ownershipshare">
+                        <ns2:property id="ownershipShare" hidden="EVERYWHERE"/>
+                    </ns2:fieldSet>
                     <ns2:fieldSet name="Related" id="related">
                         <!-- TODO: hidden because they lie !!! -->
                         <ns2:property id="predecessor" hidden="EVERYWHERE"/>
