@@ -128,7 +128,17 @@ import lombok.experimental.UtilityClass;
                 value = "SELECT "
                         + "FROM org.estatio.module.lease.dom.occupancy.Occupancy "
                         + "WHERE brand == :brand "
-                        + "&& (:includeTerminated || endDate == null || endDate >= :date)")
+                        + "&& (:includeTerminated || endDate == null || endDate >= :date)"),
+        @javax.jdo.annotations.Query(
+                name = "findBySector", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.module.lease.dom.occupancy.Occupancy "
+                        + "WHERE sector == :sector"),
+        @javax.jdo.annotations.Query(
+                name = "findByActivity", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.module.lease.dom.occupancy.Occupancy "
+                        + "WHERE activity == :activity")
 })
 @DomainObject(
         objectType = "org.estatio.dom.lease.Occupancy"

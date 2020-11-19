@@ -60,6 +60,18 @@ public class InvoiceRepository extends UdoDomainRepositoryAndFactory<Invoice> {
                 "seller", party);
     }
 
+    @Programmatic
+    public Invoice findFirstByBuyer(final Party party) {
+        return firstMatch("findByBuyer",
+                "buyer", party);
+    }
+
+    @Programmatic
+    public Invoice findFirstBySeller(final Party party) {
+        return firstMatch("findBySeller",
+                "seller", party);
+    }
+
     /**
      * Finds all invoices for the invoice number (invoice numbers are reused in Italy, at least, new sequence each year)
      *

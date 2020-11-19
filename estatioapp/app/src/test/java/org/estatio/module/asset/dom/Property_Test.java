@@ -34,9 +34,6 @@ import org.incode.module.country.dom.impl.Country;
 import org.incode.module.unittestsupport.dom.bean.AbstractBeanPropertiesTest;
 
 import org.estatio.module.asset.dom.location.LocationLookupService;
-import org.estatio.module.asset.dom.ownership.FixedAssetOwnership;
-import org.estatio.module.party.dom.Party;
-import org.estatio.module.party.dom.PartyForTesting;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -122,51 +119,6 @@ public class Property_Test {
 
     }
 
-    public static class ValidateAddOwner extends Property_Test {
-
-        private Property property;
-        private FixedAssetOwnership fixedAssetOwnership;
-        private Party party;
-
-        @Before
-        public void setUp() throws Exception {
-            party = new PartyForTesting();
-            party.setName("Party");
-            property = new Property();
-
-            fixedAssetOwnership = new FixedAssetOwnership();
-            fixedAssetOwnership.setOwner(party);
-            fixedAssetOwnership.setFixedAsset(property);
-
-            property.getOwners().add(fixedAssetOwnership);
-            assertThat(property.getOwners()).hasSize(1);
-        }
-
-        @Test
-        public void alreadyDefined() throws Exception {
-            // given
-            fixedAssetOwnership.setOwnershipType(OwnershipType.FULL);
-
-            // when
-            final String validation = property.validateAddOwner(party, OwnershipType.FULL);
-
-            // then
-            assertThat(validation).isEqualToIgnoringCase("This owner already has its share defined");
-        }
-
-        @Test
-        public void fullOwnershipUnavailable() throws Exception {
-            // given
-            fixedAssetOwnership.setOwnershipType(OwnershipType.SHARED);
-            final Party newParty = new PartyForTesting();
-
-            // when
-            final String validation = property.validateAddOwner(newParty, OwnershipType.FULL);
-
-            // then
-            assertThat(validation).isEqualToIgnoringCase("This owner can not be a full owner as there is already a shared owner defined");
-        }
-    }
 
     public static class Dispose extends Property_Test {
         private Property property;
