@@ -2,12 +2,7 @@ package org.estatio.module.application.app;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
@@ -18,6 +13,7 @@ import com.google.common.collect.Lists;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.isis.applib.annotation.*;
+import org.apache.isis.applib.annotation.Collection;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
@@ -839,11 +835,12 @@ public class AdminDashboard implements ViewModel {
         List<LeaseItem> newServiceCharges = new ArrayList<>();
         properties.stream().forEach(property -> {
             leaseRepository.findByAssetAndActiveOnDate(property, date).stream().forEach(lease -> {
-//                LeaseItem rentItem = lease.getItems().stream().filter(li -> li.getType() == LeaseItemType.RENT && li.isActiveOn(date)).collect(Collectors.toList()).get(0); // TODO: check if this is needed and correct
-                lease.getItems().stream()
-                        .filter(li -> li.getType() == LeaseItemType.SERVICE_CHARGE
-                                && li.getInvoicedBy() == LeaseAgreementRoleTypeEnum.MANAGER
-                                && li.getEndDate() == null)
+                List<LeaseItem> leaseItems = new ArrayList<>(lease.getItems());
+//                LeaseItem rentItem = leaseItems.stream().filter(li -> li.getType() == LeaseItemType.RENT && li.isActiveOn(date)).collect(Collectors.toList()).get(0); // TODO: check if this is needed and correct
+                leaseItems.stream()
+                        .filter(li -> li.getType().equals(LeaseItemType.SERVICE_CHARGE)
+                                && li.getInvoicedBy() == LeaseAgreementRoleTypeEnum.LANDLORD
+                                && li.isActiveOn(date))
                         .forEach(li -> {
                             li.verifyUntil(date.plusYears(1));
 //                            newServiceCharges.add(li.copy(date, rentItem.getInvoicingFrequency(), rentItem.getPaymentMethod(), li.getCharge())); // TODO: check if freq and method of payment should be taken from rent

@@ -505,7 +505,8 @@ public class LeaseItem
         return isActiveOn(getClockService().now());
     }
 
-    private boolean isActiveOn(final LocalDate localDate) {
+    @Programmatic
+    public boolean isActiveOn(final LocalDate localDate) {
         return getEffectiveInterval().contains(localDate);
     }
 
