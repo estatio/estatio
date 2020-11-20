@@ -836,15 +836,14 @@ public class AdminDashboard implements ViewModel {
         properties.stream().forEach(property -> {
             leaseRepository.findByAssetAndActiveOnDate(property, date).stream().forEach(lease -> {
                 List<LeaseItem> leaseItems = new ArrayList<>(lease.getItems());
-//                LeaseItem rentItem = leaseItems.stream().filter(li -> li.getType() == LeaseItemType.RENT && li.isActiveOn(date)).collect(Collectors.toList()).get(0); // TODO: check if this is needed and correct
+                LeaseItem rent = leaseItems.stream().filter(li -> li.getType() == LeaseItemType.RENT && li.isActiveOn(date)).collect(Collectors.toList()).get(0);
                 leaseItems.stream()
                         .filter(li -> li.getType().equals(LeaseItemType.SERVICE_CHARGE)
                                 && li.getInvoicedBy() == LeaseAgreementRoleTypeEnum.LANDLORD
                                 && li.isActiveOn(date))
                         .forEach(li -> {
                             li.verifyUntil(date.plusYears(1));
-//                            newServiceCharges.add(li.copy(date, rentItem.getInvoicingFrequency(), rentItem.getPaymentMethod(), li.getCharge())); // TODO: check if freq and method of payment should be taken from rent
-                            newServiceCharges.add(li.copy(date, li.getInvoicingFrequency(), li.getPaymentMethod(), li.getCharge()));
+                            newServiceCharges.add(li.copy(date, rent.getInvoicingFrequency(), rent.getPaymentMethod(), li.getCharge()));
                         });
             });
         });
