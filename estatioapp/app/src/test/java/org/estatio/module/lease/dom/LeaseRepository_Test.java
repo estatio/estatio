@@ -131,22 +131,6 @@ public class LeaseRepository_Test {
         }
     }
 
-    public static class FindLeasesActiveOnDate extends LeaseRepository_Test {
-
-        @Test
-        public void happyCase() {
-
-            leaseRepository.findByAssetAndActiveOnDate(asset, date);
-
-            assertThat(finderInteraction.getFinderMethod()).isEqualTo(FinderMethod.ALL_MATCHES);
-            assertThat(finderInteraction.getResultType()).isEqualTo(Lease.class);
-            assertThat(finderInteraction.getQueryName()).isEqualTo("findByAssetAndActiveOnDate");
-            assertThat(finderInteraction.getArgumentsByParameterName().get("asset")).isEqualTo((Object) asset);
-            assertThat(finderInteraction.getArgumentsByParameterName().get("date")).isEqualTo((Object) date);
-            assertThat(finderInteraction.getArgumentsByParameterName()).hasSize(2);
-        }
-    }
-
     public static class AllLeases extends LeaseRepository_Test {
 
         @Test
