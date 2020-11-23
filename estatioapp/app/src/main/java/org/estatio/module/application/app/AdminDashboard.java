@@ -834,7 +834,7 @@ public class AdminDashboard implements ViewModel {
     public List<LeaseItem> adaptServiceChargeLeaseItems(final List<org.estatio.module.asset.dom.Property> properties, final LocalDate date){
         List<LeaseItem> newServiceCharges = new ArrayList<>();
         properties.stream().forEach(property -> {
-            leaseRepository.findByAssetAndActiveOnDate(property, date).stream().forEach(lease -> {
+            leaseRepository.findByAssetAndActiveOnDateIncludingPreviews(property, date).stream().forEach(lease -> {
                 List<LeaseItem> leaseItems = new ArrayList<>(lease.getItems());
                 List<LeaseItem> rentItems = leaseItems.stream().filter(li -> li.getType() == LeaseItemType.RENT && li.isActiveOn(date)).collect(Collectors.toList());
                 if (!rentItems.isEmpty()) {

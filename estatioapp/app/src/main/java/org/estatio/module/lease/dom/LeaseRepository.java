@@ -142,7 +142,16 @@ public class LeaseRepository extends UdoDomainRepositoryAndFactory<Lease> {
     public List<Lease> findByAssetAndActiveOnDate(
             final FixedAsset fixedAsset,
             final LocalDate activeOnDate) {
-        return allMatches("findByAssetAndActiveOnDate", "asset", fixedAsset, "activeOnDate", activeOnDate);
+        return allMatches("findByAssetAndActiveOnDate", "asset", fixedAsset, "activeOnDate", activeOnDate)
+                .stream()
+                .filter(lease -> lease.getStatus() != LeaseStatus.PREVIEW)
+                .collect(Collectors.toList());
+    }
+
+    public List<Lease> findByAssetAndActiveOnDateIncludingPreviews(
+            final FixedAsset fixedAsset,
+            final LocalDate activeOnDate) {
+        return allMatches("findByAssetAndActiveOnDateIncludingPreviews", "asset", fixedAsset, "activeOnDate", activeOnDate);
     }
 
     @Programmatic
