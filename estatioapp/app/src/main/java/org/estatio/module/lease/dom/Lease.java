@@ -172,6 +172,7 @@ import lombok.Setter;
                 value = "SELECT "
                         + "FROM org.estatio.module.lease.dom.Lease "
                         + "WHERE occupancies.contains(occ) "
+                        + "&& status != LeaseStatus.PREVIEW "
                         + "&& (tenancyStartDate == null || tenancyStartDate <= :activeOnDate) "
                         + "&& (tenancyEndDate == null || tenancyEndDate >= :activeOnDate) "
                         + "&& (occ.unit.property == :asset) "
