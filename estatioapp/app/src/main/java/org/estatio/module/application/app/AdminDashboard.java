@@ -836,15 +836,21 @@ public class AdminDashboard implements ViewModel {
         properties.stream().forEach(property -> {
             leaseRepository.findByAssetAndActiveOnDate(property, date).stream().forEach(lease -> {
                 List<LeaseItem> leaseItems = new ArrayList<>(lease.getItems());
-                LeaseItem rent = leaseItems.stream().filter(li -> li.getType() == LeaseItemType.RENT && li.isActiveOn(date)).collect(Collectors.toList()).get(0);
-                leaseItems.stream()
-                        .filter(li -> li.getType() == LeaseItemType.SERVICE_CHARGE
-                                && li.getInvoicedBy() == LeaseAgreementRoleTypeEnum.MANAGER
-                                && li.isActiveOn(date))
-                        .forEach(li -> {
-                            li.verifyUntil(date.plusYears(1));
-                            newServiceCharges.add(li.copy(date, rent.getInvoicingFrequency(), rent.getPaymentMethod(), li.getCharge()));
-                        });
+                List<LeaseItem> rentItems = leaseItems.stream().filter(li -> li.getType() == LeaseItemType.RENT && li.isActiveOn(date)).collect(Collectors.toList());
+                if (!rentItems.isEmpty()) {
+                    LeaseItem rent = rentItems.get(0);
+                    leaseItems.stream()
+                            .filter(li -> li.getType() == LeaseItemType.SERVICE_CHARGE
+                                    && li.getInvoicedBy() == LeaseAgreementRoleTypeEnum.MANAGER
+                                    && li.isActiveOn(date))
+                            .forEach(li -> {
+                                li.verifyUntil(date.plusYears(1));
+                                newServiceCharges.add(li.copy(date, rent.getInvoicingFrequency(), rent.getPaymentMethod(), li.getCharge()));
+                                LOG.info(String.format("Adapting service charge item with new invoicing frequency %s, payment method %s and charge %s on lease %s", rent.getInvoicingFrequency(), rent.getPaymentMethod(), li.getCharge().getReference(), lease.getReference()));
+                            });
+                } else {
+                    LOG.info(String.format("No rent item found for lease %s; could not adapt service charge item", lease.getReference()));
+                }
             });
         });
 
