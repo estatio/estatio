@@ -838,8 +838,8 @@ public class AdminDashboard implements ViewModel {
                 List<LeaseItem> leaseItems = new ArrayList<>(lease.getItems());
                 LeaseItem rent = leaseItems.stream().filter(li -> li.getType() == LeaseItemType.RENT && li.isActiveOn(date)).collect(Collectors.toList()).get(0);
                 leaseItems.stream()
-                        .filter(li -> li.getType().equals(LeaseItemType.SERVICE_CHARGE)
-                                && li.getInvoicedBy() == LeaseAgreementRoleTypeEnum.LANDLORD
+                        .filter(li -> li.getType() == LeaseItemType.SERVICE_CHARGE
+                                && li.getInvoicedBy() == LeaseAgreementRoleTypeEnum.MANAGER
                                 && li.isActiveOn(date))
                         .forEach(li -> {
                             li.verifyUntil(date.plusYears(1));
