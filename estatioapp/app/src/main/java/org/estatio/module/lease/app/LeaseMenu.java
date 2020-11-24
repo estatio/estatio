@@ -128,7 +128,16 @@ public class LeaseMenu {
         return partyRoleRepository.validateThat(landlord, LeaseRoleTypeEnum.LANDLORD);
     }
     public List<Party> autoComplete8NewLease(@MinLength(3) String searchPhrase) {
-        return partyRepository.autoCompleteWithRole(searchPhrase, LeaseRoleTypeEnum.TENANT);
+        return partyRepository.autoCompleteWithRole(searchPhrase, LeaseRoleTypeEnum.TENANT)
+                .stream()
+                .filter(party -> {
+                    if (party.getAtPath().startsWith("/BEL")) {
+                        return party.getReference().startsWith("BECL");
+                    } else {
+                        return true;
+                    }
+                })
+                .collect(Collectors.toList());
     }
     public String validate8NewLease(Party tenant) {
         return partyRoleRepository.validateThat(tenant, LeaseRoleTypeEnum.TENANT);

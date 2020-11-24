@@ -304,8 +304,8 @@ public class LeaseAmendmentService {
         serviceRegistry2.injectServicesInto(leaseCopy);
         final Party tenant = originalLease.getSecondaryParty();
         if (tenant != null) {
-            final AgreementRoleType artLandlord = agreementRoleTypeRepository.find(LeaseAgreementRoleTypeEnum.TENANT);
-            leaseCopy.newRole(artLandlord, tenant, null, null);
+            final AgreementRoleType artTenant = agreementRoleTypeRepository.find(LeaseAgreementRoleTypeEnum.TENANT);
+            leaseCopy.newRole(artTenant, tenant, null, null);
         }
         final Party landlord = originalLease.getPrimaryParty();
         if (landlord != null) {

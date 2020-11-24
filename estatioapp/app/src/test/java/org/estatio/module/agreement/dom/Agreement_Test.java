@@ -25,6 +25,7 @@ import com.google.common.collect.Lists;
 
 import org.apache.isis.applib.services.factory.FactoryService;
 import org.apache.isis.applib.services.repository.RepositoryService;
+import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
@@ -582,6 +583,9 @@ public class Agreement_Test {
             @Mock
             private ClockService mockClockService;
 
+            @Mock
+            private AgreementRoleTypeRepository mockAgreementRoleTypeRepository;
+
             private AgreementRoleType art;
             private AgreementRoleType artOther;
             private Party party;
@@ -609,11 +613,13 @@ public class Agreement_Test {
 
                 agreement = new AgreementForTesting();
                 agreement.clockService = mockClockService;
+                agreement.agreementRoleTypeRepository = mockAgreementRoleTypeRepository;
 
                 context.checking(new Expectations() {
                     {
                         allowing(mockClockService).now();
                         will(returnValue(clockDate));
+                        allowing(mockAgreementRoleTypeRepository).find(LeaseAgreementRoleTypeEnum.TENANT);
                     }
                 });
             }
