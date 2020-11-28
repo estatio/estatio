@@ -93,6 +93,7 @@ language governing permissions and limitations under the License.
     </build>
 
     <properties>
+        <jetty-maven-plugin.version>9.4.35.v20201120</jetty-maven-plugin.version>
         <maven-war-plugin.warName>${project.parent.artifactId}</maven-war-plugin.warName>
     </properties>
 
