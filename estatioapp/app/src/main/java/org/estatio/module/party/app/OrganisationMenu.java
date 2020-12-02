@@ -43,6 +43,7 @@ import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
+import org.estatio.module.party.dom.role.*;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.base.dom.Dflt;
@@ -58,10 +59,6 @@ import org.estatio.module.party.dom.NumeratorAtPathRepository;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.OrganisationRepository;
 import org.estatio.module.party.dom.PartyRepository;
-import org.estatio.module.party.dom.role.IPartyRoleType;
-import org.estatio.module.party.dom.role.PartyRoleRepository;
-import org.estatio.module.party.dom.role.PartyRoleType;
-import org.estatio.module.party.dom.role.PartyRoleTypeRepository;
 
 @DomainService(
         nature = NatureOfService.VIEW_MENU_ONLY,
@@ -118,11 +115,18 @@ public class OrganisationMenu {
             final List<IPartyRoleType> partyRoleTypes
     ) {
         final ApplicationTenancy applicationTenancy = estatioApplicationTenancyRepository.findOrCreateTenancyFor(country);
-        if (Strings.isNullOrEmpty(reference) && numeratorForOrganisationsRepository.findNumerator(applicationTenancy) == null) {
-            return "No numerator found";
+        PartyRoleType tenantRole = partyRoleTypeRepository.findByKey(LeaseAgreementRoleTypeEnum.TENANT.getKey());
+        if (applicationTenancy.getPath().startsWith("/BEL") && partyRoleTypes.contains(tenantRole)) {
+            if (Strings.isNullOrEmpty(reference) || !reference.startsWith("BECL")) {
+                return "The reference for Belgian organisations with role TENANT should have the following format: 'BECLxxxxx'";
+            }
         } else {
-            if (!Strings.isNullOrEmpty(reference) && numeratorForOrganisationsRepository.findNumerator(applicationTenancy) != null)
-                return "Reference must be left empty because a numerator is being used";
+            if (Strings.isNullOrEmpty(reference) && numeratorForOrganisationsRepository.findNumerator(applicationTenancy) == null) {
+                return "No numerator found";
+            } else {
+                if (!Strings.isNullOrEmpty(reference) && numeratorForOrganisationsRepository.findNumerator(applicationTenancy) != null)
+                    return "Reference must be left empty because a numerator is being used";
+            }
         }
 
         if (Stream.of("/FRA", "/BEL").anyMatch(applicationTenancy.getPath()::startsWith)) {
