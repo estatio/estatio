@@ -8,11 +8,14 @@ import javax.jdo.annotations.Column;
 import javax.jdo.annotations.DatastoreIdentity;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.Index;
+import javax.jdo.annotations.Indices;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.Queries;
 import javax.jdo.annotations.Query;
 import javax.jdo.annotations.Unique;
+import javax.jdo.annotations.Uniques;
 import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
 
@@ -57,9 +60,24 @@ import lombok.Setter;
                         + "WHERE cmpCode == :cmpCode "
                         + "   && docCode == :docCode "
                         + "   && docNum  == :docNum "),
+        @Query(
+                name = "findByDocumentTypeAndCmpCodeAndDocCodeAndDocDate", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.module.coda.dom.codadocument.CodaDocument "
+                        + "WHERE documentType == :documentType "
+                        + "   && cmpCode == :cmpCode "
+                        + "   && docCode == :docCode "
+                        + "   && docDate  == :docDate "),
 
 })
-@Unique(name = "CodaDocument_uuid_UNQ", members = { "uuid" })
+@Uniques({
+        @Unique(name = "CodaDocument_uuid_UNQ", members = { "uuid" })
+})
+@Indices({
+        @Index(name = "CodaDocument_docType__cmpCode_docCode_docDate_IDX", members = { "documentType", "cmpCode", "docCode", "docDate" }),
+        @Index(name = "CodaDocument_cmpCode_docCode_docNum_IDX", members = { "cmpCode", "docCode", "docNum" }),
+})
+
 @DomainObject(
         objectType = "codadocument.CodaDocument",
         editing = Editing.DISABLED
