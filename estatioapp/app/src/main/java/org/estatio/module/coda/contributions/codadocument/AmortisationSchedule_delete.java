@@ -34,10 +34,10 @@ public class AmortisationSchedule_delete {
         // delete all coda docs related to entry
         Lists.newArrayList(amortisationSchedule.getEntries())
                 .forEach(e->{
-                    codaDocumentLinkRepository.findByEntry(e).forEach(l->{
+                    codaDocumentLinkRepository.findByAmortisationEntry(e).forEach(l->{
                         factoryService.mixin(
                                 CodaDocument_delete.class,
-                                l.getCodaDocument()
+                                l.getCodaDocumentLine()
                         ).$$();
                     });
                 });
@@ -45,7 +45,7 @@ public class AmortisationSchedule_delete {
         codaDocumentLinkRepository.findByAmortisationSchedule(amortisationSchedule).forEach(l->{
             factoryService.mixin(
                     CodaDocument_delete.class,
-                    l.getCodaDocument()
+                    l.getCodaDocumentLine()
             ).$$();
         });
         // delete all links to schedule

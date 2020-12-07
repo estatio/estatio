@@ -22,7 +22,7 @@ import lombok.Setter;
 @PersistenceCapable(
         identityType = IdentityType.DATASTORE,
         schema = "dbo",
-        table = "OutgoingInvoiceCodaDocumentLink"
+        table = "InvoiceForLeaseCodaDocumentLineLink"
 )
 @DatastoreIdentity(
         strategy = IdGeneratorStrategy.IDENTITY,
@@ -34,40 +34,40 @@ import lombok.Setter;
         @Query(
                 name = "findUnique", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.module.coda.dom.codadocument.OutgoingInvoiceCodaDocumentLink "
-                        + "WHERE codaDocument == :codaDocument "
+                        + "FROM org.estatio.module.coda.dom.codadocument.InvoiceForLeaseCodaDocumentLineLink "
+                        + "WHERE codaDocumentLine == :codaDocumentLine "
                         + "   && invoice  == :invoice "),
         @Query(
                 name = "findByInvoice", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.module.coda.dom.codadocument.OutgoingInvoiceCodaDocumentLink "
+                        + "FROM org.estatio.module.coda.dom.codadocument.InvoiceForLeaseCodaDocumentLineLink "
                         + "WHERE invoice == :invoice "),
         @Query(
-                name = "findByDocument", language = "JDOQL",
+                name = "findByDocumentLine", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.module.coda.dom.codadocument.OutgoingInvoiceCodaDocumentLink "
-                        + "WHERE codaDocument == :codaDocument "),
+                        + "FROM org.estatio.module.coda.dom.codadocument.InvoiceForLeaseCodaDocumentLineLink "
+                        + "WHERE codaDocumentLine == :codaDocumentLine "),
 
 })
-@Unique(name = "OutgoingInvoiceCodaDocumentLink_codaDocument_invoice_UNQ", members = { "codaDocument", "invoice" })
+@Unique(name = "InvoiceForLeaseCodaDocumentLineLink_codaDocumentLine_invoice_UNQ", members = { "codaDocumentLine", "invoice" })
 @DomainObject(
-        objectType = "codadocument.OutgoingInvoiceCodaDocumentLink",
+        objectType = "codadocument.InvoiceForLeaseCodaDocumentLineLink",
         editing = Editing.DISABLED
 )
-public class OutgoingInvoiceCodaDocumentLink {
+public class InvoiceForLeaseCodaDocumentLineLink {
 
-    public OutgoingInvoiceCodaDocumentLink(final InvoiceForLease invoice, final CodaDocument codaDocument){
+    public InvoiceForLeaseCodaDocumentLineLink(final InvoiceForLease invoice, final CodaDocumentLine codaDocumentLine){
         this.invoice = invoice;
-        this.codaDocument = codaDocument;
+        this.codaDocumentLine = codaDocumentLine;
     }
 
     @Column(allowsNull = "false", name = "invoiceId")
     @Getter @Setter
     private InvoiceForLease invoice;
 
-    @Column(allowsNull = "false", name = "documentId")
+    @Column(allowsNull = "false", name = "documentLineId")
     @Getter @Setter
-    private CodaDocument codaDocument;
+    private CodaDocumentLine codaDocumentLine;
 
 
 }

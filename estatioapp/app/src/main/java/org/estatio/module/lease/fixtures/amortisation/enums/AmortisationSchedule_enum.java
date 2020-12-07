@@ -26,7 +26,8 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public enum AmortisationSchedule_enum implements PersonaWithFinder<AmortisationSchedule>, PersonaWithBuilderScript<AmortisationSchedule, AmortisationScheduleBuilder> {
 
-    OxfTopModel(Lease_enum.OxfTopModel001Gb, Charge_enum.GbDiscount, new BigDecimal("36000.00"), new LocalDate(2020,8,1), BigInteger.valueOf(1));
+    OxfTopModel(Lease_enum.OxfTopModel001Gb, Charge_enum.GbDiscount, new BigDecimal("36000.00"), new LocalDate(2020,8,1), BigInteger.valueOf(1)),
+    OxfMiracl(Lease_enum.OxfMiracl005Gb, Charge_enum.GbDiscount, new BigDecimal("18000.00"), new LocalDate(2020,9,2), BigInteger.valueOf(1));
 
     private final Lease_enum lease_d;
 

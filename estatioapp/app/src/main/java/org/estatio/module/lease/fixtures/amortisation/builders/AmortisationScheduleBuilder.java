@@ -39,8 +39,8 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
-@EqualsAndHashCode(of={"property"}, callSuper = false)
-@ToString(of={"property"})
+@EqualsAndHashCode(of={"lease", "charge", "startDate", "sequence"}, callSuper = false)
+@ToString(of={"lease", "charge", "startDate", "sequence"})
 @Accessors(chain = true)
 public final class AmortisationScheduleBuilder
         extends BuilderScriptAbstract<AmortisationSchedule, AmortisationScheduleBuilder> {

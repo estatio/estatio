@@ -22,7 +22,7 @@ import lombok.Setter;
 @PersistenceCapable(
         identityType = IdentityType.DATASTORE,
         schema = "dbo",
-        table = "AmortisationScheduleCodaDocumentLink"
+        table = "AmortisationScheduleCodaDocumentLineLink"
 )
 @DatastoreIdentity(
         strategy = IdGeneratorStrategy.IDENTITY,
@@ -34,39 +34,39 @@ import lombok.Setter;
         @Query(
                 name = "findUnique", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.module.coda.dom.codadocument.AmortisationScheduleCodaDocumentLink "
-                        + "WHERE codaDocument == :codaDocument "
+                        + "FROM org.estatio.module.coda.dom.codadocument.AmortisationScheduleCodaDocumentLineLink "
+                        + "WHERE codaDocumentLine == :codaDocumentLine "
                         + "   && amortisationSchedule  == :amortisationSchedule "),
         @Query(
                 name = "findByAmortisationSchedule", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.module.coda.dom.codadocument.AmortisationScheduleCodaDocumentLink "
+                        + "FROM org.estatio.module.coda.dom.codadocument.AmortisationScheduleCodaDocumentLineLink "
                         + "WHERE amortisationSchedule  == :amortisationSchedule "),
         @Query(
-                name = "findByDocument", language = "JDOQL",
+                name = "findByDocumentLine", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.module.coda.dom.codadocument.AmortisationScheduleCodaDocumentLink "
-                        + "WHERE codaDocument  == :codaDocument "),
+                        + "FROM org.estatio.module.coda.dom.codadocument.AmortisationScheduleCodaDocumentLineLink "
+                        + "WHERE codaDocumentLine  == :codaDocumentLine "),
 
 })
-@Unique(name = "AmortisationScheduleCodaDocumentLink_codaDocument_amortisationSchedule_UNQ", members = { "codaDocument", "amortisationSchedule" })
+@Unique(name = "AmortisationScheduleCodaDocumentLineLink_codaDocumentLine_amortisationSchedule_UNQ", members = { "codaDocumentLine", "amortisationSchedule" })
 @DomainObject(
-        objectType = "codadocument.AmortisationScheduleCodaDocumentLink",
+        objectType = "codadocument.AmortisationScheduleCodaDocumentLineLink",
         editing = Editing.DISABLED
 )
-public class AmortisationScheduleCodaDocumentLink {
+public class AmortisationScheduleCodaDocumentLineLink {
 
-    public AmortisationScheduleCodaDocumentLink(final AmortisationSchedule amortisationSchedule, final CodaDocument codaDocument){
+    public AmortisationScheduleCodaDocumentLineLink(final AmortisationSchedule amortisationSchedule, final CodaDocumentLine codaDocumentLine){
         this.amortisationSchedule = amortisationSchedule;
-        this.codaDocument = codaDocument;
+        this.codaDocumentLine = codaDocumentLine;
     }
 
     @Column(allowsNull = "false", name = "scheduleId")
     @Getter @Setter
     private AmortisationSchedule amortisationSchedule;
 
-    @Column(allowsNull = "false", name = "documentId")
+    @Column(allowsNull = "false", name = "documentLineId")
     @Getter @Setter
-    private CodaDocument codaDocument;
+    private CodaDocumentLine codaDocumentLine;
 
 }

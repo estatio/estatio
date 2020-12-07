@@ -22,7 +22,7 @@ import lombok.Setter;
 @PersistenceCapable(
         identityType = IdentityType.DATASTORE,
         schema = "dbo",
-        table = "AmortisationEntryCodaDocumentLink"
+        table = "AmortisationEntryCodaDocumentLineLink"
 )
 @DatastoreIdentity(
         strategy = IdGeneratorStrategy.IDENTITY,
@@ -34,38 +34,38 @@ import lombok.Setter;
         @Query(
                 name = "findUnique", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.module.coda.dom.codadocument.AmortisationEntryCodaDocumentLink "
-                        + "WHERE codaDocument == :codaDocument "
+                        + "FROM org.estatio.module.coda.dom.codadocument.AmortisationEntryCodaDocumentLineLink "
+                        + "WHERE codaDocumentLine == :codaDocumentLine "
                         + "   && amortisationEntry  == :amortisationEntry "),
         @Query(
                 name = "findByEntry", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.module.coda.dom.codadocument.AmortisationEntryCodaDocumentLink "
+                        + "FROM org.estatio.module.coda.dom.codadocument.AmortisationEntryCodaDocumentLineLink "
                         + "WHERE amortisationEntry == :amortisationEntry "),
         @Query(
-                name = "findByDocument", language = "JDOQL",
+                name = "findByDocumentLine", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.module.coda.dom.codadocument.AmortisationEntryCodaDocumentLink "
-                        + "WHERE codaDocument == :codaDocument "),
+                        + "FROM org.estatio.module.coda.dom.codadocument.AmortisationEntryCodaDocumentLineLink "
+                        + "WHERE codaDocumentLine == :codaDocumentLine "),
 
 })
-@Unique(name = "AmortisationEntryCodaDocumentLink_codaDocument_amortisationEntry_UNQ", members = { "codaDocument", "amortisationEntry" })
+@Unique(name = "AmortisationEntryCodaDocumentLineLink_codaDocumentLine_amortisationEntry_UNQ", members = { "codaDocumentLine", "amortisationEntry" })
 @DomainObject(
-        objectType = "codadocument.AmortisationEntryCodaDocumentLink",
+        objectType = "codadocument.AmortisationEntryCodaDocumentLineLink",
         editing = Editing.DISABLED
 )
-public class AmortisationEntryCodaDocumentLink {
+public class AmortisationEntryCodaDocumentLineLink {
 
-    public AmortisationEntryCodaDocumentLink(final AmortisationEntry amortisationEntry, final CodaDocument codaDocument){
+    public AmortisationEntryCodaDocumentLineLink(final AmortisationEntry amortisationEntry, final CodaDocumentLine codaDocumentLine){
         this.amortisationEntry = amortisationEntry;
-        this.codaDocument = codaDocument;
+        this.codaDocumentLine = codaDocumentLine;
     }
 
     @Column(allowsNull = "false", name = "entryId")
     @Getter @Setter
     private AmortisationEntry amortisationEntry;
 
-    @Column(allowsNull = "false", name = "documentId")
+    @Column(allowsNull = "false", name = "documentLineId")
     @Getter @Setter
-    private CodaDocument codaDocument;
+    private CodaDocumentLine codaDocumentLine;
 }

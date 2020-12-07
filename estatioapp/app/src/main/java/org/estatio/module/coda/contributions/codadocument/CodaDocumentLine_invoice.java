@@ -12,25 +12,25 @@ import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.estatio.module.coda.dom.codadocument.CodaDocument;
+import org.estatio.module.coda.dom.codadocument.CodaDocumentLine;
 import org.estatio.module.coda.dom.codadocument.CodaDocumentLinkRepository;
-import org.estatio.module.lease.dom.amortisation.AmortisationSchedule;
+import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
 
 @Mixin(method="coll")
-public class AmortisationSchedule_codaDocuments {
+public class CodaDocumentLine_invoice {
 
-    private final AmortisationSchedule amortisationSchedule;
-    public AmortisationSchedule_codaDocuments(final AmortisationSchedule amortisationSchedule) {
-        this.amortisationSchedule = amortisationSchedule;
+    private final CodaDocumentLine codaDocumentLine;
+    public CodaDocumentLine_invoice(final CodaDocumentLine codaDocumentLine) {
+        this.codaDocumentLine = codaDocumentLine;
     }
 
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed= Contributed.AS_ASSOCIATION)
     @Property
-    public List<CodaDocument> coll() {
-        return codaDocumentLinkRepository.findByAmortisationSchedule(amortisationSchedule)
+    public List<InvoiceForLease> coll() {
+        return codaDocumentLinkRepository.findInvoiceLinkByDocumentLine(codaDocumentLine)
                 .stream()
-                .map(l->l.getCodaDocument())
+                .map(l->l.getInvoice())
                 .collect(Collectors.toList());
     }
 

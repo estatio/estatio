@@ -3,7 +3,6 @@ package org.estatio.module.coda.dom.codadocument;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import javax.inject.Inject;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.DatastoreIdentity;
 import javax.jdo.annotations.IdGeneratorStrategy;
@@ -20,6 +19,7 @@ import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
 
 import com.google.common.collect.ComparisonChain;
+import com.google.common.collect.Lists;
 
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
@@ -162,11 +162,7 @@ public class CodaDocument implements Comparable<CodaDocument>, HasAtPath {
     public void updatePostedAtAndAttachedScheduleEntryIfAny(final LocalDateTime dateTime) {
         setPostedAt(dateTime);
         if (dateTime==null) return; // guard, but should not be possble
-        codaDocumentLinkRepository.findEntryLinkByDocument(this).forEach(l->{
-            l.getAmortisationEntry().setDateReported(dateTime.toLocalDate());
-            l.getAmortisationEntry().getSchedule().verifyOutstandingValue();
-        });
-
+        Lists.newArrayList(getLines()).forEach(l->l.updateAttachedScheduleEntryIfAny(dateTime));
     }
 
     //region > compareTo, toString
@@ -188,7 +184,5 @@ public class CodaDocument implements Comparable<CodaDocument>, HasAtPath {
                 ", uuid='" + getUuid() + '\'' +
                 '}';
     }
-
-    @Inject CodaDocumentLinkRepository codaDocumentLinkRepository;
 
 }

@@ -2,6 +2,7 @@ package org.estatio.module.coda.dom.codadocument;
 
 import java.math.BigDecimal;
 
+import javax.inject.Inject;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.DatastoreIdentity;
 import javax.jdo.annotations.IdGeneratorStrategy;
@@ -17,6 +18,7 @@ import javax.jdo.annotations.VersionStrategy;
 import com.google.common.collect.ComparisonChain;
 
 import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
 
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.DomainObject;
@@ -150,6 +152,13 @@ public class CodaDocumentLine implements Comparable<CodaDocumentLine>, HasAtPath
     @Getter @Setter
     private String externalReference6;
 
+    public void updateAttachedScheduleEntryIfAny(final LocalDateTime dateTime) {
+        codaDocumentLinkRepository.findAmortisationEntryLinkByDocumentLine(this).forEach(l->{
+            l.getAmortisationEntry().setDateReported(dateTime.toLocalDate());
+            l.getAmortisationEntry().getSchedule().verifyOutstandingValue();
+        });
+    }
+
     @Override
     public int compareTo(final CodaDocumentLine o) {
         return ComparisonChain.start()
@@ -170,4 +179,6 @@ public class CodaDocumentLine implements Comparable<CodaDocumentLine>, HasAtPath
     public String getAtPath() {
         return getDocument().getAtPath();
     }
+
+    @Inject CodaDocumentLinkRepository codaDocumentLinkRepository;
 }
