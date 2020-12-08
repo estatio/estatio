@@ -6,6 +6,7 @@ import javax.inject.Inject;
 
 import org.assertj.core.api.Assertions;
 import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
 import org.junit.Test;
 
 import org.estatio.module.coda.dom.CodaCurrency;
@@ -55,6 +56,11 @@ public class CodaDocumentRepository_integtest extends CodaModuleIntegTestAbstrac
         final CodaDocument codaDocument = byDocumentTypeAndCmpCodeAndDocCodeAndDocDate.get(0);
         Assertions.assertThat(codaDocument).isEqualTo(document);
 
+        List<CodaDocument> unpostedByAtPathIta = codaDocumentRepository.findUnpostedByAtPath(atPath);
+        final List<CodaDocument> unpostedByAtPathFra = codaDocumentRepository.findUnpostedByAtPath("/FRA");
+        Assertions.assertThat(unpostedByAtPathIta).hasSize(1);
+        Assertions.assertThat(unpostedByAtPathFra).isEmpty();
+
         // and when again
         codaDocumentRepository.findOrCreateForAmortisation(
                 CodaDocumentType.INITIAL_COVID_AMORTISATION,
@@ -65,6 +71,13 @@ public class CodaDocumentRepository_integtest extends CodaModuleIntegTestAbstrac
                 atPath);
         // then still ( = idempotent)
         Assertions.assertThat(codaDocumentRepository.listAll()).hasSize(1);
+
+        // and when posted
+        codaDocument.setPostedAt(new LocalDateTime());
+        // then
+        unpostedByAtPathIta = codaDocumentRepository.findUnpostedByAtPath(atPath);
+        Assertions.assertThat(unpostedByAtPathIta).isEmpty();
+
 
     }
 

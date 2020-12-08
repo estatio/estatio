@@ -103,10 +103,17 @@ public class CodaDocumentRepository {
         return document;
     }
 
+    public List<CodaDocument> findUnpostedByAtPath(final String atPath) {
+        return repositoryService.allMatches(
+                new QueryDefault<>(
+                        CodaDocument.class,
+                        "findUnpostedByAtPath",
+                        "atPath", atPath));
+    }
+
     @Inject
     RepositoryService repositoryService;
 
     @Inject
     ClockService clockService;
-
 }

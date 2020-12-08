@@ -68,6 +68,12 @@ import lombok.Setter;
                         + "   && cmpCode == :cmpCode "
                         + "   && docCode == :docCode "
                         + "   && docDate  == :docDate "),
+        @Query(
+                name = "findUnpostedByAtPath", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.module.coda.dom.codadocument.CodaDocument "
+                        + "WHERE atPath == :atPath "
+                        + "   && postedAt == null "),
 
 })
 @Uniques({
