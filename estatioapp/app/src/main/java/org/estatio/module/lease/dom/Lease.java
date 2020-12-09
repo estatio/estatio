@@ -38,7 +38,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 import org.apache.commons.lang3.ObjectUtils;
-import org.estatio.module.party.dom.PartyRepository;
 import org.joda.time.LocalDate;
 import org.joda.time.Period;
 import org.joda.time.PeriodType;
@@ -107,6 +106,7 @@ import org.estatio.module.lease.dom.breaks.BreakOptionRepository;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
 import org.estatio.module.lease.dom.occupancy.OccupancyRepository;
 import org.estatio.module.party.dom.Party;
+import org.estatio.module.party.dom.PartyRepository;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -179,6 +179,13 @@ import lombok.Setter;
                         + "&& (occ.unit.property == :asset) "
                         + "VARIABLES "
                         + "org.estatio.module.lease.dom.occupancy.Occupancy occ "
+                        + "ORDER BY reference"),
+        @javax.jdo.annotations.Query(
+                name = "findNotExpiredOnDate", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.module.lease.dom.Lease "
+                        + "WHERE status != LeaseStatus.PREVIEW "
+                        + "&& (tenancyEndDate == null || tenancyEndDate >= :notExpiredOnDate) "
                         + "ORDER BY reference"),
         @javax.jdo.annotations.Query(
                 name = "findExpireInDateRange", language = "JDOQL",

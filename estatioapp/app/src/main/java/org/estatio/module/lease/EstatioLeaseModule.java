@@ -64,6 +64,7 @@ import org.estatio.module.lease.dom.amortisation.AmortisationScheduleLeaseItemLi
 import org.estatio.module.lease.dom.breaks.BreakOption;
 import org.estatio.module.lease.dom.breaks.BreakOptionRepository;
 import org.estatio.module.lease.dom.breaks.EventSourceLinkForBreakOption;
+import org.estatio.module.lease.dom.etlutilobjects.LeaseEvaluationDateEtlObject;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
 import org.estatio.module.lease.dom.invoicing.InvoiceItemForLease;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
@@ -170,6 +171,8 @@ public final class EstatioLeaseModule extends ModuleAbstract {
                 deleteFrom(LeaseAmendmentItemForDiscount.class);
                 deleteFrom(LeaseAmendmentItemForFrequencyChange.class);
                 deleteFrom(LeaseAmendment.class);
+
+                deleteFrom(LeaseEvaluationDateEtlObject.class);
 
                 deleteFrom(Lease.class);
                 deleteFrom(LeaseType.class);
