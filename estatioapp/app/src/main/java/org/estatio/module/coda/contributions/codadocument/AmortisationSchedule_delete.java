@@ -1,5 +1,9 @@
 package org.estatio.module.coda.contributions.codadocument;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import javax.inject.Inject;
 
 import com.google.common.collect.Lists;
@@ -10,6 +14,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.factory.FactoryService;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
+import org.estatio.module.coda.dom.codadocument.CodaDocument;
 import org.estatio.module.coda.dom.codadocument.CodaDocumentLinkRepository;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.amortisation.AmortisationSchedule;
@@ -30,24 +35,21 @@ public class AmortisationSchedule_delete {
     public Lease $$() {
 
         final Lease lease = amortisationSchedule.getLease();
-
-        // delete all coda docs related to entry
+        List<CodaDocument> docsToDelete = new ArrayList<>();
+        // add all coda docs related to entry
         Lists.newArrayList(amortisationSchedule.getEntries())
                 .forEach(e->{
-                    codaDocumentLinkRepository.findByAmortisationEntry(e).forEach(l->{
-                        factoryService.mixin(
-                                CodaDocument_delete.class,
-                                l.getCodaDocumentLine()
-                        ).$$();
-                    });
+                    docsToDelete.addAll(codaDocumentLinkRepository.findByAmortisationEntry(e).stream()
+                            .map(l->l.getCodaDocumentLine().getDocument())
+                            .distinct()
+                            .collect(Collectors.toList()));
                 });
-        // delete all coda docs related to schedule
-        codaDocumentLinkRepository.findByAmortisationSchedule(amortisationSchedule).forEach(l->{
-            factoryService.mixin(
-                    CodaDocument_delete.class,
-                    l.getCodaDocumentLine()
-            ).$$();
-        });
+        // add all coda docs related to schedule
+        docsToDelete.addAll(codaDocumentLinkRepository.findByAmortisationSchedule(amortisationSchedule).stream()
+                .map(l->l.getCodaDocumentLine().getDocument())
+                .distinct()
+                .collect(Collectors.toList()));
+        docsToDelete.stream().distinct().forEach(d->factoryService.mixin(CodaDocument_delete.class, d).$$());
         // delete all links to schedule
         amortisationScheduleLeaseItemLinkRepository.findBySchedule(amortisationSchedule).forEach(l->{
             repositoryService.removeAndFlush(l);
