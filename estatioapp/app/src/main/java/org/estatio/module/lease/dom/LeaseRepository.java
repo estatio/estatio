@@ -145,6 +145,11 @@ public class LeaseRepository extends UdoDomainRepositoryAndFactory<Lease> {
         return allMatches("findByAssetAndActiveOnDate", "asset", fixedAsset, "activeOnDate", activeOnDate);
     }
 
+    public List<Lease> findNotExpiredOnDate(
+            final LocalDate notExpiredOnDate) {
+        return allMatches("findNotExpiredOnDate",  "notExpiredOnDate", notExpiredOnDate);
+    }
+
     @Programmatic
     public Lease findLeaseByReference(final String reference) {
         return uniqueMatch("findByReference", "reference", reference);
