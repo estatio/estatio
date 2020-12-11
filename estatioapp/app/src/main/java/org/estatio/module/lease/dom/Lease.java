@@ -106,6 +106,7 @@ import org.estatio.module.lease.dom.breaks.BreakOptionRepository;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
 import org.estatio.module.lease.dom.occupancy.OccupancyRepository;
 import org.estatio.module.party.dom.Party;
+import org.estatio.module.party.dom.PartyRepository;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -178,6 +179,13 @@ import lombok.Setter;
                         + "&& (occ.unit.property == :asset) "
                         + "VARIABLES "
                         + "org.estatio.module.lease.dom.occupancy.Occupancy occ "
+                        + "ORDER BY reference"),
+        @javax.jdo.annotations.Query(
+                name = "findNotExpiredOnDate", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.module.lease.dom.Lease "
+                        + "WHERE status != LeaseStatus.PREVIEW "
+                        + "&& (tenancyEndDate == null || tenancyEndDate >= :notExpiredOnDate) "
                         + "ORDER BY reference"),
         @javax.jdo.annotations.Query(
                 name = "findExpireInDateRange", language = "JDOQL",
@@ -1092,6 +1100,19 @@ public class Lease
         return getClockService().now();
     }
 
+    public List<Party> choices2Assign() {
+        return partyRepository.allParties()
+                .stream()
+                .filter(party -> {
+                    if (party.getAtPath().startsWith("/BEL")) {
+                        return party.getReference().startsWith("BECL");
+                    } else {
+                        return true;
+                    }
+                })
+                .collect(Collectors.toList());
+    }
+
     public String validateAssign(
             final String reference,
             final String name,
@@ -1364,6 +1385,9 @@ public class Lease
 
     @Inject
     ChargeRepository chargeRepository;
+
+    @Inject
+    PartyRepository partyRepository;
 
     @Inject
     private WrapperFactory wrapperFactory;

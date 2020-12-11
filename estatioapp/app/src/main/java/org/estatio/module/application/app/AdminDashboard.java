@@ -2,12 +2,7 @@ package org.estatio.module.application.app;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
@@ -17,26 +12,14 @@ import javax.servlet.http.HttpSession;
 import com.google.common.collect.Lists;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.isis.applib.annotation.*;
+import org.apache.isis.applib.annotation.Collection;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.apache.isis.applib.ViewModel;
-import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.ActionLayout;
-import org.apache.isis.applib.annotation.Collection;
-import org.apache.isis.applib.annotation.CollectionLayout;
-import org.apache.isis.applib.annotation.DomainObject;
-import org.apache.isis.applib.annotation.Editing;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Optionality;
-import org.apache.isis.applib.annotation.ParameterLayout;
-import org.apache.isis.applib.annotation.Property;
-import org.apache.isis.applib.annotation.Publishing;
-import org.apache.isis.applib.annotation.RestrictTo;
-import org.apache.isis.applib.annotation.SemanticsOf;
-import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.background.BackgroundService2;
 import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.config.ConfigurationProperty;
@@ -845,6 +828,33 @@ public class AdminDashboard implements ViewModel {
                 }
         );
 
+    }
+
+    @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
+    public List<LeaseItem> adaptServiceChargeLeaseItems(final List<org.estatio.module.asset.dom.Property> properties, final LocalDate date){
+        List<LeaseItem> newServiceCharges = new ArrayList<>();
+        properties.stream().forEach(property -> {
+            leaseRepository.findByAssetAndActiveOnDate(property, date).stream().forEach(lease -> {
+                List<LeaseItem> leaseItems = new ArrayList<>(lease.getItems());
+                List<LeaseItem> rentItems = leaseItems.stream().filter(li -> li.getType() == LeaseItemType.RENT && li.getInterval().contains(date)).collect(Collectors.toList());
+                if (!rentItems.isEmpty()) {
+                    LeaseItem rent = rentItems.get(0);
+                    leaseItems.stream()
+                            .filter(li -> li.getType() == LeaseItemType.SERVICE_CHARGE
+                                    && li.getInvoicedBy() == LeaseAgreementRoleTypeEnum.MANAGER
+                                    && li.getInterval().contains(date))
+                            .forEach(li -> {
+                                li.verifyUntil(date.plusYears(1));
+                                newServiceCharges.add(li.copy(date, rent.getInvoicingFrequency(), rent.getPaymentMethod(), li.getCharge()));
+                                LOG.info(String.format("Adapting service charge item with new invoicing frequency %s, payment method %s and charge %s on lease %s", rent.getInvoicingFrequency(), rent.getPaymentMethod(), li.getCharge().getReference(), lease.getReference()));
+                            });
+                } else {
+                    LOG.info(String.format("No rent item found for lease %s; could not adapt service charge item", lease.getReference()));
+                }
+            });
+        });
+
+        return newServiceCharges;
     }
 
     @Inject PropertyRepository propertyRepository;

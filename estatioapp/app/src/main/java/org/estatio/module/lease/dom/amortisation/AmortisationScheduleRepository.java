@@ -3,6 +3,7 @@ package org.estatio.module.lease.dom.amortisation;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -15,6 +16,8 @@ import org.apache.isis.applib.query.QueryDefault;
 import org.apache.isis.applib.services.message.MessageService;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.repository.RepositoryService;
+
+import org.incode.module.country.dom.impl.Country;
 
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.lease.dom.Frequency;
@@ -96,12 +99,21 @@ public class AmortisationScheduleRepository {
         return newSchedule;
     }
 
+    @Programmatic
+    public List<AmortisationSchedule> findByCountry(final Country country) {
+        return listAll()
+                .stream()
+                .filter(a->a.getLease().getProperty()!=null)
+                .filter(a->a.getLease().getProperty().getCountry()==country)
+                .collect(Collectors.toList());
+    }
+
     @Inject
     RepositoryService repositoryService;
 
     @Inject
     ServiceRegistry2 serviceRegistry2;
 
-    @Inject MessageService messageService;
-
+    @Inject
+    MessageService messageService;
 }

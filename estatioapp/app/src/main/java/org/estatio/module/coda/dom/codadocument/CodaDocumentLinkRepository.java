@@ -21,145 +21,145 @@ import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
 public class CodaDocumentLinkRepository {
 
     @Programmatic
-    public List<AmortisationScheduleCodaDocumentLink> listAllScheduleLinks() {
-        return repositoryService.allInstances(AmortisationScheduleCodaDocumentLink.class);
+    public List<AmortisationScheduleCodaDocumentLineLink> listAllScheduleLinks() {
+        return repositoryService.allInstances(AmortisationScheduleCodaDocumentLineLink.class);
     }
 
     @Programmatic
-    public List<AmortisationEntryCodaDocumentLink> listAllEntryLinks() {
-        return repositoryService.allInstances(AmortisationEntryCodaDocumentLink.class);
+    public List<AmortisationEntryCodaDocumentLineLink> listAllEntryLinks() {
+        return repositoryService.allInstances(AmortisationEntryCodaDocumentLineLink.class);
     }
 
     @Programmatic
-    public List<OutgoingInvoiceCodaDocumentLink> listAllOutgoingInvoiceLinks() {
-        return repositoryService.allInstances(OutgoingInvoiceCodaDocumentLink.class);
+    public List<InvoiceForLeaseCodaDocumentLineLink> listAllInvoiceForLeaseLinks() {
+        return repositoryService.allInstances(InvoiceForLeaseCodaDocumentLineLink.class);
     }
 
     @Programmatic
-    public List<AmortisationScheduleCodaDocumentLink> findByAmortisationSchedule(final AmortisationSchedule amortisationSchedule) {
+    public List<AmortisationScheduleCodaDocumentLineLink> findByAmortisationSchedule(final AmortisationSchedule amortisationSchedule) {
         return repositoryService.allMatches(
                 new QueryDefault<>(
-                        AmortisationScheduleCodaDocumentLink.class,
+                        AmortisationScheduleCodaDocumentLineLink.class,
                         "findByAmortisationSchedule",
                         "amortisationSchedule", amortisationSchedule));
     }
 
     @Programmatic
-    public List<AmortisationScheduleCodaDocumentLink> findByAmortisationScheduleLinkByDocument(final CodaDocument codaDocument) {
+    public List<AmortisationScheduleCodaDocumentLineLink> findAmortisationScheduleLinkByDocumentLine(final CodaDocumentLine codaDocumentLine) {
         return repositoryService.allMatches(
                 new QueryDefault<>(
-                        AmortisationScheduleCodaDocumentLink.class,
-                        "findByDocument",
-                        "codaDocument", codaDocument));
+                        AmortisationScheduleCodaDocumentLineLink.class,
+                        "findByDocumentLine",
+                        "codaDocumentLine", codaDocumentLine));
     }
 
     @Programmatic
-    public AmortisationScheduleCodaDocumentLink findUnique(final AmortisationSchedule amortisationSchedule, final CodaDocument codaDocument){
+    public AmortisationScheduleCodaDocumentLineLink findUnique(final AmortisationSchedule amortisationSchedule, final CodaDocumentLine codaDocumentLine){
         return repositoryService.uniqueMatch(
                 new QueryDefault<>(
-                        AmortisationScheduleCodaDocumentLink.class,
+                        AmortisationScheduleCodaDocumentLineLink.class,
                         "findUnique",
-                        "codaDocument", codaDocument,
+                        "codaDocumentLine", codaDocumentLine,
                         "amortisationSchedule", amortisationSchedule));
     }
 
     @Programmatic
-    public AmortisationScheduleCodaDocumentLink findOrCreate(final AmortisationSchedule amortisationSchedule, final CodaDocument codaDocument){
-        AmortisationScheduleCodaDocumentLink result = findUnique(amortisationSchedule, codaDocument);
+    public AmortisationScheduleCodaDocumentLineLink findOrCreate(final AmortisationSchedule amortisationSchedule, final CodaDocumentLine codaDocumentLine){
+        AmortisationScheduleCodaDocumentLineLink result = findUnique(amortisationSchedule, codaDocumentLine);
         if (result ==null) {
-            result = create(amortisationSchedule, codaDocument);
+            result = create(amortisationSchedule, codaDocumentLine);
         }
         return result;
     }
 
-    private AmortisationScheduleCodaDocumentLink create(final AmortisationSchedule schedule, final CodaDocument document){
-        AmortisationScheduleCodaDocumentLink link = new AmortisationScheduleCodaDocumentLink(schedule, document);
+    private AmortisationScheduleCodaDocumentLineLink create(final AmortisationSchedule schedule, final CodaDocumentLine codaDocumentLine){
+        AmortisationScheduleCodaDocumentLineLink link = new AmortisationScheduleCodaDocumentLineLink(schedule, codaDocumentLine);
         repositoryService.persistAndFlush(link);
         return link;
     }
 
     @Programmatic
-    public List<AmortisationEntryCodaDocumentLink> findByEntry(final AmortisationEntry amortisationEntry) {
+    public List<AmortisationEntryCodaDocumentLineLink> findByAmortisationEntry(final AmortisationEntry amortisationEntry) {
         return repositoryService.allMatches(
                 new QueryDefault<>(
-                        AmortisationEntryCodaDocumentLink.class,
+                        AmortisationEntryCodaDocumentLineLink.class,
                         "findByEntry",
                         "amortisationEntry", amortisationEntry));
     }
 
     @Programmatic
-    public List<AmortisationEntryCodaDocumentLink> findEntryLinkByDocument(final CodaDocument codaDocument) {
+    public List<AmortisationEntryCodaDocumentLineLink> findAmortisationEntryLinkByDocumentLine(final CodaDocumentLine codaDocumentLine) {
         return repositoryService.allMatches(
                 new QueryDefault<>(
-                        AmortisationEntryCodaDocumentLink.class,
-                        "findByDocument",
-                        "codaDocument", codaDocument));
+                        AmortisationEntryCodaDocumentLineLink.class,
+                        "findByDocumentLine",
+                        "codaDocumentLine", codaDocumentLine));
     }
 
     @Programmatic
-    public AmortisationEntryCodaDocumentLink findUnique(final AmortisationEntry amortisationEntry, final CodaDocument codaDocument){
+    public AmortisationEntryCodaDocumentLineLink findUnique(final AmortisationEntry amortisationEntry, final CodaDocumentLine codaDocumentLine){
         return repositoryService.uniqueMatch(
                 new QueryDefault<>(
-                        AmortisationEntryCodaDocumentLink.class,
+                        AmortisationEntryCodaDocumentLineLink.class,
                         "findUnique",
-                        "codaDocument", codaDocument,
+                        "codaDocumentLine", codaDocumentLine,
                         "amortisationEntry", amortisationEntry));
     }
 
     @Programmatic
-    public AmortisationEntryCodaDocumentLink findOrCreate(final AmortisationEntry amortisationEntry, final CodaDocument codaDocument){
-        AmortisationEntryCodaDocumentLink result = findUnique(amortisationEntry, codaDocument);
+    public AmortisationEntryCodaDocumentLineLink findOrCreate(final AmortisationEntry amortisationEntry, final CodaDocumentLine codaDocumentLine){
+        AmortisationEntryCodaDocumentLineLink result = findUnique(amortisationEntry, codaDocumentLine);
         if (result ==null) {
-            result = create(amortisationEntry, codaDocument);
+            result = create(amortisationEntry, codaDocumentLine);
         }
         return result;
     }
 
-    private AmortisationEntryCodaDocumentLink create(final AmortisationEntry amortisationEntry, final CodaDocument document){
-        AmortisationEntryCodaDocumentLink link = new AmortisationEntryCodaDocumentLink(amortisationEntry, document);
+    private AmortisationEntryCodaDocumentLineLink create(final AmortisationEntry amortisationEntry, final CodaDocumentLine codaDocumentLine){
+        AmortisationEntryCodaDocumentLineLink link = new AmortisationEntryCodaDocumentLineLink(amortisationEntry, codaDocumentLine);
         repositoryService.persistAndFlush(link);
         return link;
     }
 
     @Programmatic
-    public List<OutgoingInvoiceCodaDocumentLink> findByInvoice(final InvoiceForLease invoice) {
+    public List<InvoiceForLeaseCodaDocumentLineLink> findByInvoice(final InvoiceForLease invoice) {
         return repositoryService.allMatches(
                 new QueryDefault<>(
-                        OutgoingInvoiceCodaDocumentLink.class,
+                        InvoiceForLeaseCodaDocumentLineLink.class,
                         "findByInvoice",
                         "invoice", invoice));
     }
 
     @Programmatic
-    public List<OutgoingInvoiceCodaDocumentLink> findInvoiceLinkByDocument(final CodaDocument codaDocument) {
+    public List<InvoiceForLeaseCodaDocumentLineLink> findInvoiceLinkByDocumentLine(final CodaDocumentLine codaDocumentLine) {
         return repositoryService.allMatches(
                 new QueryDefault<>(
-                        OutgoingInvoiceCodaDocumentLink.class,
-                        "findByDocument",
-                        "codaDocument", codaDocument));
+                        InvoiceForLeaseCodaDocumentLineLink.class,
+                        "findByDocumentLine",
+                        "codaDocumentLine", codaDocumentLine));
     }
 
     @Programmatic
-    public OutgoingInvoiceCodaDocumentLink findUnique(final InvoiceForLease invoice, final CodaDocument codaDocument){
+    public InvoiceForLeaseCodaDocumentLineLink findUnique(final InvoiceForLease invoice, final CodaDocumentLine codaDocumentLine){
         return repositoryService.uniqueMatch(
                 new QueryDefault<>(
-                        OutgoingInvoiceCodaDocumentLink.class,
+                        InvoiceForLeaseCodaDocumentLineLink.class,
                         "findUnique",
-                        "codaDocument", codaDocument,
+                        "codaDocumentLine", codaDocumentLine,
                         "invoice", invoice));
     }
 
     @Programmatic
-    public OutgoingInvoiceCodaDocumentLink findOrCreate(final InvoiceForLease invoice, final CodaDocument codaDocument){
-        OutgoingInvoiceCodaDocumentLink result = findUnique(invoice, codaDocument);
+    public InvoiceForLeaseCodaDocumentLineLink findOrCreate(final InvoiceForLease invoice, final CodaDocumentLine codaDocumentLine){
+        InvoiceForLeaseCodaDocumentLineLink result = findUnique(invoice, codaDocumentLine);
         if (result ==null) {
-            result = create(invoice, codaDocument);
+            result = create(invoice, codaDocumentLine);
         }
         return result;
     }
 
-    private OutgoingInvoiceCodaDocumentLink create(final InvoiceForLease invoice, final CodaDocument document){
-        OutgoingInvoiceCodaDocumentLink link = new OutgoingInvoiceCodaDocumentLink(invoice, document);
+    private InvoiceForLeaseCodaDocumentLineLink create(final InvoiceForLease invoice, final CodaDocumentLine codaDocumentLine){
+        InvoiceForLeaseCodaDocumentLineLink link = new InvoiceForLeaseCodaDocumentLineLink(invoice, codaDocumentLine);
         repositoryService.persistAndFlush(link);
         return link;
     }

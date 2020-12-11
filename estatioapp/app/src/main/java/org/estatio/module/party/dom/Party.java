@@ -51,6 +51,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
+import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.base.dom.types.ReferenceType;
@@ -260,6 +261,14 @@ public abstract class Party
     public List<PartyRoleType>  choices0AddRole(){
         final List<PartyRoleType> partyRoleTypes = getRoles().stream().map(x -> x.getRoleType()).collect(Collectors.toList());
         return partyRoleTypeRepository.listAll().stream().filter(x -> !partyRoleTypes.contains(x)).collect(Collectors.toList());
+    }
+
+    public String validateAddRole(final PartyRoleType roleType) {
+        PartyRoleType tenantRole = partyRoleTypeRepository.findByKey(LeaseAgreementRoleTypeEnum.TENANT.getKey());
+        if (getAtPath().startsWith("/BEL") && roleType.equals(tenantRole) && !getReference().startsWith("BECL")) {
+            return "Reference of a Belgian party should start with 'BECL' to have a TENANT role";
+        }
+        return null;
     }
 
     @Programmatic

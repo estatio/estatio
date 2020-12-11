@@ -2,6 +2,8 @@ package org.estatio.module.coda.contributions.codadocument;
 
 import javax.inject.Inject;
 
+import com.google.common.collect.Lists;
+
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
@@ -9,7 +11,6 @@ import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.estatio.module.coda.dom.codadocument.CodaDocument;
 import org.estatio.module.coda.dom.codadocument.CodaDocumentLinkRepository;
-import org.estatio.module.lease.dom.amortisation.AmortisationSchedule;
 
 @Mixin
 public class CodaDocument_delete {
@@ -21,25 +22,22 @@ public class CodaDocument_delete {
     }
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
-    public AmortisationSchedule $$() {
-        final AmortisationSchedule schedule = codaDocumentLinkRepository
-                .findByAmortisationScheduleLinkByDocument(codaDocument).stream()
-                .map(l -> l.getAmortisationSchedule())
-                .findFirst().orElse(null);
-        codaDocumentLinkRepository.findByAmortisationScheduleLinkByDocument(codaDocument)
-                .forEach(l->{
-                    repositoryService.removeAndFlush(l);
-                });
-        codaDocumentLinkRepository.findEntryLinkByDocument(codaDocument)
-                .forEach(l->{
-                    repositoryService.removeAndFlush(l);
-                });
-        codaDocumentLinkRepository.findInvoiceLinkByDocument(codaDocument)
-                .forEach(l->{
-                    repositoryService.removeAndFlush(l);
-                });
+    public void $$() {
+        Lists.newArrayList(codaDocument.getLines()).forEach(dl->{
+            codaDocumentLinkRepository.findAmortisationScheduleLinkByDocumentLine(dl)
+                    .forEach(l->{
+                        repositoryService.removeAndFlush(l);
+                    });
+            codaDocumentLinkRepository.findAmortisationEntryLinkByDocumentLine(dl)
+                    .forEach(l->{
+                        repositoryService.removeAndFlush(l);
+                    });
+            codaDocumentLinkRepository.findInvoiceLinkByDocumentLine(dl)
+                    .forEach(l->{
+                        repositoryService.removeAndFlush(l);
+                    });
+        });
         repositoryService.removeAndFlush(codaDocument);
-        return schedule;
     }
 
     public String disable$$(){

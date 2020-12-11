@@ -3,6 +3,7 @@ package org.estatio.module.coda.integtests;
 import javax.inject.Inject;
 
 import org.assertj.core.api.Assertions;
+import org.joda.time.LocalDate;
 import org.junit.Test;
 
 import org.estatio.module.coda.dom.CodaDocumentType;
@@ -20,6 +21,7 @@ public class CodaDocumentLineRepository_integtest extends CodaModuleIntegTestAbs
         final String cmpCode = "IT01";
         final String docCode = "IT00COV19";
         final String codaPeriod = "2020/13";
+        final LocalDate docDate = new LocalDate(2020,10,1);
         final String atPath = "/ITA";
         final int lineNumber = 1;
         final LineType lineType = LineType.ANALYSIS;
@@ -27,8 +29,7 @@ public class CodaDocumentLineRepository_integtest extends CodaModuleIntegTestAbs
         // given
         Assertions.assertThat(codaDocumentLineRepository.listAll()).isEmpty();
         final CodaDocument document = codaDocumentRepository
-                .create(CodaDocumentType.INITIAL_COVID_AMORTISATION, cmpCode, docCode, codaPeriod,
-                        atPath);
+                .findOrCreateForAmortisation(CodaDocumentType.INITIAL_COVID_AMORTISATION, cmpCode, docCode, codaPeriod, docDate, atPath);
 
         // when
         final CodaDocumentLine codaDocumentLine = codaDocumentLineRepository.create(document, lineNumber,
@@ -46,6 +47,5 @@ public class CodaDocumentLineRepository_integtest extends CodaModuleIntegTestAbs
     @Inject CodaDocumentRepository codaDocumentRepository;
 
     @Inject CodaDocumentLineRepository codaDocumentLineRepository;
-
 
 }

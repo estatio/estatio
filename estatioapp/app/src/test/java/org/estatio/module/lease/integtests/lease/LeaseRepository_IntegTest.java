@@ -22,6 +22,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.assertj.core.api.Assertions;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
@@ -370,6 +371,48 @@ public class LeaseRepository_IntegTest extends LeaseModuleIntegTestAbstract {
             topmodelLease.setStatus(LeaseStatus.PREVIEW);
             // then
             assertThat(leaseRepository.findByAssetAndActiveOnDate(property, new LocalDate(2010, 7, 15)).size()).isEqualTo(0);
+
+        }
+    }
+
+    public static class FindLeasesNotExpiredOnDate extends LeaseRepository_IntegTest {
+
+        @Before
+        public void setupData() {
+            runFixtureScript(new FixtureScript() {
+                @Override
+                protected void execute(ExecutionContext executionContext) {
+                    executionContext.executeChild(this, Lease_enum.OxfTopModel001Gb.builder());
+                }
+            });
+        }
+
+        @Test
+        public void queryWorks() {
+            // given
+            final Lease topmodelLease = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
+            final LocalDate dateBeforeTenStartDate = new LocalDate(2010, 7, 14);
+
+            Assertions.assertThat(topmodelLease.getTenancyEndDate()).isNull();
+            Assertions.assertThat(topmodelLease.getTenancyStartDate().isAfter(dateBeforeTenStartDate)).isTrue();
+
+            // when
+            assertThat(leaseRepository.findNotExpiredOnDate(dateBeforeTenStartDate).size()).isEqualTo(1);
+            assertThat(leaseRepository.findNotExpiredOnDate(topmodelLease.getTenancyStartDate()).size()).isEqualTo(1);
+
+            // and when
+            final LocalDate tenancyEndDate = topmodelLease.getTenancyStartDate().plusYears(1);
+            topmodelLease.setTenancyEndDate(tenancyEndDate);
+            transactionService.nextTransaction();
+
+            // then
+            assertThat(leaseRepository.findNotExpiredOnDate(tenancyEndDate).size()).isEqualTo(1);
+            assertThat(leaseRepository.findNotExpiredOnDate(tenancyEndDate.plusDays(1)).size()).isEqualTo(0);
+
+            // and when (filters preview)
+            topmodelLease.setStatus(LeaseStatus.PREVIEW);
+            // then
+            assertThat(leaseRepository.findNotExpiredOnDate(tenancyEndDate).size()).isEqualTo(0);
 
         }
     }

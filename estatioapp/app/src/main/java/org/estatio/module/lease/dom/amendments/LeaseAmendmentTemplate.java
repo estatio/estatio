@@ -13,6 +13,34 @@ import lombok.Getter;
 
 public enum LeaseAmendmentTemplate {
 
+    COVID2_ITA_FREQ_CHANGE(
+            LeaseAmendmentType.COVID_WAVE_2,
+            new LocalDate(2020,12,1),
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            Arrays.asList(
+                    new Tuple<>(InvoicingFrequency.QUARTERLY_IN_ADVANCE, InvoicingFrequency.MONTHLY_IN_ADVANCE),
+                    new Tuple<>(InvoicingFrequency.QUARTERLY_IN_ARREARS, InvoicingFrequency.MONTHLY_IN_ADVANCE),
+                    new Tuple<>(InvoicingFrequency.QUARTERLY_IN_ADVANCE_PLUS1M, InvoicingFrequency.MONTHLY_IN_ADVANCE),
+                    new Tuple<>(InvoicingFrequency.QUARTERLY_IN_ADVANCE_PLUS2M, InvoicingFrequency.MONTHLY_IN_ADVANCE)
+            ),
+            Arrays.asList(
+                    LeaseItemType.RENT,
+                    LeaseItemType.RENT_DISCOUNT,
+                    LeaseItemType.RENT_DISCOUNT_FIXED,
+                    LeaseItemType.SERVICE_CHARGE,
+                    LeaseItemType.MARKETING
+            ),
+            new LocalDate(2021,1,1),
+            new LocalDate(2021,3,31),
+            "-FC2",
+            new LocalDate(2020,10,1), // because of _PLUSM1 / _PLUSM2 calcs
+            new LocalDate(2021,3,31),
+            true),
     COVID_BEL(
             LeaseAmendmentType.COVID_WAVE_1,
             new LocalDate(2020,3,18), // min date because of lease selection

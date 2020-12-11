@@ -116,6 +116,9 @@ public class LeaseImport implements ExcelFixtureRowHandler, Importable {
         final Property property = fetchProperty(propertyReference, null, false);
 
         if (lease == null) {
+            if (tenant != null && tenant.getAtPath().startsWith("/BEL") && !tenant.getReference().startsWith("BECL")) {
+                throw new IllegalArgumentException(String.format("Reference [%s] of Belgian Party %s should start with 'BECL' when adding as tenant", tenant.getReference(), tenant.getName()));
+            }
             lease = leaseRepository.newLease(property.getApplicationTenancy(), reference, name, leaseType, startDate, endDate, tenancyStartDate, tenancyEndDate, landlord, tenant);
         }
         lease.setTenancyStartDate(tenancyStartDate);

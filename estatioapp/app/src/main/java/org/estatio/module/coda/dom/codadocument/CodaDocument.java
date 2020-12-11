@@ -3,20 +3,23 @@ package org.estatio.module.coda.dom.codadocument;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import javax.inject.Inject;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.DatastoreIdentity;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.Index;
+import javax.jdo.annotations.Indices;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.Queries;
 import javax.jdo.annotations.Query;
 import javax.jdo.annotations.Unique;
+import javax.jdo.annotations.Uniques;
 import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
 
 import com.google.common.collect.ComparisonChain;
+import com.google.common.collect.Lists;
 
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
@@ -57,9 +60,30 @@ import lombok.Setter;
                         + "WHERE cmpCode == :cmpCode "
                         + "   && docCode == :docCode "
                         + "   && docNum  == :docNum "),
+        @Query(
+                name = "findByDocumentTypeAndCmpCodeAndDocCodeAndDocDate", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.module.coda.dom.codadocument.CodaDocument "
+                        + "WHERE documentType == :documentType "
+                        + "   && cmpCode == :cmpCode "
+                        + "   && docCode == :docCode "
+                        + "   && docDate  == :docDate "),
+        @Query(
+                name = "findUnpostedByAtPath", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.module.coda.dom.codadocument.CodaDocument "
+                        + "WHERE atPath == :atPath "
+                        + "   && postedAt == null "),
 
 })
-@Unique(name = "CodaDocument_uuid_UNQ", members = { "uuid" })
+@Uniques({
+        @Unique(name = "CodaDocument_uuid_UNQ", members = { "uuid" })
+})
+@Indices({
+        @Index(name = "CodaDocument_docType__cmpCode_docCode_docDate_IDX", members = { "documentType", "cmpCode", "docCode", "docDate" }),
+        @Index(name = "CodaDocument_cmpCode_docCode_docNum_IDX", members = { "cmpCode", "docCode", "docNum" }),
+})
+
 @DomainObject(
         objectType = "codadocument.CodaDocument",
         editing = Editing.DISABLED
@@ -144,11 +168,7 @@ public class CodaDocument implements Comparable<CodaDocument>, HasAtPath {
     public void updatePostedAtAndAttachedScheduleEntryIfAny(final LocalDateTime dateTime) {
         setPostedAt(dateTime);
         if (dateTime==null) return; // guard, but should not be possble
-        codaDocumentLinkRepository.findEntryLinkByDocument(this).forEach(l->{
-            l.getAmortisationEntry().setDateReported(dateTime.toLocalDate());
-            l.getAmortisationEntry().getSchedule().verifyOutstandingValue();
-        });
-
+        Lists.newArrayList(getLines()).forEach(l->l.updateAttachedScheduleEntryIfAny(dateTime));
     }
 
     //region > compareTo, toString
@@ -170,7 +190,5 @@ public class CodaDocument implements Comparable<CodaDocument>, HasAtPath {
                 ", uuid='" + getUuid() + '\'' +
                 '}';
     }
-
-    @Inject CodaDocumentLinkRepository codaDocumentLinkRepository;
 
 }

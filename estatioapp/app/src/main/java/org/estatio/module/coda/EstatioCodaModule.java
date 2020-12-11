@@ -30,11 +30,11 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.fixturescripts.teardown.TeardownFixtureAbstract2;
 
 import org.estatio.module.capex.EstatioCapexModule;
-import org.estatio.module.coda.dom.codadocument.AmortisationEntryCodaDocumentLink;
-import org.estatio.module.coda.dom.codadocument.AmortisationScheduleCodaDocumentLink;
+import org.estatio.module.coda.dom.codadocument.AmortisationEntryCodaDocumentLineLink;
+import org.estatio.module.coda.dom.codadocument.AmortisationScheduleCodaDocumentLineLink;
 import org.estatio.module.coda.dom.codadocument.CodaDocument;
 import org.estatio.module.coda.dom.codadocument.CodaDocumentLine;
-import org.estatio.module.coda.dom.codadocument.OutgoingInvoiceCodaDocumentLink;
+import org.estatio.module.coda.dom.codadocument.InvoiceForLeaseCodaDocumentLineLink;
 import org.estatio.module.coda.dom.costcentre.CostCentre;
 import org.estatio.module.coda.dom.doc.CodaDocHead;
 import org.estatio.module.coda.dom.doc.CodaDocLine;
@@ -71,9 +71,9 @@ public final class EstatioCodaModule extends ModuleAbstract {
 
             @Override
             protected void execute(final FixtureScript.ExecutionContext executionContext) {
-                deleteFrom(AmortisationScheduleCodaDocumentLink.class);
-                deleteFrom(AmortisationEntryCodaDocumentLink.class);
-                deleteFrom(OutgoingInvoiceCodaDocumentLink.class);
+                deleteFrom(AmortisationScheduleCodaDocumentLineLink.class);
+                deleteFrom(AmortisationEntryCodaDocumentLineLink.class);
+                deleteFrom(InvoiceForLeaseCodaDocumentLineLink.class);
 
                 deleteFrom(CodaDocumentLine.class);
                 deleteFrom(CodaDocument.class);
