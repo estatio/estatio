@@ -34,6 +34,7 @@ import javax.jdo.annotations.Persistent;
 
 import com.google.common.collect.Lists;
 
+import org.estatio.module.asset.dom.UnitType;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
@@ -113,6 +114,10 @@ public class KeyTable extends PartitioningTable {
                 BigDecimal sourceValue;
                 if (getFoundationValueType().valueOf(unit) != null) {
                     sourceValue = getFoundationValueType().valueOf(unit);
+
+                    if (getFoundationValueType().equals(FoundationValueType.AREA) && areaIsDividedForUnit(unit)) {
+                        sourceValue = calculateTotalPonderingAreaForUnit(unit);
+                    }
                 } else {
                     sourceValue = BigDecimal.ZERO;
                 }
@@ -143,6 +148,57 @@ public class KeyTable extends PartitioningTable {
 
     public String disableGenerateItems(){
         return isImmutableReason();
+    }
+
+    @Programmatic
+    private boolean areaIsDividedForUnit(Unit unit) {
+        return unit.getStorageArea()!=null || unit.getSalesArea()!=null;
+    }
+
+    @Programmatic
+    private BigDecimal calculateTotalPonderingAreaForUnit(Unit unit) {
+        final PonderingAreaCoefficients coefficients;
+        if (unit.getType().equals(UnitType.HYPERMARKET)) {
+            coefficients = PonderingAreaCoefficients.FOR_HYPERMARKET;
+        } else {
+            coefficients = PonderingAreaCoefficients.DEFAULT;
+        }
+
+        BigDecimal totalPonderingArea = BigDecimal.ZERO;
+        // Calculate pondering area for storage if possible
+        if (unit.getStorageArea()!=null) {
+            totalPonderingArea = totalPonderingArea.add(
+                    calculatePonderingAreaForUnitAreaType(unit.getStorageArea(), coefficients.getStorageCoefficients()));
+        }
+        // Calculates pondering area for sales if possible
+        if (unit.getSalesArea()!=null) {
+            totalPonderingArea = totalPonderingArea.add(
+                    calculatePonderingAreaForUnitAreaType(unit.getSalesArea(), coefficients.getSalesCoefficients()));
+        }
+
+        return totalPonderingArea;
+    }
+
+    @Programmatic
+    private BigDecimal calculatePonderingAreaForUnitAreaType(BigDecimal areaRemaining, final List<PonderingAreaCoefficients.Tuple> tuples) {
+        BigDecimal ponderingArea = BigDecimal.ZERO;
+        for (PonderingAreaCoefficients.Tuple t : tuples) {
+            if (t.area!=null) {
+                if (areaRemaining.min(t.area).compareTo(BigDecimal.ZERO) <= 0) {
+                    // Area remaining is less than or equal to the tuple area value; multiply the remainder of the area by the corresponding coefficient and add it to result
+                    return ponderingArea.add(areaRemaining.multiply(t.coefficient));
+                } else {
+                    // Enough area remaining for the tuple area value to 'take' from; multiply the until value by the corresponding coefficient and add it to result
+                    ponderingArea = ponderingArea.add(t.area.multiply(t.coefficient));
+                    areaRemaining = areaRemaining.min(t.area);
+                }
+            } else {
+                // No tuple area value; multiply the remainder of the area by the corresponding coefficient and add it to result
+                return ponderingArea.add(areaRemaining.multiply(t.coefficient));
+            }
+        }
+
+        return ponderingArea;
     }
 
     @Programmatic
