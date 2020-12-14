@@ -73,7 +73,7 @@ public class CodaDocumentRepository_integtest extends CodaModuleIntegTestAbstrac
         Assertions.assertThat(codaDocumentRepository.listAll()).hasSize(1);
 
         // and when posted
-        codaDocument.setPostedAt(new LocalDateTime());
+        codaDocument.updatePostedAtAndAttachedScheduleEntryIfAny(new LocalDateTime());
         // then
         unpostedByAtPathIta = codaDocumentRepository.findUnpostedByAtPath(atPath);
         Assertions.assertThat(unpostedByAtPathIta).isEmpty();

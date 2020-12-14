@@ -28,6 +28,15 @@ public class CodaDocumentRepository {
         return repositoryService.allInstances(CodaDocument.class);
     }
 
+
+    public CodaDocument findByUuid(final String uuid) {
+        return repositoryService.uniqueMatch(
+                new QueryDefault<>(
+                        CodaDocument.class,
+                        "findByUuid",
+                        "uuid", uuid));
+    }
+
     @Programmatic
     public List<CodaDocument> findByCmpCodeAndDocCodeAndDocNum(
             final String cmpCode,
@@ -116,4 +125,5 @@ public class CodaDocumentRepository {
 
     @Inject
     ClockService clockService;
+
 }

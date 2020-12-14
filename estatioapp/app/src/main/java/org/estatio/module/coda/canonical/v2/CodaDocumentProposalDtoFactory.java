@@ -27,6 +27,9 @@ public class CodaDocumentProposalDtoFactory extends DtoFactoryAbstract<CodaDocum
     }
 
     protected CodaDocumentProposalDto newDto(final CodaDocument codaDocument) {
+        // As long as we use CodaDocument for both Proposal and Projection, we make sure that ony for proposal a dto is created
+        if (codaDocument.getRole()== CodaDocument.CodaDocumentRole.PROJECTION) return null;
+
         final CodaDocumentProposalDto dto = new CodaDocumentProposalDto();
         dto.setMajorVersion("2");
         dto.setMinorVersion("0");

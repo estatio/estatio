@@ -74,6 +74,11 @@ import lombok.Setter;
                         + "FROM org.estatio.module.coda.dom.codadocument.CodaDocument "
                         + "WHERE atPath == :atPath "
                         + "   && postedAt == null "),
+        @Query(
+                name = "findByUuid", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.module.coda.dom.codadocument.CodaDocument "
+                        + "WHERE uuid == :uuid "),
 
 })
 @Uniques({
@@ -153,7 +158,7 @@ public class CodaDocument implements Comparable<CodaDocument>, HasAtPath {
     public static class CodaDocumentChangePostedAtEvent
             extends ActionDomainEvent<CodaDocument> {}
 
-    @Getter @Setter
+    @Getter
     @Column(allowsNull = "true")
     private LocalDateTime postedAt;
 
@@ -166,9 +171,14 @@ public class CodaDocument implements Comparable<CodaDocument>, HasAtPath {
 
     @Programmatic
     public void updatePostedAtAndAttachedScheduleEntryIfAny(final LocalDateTime dateTime) {
-        setPostedAt(dateTime);
+        this.postedAt = dateTime;
         if (dateTime==null) return; // guard, but should not be possble
         Lists.newArrayList(getLines()).forEach(l->l.updateAttachedScheduleEntryIfAny(dateTime));
+    }
+
+    public CodaDocumentRole getRole(){
+        if (getDocNum()!=null) return CodaDocumentRole.PROJECTION;
+        return CodaDocumentRole.PROPOSAL;
     }
 
     //region > compareTo, toString
@@ -189,6 +199,11 @@ public class CodaDocument implements Comparable<CodaDocument>, HasAtPath {
                 ", docCode='" + getDocCode() + '\'' +
                 ", uuid='" + getUuid() + '\'' +
                 '}';
+    }
+
+    public enum CodaDocumentRole {
+        PROPOSAL,
+        PROJECTION
     }
 
 }
