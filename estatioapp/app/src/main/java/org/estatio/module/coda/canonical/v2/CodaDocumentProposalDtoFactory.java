@@ -40,7 +40,7 @@ public class CodaDocumentProposalDtoFactory extends DtoFactoryAbstract<CodaDocum
         dto.setDocCode(codaDocument.getDocCode());
         dto.setDocNum(codaDocument.getDocNum()); // TODO: at time of posting is null, so is this needed?
         dto.setUuid(codaDocument.getUuid());
-        dto.setCodaDocDate(asXMLGregorianCalendar(codaDocument.getDocDate())); // TODO: at the moment null...
+        dto.setCodaDocDate(asXMLGregorianCalendar(codaDocument.getDocDate()));
         dto.setCodaPeriod(codaDocument.getCodaPeriod());
         final List<CodaDocumentLineType> lineDtos = new ArrayList<>();
         for (CodaDocumentLine line : codaDocument.getLines()){

@@ -19,9 +19,12 @@
                                         <ns2:property id="docCode"/>
                                         <ns2:property id="docNum"/>
                                     </ns2:fieldSet>
+                                    <ns2:fieldSet name="Role" id="role">
+                                        <ns2:property id="role"/>
+                                    </ns2:fieldSet>
                                     <ns2:fieldSet name="Dates" id="dates">
                                         <ns2:property id="codaPeriod"/>
-                                        <ns2:property id="inputDate"/>
+                                        <ns2:property id="inputDate" hidden="EVERYWHERE"/>
                                         <ns2:property id="docDate"/>
                                     </ns2:fieldSet>
                                     <ns2:fieldSet name="Handling" id="handling">

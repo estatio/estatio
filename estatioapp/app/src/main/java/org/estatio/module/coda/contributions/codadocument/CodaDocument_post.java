@@ -23,8 +23,9 @@ public class CodaDocument_post {
     }
 
     @Action(publishing = Publishing.ENABLED, semantics = SemanticsOf.IDEMPOTENT)
-    public void act() {
+    public CodaDocument act() {
         if (codaDocument.getPostedAt()==null) codaDocument.updatePostedAtAndAttachedScheduleEntryIfAny(clockService.nowAsLocalDateTime());
+        return codaDocument;
     }
 
     // extra temp requirement until Camel can handle everything ...
