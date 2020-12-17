@@ -1,10 +1,6 @@
 package org.estatio.module.lease.dom.amendments;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
@@ -123,6 +119,16 @@ public class LeaseAmendmentManager {
     @Action(semantics = SemanticsOf.SAFE)
     public LeaseAmendmentManager filterByType(@Nullable final LeaseAmendmentTemplate leaseAmendmentTemplate){
         return new LeaseAmendmentManager(getProperty(), leaseAmendmentTemplate, getState());
+    }
+
+    public List<LeaseAmendmentTemplate> choices0FilterByType() {
+        if (getProperty()!=null) {
+            return Arrays.asList(LeaseAmendmentTemplate.values())
+                    .stream()
+                    .filter(lat -> getProperty().getAtPath().startsWith(lat.getAtPath()))
+                    .collect(Collectors.toList());
+        }
+        return Arrays.asList(LeaseAmendmentTemplate.values());
     }
 
     @Action(semantics = SemanticsOf.SAFE)

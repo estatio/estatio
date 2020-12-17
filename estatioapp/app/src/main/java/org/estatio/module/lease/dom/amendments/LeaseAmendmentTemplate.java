@@ -13,34 +13,6 @@ import lombok.Getter;
 
 public enum LeaseAmendmentTemplate {
 
-    COVID2_ITA_FREQ_CHANGE(
-            LeaseAmendmentType.COVID_WAVE_2,
-            new LocalDate(2020,12,1),
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            Arrays.asList(
-                    new Tuple<>(InvoicingFrequency.QUARTERLY_IN_ADVANCE, InvoicingFrequency.MONTHLY_IN_ADVANCE),
-                    new Tuple<>(InvoicingFrequency.QUARTERLY_IN_ARREARS, InvoicingFrequency.MONTHLY_IN_ADVANCE),
-                    new Tuple<>(InvoicingFrequency.QUARTERLY_IN_ADVANCE_PLUS1M, InvoicingFrequency.MONTHLY_IN_ADVANCE),
-                    new Tuple<>(InvoicingFrequency.QUARTERLY_IN_ADVANCE_PLUS2M, InvoicingFrequency.MONTHLY_IN_ADVANCE)
-            ),
-            Arrays.asList(
-                    LeaseItemType.RENT,
-                    LeaseItemType.RENT_DISCOUNT,
-                    LeaseItemType.RENT_DISCOUNT_FIXED,
-                    LeaseItemType.SERVICE_CHARGE,
-                    LeaseItemType.MARKETING
-            ),
-            new LocalDate(2021,1,1),
-            new LocalDate(2021,3,31),
-            "-FC2",
-            new LocalDate(2020,10,1), // because of _PLUSM1 / _PLUSM2 calcs
-            new LocalDate(2021,3,31),
-            true),
     COVID_BEL(
             LeaseAmendmentType.COVID_WAVE_1,
             new LocalDate(2020,3,18), // min date because of lease selection
@@ -62,7 +34,8 @@ public enum LeaseAmendmentTemplate {
             "-A",
             new LocalDate(2020,1,1),
             new LocalDate(2020,12,31),
-            false),
+            false,
+            "/BEL"),
     COVID_FRA_50_PERC(
             LeaseAmendmentType.COVID_WAVE_1,
             new LocalDate(2020,3,16), // min date because of lease selection
@@ -94,7 +67,8 @@ public enum LeaseAmendmentTemplate {
             "-A50",
             new LocalDate(2020,1,1),
             new LocalDate(2020,12,31),
-            false),
+            false,
+            "/FRA"),
     COVID_FRA_100_PERC(
             LeaseAmendmentType.COVID_WAVE_1,
             new LocalDate(2020,4,1),
@@ -126,7 +100,8 @@ public enum LeaseAmendmentTemplate {
             "-A100",
             new LocalDate(2020,1,1),
             new LocalDate(2020,12,31),
-            false),
+            false,
+            "/FRA"),
     COVID_ITA_100_PERC_1M(
             LeaseAmendmentType.COVID_WAVE_1,
             new LocalDate(2020,7,1),
@@ -152,7 +127,8 @@ public enum LeaseAmendmentTemplate {
             "-A1M",
             new LocalDate(2020,4,1), // because of _PLUSM1 / _PLUSM2 calcs
             new LocalDate(2020,12,31),
-            false),
+            false,
+            "/ITA"),
     COVID_ITA_100_PERC_2M(
             LeaseAmendmentType.COVID_WAVE_1,
             new LocalDate(2020,7,1),
@@ -178,7 +154,8 @@ public enum LeaseAmendmentTemplate {
             "-A2M",
             new LocalDate(2020,4,1), // because of _PLUSM1 / _PLUSM2 calcs
             new LocalDate(2020,12,31),
-            false),
+            false,
+            "/ITA"),
     COVID2_ITA_100_PERC_1M(
             LeaseAmendmentType.COVID_WAVE_2,
             new LocalDate(2021,1,1),
@@ -204,7 +181,8 @@ public enum LeaseAmendmentTemplate {
             "-C21M",
             new LocalDate(2020,10,1), // because of _PLUSM1 / _PLUSM2 calcs
             new LocalDate(2021,6,30),
-            false),
+            false,
+            "/ITA"),
     COVID2_ITA_100_PERC_2M(
             LeaseAmendmentType.COVID_WAVE_2,
             new LocalDate(2021,1,1),
@@ -230,7 +208,8 @@ public enum LeaseAmendmentTemplate {
             "-C22M",
             new LocalDate(2020,10,1), // because of _PLUSM1 / _PLUSM2 calcs
             new LocalDate(2021,6,30),
-            false),
+            false,
+            "/ITA"),
     COVID2_ITA_100_PERC_3M(
             LeaseAmendmentType.COVID_WAVE_2,
             new LocalDate(2021,1,1),
@@ -256,7 +235,8 @@ public enum LeaseAmendmentTemplate {
             "-C23M",
             new LocalDate(2020,10,1), // because of _PLUSM1 / _PLUSM2 calcs
             new LocalDate(2021,6,30),
-            false),
+            false,
+            "/ITA"),
     COVID_ITA_FREQ_CHANGE_ONLY(
             LeaseAmendmentType.COVID_WAVE_1,
             new LocalDate(2020,7,1),
@@ -284,7 +264,8 @@ public enum LeaseAmendmentTemplate {
             "-AF",
             new LocalDate(2020,4,1), // because of _PLUSM1 / _PLUSM2 calcs
             new LocalDate(2020,12,31),
-            true),
+            true,
+            "/ITA"),
     DEMO_TYPE(
             LeaseAmendmentType.COVID_WAVE_1,
             new LocalDate(2020,1,1),
@@ -305,7 +286,8 @@ public enum LeaseAmendmentTemplate {
             "-DEM",
             new LocalDate(2020,1,1),
             new LocalDate(2020,12,31),
-            false),
+            false,
+            "/GBR"),
     DEMO_TYPE2(
             LeaseAmendmentType.COVID_WAVE_1,
             new LocalDate(2020,7,1),
@@ -326,7 +308,8 @@ public enum LeaseAmendmentTemplate {
             "-DEM2",
             new LocalDate(2020,7,1),
             new LocalDate(2020,12,31),
-            false)
+            false,
+            "/GBR")
     ;
 
     @Getter
@@ -377,6 +360,9 @@ public enum LeaseAmendmentTemplate {
     @Getter
     private Boolean allowsBulkApply;
 
+    @Getter
+    private String atPath;
+
     LeaseAmendmentTemplate(
             final LeaseAmendmentType leaseAmendmentType,
             final LocalDate amendmentStartDate,
@@ -393,7 +379,8 @@ public enum LeaseAmendmentTemplate {
             final String ref_suffix,
             final LocalDate previewInvoicingStartDate,
             final LocalDate previewInvoicingEndDate,
-            final boolean allowsBulkApply) {
+            final boolean allowsBulkApply,
+            final String atpath) {
         this.leaseAmendmentType = leaseAmendmentType;
         this.amendmentStartDate = amendmentStartDate;
         this.discountPercentage = discountPercentage;
@@ -410,6 +397,7 @@ public enum LeaseAmendmentTemplate {
         this.previewInvoicingStartDate = previewInvoicingStartDate;
         this.previewInvoicingEndDate = previewInvoicingEndDate;
         this.allowsBulkApply = allowsBulkApply;
+        this.atPath = atpath;
     }
 
     public static class Tuple<X, Y> {

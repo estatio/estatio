@@ -9,6 +9,10 @@ import org.estatio.module.lease.dom.InvoicingFrequency;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseStatus;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Mixin
 public class Lease_createLeaseAmendment {
 
@@ -38,6 +42,21 @@ public class Lease_createLeaseAmendment {
                     leaseAmendmentTemplate.getFrequencyChangeStartDate(), leaseAmendmentTemplate.getFrequencyChangeEndDate());
         }
         return lease;
+    }
+
+    public List<LeaseAmendmentTemplate> choices0$$() {
+        final List<LeaseAmendmentTemplate> templatesForAtPath = Arrays.asList(LeaseAmendmentTemplate.values())
+                .stream()
+                .filter(lat -> lease.getAtPath().startsWith(lat.getAtPath()))
+                .collect(Collectors.toList());
+        if (lease.getAtPath().startsWith("/ITA")) {
+            return templatesForAtPath
+                    .stream()
+                    .filter(lat -> lat.getLeaseAmendmentType() == LeaseAmendmentType.COVID_WAVE_2)
+                    .collect(Collectors.toList());
+        }
+
+        return templatesForAtPath;
     }
 
     public String validate$$(
