@@ -54,23 +54,7 @@ public class LeaseAmendmentService {
     public void apply(final LeaseAmendment leaseAmendment, final boolean preview) {
 
         if (leaseAmendment.getState()==LeaseAmendmentState.APPLIED) return;
-
-        // Extra guard for supported types
-        if (!Arrays.asList(
-                LeaseAmendmentTemplate.COVID_BEL,
-                LeaseAmendmentTemplate.COVID_FRA_50_PERC,
-                LeaseAmendmentTemplate.COVID_FRA_100_PERC,
-                LeaseAmendmentTemplate.COVID_ITA_100_PERC_1M,
-                LeaseAmendmentTemplate.COVID_ITA_100_PERC_2M,
-                LeaseAmendmentTemplate.COVID_ITA_FREQ_CHANGE_ONLY,
-                LeaseAmendmentTemplate.DEMO_TYPE,
-                LeaseAmendmentTemplate.DEMO_TYPE2).
-                contains(leaseAmendment.getLeaseAmendmentTemplate())
-        ) {
-            messageService.warnUser(String.format("Amendment type %s is not implemented (yet...)", leaseAmendment.getLeaseAmendmentTemplate()));
-            return;
-        }
-
+        
         final String message = String.format("Applying amendment %s for lease %s", leaseAmendment.getReference(), preview ? leaseAmendment.getLeasePreview().getReference() : leaseAmendment.getLease().getReference());
         LOG.info(message);
         if (!preview && leaseAmendment.getLeasePreview()!=null) {
