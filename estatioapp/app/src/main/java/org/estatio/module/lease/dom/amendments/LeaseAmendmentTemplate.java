@@ -179,6 +179,84 @@ public enum LeaseAmendmentTemplate {
             new LocalDate(2020,4,1), // because of _PLUSM1 / _PLUSM2 calcs
             new LocalDate(2020,12,31),
             false),
+    COVID2_ITA_100_PERC_1M(
+            LeaseAmendmentType.COVID_WAVE_2,
+            new LocalDate(2021,1,1),
+            new BigDecimal("100.00"),
+            Arrays.asList(
+                    LeaseItemType.RENT,
+                    LeaseItemType.RENT_DISCOUNT
+            ),
+            new LocalDate(2021,1,1),
+            new LocalDate(2021,1,31),
+            Arrays.asList(
+                    new Tuple<>("6001", "6034"),
+                    new Tuple<>("6002", "6035"),
+                    new Tuple<>("6031", "6034"), // current discount charge on any discount item
+                    new Tuple<>("6032", "6035"), // current discount charge on any discount item
+                    new Tuple<>(null, "6035") // TODO: check DEFAULT with users?
+            ),
+            new LocalDate(2021,1,1),
+            null,
+            null,
+            null,
+            null,
+            "-C21M",
+            new LocalDate(2020,10,1), // because of _PLUSM1 / _PLUSM2 calcs
+            new LocalDate(2021,6,30),
+            false),
+    COVID2_ITA_100_PERC_2M(
+            LeaseAmendmentType.COVID_WAVE_2,
+            new LocalDate(2021,1,1),
+            new BigDecimal("100.00"),
+            Arrays.asList(
+                    LeaseItemType.RENT,
+                    LeaseItemType.RENT_DISCOUNT
+            ),
+            new LocalDate(2021,1,1),
+            new LocalDate(2021,2,28),
+            Arrays.asList(
+                    new Tuple<>("6001", "6034"),
+                    new Tuple<>("6002", "6035"),
+                    new Tuple<>("6031", "6034"), // current discount charge on any discount item
+                    new Tuple<>("6032", "6035"), // current discount charge on any discount item
+                    new Tuple<>(null, "6035") // TODO: check DEFAULT with users?
+            ),
+            new LocalDate(2021,1,1),
+            null,
+            null,
+            null,
+            null,
+            "-C22M",
+            new LocalDate(2020,10,1), // because of _PLUSM1 / _PLUSM2 calcs
+            new LocalDate(2021,6,30),
+            false),
+    COVID2_ITA_100_PERC_3M(
+            LeaseAmendmentType.COVID_WAVE_2,
+            new LocalDate(2021,1,1),
+            new BigDecimal("100.00"),
+            Arrays.asList(
+                    LeaseItemType.RENT,
+                    LeaseItemType.RENT_DISCOUNT
+            ),
+            new LocalDate(2021,1,1),
+            new LocalDate(2021,3,31),
+            Arrays.asList(
+                    new Tuple<>("6001", "6034"),
+                    new Tuple<>("6002", "6035"),
+                    new Tuple<>("6031", "6034"), // current discount charge on any discount item
+                    new Tuple<>("6032", "6035"), // current discount charge on any discount item
+                    new Tuple<>(null, "6035") // TODO: check DEFAULT with users?
+            ),
+            new LocalDate(2021,1,1),
+            null,
+            null,
+            null,
+            null,
+            "-C23M",
+            new LocalDate(2020,10,1), // because of _PLUSM1 / _PLUSM2 calcs
+            new LocalDate(2021,6,30),
+            false),
     COVID_ITA_FREQ_CHANGE_ONLY(
             LeaseAmendmentType.COVID_WAVE_1,
             new LocalDate(2020,7,1),
