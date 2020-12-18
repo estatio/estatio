@@ -18,6 +18,7 @@
                 <ns2:action id="upload"/>
             </ns2:collection>
             <ns2:collection id="sectorsWithNoActivities" defaultView="table"/>
+            <ns2:collection id="sectorsWithActivities" defaultView="table"/>
         </col>
     </row>
 </grid>

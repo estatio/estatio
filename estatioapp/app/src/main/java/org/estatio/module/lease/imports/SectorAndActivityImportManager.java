@@ -59,6 +59,14 @@ public class SectorAndActivityImportManager {
                 .collect(Collectors.toList());
     }
 
+    public List<Sector> getSectorsWithActivities() {
+        return sectorRepository.allSectors()
+                .stream()
+                .filter(sector -> !sector.getActivities().isEmpty())
+                .sorted(Comparator.comparing(Sector::getSortOrder, Comparator.nullsLast(Comparator.naturalOrder())))
+                .collect(Collectors.toList());
+    }
+
     private List<SectorAndActivityImport> getSectorAndActivityLines(){
         List<SectorAndActivityImport> result = new ArrayList<>();
         sectorRepository.allSectors()
