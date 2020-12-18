@@ -67,8 +67,7 @@ public class KeyTable_IntegTest extends BudgetModuleIntegTestAbstract {
             protected void execute(final ExecutionContext executionContext) {
                 executionContext.executeChild(this, Budget_enum.OxfBudget2015.builder());
                 executionContext.executeChild(this, Budget_enum.OxfBudget2016.builder());
-
-
+                executionContext.executeChild(this, Budget_enum.RonItaBudget2016UnitAreaDivided.builder());
             }
         });
     }
@@ -119,6 +118,26 @@ public class KeyTable_IntegTest extends BudgetModuleIntegTestAbstract {
             //then
             assertThat(keyItemRepository.findByKeyTableAndUnit(keyTableByArea, unitRepository.findUnitByReference("OXF-001")).getValue()).isEqualTo(new BigDecimal("3.077"));
             assertThat(keyItemRepository.findByKeyTableAndUnit(keyTableByArea, unitRepository.findUnitByReference("OXF-002")).getValue()).isEqualTo(new BigDecimal("6.154"));
+        }
+
+        @Test
+        public void whenSetUpForPonderingAreaCalculation() throws Exception {
+
+            //given
+            Property property = Property_enum.RonIt.findUsing(serviceRegistry);
+            Budget budget = budgetRepository.findByPropertyAndStartDate(property,
+                    Budget_enum.RonItaBudget2016UnitAreaDivided.getStartDate());
+            keyTableByArea = budget.createKeyTable("Some name", FoundationValueType.AREA, KeyValueMethod.PROMILLE);
+            keyTableByArea.setPrecision(3);
+
+            //when
+            wrap(keyTableByArea).generateItems();
+
+            //then
+            assertThat(keyItemRepository.findByKeyTableAndUnit(keyTableByArea, unitRepository.findUnitByReference("RON-001")).getSourceValue()).isEqualTo(new BigDecimal("70.0000"));
+            assertThat(keyItemRepository.findByKeyTableAndUnit(keyTableByArea, unitRepository.findUnitByReference("RON-002")).getSourceValue()).isEqualTo(new BigDecimal("140.0000"));
+            assertThat(keyItemRepository.findByKeyTableAndUnit(keyTableByArea, unitRepository.findUnitByReference("RON-029")).getSourceValue()).isEqualTo(new BigDecimal("1590.0000"));
+            assertThat(keyItemRepository.findByKeyTableAndUnit(keyTableByArea, unitRepository.findUnitByReference("RON-030")).getSourceValue()).isEqualTo(new BigDecimal("1640.0000"));
         }
 
         Unit unitWithAreaNull;

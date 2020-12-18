@@ -1,5 +1,7 @@
 package org.estatio.module.asset.fixtures.property.enums;
 
+import lombok.Getter;
+import lombok.experimental.Accessors;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.fixturescripts.PersonaWithBuilderScript;
@@ -12,8 +14,6 @@ import org.estatio.module.asset.fixtures.person.enums.Person_enum;
 import org.estatio.module.asset.fixtures.property.builders.PropertyAndUnitsAndOwnerAndManagerBuilder;
 import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
 
-import lombok.Getter;
-import lombok.experimental.Accessors;
 import static org.incode.module.base.integtests.VT.ld;
 
 //@AllArgsConstructor
@@ -25,52 +25,68 @@ public enum PropertyAndUnitsAndOwnerAndManager_enum implements
 
     BudNl   (Property_enum.BudNl,
             7,
+            false,
             Organisation_enum.AcmeNl, ld(1999, 1, 1), ld(2000, 1, 1),
             Person_enum.JohnDoeNl, null, null
     ) {
     },
     RonIt   (Property_enum.RonIt,
             5,
+            false,
+            Organisation_enum.HelloWorldIt, ld(1999, 1, 1), ld(2000, 1, 1),
+            Person_enum.FloellaAssetManagerIt, null, null
+    ),
+    RonItDiv   (Property_enum.RonIt,
+            30,
+            true,
             Organisation_enum.HelloWorldIt, ld(1999, 1, 1), ld(2000, 1, 1),
             Person_enum.FloellaAssetManagerIt, null, null
     ),
     GraIt   (Property_enum.GraIt,
             55,
+            false,
             Organisation_enum.HelloWorldIt, ld(1999, 1, 1), ld(2000, 1, 1),
             Person_enum.LucianoPavarottiIt, null, null
     ),
     HanSe   (Property_enum.HanSe,
             5,
+            false,
             Organisation_enum.HelloWorldSe, ld(1999, 1, 1), ld(2000, 1, 1),
             Person_enum.AgnethaFaltskogSe, null, null
     ),
     KalNl   (Property_enum.KalNl,
             40,
+            false,
             Organisation_enum.AcmeNl, ld(1999, 1, 1), ld(2000, 1, 1),
             Person_enum.JohnDoeNl, null, null
     ),
     MacFr   (Property_enum.MacFr,
             5,
+            false,
             Organisation_enum.HelloWorldFr, ld(1999, 1, 1), ld(2000, 1, 1),
             Person_enum.JeanneDarcFr, null, null
     ),
     MnsFr   (Property_enum.MnsFr,
             5,
+            false,
             Organisation_enum.HelloWorldFr, ld(1999, 1, 1), ld(2000, 1, 1),
             Person_enum.FleuretteRenaudFr, null, null
     ),
     OxfGb   (Property_enum.OxfGb,
             25,
+            false,
             Organisation_enum.HelloWorldGb, ld(1999, 1, 1), ld(2000, 1, 1),
             Person_enum.GinoVannelliGb, null, null
     ),
     LuwBe   (Property_enum.LuwBe,
             25,
+            false,
             Organisation_enum.HelloWorldBe, ld(1999, 1, 1), ld(2000, 1, 1),
             Person_enum.GinoVannelliBe, null, null
     ),
     VivFr   (Property_enum.VivFr,
             5,
+            false,
             Organisation_enum.HelloWorldFr, ld(1999, 1, 1), ld(2000, 1, 1),
             Person_enum.JeanneDarcFr, null, null
     );
@@ -79,6 +95,7 @@ public enum PropertyAndUnitsAndOwnerAndManager_enum implements
     public String getRef() { return property_d.getRef(); }
 
     private final int numberOfUnits;
+    private final boolean unitAreasDivided;
     private final Organisation_enum owner_d;
     private final LocalDate ownerStartDate;
     private final LocalDate ownerEndDate;
@@ -89,6 +106,7 @@ public enum PropertyAndUnitsAndOwnerAndManager_enum implements
     PropertyAndUnitsAndOwnerAndManager_enum(
             final Property_enum property_d,
             final int numberOfUnits,
+            final boolean unitAreasDivided,
             final Organisation_enum owner_d,
             final LocalDate ownerStartDate,
             final LocalDate ownerEndDate,
@@ -99,6 +117,7 @@ public enum PropertyAndUnitsAndOwnerAndManager_enum implements
         this.property_d = property_d;
 
         this.numberOfUnits = numberOfUnits;
+        this.unitAreasDivided = unitAreasDivided;
 
         this.owner_d = owner_d;
         this.ownerStartDate = ownerStartDate;
@@ -124,6 +143,8 @@ public enum PropertyAndUnitsAndOwnerAndManager_enum implements
                 .setLocationStr(property_d.getLocationStr())
 
                 .setNumberOfUnits(getNumberOfUnits())
+                .setUnitAreasDivided(isUnitAreasDivided())
+
 
                 .setPrereq((f,ex) -> f.setOwner(f.objectFor(getOwner_d(), ex)))
                 .setOwnerStartDate(getOwnerStartDate())
@@ -139,4 +160,6 @@ public enum PropertyAndUnitsAndOwnerAndManager_enum implements
     public Property findUsing(final ServiceRegistry2 serviceRegistry) {
         return serviceRegistry.lookupService(PropertyRepository.class).findPropertyByReference(getRef());
     }
+
+
 }

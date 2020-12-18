@@ -81,6 +81,12 @@ public enum Budget_enum implements PersonaWithBuilderScript<Budget, BudgetBuilde
                     new ItemSpec(Charge_enum.ItServiceCharge, bd("10000.00"))
             }
     ),
+    RonItaBudget2016UnitAreaDivided(
+            PropertyAndUnitsAndOwnerAndManager_enum.RonItDiv, ld(2016, 1, 1),
+            new ItemSpec[]{
+                    new ItemSpec(Charge_enum.ItServiceCharge, bd("10000.00"))
+            }
+    ),
     RonItaBudget2018(
             PropertyAndUnitsAndOwnerAndManager_enum.RonIt, ld(2018, 1, 1),
             new ItemSpec[]{

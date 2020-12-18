@@ -51,6 +51,9 @@ public final class PropertyUnitsBuilder
     @Getter @Setter
     private Integer numberOfUnits;
 
+    @Getter @Setter
+    private boolean unitAreasDivided;
+
     @Getter
     private List<Unit> object = Lists.newArrayList();
 
@@ -61,6 +64,8 @@ public final class PropertyUnitsBuilder
 
         defaultParam("numberOfUnits", executionContext, fakeDataService.ints().between(10,20));
 
+        defaultParam("unitAreasDivided", executionContext, false);
+
         for (int i = 0; i < getNumberOfUnits(); i++) {
             final int unitNum = i + 1;
             final String unitRef = buildUnitReference(property.getReference(), unitNum);
@@ -69,6 +74,10 @@ public final class PropertyUnitsBuilder
             final Unit unit = wrap(property).newUnit(unitRef, unitName, unitType);
 
             unit.setArea(new BigDecimal(unitNum * 100));
+            if (isUnitAreasDivided()) {
+                unit.setSalesArea(unit.getArea().multiply(new BigDecimal("0.5")));
+                unit.setStorageArea(unit.getArea().subtract(unit.getSalesArea()));
+            }
 
             object.add(unit);
             executionContext.addResult(this, unitRef, unit);

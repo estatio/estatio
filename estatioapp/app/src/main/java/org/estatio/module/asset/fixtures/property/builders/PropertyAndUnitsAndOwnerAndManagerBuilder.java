@@ -92,6 +92,8 @@ public final class PropertyAndUnitsAndOwnerAndManagerBuilder
 
     @Getter @Setter
     private Integer numberOfUnits;
+    @Getter @Setter
+    private boolean unitAreasDivided;
 
     @Getter
     private Property object;
@@ -106,6 +108,7 @@ public final class PropertyAndUnitsAndOwnerAndManagerBuilder
     protected void execute(final ExecutionContext executionContext) {
 
         defaultParam("numberOfUnits", executionContext, fakeDataService.ints().between(10,20));
+        defaultParam("unitAreasDivided", executionContext, false);
 
         final Property property = new PropertyBuilder()
                 .setReference(reference)
@@ -145,6 +148,10 @@ public final class PropertyAndUnitsAndOwnerAndManagerBuilder
                     .newUnit(String.format("%s-%03d", property.getReference(), unitNumber), "Unit " + unitNumber,
                             unitType(i));
             unit.setArea(new BigDecimal((i + 1) * 100));
+            if (isUnitAreasDivided()) {
+                unit.setSalesArea(unit.getArea().multiply(new BigDecimal("0.5")));
+                unit.setStorageArea(unit.getArea().subtract(unit.getSalesArea()));
+            }
             units.add(unit);
         }
 

@@ -24,24 +24,25 @@ import javax.annotation.Nullable;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
+import static org.incode.module.base.integtests.VT.bd;
 
 public enum PonderingAreaCoefficients {
     DEFAULT(
             Arrays.asList(
-                    new Tuple(new BigDecimal("350.0"), BigDecimal.ONE),
-                    new Tuple(null, new BigDecimal("0.60"))),
+                    new Tuple(bd("350.0"), bd("1.00")),
+                    new Tuple(null, bd("0.60"))),
             Arrays.asList(
-                    new Tuple(null, new BigDecimal("0.40"))
+                    new Tuple(null, bd("0.40"))
             )),
     FOR_HYPERMARKET(
             Arrays.asList(
-                    new Tuple(new BigDecimal("1000.0"), BigDecimal.ONE),
-                    new Tuple(new BigDecimal("1000.0"), new BigDecimal("0.90")),
-                    new Tuple(new BigDecimal("2000.0"), new BigDecimal("0.80")),
-                    new Tuple(new BigDecimal("2000.0"), new BigDecimal("0.70")),
-                    new Tuple(null, new BigDecimal("0.60"))),
+                    new Tuple(bd("1000.0"), bd("1.00")),
+                    new Tuple(bd("1000.0"), bd("0.90")),
+                    new Tuple(bd("2000.0"), bd("0.80")),
+                    new Tuple(bd("2000.0"), bd("0.70")),
+                    new Tuple(null, bd("0.60"))),
             Arrays.asList(
-                new Tuple(null, new BigDecimal("0.40"))
+                new Tuple(null, bd("0.40"))
             ));
 
     @Getter

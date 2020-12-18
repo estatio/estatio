@@ -184,13 +184,13 @@ public class KeyTable extends PartitioningTable {
         BigDecimal ponderingArea = BigDecimal.ZERO;
         for (PonderingAreaCoefficients.Tuple t : tuples) {
             if (t.area!=null) {
-                if (areaRemaining.min(t.area).compareTo(BigDecimal.ZERO) <= 0) {
+                if (areaRemaining.subtract(t.area).compareTo(BigDecimal.ZERO) <= 0) {
                     // Area remaining is less than or equal to the tuple area value; multiply the remainder of the area by the corresponding coefficient and add it to result
                     return ponderingArea.add(areaRemaining.multiply(t.coefficient));
                 } else {
                     // Enough area remaining for the tuple area value to 'take' from; multiply the until value by the corresponding coefficient and add it to result
                     ponderingArea = ponderingArea.add(t.area.multiply(t.coefficient));
-                    areaRemaining = areaRemaining.min(t.area);
+                    areaRemaining = areaRemaining.subtract(t.area);
                 }
             } else {
                 // No tuple area value; multiply the remainder of the area by the corresponding coefficient and add it to result
