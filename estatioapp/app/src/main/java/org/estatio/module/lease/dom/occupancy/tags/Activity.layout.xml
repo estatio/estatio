@@ -11,12 +11,15 @@
         <bs3:col span="4">
             <cpt:fieldSet name="General" id="general" unreferencedProperties="true">
                 <cpt:property id="name"/>
+                <cpt:property id="description"/>
+                <cpt:property id="sortOrder"/>
                 <cpt:property id="sector">
                     <cpt:action id="change" position="BELOW"/>
                 </cpt:property>
             </cpt:fieldSet>
             <cpt:fieldSet name="Application Level" id="applicationLevel">
                 <cpt:property id="applicationTenancy"/>
+                <cpt:property id="atPath" hidden="ALL_TABLES"/>
             </cpt:fieldSet>
             <cpt:fieldSet name="Metadata" id="metadata">
                 <cpt:action id="downloadLayoutXml" position="PANEL_DROPDOWN"/>
