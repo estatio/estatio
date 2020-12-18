@@ -121,28 +121,43 @@ public class SectorAndActivityImportManager {
     }
 
     public String validateUpload(final Blob spreadSheet) {
-        List<SectorAndActivityImport> newSectorsAndActivities = excelService.fromExcel(spreadSheet, SectorAndActivityImport.class, "Sectors and Activities", Mode.RELAXED);
-        List<String> errors = tryToRemoveSectorsAndActivities(getSectorsAndActivitiesToRemove(getSectorAndActivityLines(), newSectorsAndActivities));
+        final List<SectorAndActivityImport> newSectorsAndActivities = excelService.fromExcel(spreadSheet, SectorAndActivityImport.class, "Sectors and Activities", Mode.RELAXED);
+        final List<SectorAndActivityImport> oldSectorsAndActivities = getSectorAndActivityLines();
+        List<String> errors = new ArrayList<>();
+        // first try to remove activities
+        String activitiesError = tryToRemoveActivities(getActivitiesToRemove(oldSectorsAndActivities, newSectorsAndActivities));
+        if (activitiesError!=null) errors.add(activitiesError);
+        // then try to remove sectors
+        String sectorsError = tryToRemoveSectors(getSectorsToRemove(oldSectorsAndActivities, newSectorsAndActivities));
+        if (sectorsError!=null) errors.add(sectorsError);
 
         return errors.isEmpty() ? null : errors.stream().collect(Collectors.joining("\n"));
     }
 
-    private List<SectorAndActivityImport> getSectorsAndActivitiesToRemove(List<SectorAndActivityImport> oldImps, List<SectorAndActivityImport> newImps) {
-        return oldImps.stream().filter(imp -> newImps.stream().allMatch(newImp -> {
-            if (StringUtils.equals(newImp.getSectorName(), imp.getSectorName())) {
-                return !StringUtils.equals(newImp.getActivityName(), imp.getActivityName());
-            } else {
-                return true;
-            }
-        })).collect(Collectors.toList());
+    private List<SectorAndActivityImport> getActivitiesToRemove(List<SectorAndActivityImport> oldImps, List<SectorAndActivityImport> newImps) {
+        return oldImps
+                .stream()
+                .filter(imp -> imp.getActivityName()!=null)
+                .filter(imp -> newImps.stream().allMatch(newImp -> {
+                    if (StringUtils.equals(newImp.getSectorName(), imp.getSectorName())) {
+                        return !StringUtils.equals(newImp.getActivityName(), imp.getActivityName());
+                    } else {
+                        return true;
+                    }
+                }))
+                .collect(Collectors.toList());
     }
 
-    private List<String> tryToRemoveSectorsAndActivities(List<SectorAndActivityImport> toRemove) {
-        List<String> errors = new ArrayList<>();
+    private List<String> getSectorsToRemove(List<SectorAndActivityImport> oldImps, List<SectorAndActivityImport> newImps) {
+        return oldImps
+                .stream()
+                .filter(imp -> newImps.stream().allMatch(newImp -> !StringUtils.equals(imp.getSectorName(), newImp.getSectorName())))
+                .map(SectorAndActivityImport::getSectorName)
+                .collect(Collectors.toList());
+    }
 
-        // Try to remove activities first
+    private String tryToRemoveActivities(List<SectorAndActivityImport> activitiesToRemove) {
         List<String> nonremovableActivities = new ArrayList<>();
-        List<SectorAndActivityImport> activitiesToRemove = toRemove.stream().filter(imp -> imp.getActivityName()!=null).collect(Collectors.toList());
         activitiesToRemove.forEach(imp -> {
             Sector sector = sectorRepository.findByName(imp.getSectorName());
             Activity activity = activityRepository.findBySectorAndName(sector, imp.getActivityName());
@@ -153,27 +168,29 @@ public class SectorAndActivityImportManager {
             }
         });
         if (!nonremovableActivities.isEmpty()) {
-            errors.add(String.format("The following activities are already in use, cannot be removed: %s",
-                    nonremovableActivities.stream().collect(Collectors.joining(", "))));
+            return String.format("The following activities are already in use, cannot be removed: %s",
+                    nonremovableActivities.stream().collect(Collectors.joining(", ")));
         }
-        
-        // Then try to remove sectors
+
+        return null;
+    }
+
+    private String tryToRemoveSectors(List<String> sectorsToRemove) {
         List<String> nonremovableSectors = new ArrayList<>();
-        List<SectorAndActivityImport> sectorsToRemove = toRemove.stream().filter(imp -> imp.getActivityName()==null).collect(Collectors.toList());
-        sectorsToRemove.forEach(imp -> {
-            Sector sector = sectorRepository.findByName(imp.getSectorName());
+        sectorsToRemove.forEach(sectorName -> {
+            Sector sector = sectorRepository.findByName(sectorName);
             if (occupancyRepository.findBySector(sector).isEmpty() && activityRepository.findBySector(sector).isEmpty()) {
                 repositoryService.remove(sector);
             } else {
-                nonremovableSectors.add(imp.getSectorName());
+                nonremovableSectors.add(sectorName);
             }
         });
         if (!nonremovableSectors.isEmpty()) {
-            errors.add(String.format("The following sectors are already in use, cannot be removed: %s",
-                    nonremovableSectors.stream().collect(Collectors.joining(", "))));
+            return String.format("The following sectors are already in use, cannot be removed: %s",
+                    nonremovableSectors.stream().collect(Collectors.joining(", ")));
         }
 
-        return errors;
+        return null;
     }
 
     @Inject
