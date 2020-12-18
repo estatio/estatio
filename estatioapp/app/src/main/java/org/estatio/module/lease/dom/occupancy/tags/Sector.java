@@ -21,6 +21,7 @@ package org.estatio.module.lease.dom.occupancy.tags;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import javax.inject.Inject;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
@@ -30,7 +31,15 @@ import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.Where;
 
+import org.apache.isis.applib.services.repository.RepositoryService;
+import org.apache.isis.applib.services.user.UserService;
 import org.apache.isis.applib.types.DescriptionType;
+import org.estatio.module.base.dom.EstatioRole;
+import org.estatio.module.lease.dom.occupancy.OccupancyRepository;
+import org.estatio.module.party.dom.Person;
+import org.estatio.module.party.dom.PersonRepository;
+import org.estatio.module.party.dom.role.PartyRoleTypeEnum;
+import org.estatio.module.party.dom.role.PartyRoleTypeRepository;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.base.dom.types.NameType;
@@ -107,6 +116,48 @@ public class Sector
 
     // //////////////////////////////////////
 
+    public Sector change(
+            final String description,
+            final Integer sortOrder) {
+        setDescription(description);
+        setSortOrder(sortOrder);
+        return this;
+    }
+
+    public String default0Change() {
+        return getDescription();
+    }
+
+    public Integer default1Change() {
+        return getSortOrder();
+    }
+
+    public boolean hideChange() {
+        Person meAsPerson = personRepository.me();
+        if (meAsPerson != null && meAsPerson.hasPartyRoleType(PartyRoleTypeEnum.SECTOR_MAINTAINER.findUsing(partyRoleTypeRepository))) {
+            return false;
+        }
+        return !EstatioRole.ADMINISTRATOR.isApplicableFor(userService.getUser());
+    }
+
+    public void remove() {
+        repositoryService.remove(this);
+    }
+
+    public String validateRemove() {
+        return occupancyRepository.findBySector(this).isEmpty() && activityRepository.findBySector(this).isEmpty() ? null : "Sector is already in use, cannot be removed";
+    }
+
+    public boolean hideRemove() {
+        Person meAsPerson = personRepository.me();
+        if (meAsPerson != null && meAsPerson.hasPartyRoleType(PartyRoleTypeEnum.SECTOR_MAINTAINER.findUsing(partyRoleTypeRepository))) {
+            return false;
+        }
+        return !EstatioRole.ADMINISTRATOR.isApplicableFor(userService.getUser());
+    }
+
+    // //////////////////////////////////////
+
     @javax.jdo.annotations.Persistent(mappedBy = "sector")
     private SortedSet<Activity> activities = new TreeSet<>();
 
@@ -117,5 +168,23 @@ public class Sector
     public void setActivities(final SortedSet<Activity> activities) {
         this.activities = activities;
     }
+
+    @Inject
+    ActivityRepository activityRepository;
+
+    @Inject
+    RepositoryService repositoryService;
+
+    @Inject
+    PersonRepository personRepository;
+
+    @Inject
+    PartyRoleTypeRepository partyRoleTypeRepository;
+
+    @Inject
+    UserService userService;
+
+    @Inject
+    OccupancyRepository occupancyRepository;
 
 }

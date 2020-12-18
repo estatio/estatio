@@ -18,17 +18,22 @@
  */
 package org.estatio.module.lease.dom.occupancy.tags;
 
+import javax.inject.Inject;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
 
-import org.apache.isis.applib.annotation.DomainObject;
-import org.apache.isis.applib.annotation.Editing;
-import org.apache.isis.applib.annotation.Property;
-import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.annotation.*;
 
+import org.apache.isis.applib.services.repository.RepositoryService;
+import org.apache.isis.applib.services.user.UserService;
 import org.apache.isis.applib.types.DescriptionType;
 import org.estatio.module.base.dom.EstatioRole;
+import org.estatio.module.lease.dom.occupancy.OccupancyRepository;
+import org.estatio.module.party.dom.Person;
+import org.estatio.module.party.dom.PersonRepository;
+import org.estatio.module.party.dom.role.PartyRoleTypeEnum;
+import org.estatio.module.party.dom.role.PartyRoleTypeRepository;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.base.dom.types.NameType;
@@ -111,22 +116,58 @@ public class Activity
     private Integer sortOrder;
 
     public Activity change(
-            final String name,
-            final Sector sector) {
-        setName(name);
-        setSector(sector);
+            final String description,
+            final Integer sortOrder) {
+        setDescription(description);
+        setSortOrder(sortOrder);
         return this;
     }
 
     public String default0Change() {
-        return getName();
+        return getDescription();
     }
 
-    public Sector default1Change() {
-        return getSector();
+    public Integer default1Change() {
+        return getSortOrder();
     }
 
-    public String disableChange() {
-        return EstatioRole.ADMINISTRATOR.isApplicableFor(getUser()) ? null : "Users cannot change sectors or activities.";
+    public boolean hideChange() {
+        Person meAsPerson = personRepository.me();
+        if (meAsPerson != null && meAsPerson.hasPartyRoleType(PartyRoleTypeEnum.SECTOR_MAINTAINER.findUsing(partyRoleTypeRepository))) {
+            return false;
+        }
+        return !EstatioRole.ADMINISTRATOR.isApplicableFor(userService.getUser());
     }
+
+    public void remove() {
+        repositoryService.remove(this);
+    }
+
+    public String validateRemove() {
+        return occupancyRepository.findByActivity(this).isEmpty() ? null : "Activity is already in use, cannot be removed";
+    }
+
+    public boolean hideRemove() {
+        Person meAsPerson = personRepository.me();
+        if (meAsPerson != null && meAsPerson.hasPartyRoleType(PartyRoleTypeEnum.SECTOR_MAINTAINER.findUsing(partyRoleTypeRepository))) {
+            return false;
+        }
+        return !EstatioRole.ADMINISTRATOR.isApplicableFor(userService.getUser());
+    }
+
+    @Inject
+    RepositoryService repositoryService;
+
+    @Inject
+    PersonRepository personRepository;
+
+    @Inject
+    PartyRoleTypeRepository partyRoleTypeRepository;
+
+    @Inject
+    UserService userService;
+
+    @Inject
+    OccupancyRepository occupancyRepository;
+
 }

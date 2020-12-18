@@ -10,6 +10,8 @@
     <row>
         <col span="4">
             <ns2:fieldSet name="General" id="general" unreferencedProperties="true">
+                <ns2:action id="change"/>
+                <ns2:action id="remove"/>
                 <ns2:property id="name"/>
                 <ns2:property id="description"/>
                 <ns2:property id="sortOrder"/>

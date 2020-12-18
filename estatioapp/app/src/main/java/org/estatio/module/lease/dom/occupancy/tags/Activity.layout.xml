@@ -10,12 +10,12 @@
     <bs3:row>
         <bs3:col span="4">
             <cpt:fieldSet name="General" id="general" unreferencedProperties="true">
+                <cpt:action id="change"/>
+                <cpt:action id="remove"/>
                 <cpt:property id="name"/>
                 <cpt:property id="description"/>
                 <cpt:property id="sortOrder"/>
-                <cpt:property id="sector">
-                    <cpt:action id="change" position="BELOW"/>
-                </cpt:property>
+                <cpt:property id="sector"/>
             </cpt:fieldSet>
             <cpt:fieldSet name="Application Level" id="applicationLevel">
                 <cpt:property id="applicationTenancy"/>
