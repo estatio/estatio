@@ -1,6 +1,7 @@
 package org.estatio.module.lease.imports;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -43,10 +44,27 @@ public class SectorAndActivityImportManager {
         return "Sector And Activity Import Manager";
     }
 
-    public List<SectorAndActivityImport> getSectorAndActivityLines(){
+    public List<Activity> getActivities() {
+        return activityRepository.allActivities()
+                .stream()
+                .sorted(Comparator.comparing(Activity::getSector).thenComparing(Activity::getSortOrder, Comparator.nullsLast(Comparator.naturalOrder())))
+                .collect(Collectors.toList());
+    }
+
+    public List<Sector> getSectorsWithNoActivities() {
+        return sectorRepository.allSectors()
+                .stream()
+                .filter(sector -> sector.getActivities().isEmpty())
+                .sorted(Comparator.comparing(Sector::getSortOrder, Comparator.nullsLast(Comparator.naturalOrder())))
+                .collect(Collectors.toList());
+    }
+
+    private List<SectorAndActivityImport> getSectorAndActivityLines(){
         List<SectorAndActivityImport> result = new ArrayList<>();
-        List<Sector> sectors = sectorRepository.allSectors();
-        sectors.forEach(sector -> result.addAll(getSectorAndActivityImports(sector)));
+        sectorRepository.allSectors()
+                .stream()
+                .sorted(Comparator.comparing(Sector::getSortOrder, Comparator.nullsLast(Comparator.naturalOrder())))
+                .forEach(sector -> result.addAll(getSectorAndActivityImports(sector)));
         return result;
     }
 
@@ -56,18 +74,22 @@ public class SectorAndActivityImportManager {
         impSector.setSectorName(s.getName());
         impSector.setSectorDescription(s.getDescription());
         impSector.setSectorSortOrder(s.getSortOrder());
-        result.add(impSector);
 
-        if (!s.getActivities().isEmpty()) {
-            Lists.newArrayList(s.getActivities()).forEach(a -> {
-                SectorAndActivityImport imp = new SectorAndActivityImport();
-                imp.setSectorName(s.getName());
-                imp.setSectorDescription(s.getDescription());
-                imp.setSectorSortOrder(s.getSortOrder());
-                imp.setActivityName(a.getName());
-                imp.setActivityDescription(a.getDescription());
-                imp.setActivitySortOrder(a.getSortOrder());
-                result.add(imp);
+        if (s.getActivities().isEmpty()) {
+            result.add(impSector);
+        } else {
+            Lists.newArrayList(s.getActivities())
+                    .stream()
+                    .sorted(Comparator.comparing(Activity::getSortOrder, Comparator.nullsLast(Comparator.naturalOrder())))
+                    .forEach(a -> {
+                        SectorAndActivityImport imp = new SectorAndActivityImport();
+                        imp.setSectorName(s.getName());
+                        imp.setSectorDescription(s.getDescription());
+                        imp.setSectorSortOrder(s.getSortOrder());
+                        imp.setActivityName(a.getName());
+                        imp.setActivityDescription(a.getDescription());
+                        imp.setActivitySortOrder(a.getSortOrder());
+                        result.add(imp);
             });
         }
 
