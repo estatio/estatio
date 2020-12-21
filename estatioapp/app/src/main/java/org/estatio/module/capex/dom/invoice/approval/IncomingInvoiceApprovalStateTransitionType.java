@@ -454,10 +454,11 @@ public enum IncomingInvoiceApprovalStateTransitionType
                 final ServiceRegistry2 serviceRegistry2) {
             if (!isItalian(incomingInvoice))
                 return false; // superfluous but just to be explicit
+            //ECP-1298 NO LONGER
             // applies to invoices under threshold only
-            if (hasGrossAmountAboveThreshold(incomingInvoice)) {
-                return false;
-            }
+//            if (hasGrossAmountAboveThreshold(incomingInvoice)) {
+//                return false;
+//            }
             return true;
         }
 
@@ -469,8 +470,10 @@ public enum IncomingInvoiceApprovalStateTransitionType
     },
     APPROVE_AS_COUNTRY_DIRECTOR(
             Lists.newArrayList(
-                    IncomingInvoiceApprovalState.APPROVED,
-                    IncomingInvoiceApprovalState.APPROVED_BY_CENTER_MANAGER
+                    IncomingInvoiceApprovalState.APPROVED
+                    //ECP-1298
+//                    ,
+//                    IncomingInvoiceApprovalState.APPROVED_BY_CENTER_MANAGER
             ),
             IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_DIRECTOR,
             NextTransitionSearchStrategy.firstMatchingExcluding(REJECT),
@@ -491,9 +494,10 @@ public enum IncomingInvoiceApprovalStateTransitionType
                 // guard since EST-1508 type can be not set
                 if (incomingInvoice.getType() == null)
                     return null;
+                //ECP-1298: no longer needed. With new center managers for COL, IGIGL we need Asset Manager And Center Manager to sign both when > 100.000
                 // for an recoverable (ita) invoice of a property that has a center manager, take the invoice approval director (of that property)
-                if (incomingInvoice.getProperty() != null && incomingInvoice.getType() == IncomingInvoiceType.ITA_RECOVERABLE && hasCenterManager(incomingInvoice.getProperty()))
-                    return Collections.singletonList(FixedAssetRoleTypeEnum.INV_APPROVAL_DIRECTOR);
+//                if (incomingInvoice.getProperty() != null && incomingInvoice.getType() == IncomingInvoiceType.ITA_RECOVERABLE && hasCenterManager(incomingInvoice.getProperty()))
+//                    return Collections.singletonList(FixedAssetRoleTypeEnum.INV_APPROVAL_DIRECTOR);
                 return Collections.singletonList(PartyRoleTypeEnum.COUNTRY_DIRECTOR);
             };
         }

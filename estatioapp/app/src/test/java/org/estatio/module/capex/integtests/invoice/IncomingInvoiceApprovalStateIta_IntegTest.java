@@ -630,14 +630,40 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
                 null,
                 IncomingInvoiceApprovalState.APPROVED_BY_CENTER_MANAGER,
                 null,
-                IncomingInvoiceApprovalStateTransitionType.APPROVE_AS_COUNTRY_DIRECTOR
+                IncomingInvoiceApprovalStateTransitionType.APPROVE_WHEN_APPROVED_BY_CENTER_MANAGER
         ));
 
         final Task newPendingTransitionTask = newPendingTransition.getTask();
         assertTask(newPendingTransitionTask, new ExpectedTaskResult(
                 false,
-                FixedAssetRoleTypeEnum.INV_APPROVAL_DIRECTOR,
-                Person_enum.SergioPreferredCountryDirectorIt.findUsing(serviceRegistry2)
+                FixedAssetRoleTypeEnum.ASSET_MANAGER,
+                Person_enum.FloellaAssetManagerIt.findUsing(serviceRegistry2)
+        ));
+
+        // and when
+        queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
+        sudoService.sudo(Person_enum.FloellaAssetManagerIt.getRef().toLowerCase(), (Runnable) () ->
+                wrap(mixin(IncomingInvoice_approveWhenApprovedByCenterManager.class, recoverableInvoice)).act(null,null, null, false));
+
+        // then
+        assertThat(recoverableInvoice.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.APPROVED);
+        transitionsOfInvoice = incomingInvoiceStateTransitionRepository.findByDomainObject(recoverableInvoice);
+        assertThat(transitionsOfInvoice).hasSize(5);
+
+        final IncomingInvoiceApprovalStateTransition nextPendingTransition = transitionsOfInvoice.get(0);
+        assertTransition(nextPendingTransition, new ExpectedTransitionResult(
+                false,
+                null,
+                IncomingInvoiceApprovalState.APPROVED,
+                null,
+                IncomingInvoiceApprovalStateTransitionType.APPROVE_AS_COUNTRY_DIRECTOR
+        ));
+
+        final Task nextPendingTransitionTask = nextPendingTransition.getTask();
+        assertTask(nextPendingTransitionTask, new ExpectedTaskResult(
+                false,
+                PartyRoleTypeEnum.COUNTRY_DIRECTOR,
+                null
         ));
 
         // and when
@@ -647,13 +673,13 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
 
         assertThat(recoverableInvoice.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.PENDING_CODA_BOOKS_CHECK);
         transitionsOfInvoice = incomingInvoiceStateTransitionRepository.findByDomainObject(recoverableInvoice);
-        assertThat(transitionsOfInvoice).hasSize(6);
+        assertThat(transitionsOfInvoice).hasSize(7);
 
         final IncomingInvoiceApprovalStateTransition completedByInvoiceApprovalDirector = transitionsOfInvoice.get(2);
         assertTransition(completedByInvoiceApprovalDirector, new ExpectedTransitionResult(
                 true,
                 "sgalati",
-                IncomingInvoiceApprovalState.APPROVED_BY_CENTER_MANAGER,
+                IncomingInvoiceApprovalState.APPROVED,
                 IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_DIRECTOR,
                 IncomingInvoiceApprovalStateTransitionType.APPROVE_AS_COUNTRY_DIRECTOR
         ));
