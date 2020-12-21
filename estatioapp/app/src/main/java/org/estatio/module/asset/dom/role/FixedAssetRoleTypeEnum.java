@@ -39,7 +39,9 @@ public enum FixedAssetRoleTypeEnum implements TitledEnum, IPartyRoleType {
     CENTER_MANAGER,
     INV_APPROVAL_DIRECTOR,    // meant for invoices above threshold approved by center manager
     PROPERTY_INV_MANAGER,
-    TURNOVER_REPORTER;
+    TURNOVER_REPORTER,
+    PROPERTY_ADVISOR // meant for external users that must have rights to access incoming invoices when asked for advice
+    ;
 
     @Override
     public String getKey() {
