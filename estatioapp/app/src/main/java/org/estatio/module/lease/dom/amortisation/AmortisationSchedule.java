@@ -182,7 +182,6 @@ public class AmortisationSchedule extends UdoDomainObject2<AmortisationSchedule>
 
     public boolean hideRedistributeEntries(){
         final BigDecimal totalValueOfEntries = Lists.newArrayList(getEntries()).stream()
-                .filter(e -> e.getDateReported() != null)
                 .map(e -> e.getEntryAmount())
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
         return totalValueOfEntries.compareTo(getScheduledValue())==0;
