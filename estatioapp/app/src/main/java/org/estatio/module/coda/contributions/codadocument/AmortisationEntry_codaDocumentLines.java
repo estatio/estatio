@@ -17,10 +17,10 @@ import org.estatio.module.coda.dom.codadocument.CodaDocumentLinkRepository;
 import org.estatio.module.lease.dom.amortisation.AmortisationEntry;
 
 @Mixin(method="coll")
-public class AmortisationEntry_codaDocumentLine {
+public class AmortisationEntry_codaDocumentLines {
 
     private final AmortisationEntry amortisationEntry;
-    public AmortisationEntry_codaDocumentLine(final AmortisationEntry amortisationEntry) {
+    public AmortisationEntry_codaDocumentLines(final AmortisationEntry amortisationEntry) {
         this.amortisationEntry = amortisationEntry;
     }
 
