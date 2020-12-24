@@ -26,13 +26,10 @@ import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
 
-import org.apache.isis.applib.annotation.DomainObject;
-import org.apache.isis.applib.annotation.Editing;
-import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.PropertyLayout;
-import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
+import org.estatio.module.budget.dom.keytable.PonderingAreaCoefficients;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.base.dom.utils.TitleBuilder;
@@ -97,5 +94,20 @@ public class KeyItem extends PartitioningTableItem
         repositoryService.removeAndFlush(this);
     }
 
+    @Action
+    public KeyItem calculateSourceValueWithDifferentCoefficients(PonderingAreaCoefficients coefficients) {
+        KeyTable keyTable = (KeyTable) getPartitioningTable();
+        setSourceValue(keyTable.calculateTotalPonderingAreaForUnitWithSpecifiedCoefficients(getUnit(), coefficients));
+        keyTable.distributeSourceValues();
+
+        return this;
+    }
+
+    public boolean hideCalculateSourceValueWithDifferentCoefficients() {
+        KeyTable keyTable = (KeyTable) getPartitioningTable();
+        return !(keyTable.getFoundationValueType().equals(FoundationValueType.AREA) && keyTable.areaIsDividedForUnit(getUnit()));
+    }
+
     @Inject RepositoryService repositoryService;
+
 }

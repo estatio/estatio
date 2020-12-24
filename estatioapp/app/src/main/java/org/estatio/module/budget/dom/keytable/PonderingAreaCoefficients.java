@@ -46,14 +46,14 @@ public enum PonderingAreaCoefficients {
             ));
 
     @Getter
-    private List<Tuple> salesCoefficients;
+    private List<Tuple> salesAreaCoefficients;
 
     @Getter
-    private List<Tuple> storageCoefficients;
+    private List<Tuple> storageAreaCoefficients;
 
-    PonderingAreaCoefficients(final List<Tuple> salesCoefficients, final List<Tuple> storageCoefficients) {
-        this.salesCoefficients = salesCoefficients;
-        this.storageCoefficients = storageCoefficients;
+    PonderingAreaCoefficients(final List<Tuple> salesAreaCoefficients, final List<Tuple> storageAreaCoefficients) {
+        this.salesAreaCoefficients = salesAreaCoefficients;
+        this.storageAreaCoefficients = storageAreaCoefficients;
     }
 
     public static class Tuple {

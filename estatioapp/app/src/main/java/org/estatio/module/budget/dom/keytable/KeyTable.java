@@ -116,7 +116,7 @@ public class KeyTable extends PartitioningTable {
                     sourceValue = getFoundationValueType().valueOf(unit);
 
                     if (getFoundationValueType().equals(FoundationValueType.AREA) && areaIsDividedForUnit(unit)) {
-                        sourceValue = calculateTotalPonderingAreaForUnit(unit);
+                        sourceValue = calculateTotalPonderingAreaForUnitWithSpecifiedCoefficients(unit, null);
                     }
                 } else {
                     sourceValue = BigDecimal.ZERO;
@@ -139,6 +139,8 @@ public class KeyTable extends PartitioningTable {
         return this;
     }
 
+
+
     public boolean hideGenerateItems() {
         if (getFoundationValueType() == FoundationValueType.MANUAL) {
             return true;
@@ -151,12 +153,17 @@ public class KeyTable extends PartitioningTable {
     }
 
     @Programmatic
-    private boolean areaIsDividedForUnit(Unit unit) {
+    public boolean areaIsDividedForUnit(Unit unit) {
         return unit.getStorageArea()!=null || unit.getSalesArea()!=null;
     }
 
     @Programmatic
-    private BigDecimal calculateTotalPonderingAreaForUnit(Unit unit) {
+    public BigDecimal calculateTotalPonderingAreaForUnitWithSpecifiedCoefficients(final Unit unit, final PonderingAreaCoefficients specifiedCoefficients) {
+        if (specifiedCoefficients!=null) {
+            return calculateTotalPonderingAreaForUnit(unit, specifiedCoefficients);
+        }
+
+        // coefficients not specified, choose corresponding one for unit type
         final PonderingAreaCoefficients coefficients;
         if (unit.getType().equals(UnitType.HYPERMARKET)) {
             coefficients = PonderingAreaCoefficients.FOR_HYPERMARKET;
@@ -164,16 +171,21 @@ public class KeyTable extends PartitioningTable {
             coefficients = PonderingAreaCoefficients.DEFAULT;
         }
 
+        return calculateTotalPonderingAreaForUnit(unit, coefficients);
+    }
+
+    @Programmatic
+    private BigDecimal calculateTotalPonderingAreaForUnit(final Unit unit, final PonderingAreaCoefficients coefficients) {
         BigDecimal totalPonderingArea = BigDecimal.ZERO;
         // Calculate pondering area for storage if possible
         if (unit.getStorageArea()!=null) {
             totalPonderingArea = totalPonderingArea.add(
-                    calculatePonderingAreaForUnitAreaType(unit.getStorageArea(), coefficients.getStorageCoefficients()));
+                    calculatePonderingAreaForUnitAreaType(unit.getStorageArea(), coefficients.getStorageAreaCoefficients()));
         }
         // Calculates pondering area for sales if possible
         if (unit.getSalesArea()!=null) {
             totalPonderingArea = totalPonderingArea.add(
-                    calculatePonderingAreaForUnitAreaType(unit.getSalesArea(), coefficients.getSalesCoefficients()));
+                    calculatePonderingAreaForUnitAreaType(unit.getSalesArea(), coefficients.getSalesAreaCoefficients()));
         }
 
         return totalPonderingArea;
