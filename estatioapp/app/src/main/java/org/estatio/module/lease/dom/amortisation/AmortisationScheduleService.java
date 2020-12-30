@@ -2,6 +2,8 @@ package org.estatio.module.lease.dom.amortisation;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -15,6 +17,7 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 
+import org.estatio.module.base.dom.distribution.Distributable;
 import org.estatio.module.base.dom.distribution.DistributionService;
 import org.estatio.module.lease.dom.Frequency;
 
@@ -94,6 +97,20 @@ public class AmortisationScheduleService {
 
     }
 
+    public void redistributeEntries(final AmortisationSchedule schedule) {
+        final List<Distributable> unreportedEntries = Lists.newArrayList(schedule.getEntries()).stream()
+                .filter(e -> e.getDateReported() == null)
+                .collect(Collectors.toList());
+        final List<AmortisationEntry> reportedEntries = Lists.newArrayList(schedule.getEntries()).stream()
+                .filter(e -> e.getDateReported() != null)
+                .collect(Collectors.toList());
+        final BigDecimal reportedAmount = reportedEntries.stream().map(AmortisationEntry::getValue)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        final BigDecimal unreportedAmount = schedule.getScheduledValue().subtract(reportedAmount);
+        if (unreportedAmount.compareTo(BigDecimal.ZERO)<1) return; //Safe guard: in this case everything and more is reported (amortised) already
+        distributionService.distribute(unreportedEntries, unreportedAmount, 2);
+    }
+
     @Inject AmortisationScheduleLeaseItemLinkRepository amortisationScheduleLeaseItemLinkRepository;
 
     @Inject AmortisationScheduleAmendmentItemLinkRepository amortisationScheduleAmendmentItemLinkRepository;
@@ -103,5 +120,4 @@ public class AmortisationScheduleService {
     @Inject AmortisationEntryRepository amortisationEntryRepository;
 
     @Inject DistributionService distributionService;
-
 }

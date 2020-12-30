@@ -19,6 +19,8 @@
 package org.estatio.module.lease.dom;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -188,11 +190,26 @@ public class LeaseTermForTurnoverRent extends LeaseTerm {
                 calculationResults.addAll(
                         leaseItemSource.getSourceItem().calculationResults(calculationInterval));
             }
-            // TODO: do prorata when intervals don't match
+            boolean prorataUsed = false;
             for (CalculationResult result : calculationResults) {
-                if (getInterval().contains(result.invoicingInterval().asLocalDateInterval())) {
-                    newContractualRent = newContractualRent.add(result.value());
+                final LocalDateInterval resultInterval = result.invoicingInterval().asLocalDateInterval();
+                if (getInterval().contains(resultInterval)) {
+                        newContractualRent = newContractualRent.add(result.value());
+                } else {
+                    if (getInterval().overlaps(resultInterval)){
+                        prorataUsed = true;
+                        final LocalDateInterval overlap = getInterval().overlap(resultInterval);
+                        final BigDecimal numerator = BigDecimal.valueOf(overlap.days());
+                        final BigDecimal denominator = BigDecimal.valueOf(resultInterval.days());
+                        final BigDecimal prorataValue = result.value().multiply(numerator)
+                                .divide(denominator, MathContext.DECIMAL64).setScale(6, RoundingMode.HALF_UP);
+                        newContractualRent = newContractualRent.add(prorataValue);
+                    }
                 }
+            }
+            if (prorataUsed) {
+                // do the rounding
+                newContractualRent = newContractualRent.setScale(2, RoundingMode.HALF_UP);
             }
             if (ObjectUtils.compare(getContractualRent(), newContractualRent) != 0) {
                 setContractualRent(newContractualRent);

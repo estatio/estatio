@@ -173,6 +173,20 @@ public class AmortisationSchedule extends UdoDomainObject2<AmortisationSchedule>
         return !getEntries().isEmpty();
     }
 
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
+    public AmortisationSchedule redistributeEntries(){
+        amortisationScheduleService.redistributeEntries(this);
+        verifyOutstandingValue();
+        return this;
+    }
+
+    public boolean hideRedistributeEntries(){
+        final BigDecimal totalValueOfEntries = Lists.newArrayList(getEntries()).stream()
+                .map(e -> e.getEntryAmount())
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        return totalValueOfEntries.compareTo(getScheduledValue())==0;
+    }
+
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     public void verifyOutstandingValue() {
         setOutstandingValue(

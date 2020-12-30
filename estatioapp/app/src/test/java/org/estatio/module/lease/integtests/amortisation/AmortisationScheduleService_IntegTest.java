@@ -20,8 +20,11 @@ package org.estatio.module.lease.integtests.amortisation;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.List;
 
 import javax.inject.Inject;
+
+import com.google.common.collect.Lists;
 
 import org.joda.time.LocalDate;
 import org.junit.Before;
@@ -46,6 +49,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class AmortisationScheduleService_IntegTest extends LeaseModuleIntegTestAbstract {
 
+    Lease lease;
     AmortisationSchedule schedule;
     LocalDate startDate;
     LocalDate endDate;
@@ -58,7 +62,7 @@ public class AmortisationScheduleService_IntegTest extends LeaseModuleIntegTestA
                 executionContext.executeChild(this, LeaseItemForDiscount_enum.OxfTopModel001Gb);
             }
         });
-        final Lease lease = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
+        lease = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
         final LeaseItem discountItem = LeaseItemForDiscount_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
         final Charge charge = discountItem.getCharge();
         final BigDecimal scheduledAmount = BigDecimal.ZERO;
@@ -193,6 +197,40 @@ public class AmortisationScheduleService_IntegTest extends LeaseModuleIntegTestA
 
         // then
         assertThat(schedule.getEntries()).isEmpty();
+
+    }
+
+    @Test
+    public void redistributeEntries_works() throws Exception {
+
+        // given
+        assertThat(schedule).isNotNull();
+        final BigDecimal scheduledAmount = new BigDecimal("130.00");
+        schedule.setScheduledValue(scheduledAmount);
+        amortisationScheduleService.createAndDistributeEntries(schedule);
+        assertThat(schedule.getEntries()).hasSize(13);
+        final List<AmortisationEntry> entriesBefore = Lists.newArrayList(schedule.getEntries());
+        entriesBefore.forEach(e->{
+            assertThat(e.getEntryAmount()).isEqualTo(new BigDecimal("10.00"));
+        });
+
+        // when
+        schedule.getEntries().first().setDateReported(startDate);
+        final BigDecimal changedScheduledValueForSomeReason = new BigDecimal("250.00");
+        schedule.setScheduledValue(changedScheduledValueForSomeReason);
+        schedule.redistributeEntries();
+        transactionService.nextTransaction();
+
+        // then
+        AmortisationSchedule scheduleModified = amortisationScheduleRepository.findByLease(lease).get(0);
+        final List<AmortisationEntry> entriesAfter = Lists.newArrayList(scheduleModified.getEntries());
+        assertThat(entriesAfter.get(0).getEntryAmount()).isEqualTo(new BigDecimal("10.00")); // should be untouched because is reported
+        for (int i = 1; i < 13; i++) {
+            assertThat(entriesAfter.get(i).getEntryAmount()).isEqualTo(new BigDecimal("20.00"));
+        }
+        BigDecimal sumOfEntries = entriesAfter.stream().map(AmortisationEntry::getEntryAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
+        assertThat(sumOfEntries).isEqualTo(scheduleModified.getScheduledValue());
+        assertThat(scheduleModified.getOutstandingValue()).isEqualTo(scheduleModified.getScheduledValue().subtract(entriesAfter.get(0).getEntryAmount()));
 
     }
 
