@@ -19,7 +19,6 @@
 package org.estatio.module.budget.dom.keyitem;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 
 import javax.inject.Inject;
 import javax.jdo.annotations.Column;
@@ -29,14 +28,13 @@ import javax.jdo.annotations.InheritanceStrategy;
 import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
+import org.apache.isis.applib.services.user.UserService;
 import org.estatio.module.budget.dom.ponderingareacalculation.PonderingAreaCalculationService;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.base.dom.utils.TitleBuilder;
 
 import org.estatio.module.base.dom.distribution.Distributable;
-import org.estatio.module.budget.dom.keytable.FoundationValueType;
-import org.estatio.module.budget.dom.keytable.KeyTable;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -81,23 +79,14 @@ public class KeyItem extends PartitioningTableItem
     }
 
     @Programmatic
-    public BigDecimal getDivCalculatedSourceValue(){
-        KeyTable keyTable = (KeyTable) getPartitioningTable();
-        if (keyTable.getFoundationValueType() == FoundationValueType.AREA) {
-            return getUnit().getArea() != null ? getUnit().getArea().subtract(getSourceValue()).setScale(6, RoundingMode.HALF_UP) : BigDecimal.ZERO;
-        }
-        return BigDecimal.ZERO;
-    }
-
-    @Programmatic
     public void delete() {
         repositoryService.removeAndFlush(this);
     }
 
 //    @Action
-//    public KeyItem calculateSourceValueWithDifferentCoefficients(PonderingAreaCalculationService coefficients) {
+//    public KeyItem calculateSourceValueWithDifferentCoefficients(PonderingAreaCalculationService.PonderingAreaCoefficientRules rules) {
 //        KeyTable keyTable = (KeyTable) getPartitioningTable();
-//        setSourceValue(ponderingAreaCalculationService.calculateTotalPonderingAreaForUnitWithSpecifiedCoefficients(getUnit(), coefficients));
+//        setSourceValue(ponderingAreaCalculationService.calculateTotalPonderingAreaForUnitWithSpecifiedRules(getUnit(), rules));
 //        keyTable.distributeSourceValues();
 //
 //        return this;
@@ -109,6 +98,9 @@ public class KeyItem extends PartitioningTableItem
 //    }
 
     @Inject RepositoryService repositoryService;
+
+    @Inject
+    UserService userService;
 
     @Inject
     PonderingAreaCalculationService ponderingAreaCalculationService;

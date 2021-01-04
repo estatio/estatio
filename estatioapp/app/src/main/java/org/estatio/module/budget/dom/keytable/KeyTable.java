@@ -114,11 +114,8 @@ public class KeyTable extends PartitioningTable {
             if (unitIntervalValidForThisKeyTable(unit)) {
                 BigDecimal sourceValue;
                 if (getFoundationValueType().valueOf(unit) != null) {
-                    sourceValue = getFoundationValueType().valueOf(unit);
-
-                    if (getFoundationValueType().equals(FoundationValueType.AREA) && areaIsDividedForUnit(unit)) {
-                        sourceValue = ponderingAreaCalculationService.calculateTotalPonderingAreaForUnitWithSpecifiedCoefficients(unit, null);
-                    }
+                    sourceValue = getFoundationValueType().equals(FoundationValueType.AREA) ?
+                            ponderingAreaCalculationService.calculateTotalPonderingAreaForUnitIfPossible(unit) : getFoundationValueType().valueOf(unit);
                 } else {
                     sourceValue = BigDecimal.ZERO;
                 }
@@ -151,11 +148,6 @@ public class KeyTable extends PartitioningTable {
 
     public String disableGenerateItems(){
         return isImmutableReason();
-    }
-
-    @Programmatic
-    public boolean areaIsDividedForUnit(Unit unit) {
-        return unit.getStorageArea()!=null || unit.getSalesArea()!=null;
     }
 
     @Programmatic

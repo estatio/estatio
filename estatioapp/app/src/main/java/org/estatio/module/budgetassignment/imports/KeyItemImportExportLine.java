@@ -21,6 +21,7 @@ import java.math.BigDecimal;
 import javax.inject.Inject;
 import javax.jdo.annotations.Column;
 
+import org.estatio.module.budget.dom.ponderingareacalculation.PonderingAreaCalculationService;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.DomainObject;
@@ -64,7 +65,6 @@ public class KeyItemImportExportLine
         this.keyValue = keyItem.getValue();
         this.keyTableName = keyItem.getPartitioningTable().getName();
         this.startDate = keyItem.getPartitioningTable().getBudget().getStartDate();
-        this.divSourceValue = keyItem.getDivCalculatedSourceValue();
         this.tenantOnBudgetStartDate = tenant!=null ? tenant.getName() : null;
     }
 
@@ -76,7 +76,6 @@ public class KeyItemImportExportLine
         this.keyValue = item.keyValue.setScale(6, BigDecimal.ROUND_HALF_UP);
         this.keyTableName = item.keyTableName;
         this.startDate = item.startDate;
-        this.divSourceValue = item.divSourceValue;
         this.tenantOnBudgetStartDate = item.tenantOnBudgetStartDate;
     }
 
@@ -109,11 +108,6 @@ public class KeyItemImportExportLine
     @Getter @Setter
     @MemberOrder(sequence = "6")
     private BigDecimal keyValue;
-
-    @Column(scale = 6)
-    @Getter @Setter
-    @MemberOrder(sequence = "8")
-    private BigDecimal divSourceValue;
 
     @Getter @Setter
     @MemberOrder(sequence = "7")
@@ -175,12 +169,18 @@ public class KeyItemImportExportLine
         if (getUnitReference()==null) return "Unit reference is mandatory";
         if (getUnit()==null) return String.format("Unit with reference %s not found", getUnitReference());
         if (getSourceValue()==null) return "Source value is mandatory";
-        if (getKeyValue()==null && getKeyTable().getFoundationValueType()== FoundationValueType.MANUAL) return String.format("Key value is mandatory for table with foundation value type %s", getKeyTable().getFoundationValueType());
+        if (getKeyValue()==null && getKeyTable().getFoundationValueType().equals(FoundationValueType.MANUAL)) return String.format("Key value is mandatory for table with foundation value type %s", getKeyTable().getFoundationValueType());
         return null;
     }
 
     public void importData() {
-        keyItemRepository.newItem(getKeyTable(), getUnit(), getSourceValue().setScale(6, BigDecimal.ROUND_HALF_UP), getKeyValue()!=null ? getKeyValue().setScale(keyTable.getPrecision(), BigDecimal.ROUND_HALF_UP) : BigDecimal.ZERO);
+        keyItemRepository.newItem(
+                getKeyTable(),
+                getUnit(),
+                getKeyTable().getFoundationValueType().equals(FoundationValueType.AREA) ?
+                        ponderingAreaCalculationService.calculateTotalPonderingAreaForUnitIfPossible(getUnit()) : getSourceValue(),
+                getKeyValue()!=null ? getKeyValue().setScale(keyTable.getPrecision(), BigDecimal.ROUND_HALF_UP) : BigDecimal.ZERO
+        );
     }
 
 
@@ -210,4 +210,7 @@ public class KeyItemImportExportLine
 
     @Inject
     RepositoryService repositoryService;
+
+    @Inject
+    PonderingAreaCalculationService ponderingAreaCalculationService;
 }

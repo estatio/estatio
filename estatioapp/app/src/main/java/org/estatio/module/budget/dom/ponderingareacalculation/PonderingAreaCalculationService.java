@@ -19,41 +19,58 @@ import static org.incode.module.base.integtests.VT.bd;
 )
 public class PonderingAreaCalculationService {
 
-    public BigDecimal calculateTotalPonderingAreaForUnitWithSpecifiedCoefficients(final Unit unit, final PonderingAreaCoefficients specifiedCoefficients) {
-        if (specifiedCoefficients!=null) {
-            return calculateTotalPonderingAreaForUnit(unit, specifiedCoefficients);
-        }
+    // TODO: Decide whether you should be able to apply specific coefficient rules for a unit
+//    public BigDecimal calculateTotalPonderingAreaForUnitWithSpecifiedRules(final Unit unit, final PonderingAreaCoefficientRules specifiedRules) {
+//        if (specifiedRules!=null) {
+//            return calculateTotalPonderingAreaForUnitIfPossible(unit, specifiedRules);
+//        }
+//
+//        // coefficients not specified, choose corresponding one for unit type
+//        final PonderingAreaCoefficientRules rules;
+//        if (unit.getType().equals(UnitType.HYPERMARKET)) {
+//            rules = PonderingAreaCoefficientRules.FOR_HYPERMARKET;
+//        } else {
+//            rules = PonderingAreaCoefficientRules.DEFAULT;
+//        }
+//
+//        return calculateTotalPonderingAreaForUnitIfPossible(unit, rules);
+//    }
 
-        // coefficients not specified, choose corresponding one for unit type
-        final PonderingAreaCoefficients coefficients;
-        if (unit.getType().equals(UnitType.HYPERMARKET)) {
-            coefficients = PonderingAreaCoefficients.FOR_HYPERMARKET;
-        } else {
-            coefficients = PonderingAreaCoefficients.DEFAULT;
-        }
-
-        return calculateTotalPonderingAreaForUnit(unit, coefficients);
+    private boolean areaIsDividedForUnit(Unit unit) {
+        return unit.getStorageArea()!=null || unit.getSalesArea()!=null;
     }
 
-    private BigDecimal calculateTotalPonderingAreaForUnit(final Unit unit, final PonderingAreaCoefficients coefficients) {
+    public BigDecimal calculateTotalPonderingAreaForUnitIfPossible(final Unit unit) {
+        // If area of unit is not divided then pondering area calculation is not possible; just return the GLA
+        if (!areaIsDividedForUnit(unit)) {
+            return unit.getArea();
+        }
+
+        final PonderingAreaCoefficientRules rules;
+        if (unit.getType().equals(UnitType.HYPERMARKET)) {
+            rules = PonderingAreaCoefficientRules.FOR_HYPERMARKET;
+        } else {
+            rules = PonderingAreaCoefficientRules.DEFAULT;
+        }
+
         BigDecimal totalPonderingArea = BigDecimal.ZERO;
         // Calculate pondering area for storage if possible
         if (unit.getStorageArea()!=null) {
             totalPonderingArea = totalPonderingArea.add(
-                    calculatePonderingAreaForUnitAreaType(unit.getStorageArea(), coefficients.getStorageAreaCoefficients()));
+                    calculatePonderingAreaForUnitAreaType(unit.getStorageArea(), rules.getStorageAreaCoefficientRule()));
         }
         // Calculates pondering area for sales if possible
         if (unit.getSalesArea()!=null) {
             totalPonderingArea = totalPonderingArea.add(
-                    calculatePonderingAreaForUnitAreaType(unit.getSalesArea(), coefficients.getSalesAreaCoefficients()));
+                    calculatePonderingAreaForUnitAreaType(unit.getSalesArea(), rules.getSalesAreaCoefficientRule()));
         }
 
         return totalPonderingArea;
     }
 
-    private BigDecimal calculatePonderingAreaForUnitAreaType(BigDecimal areaRemaining, final List<PonderingAreaCoefficients.Tuple> tuples) {
+    private BigDecimal calculatePonderingAreaForUnitAreaType(BigDecimal areaRemaining, final List<PonderingAreaCoefficientRules.Tuple> rule) {
         BigDecimal ponderingArea = BigDecimal.ZERO;
-        for (PonderingAreaCoefficients.Tuple t : tuples) {
+        for (PonderingAreaCoefficientRules.Tuple t : rule) {
             if (t.area!=null) {
                 if (areaRemaining.subtract(t.area).compareTo(BigDecimal.ZERO) <= 0) {
                     // Area remaining is less than or equal to the tuple area value; multiply the remainder of the area by the corresponding coefficient and add it to result
@@ -73,34 +90,34 @@ public class PonderingAreaCalculationService {
     }
 
 
-    public enum PonderingAreaCoefficients {
+    private enum PonderingAreaCoefficientRules {
         DEFAULT(
                 Arrays.asList(
-                        new PonderingAreaCoefficients.Tuple(bd("350.0"), bd("1.00")),
-                        new PonderingAreaCoefficients.Tuple(null, bd("0.60"))),
+                        new Tuple(bd("350.0"), bd("1.00")),
+                        new Tuple(null, bd("0.60"))),
                 Arrays.asList(
-                        new PonderingAreaCoefficients.Tuple(null, bd("0.40"))
+                        new Tuple(null, bd("0.40"))
                 )),
         FOR_HYPERMARKET(
                 Arrays.asList(
-                        new PonderingAreaCoefficients.Tuple(bd("1000.0"), bd("1.00")),
-                        new PonderingAreaCoefficients.Tuple(bd("1000.0"), bd("0.90")),
-                        new PonderingAreaCoefficients.Tuple(bd("2000.0"), bd("0.80")),
-                        new PonderingAreaCoefficients.Tuple(bd("2000.0"), bd("0.70")),
-                        new PonderingAreaCoefficients.Tuple(null, bd("0.60"))),
+                        new Tuple(bd("1000.0"), bd("1.00")),
+                        new Tuple(bd("1000.0"), bd("0.90")),
+                        new Tuple(bd("2000.0"), bd("0.80")),
+                        new Tuple(bd("2000.0"), bd("0.70")),
+                        new Tuple(null, bd("0.60"))),
                 Arrays.asList(
-                        new PonderingAreaCoefficients.Tuple(null, bd("0.40"))
+                        new Tuple(null, bd("0.40"))
                 ));
 
         @Getter
-        private List<PonderingAreaCoefficients.Tuple> salesAreaCoefficients;
+        private List<Tuple> salesAreaCoefficientRule;
 
         @Getter
-        private List<PonderingAreaCoefficients.Tuple> storageAreaCoefficients;
+        private List<Tuple> storageAreaCoefficientRule;
 
-        PonderingAreaCoefficients(final List<PonderingAreaCoefficients.Tuple> salesAreaCoefficients, final List<PonderingAreaCoefficients.Tuple> storageAreaCoefficients) {
-            this.salesAreaCoefficients = salesAreaCoefficients;
-            this.storageAreaCoefficients = storageAreaCoefficients;
+        PonderingAreaCoefficientRules(final List<Tuple> salesAreaCoefficientRule, final List<Tuple> storageAreaCoefficientRule) {
+            this.salesAreaCoefficientRule = salesAreaCoefficientRule;
+            this.storageAreaCoefficientRule = storageAreaCoefficientRule;
         }
 
         private static class Tuple {
