@@ -35,6 +35,7 @@ import javax.jdo.annotations.Persistent;
 import com.google.common.collect.Lists;
 
 import org.estatio.module.asset.dom.UnitType;
+import org.estatio.module.budget.dom.ponderingareacalculation.PonderingAreaCalculationService;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
@@ -116,7 +117,7 @@ public class KeyTable extends PartitioningTable {
                     sourceValue = getFoundationValueType().valueOf(unit);
 
                     if (getFoundationValueType().equals(FoundationValueType.AREA) && areaIsDividedForUnit(unit)) {
-                        sourceValue = calculateTotalPonderingAreaForUnitWithSpecifiedCoefficients(unit, null);
+                        sourceValue = ponderingAreaCalculationService.calculateTotalPonderingAreaForUnitWithSpecifiedCoefficients(unit, null);
                     }
                 } else {
                     sourceValue = BigDecimal.ZERO;
@@ -155,62 +156,6 @@ public class KeyTable extends PartitioningTable {
     @Programmatic
     public boolean areaIsDividedForUnit(Unit unit) {
         return unit.getStorageArea()!=null || unit.getSalesArea()!=null;
-    }
-
-    @Programmatic
-    public BigDecimal calculateTotalPonderingAreaForUnitWithSpecifiedCoefficients(final Unit unit, final PonderingAreaCoefficients specifiedCoefficients) {
-        if (specifiedCoefficients!=null) {
-            return calculateTotalPonderingAreaForUnit(unit, specifiedCoefficients);
-        }
-
-        // coefficients not specified, choose corresponding one for unit type
-        final PonderingAreaCoefficients coefficients;
-        if (unit.getType().equals(UnitType.HYPERMARKET)) {
-            coefficients = PonderingAreaCoefficients.FOR_HYPERMARKET;
-        } else {
-            coefficients = PonderingAreaCoefficients.DEFAULT;
-        }
-
-        return calculateTotalPonderingAreaForUnit(unit, coefficients);
-    }
-
-    @Programmatic
-    private BigDecimal calculateTotalPonderingAreaForUnit(final Unit unit, final PonderingAreaCoefficients coefficients) {
-        BigDecimal totalPonderingArea = BigDecimal.ZERO;
-        // Calculate pondering area for storage if possible
-        if (unit.getStorageArea()!=null) {
-            totalPonderingArea = totalPonderingArea.add(
-                    calculatePonderingAreaForUnitAreaType(unit.getStorageArea(), coefficients.getStorageAreaCoefficients()));
-        }
-        // Calculates pondering area for sales if possible
-        if (unit.getSalesArea()!=null) {
-            totalPonderingArea = totalPonderingArea.add(
-                    calculatePonderingAreaForUnitAreaType(unit.getSalesArea(), coefficients.getSalesAreaCoefficients()));
-        }
-
-        return totalPonderingArea;
-    }
-
-    @Programmatic
-    private BigDecimal calculatePonderingAreaForUnitAreaType(BigDecimal areaRemaining, final List<PonderingAreaCoefficients.Tuple> tuples) {
-        BigDecimal ponderingArea = BigDecimal.ZERO;
-        for (PonderingAreaCoefficients.Tuple t : tuples) {
-            if (t.area!=null) {
-                if (areaRemaining.subtract(t.area).compareTo(BigDecimal.ZERO) <= 0) {
-                    // Area remaining is less than or equal to the tuple area value; multiply the remainder of the area by the corresponding coefficient and add it to result
-                    return ponderingArea.add(areaRemaining.multiply(t.coefficient));
-                } else {
-                    // Enough area remaining for the tuple area value to 'take' from; multiply the until value by the corresponding coefficient and add it to result
-                    ponderingArea = ponderingArea.add(t.area.multiply(t.coefficient));
-                    areaRemaining = areaRemaining.subtract(t.area);
-                }
-            } else {
-                // No tuple area value; multiply the remainder of the area by the corresponding coefficient and add it to result
-                return ponderingArea.add(areaRemaining.multiply(t.coefficient));
-            }
-        }
-
-        return ponderingArea;
     }
 
     @Programmatic
@@ -347,4 +292,7 @@ public class KeyTable extends PartitioningTable {
 
     @Inject
     TransactionService3 transactionService3;
+
+    @Inject
+    PonderingAreaCalculationService ponderingAreaCalculationService;
 }

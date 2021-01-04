@@ -29,7 +29,7 @@ import javax.jdo.annotations.InheritanceStrategy;
 import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
-import org.estatio.module.budget.dom.keytable.PonderingAreaCoefficients;
+import org.estatio.module.budget.dom.ponderingareacalculation.PonderingAreaCalculationService;
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 
 import org.incode.module.base.dom.utils.TitleBuilder;
@@ -94,20 +94,23 @@ public class KeyItem extends PartitioningTableItem
         repositoryService.removeAndFlush(this);
     }
 
-    @Action
-    public KeyItem calculateSourceValueWithDifferentCoefficients(PonderingAreaCoefficients coefficients) {
-        KeyTable keyTable = (KeyTable) getPartitioningTable();
-        setSourceValue(keyTable.calculateTotalPonderingAreaForUnitWithSpecifiedCoefficients(getUnit(), coefficients));
-        keyTable.distributeSourceValues();
-
-        return this;
-    }
-
-    public boolean hideCalculateSourceValueWithDifferentCoefficients() {
-        KeyTable keyTable = (KeyTable) getPartitioningTable();
-        return !(keyTable.getFoundationValueType().equals(FoundationValueType.AREA) && keyTable.areaIsDividedForUnit(getUnit()));
-    }
+//    @Action
+//    public KeyItem calculateSourceValueWithDifferentCoefficients(PonderingAreaCalculationService coefficients) {
+//        KeyTable keyTable = (KeyTable) getPartitioningTable();
+//        setSourceValue(ponderingAreaCalculationService.calculateTotalPonderingAreaForUnitWithSpecifiedCoefficients(getUnit(), coefficients));
+//        keyTable.distributeSourceValues();
+//
+//        return this;
+//    }
+//
+//    public boolean hideCalculateSourceValueWithDifferentCoefficients() {
+//        KeyTable keyTable = (KeyTable) getPartitioningTable();
+//        return !(keyTable.getFoundationValueType().equals(FoundationValueType.AREA) && keyTable.areaIsDividedForUnit(getUnit()));
+//    }
 
     @Inject RepositoryService repositoryService;
+
+    @Inject
+    PonderingAreaCalculationService ponderingAreaCalculationService;
 
 }
