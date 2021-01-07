@@ -34,7 +34,6 @@ import javax.jdo.annotations.Persistent;
 
 import com.google.common.collect.Lists;
 
-import org.estatio.module.asset.dom.UnitType;
 import org.estatio.module.budget.dom.ponderingareacalculation.PonderingAreaCalculationService;
 import org.joda.time.LocalDate;
 

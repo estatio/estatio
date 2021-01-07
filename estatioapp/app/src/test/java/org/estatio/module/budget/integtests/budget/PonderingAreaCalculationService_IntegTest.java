@@ -50,7 +50,7 @@ public class PonderingAreaCalculationService_IntegTest extends BudgetModuleInteg
     }
 
 
-    public static class CalculateTotalPonderingAreaForUnitTest extends PonderingAreaCalculationService_IntegTest {
+    public static class CalculateTotalPonderingAreaForUnitIfPossibleTest extends PonderingAreaCalculationService_IntegTest {
 
         @Test
         public void whenAreaIsDivided() throws Exception {
