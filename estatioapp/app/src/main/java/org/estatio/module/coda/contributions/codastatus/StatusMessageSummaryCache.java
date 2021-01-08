@@ -76,6 +76,8 @@ public class StatusMessageSummaryCache implements WithTransactionScope {
         if (invoiceId==null) return null;
 
         Optional<StatusMessageSummary> statusMessageOpt = statusMessageByInvoiceId.get(invoiceId);
+
+        //noinspection OptionalAssignedToNull
         if (statusMessageOpt == null) {
             final List<InvoiceIdAndStatusMessageSummary> statusMessages = find(invoiceId);
 
