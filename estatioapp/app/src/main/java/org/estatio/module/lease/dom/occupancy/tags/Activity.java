@@ -85,7 +85,6 @@ public class Activity
     public String title() {
         return TitleBuilder.start()
                 .withName(getName())
-                .withParent(getSector())
                 .toString();
     }
 
