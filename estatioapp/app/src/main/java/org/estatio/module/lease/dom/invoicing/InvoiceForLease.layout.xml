@@ -178,6 +178,7 @@
                                         <cpt:named>Show detail...</cpt:named>
                                     </cpt:action>
                                 </cpt:property>
+                                <cpt:property id="codaInfo"/>
                             </cpt:fieldSet>
                         </bs3:col>
                     </bs3:row>
