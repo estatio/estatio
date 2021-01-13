@@ -53,6 +53,7 @@ import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.clock.ClockService;
+import org.apache.isis.applib.services.eventbus.ActionDomainEvent;
 import org.apache.isis.applib.services.factory.FactoryService;
 import org.apache.isis.applib.services.message.MessageService;
 import org.apache.isis.applib.services.title.TitleService;
@@ -86,6 +87,7 @@ import org.estatio.module.lease.dom.occupancy.Occupancy;
 import org.estatio.module.numerator.dom.Numerator;
 
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(
@@ -274,17 +276,11 @@ public class InvoiceForLease
         return reasonDisabledDueToState(viewContext);
     }
 
-    /**
-     * TODO: inline this mixin
-     */
     @Mixin
+    @RequiredArgsConstructor
     public static class _newItem {
 
         private final InvoiceForLease invoice;
-
-        public _newItem(final InvoiceForLease invoice) {
-            this.invoice = invoice;
-        }
 
         @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
         @ActionLayout(contributed = Contributed.AS_ACTION)
@@ -353,33 +349,26 @@ public class InvoiceForLease
             return invoice.isImmutableDueToState() ? "Cannot add new item" : null;
         }
 
-        @Inject
-        FragmentRenderService fragmentRenderService;
-
-        @Inject
-        InvoiceItemForLeaseRepository invoiceItemForLeaseRepository;
-
-        @Inject
-        MessageService messageService;
-
-        @Inject
-        ChargeRepository chargeRepository;
+        @Inject FragmentRenderService fragmentRenderService;
+        @Inject InvoiceItemForLeaseRepository invoiceItemForLeaseRepository;
+        @Inject MessageService messageService;
+        @Inject ChargeRepository chargeRepository;
 
     }
 
-    /**
-     * TODO: inline this mixin: nb will need to update camel-config.xml when do so, and allow for a transition period
-     */
     @Mixin
+    @RequiredArgsConstructor
     public static class _collect {
 
         private final InvoiceForLease invoice;
 
-        public _collect(final InvoiceForLease invoice) {
-            this.invoice = invoice;
-        }
+        public static class ActionEvent extends ActionDomainEvent<InvoiceForLease> { }
 
-        @Action(invokeOn = InvokeOn.OBJECT_AND_COLLECTION, semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
+        @Action(
+            invokeOn = InvokeOn.OBJECT_AND_COLLECTION,
+            semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE,
+                domainEvent = ActionEvent.class
+        )
         @ActionLayout(contributed = Contributed.AS_ACTION)
         public Invoice $$() {
 
@@ -430,25 +419,16 @@ public class InvoiceForLease
             return numeratorRepository.findCollectionNumberNumerator();
         }
 
-        @javax.inject.Inject
-        NumeratorForOutgoingInvoicesRepository numeratorRepository;
-
-        @Inject
-        InvoiceVatRoundingService invoiceVatRoundingService;
+        @Inject NumeratorForOutgoingInvoicesRepository numeratorRepository;
+        @Inject InvoiceVatRoundingService invoiceVatRoundingService;
 
     }
 
-    /**
-     * TODO: inline this mixin
-     */
     @Mixin
+    @RequiredArgsConstructor
     public static class _approve {
 
         private final InvoiceForLease invoiceForLease;
-
-        public _approve(final InvoiceForLease invoiceForLease) {
-            this.invoiceForLease = invoiceForLease;
-        }
 
         @Action(invokeOn = InvokeOn.OBJECT_AND_COLLECTION)
         @ActionLayout(contributed = Contributed.AS_ACTION)
@@ -477,18 +457,17 @@ public class InvoiceForLease
 
     }
 
-    /**
-     * TODO: inline this mixin: nb will need to update camel-config.xml when do so, and allow for a transition period
-     */
     @Mixin
+    @RequiredArgsConstructor
     public static class _invoice {
         private final InvoiceForLease invoiceForLease;
 
-        public _invoice(final InvoiceForLease invoiceForLease) {
-            this.invoiceForLease = invoiceForLease;
-        }
+        public static class ActionEvent extends ActionDomainEvent<InvoiceForLease> { }
 
-        @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
+        @Action(
+                semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE,
+                domainEvent = ActionEvent.class
+        )
         @ActionLayout(contributed = Contributed.AS_ACTION)
         public Invoice $$(final LocalDate invoiceDate) {
 
@@ -574,35 +553,18 @@ public class InvoiceForLease
             return null;
         }
 
-        @Inject
-        InvoiceVatRoundingService invoiceVatRoundingService;
-
-        @javax.inject.Inject
-        NumeratorForOutgoingInvoicesRepository numeratorRepository;
-
-        @javax.inject.Inject
-        ClockService clockService;
-
-        @javax.inject.Inject
-        InvoiceRepository invoiceRepository;
-
-        @javax.inject.Inject
-        MessageService messageService;
-
-        @javax.inject.Inject
-        TitleService titleService;
+        @Inject InvoiceVatRoundingService invoiceVatRoundingService;
+        @Inject NumeratorForOutgoingInvoicesRepository numeratorRepository;
+        @Inject ClockService clockService;
+        @Inject InvoiceRepository invoiceRepository;
+        @Inject MessageService messageService;
+        @Inject TitleService titleService;
     }
 
-    /**
-     * TODO: inline this mixin
-     */
     @Mixin
+    @RequiredArgsConstructor
     public static class _saveAsHistoric {
         private final InvoiceForLease invoiceForLease;
-
-        public _saveAsHistoric(final InvoiceForLease invoiceForLease) {
-            this.invoiceForLease = invoiceForLease;
-        }
 
         @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
         @ActionLayout(contributed = Contributed.AS_ACTION)
@@ -615,8 +577,7 @@ public class InvoiceForLease
             return !EstatioRole.ADMINISTRATOR.isApplicableFor(userService.getUser());
         }
 
-        @Inject
-        UserService userService;
+        @Inject UserService userService;
     }
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
