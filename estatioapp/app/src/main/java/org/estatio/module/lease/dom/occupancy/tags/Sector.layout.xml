@@ -31,7 +31,9 @@
             </ns2:fieldSet>
         </col>
         <col span="8" unreferencedCollections="true">
-            <ns2:collection id="activities"/>
+            <ns2:collection id="activities">
+                <ns2:action id="addActivity"/>
+            </ns2:collection>
         </col>
     </row>
 </grid>

@@ -21,6 +21,7 @@ package org.estatio.module.lease.dom.occupancy.tags;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
@@ -149,6 +150,24 @@ public class Sector
     }
 
     public boolean hideRemove() {
+        Person meAsPerson = personRepository.me();
+        if (meAsPerson != null && meAsPerson.hasPartyRoleType(PartyRoleTypeEnum.SECTOR_MAINTAINER.findUsing(partyRoleTypeRepository))) {
+            return false;
+        }
+        return !EstatioRole.ADMINISTRATOR.isApplicableFor(userService.getUser());
+    }
+
+    public Sector addActivity(
+            final String name,
+            final String description,
+            @Nullable final Integer sortOrder) {
+        final Activity activity = activityRepository.findOrCreate(this, name);
+        activity.setDescription(description);
+        activity.setSortOrder(sortOrder);
+        return this;
+    }
+
+    public boolean hideAddActivity() {
         Person meAsPerson = personRepository.me();
         if (meAsPerson != null && meAsPerson.hasPartyRoleType(PartyRoleTypeEnum.SECTOR_MAINTAINER.findUsing(partyRoleTypeRepository))) {
             return false;
