@@ -44,6 +44,13 @@ public class SectorAndActivityImportManager {
         return "Sector And Activity Import Manager";
     }
 
+    public List<Sector> getSectors() {
+        return sectorRepository.allSectors()
+                .stream()
+                .sorted(Comparator.comparing(Sector::getSortOrder, Comparator.nullsLast(Comparator.naturalOrder())))
+                .collect(Collectors.toList());
+    }
+
     public List<Activity> getActivities() {
         return activityRepository.allActivities()
                 .stream()
@@ -51,28 +58,9 @@ public class SectorAndActivityImportManager {
                 .collect(Collectors.toList());
     }
 
-    public List<Sector> getSectorsWithNoActivities() {
-        return sectorRepository.allSectors()
-                .stream()
-                .filter(sector -> sector.getActivities().isEmpty())
-                .sorted(Comparator.comparing(Sector::getSortOrder, Comparator.nullsLast(Comparator.naturalOrder())))
-                .collect(Collectors.toList());
-    }
-
-    public List<Sector> getSectorsWithActivities() {
-        return sectorRepository.allSectors()
-                .stream()
-                .filter(sector -> !sector.getActivities().isEmpty())
-                .sorted(Comparator.comparing(Sector::getSortOrder, Comparator.nullsLast(Comparator.naturalOrder())))
-                .collect(Collectors.toList());
-    }
-
     private List<SectorAndActivityImport> getSectorAndActivityLines(){
         List<SectorAndActivityImport> result = new ArrayList<>();
-        sectorRepository.allSectors()
-                .stream()
-                .sorted(Comparator.comparing(Sector::getSortOrder, Comparator.nullsLast(Comparator.naturalOrder())))
-                .forEach(sector -> result.addAll(getSectorAndActivityImports(sector)));
+        getSectors().forEach(sector -> result.addAll(getSectorAndActivityImports(sector)));
         return result;
     }
 

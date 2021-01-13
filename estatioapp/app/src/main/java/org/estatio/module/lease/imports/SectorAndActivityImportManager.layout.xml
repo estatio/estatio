@@ -13,12 +13,11 @@
     </row>
     <row>
         <col span="12" unreferencedCollections="true">
-            <ns2:collection id="activities" defaultView="table">
+            <ns2:collection id="sectors" defaultView="table">
                 <ns2:action id="download"/>
                 <ns2:action id="upload"/>
             </ns2:collection>
-            <ns2:collection id="sectorsWithNoActivities" defaultView="table"/>
-            <ns2:collection id="sectorsWithActivities" defaultView="table"/>
+            <ns2:collection id="activities" defaultView="table"/>
         </col>
     </row>
 </grid>

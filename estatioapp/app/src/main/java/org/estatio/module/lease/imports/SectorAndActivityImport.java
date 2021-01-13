@@ -7,6 +7,7 @@ import javax.inject.Inject;
 import com.google.common.collect.Lists;
 
 import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Nature;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
@@ -29,21 +30,27 @@ import lombok.Setter;
 public class SectorAndActivityImport implements Importable, ExcelFixtureRowHandler {
 
     @Getter @Setter
+    @MemberOrder(sequence = "1")
     private String sectorName;
 
     @Getter @Setter
+    @MemberOrder(sequence = "2")
     private String sectorDescription;
 
     @Getter @Setter
+    @MemberOrder(sequence = "3")
     private Integer sectorSortOrder;
 
     @Getter @Setter
+    @MemberOrder(sequence = "4")
     private String activityName;
 
     @Getter @Setter
+    @MemberOrder(sequence = "5")
     private String activityDescription;
 
     @Getter @Setter
+    @MemberOrder(sequence = "6")
     private Integer activitySortOrder;
 
     @Override
