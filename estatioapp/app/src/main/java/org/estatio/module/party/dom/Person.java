@@ -228,7 +228,7 @@ public class Person extends Party
             final String initials,
             final String firstName,
             final String lastName) {
-        return Strings.isNullOrEmpty(firstName) || Strings.isNullOrEmpty(initials)
+        return Strings.isNullOrEmpty(firstName) && Strings.isNullOrEmpty(initials)
                 ? "At least the first name or initials have to be filled in"
                 : null;
     }
