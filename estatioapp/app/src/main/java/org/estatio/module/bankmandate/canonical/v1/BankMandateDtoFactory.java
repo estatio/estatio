@@ -19,7 +19,7 @@ public class BankMandateDtoFactory extends DtoFactoryAbstract<BankMandate, BankM
         super(BankMandate.class, BankMandateDto.class);
     }
 
-    protected BankMandateDto newDto(final BankMandate bankMandate) {
+    public BankMandateDto newDto(final BankMandate bankMandate) {
         final BankMandateDto dto = new BankMandateDto();
 
         dto.setSelf(mappingHelper.oidDtoFor(bankMandate));

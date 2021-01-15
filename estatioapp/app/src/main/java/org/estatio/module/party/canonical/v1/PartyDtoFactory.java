@@ -25,7 +25,7 @@ public class PartyDtoFactory extends DtoFactoryAbstract<Party, PartyDto> {
     }
 
     @Override
-    protected PartyDto newDto(final Party party) {
+    public PartyDto newDto(final Party party) {
         final PartyDto dto = new PartyDto();
 
         dto.setSelf(mappingHelper.oidDtoFor(party));

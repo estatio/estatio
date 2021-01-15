@@ -25,7 +25,7 @@ public class InvoiceForLeaseDtoFactory extends DtoFactoryAbstract<InvoiceForLeas
         super(InvoiceForLease.class, InvoiceDto.class);
     }
 
-    protected InvoiceDto newDto(final InvoiceForLease invoiceForLease) {
+    public InvoiceDto newDto(final InvoiceForLease invoiceForLease) {
         final InvoiceDto dto = new InvoiceDto();
 
         dto.setSelf(mappingHelper.oidDtoFor(invoiceForLease));
