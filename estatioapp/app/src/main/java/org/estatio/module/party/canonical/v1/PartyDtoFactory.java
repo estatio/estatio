@@ -6,6 +6,7 @@ import javax.inject.Inject;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.services.dto.DtoMappingHelper;
 
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelRepository;
@@ -22,6 +23,14 @@ public class PartyDtoFactory extends DtoFactoryAbstract<Party, PartyDto> {
 
     public PartyDtoFactory(){
         super(Party.class, PartyDto.class);
+    }
+
+    /**
+     * For unit testing.
+     */
+    public PartyDtoFactory(final DtoMappingHelper mappingHelper) {
+        this();
+        this.mappingHelper = mappingHelper;
     }
 
     @Override
