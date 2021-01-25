@@ -35,6 +35,7 @@ import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.Where;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
 
 import org.incode.module.base.dom.types.NameType;
 
@@ -77,6 +78,14 @@ public class BankMandate
      */
     public BankMandate() {
         super(BankMandateAgreementRoleTypeEnum.CREDITOR, BankMandateAgreementRoleTypeEnum.DEBTOR);
+    }
+
+    /**
+     * For testing.
+     */
+    public BankMandate(ApplicationTenancyRepository applicationTenancyRepository) {
+        this();
+        this.securityApplicationTenancyRepository = applicationTenancyRepository;
     }
 
     @javax.jdo.annotations.Column(
