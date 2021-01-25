@@ -28,9 +28,12 @@ public class PartyDtoFactory extends DtoFactoryAbstract<Party, PartyDto> {
     /**
      * For unit testing.
      */
-    public PartyDtoFactory(final DtoMappingHelper mappingHelper) {
+    public PartyDtoFactory(
+            final DtoMappingHelper mappingHelper,
+            final CommunicationChannelRepository communicationChannelRepository) {
         this();
         this.mappingHelper = mappingHelper;
+        this.communicationChannelRepository = communicationChannelRepository;
     }
 
     @Override
