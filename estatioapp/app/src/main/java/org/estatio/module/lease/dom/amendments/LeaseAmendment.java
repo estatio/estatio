@@ -152,6 +152,10 @@ public class LeaseAmendment extends Agreement {
     @Getter @Setter
     private LocalDate dateApplied;
 
+    @Column(allowsNull = "true")
+    @Getter @Setter
+    private LocalDate dateRefused;
+
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     public LeaseAmendment sign(final LocalDate dateSigned){
         setState(LeaseAmendmentState.SIGNED);
@@ -249,14 +253,30 @@ public class LeaseAmendment extends Agreement {
         return !Arrays.asList(LeaseAmendmentState.SIGNED, LeaseAmendmentState.APPLY).contains(getState());
     }
 
+    @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
+    public LeaseAmendment markAsRefused(){
+        setState(LeaseAmendmentState.REFUSED);
+        setDateRefused(clockService.now());
+        if (getLeasePreview()!=null) {
+            getLeasePreview().remove("amendment refused");
+        }
+        return this;
+    }
+
+    public boolean hideMarkAsRefused(){
+        return getState()!=LeaseAmendmentState.PROPOSED;
+    }
+
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     public LeaseAmendment createOrRenewLeasePreview(){
+        if (getState()==LeaseAmendmentState.REFUSED) return this; // extra guard when for called programmatically by import
         if (getLeasePreview()!=null) getLeasePreview().remove("Replacing preview");
         leaseAmendmentService.getLeasePreviewFor(this);
         return this;
     }
 
     public String disableCreateOrRenewLeasePreview(){
+        if (getState()==LeaseAmendmentState.REFUSED) return "This amendment is refused";
         if (getState()==LeaseAmendmentState.APPLIED) return "This amendment is applied";
         return null;
     }

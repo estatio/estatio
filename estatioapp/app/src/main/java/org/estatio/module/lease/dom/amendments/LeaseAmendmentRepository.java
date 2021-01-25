@@ -112,6 +112,7 @@ public class LeaseAmendmentRepository {
             return create(lease, leaseAmendmentTemplate, leaseAmendmentTemplate.getLeaseAmendmentType(), stateToUse, startDate, endDate);
         } else {
             if (amendment.getState()==LeaseAmendmentState.APPLIED) return amendment;
+            if (state == LeaseAmendmentState.REFUSED && amendment.getState()!=LeaseAmendmentState.PROPOSED) return amendment;
             amendment.setState(stateToUse);
             if (state==LeaseAmendmentState.SIGNED) amendment.setDateSigned(clockService.now());
             amendment.setStartDate(startDate);

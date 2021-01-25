@@ -183,7 +183,8 @@ public class LeaseAmendmentImport_IntegTest extends LeaseModuleIntegTestAbstract
         Assertions.assertThat(amendmentItemForTopmodel2.getStartDate()).isEqualTo(new LocalDate(2020,7,2));
         Assertions.assertThat(amendmentItemForTopmodel2.getEndDate()).isEqualTo(new LocalDate(2020,8,30));
 
-        Assertions.assertThat(amendmentForPoison.getState()).isEqualTo(LeaseAmendmentState.SIGNED);
+        Assertions.assertThat(amendmentForPoison.getState()).isEqualTo(LeaseAmendmentState.SIGNED); // AND NOT REFUSED as suggested in sheet2
+        Assertions.assertThat(amendmentForPoison.getDateRefused()).isNull();
         Assertions.assertThat(amendmentForPoison.getStartDate()).isEqualTo(new LocalDate(2020,7,1));
         Assertions.assertThat(amendmentForPoison.getDateSigned()).isEqualTo(new LocalDate(2020,6, 20));
         Assertions.assertThat(amendmentForPoison.getItems()).hasSize(4);
@@ -225,7 +226,8 @@ public class LeaseAmendmentImport_IntegTest extends LeaseModuleIntegTestAbstract
         Assertions.assertThat(firstMiracleAmendmentItem2.getStartDate()).isEqualTo(new LocalDate(2020,7,2));
         Assertions.assertThat(firstMiracleAmendmentItem2.getEndDate()).isEqualTo(new LocalDate(2020,8,30));
 
-        Assertions.assertThat(amendmentForMedia.getState()).isEqualTo(LeaseAmendmentState.PROPOSED);
+        Assertions.assertThat(amendmentForMedia.getState()).isEqualTo(LeaseAmendmentState.REFUSED);
+        Assertions.assertThat(amendmentForMedia.getDateRefused()).isEqualTo(new LocalDate(2020,6,22));
         Assertions.assertThat(amendmentForMedia.getDateSigned()).isNull();
         Assertions.assertThat(amendmentForMedia.getItems()).isEmpty();
     }

@@ -25,6 +25,7 @@
                                     </ns2:fieldSet>
                                     <ns2:fieldSet name="State" id="state">
                                         <ns2:action id="apply" position="PANEL"/>
+                                        <ns2:action id="markAsRefused" position="PANEL"/>
                                         <ns2:action id="sign" position="PANEL"/>
                                         <ns2:action id="appliedManually" position="PANEL_DROPDOWN"/>
                                         <ns2:property id="state"/>
@@ -32,6 +33,7 @@
                                             <ns2:action id="changeDateSigned" position="PANEL"/>
                                         </ns2:property>
                                         <ns2:property id="dateApplied"/>
+                                        <ns2:property id="dateRefused"/>
                                     </ns2:fieldSet>
                                 </col>
                             </row>

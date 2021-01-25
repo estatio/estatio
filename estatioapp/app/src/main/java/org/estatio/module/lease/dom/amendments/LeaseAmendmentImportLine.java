@@ -104,58 +104,62 @@ public class LeaseAmendmentImportLine implements ExcelFixtureRowHandler, Importa
 
     @Getter @Setter
     @MemberOrder(sequence = "5")
-    private String leaseReference;
+    private LocalDate dateRefused;
 
     @Getter @Setter
     @MemberOrder(sequence = "6")
-    private LocalDate startDate;
+    private String leaseReference;
 
     @Getter @Setter
     @MemberOrder(sequence = "7")
-    private LocalDate endDate;
+    private LocalDate startDate;
 
     @Getter @Setter
     @MemberOrder(sequence = "8")
-    private BigDecimal discountPercentage;
+    private LocalDate endDate;
 
     @Getter @Setter
     @MemberOrder(sequence = "9")
-    private BigDecimal manualDiscountAmount;
+    private BigDecimal discountPercentage;
 
     @Getter @Setter
     @MemberOrder(sequence = "10")
-    private BigDecimal calculatedDiscountAmount;
+    private BigDecimal manualDiscountAmount;
 
     @Getter @Setter
     @MemberOrder(sequence = "11")
-    private String discountApplicableTo;
+    private BigDecimal calculatedDiscountAmount;
 
     @Getter @Setter
     @MemberOrder(sequence = "12")
-    private LocalDate discountStartDate;
+    private String discountApplicableTo;
 
     @Getter @Setter
     @MemberOrder(sequence = "13")
-    private LocalDate discountEndDate;
+    private LocalDate discountStartDate;
 
     @Getter @Setter
     @MemberOrder(sequence = "14")
-    private InvoicingFrequency invoicingFrequencyOnLease;
+    private LocalDate discountEndDate;
 
     @Getter @Setter
     @MemberOrder(sequence = "15")
-    private InvoicingFrequency amendedInvoicingFrequency;
+    private InvoicingFrequency invoicingFrequencyOnLease;
 
     @Getter @Setter
     @MemberOrder(sequence = "16")
-    private String frequencyChangeApplicableTo;
+    private InvoicingFrequency amendedInvoicingFrequency;
 
     @Getter @Setter
     @MemberOrder(sequence = "17")
-    private LocalDate frequencyChangeStartDate;
+    private String frequencyChangeApplicableTo;
 
     @Getter @Setter
     @MemberOrder(sequence = "18")
+    private LocalDate frequencyChangeStartDate;
+
+    @Getter @Setter
+    @MemberOrder(sequence = "19")
     private LocalDate frequencyChangeEndDate;
 
 
@@ -174,8 +178,17 @@ public class LeaseAmendmentImportLine implements ExcelFixtureRowHandler, Importa
         if (leaseAmendmentState==LeaseAmendmentState.APPLIED){
             throw new ApplicationException(String.format("State %s for lease %s not allowed.", leaseAmendmentState, leaseReference));
         }
+        if (leaseAmendmentState==LeaseAmendmentState.REFUSED && getDateRefused()==null){
+            throw new ApplicationException(String.format("State %s for lease %s needs a dateRefused to be filled in.", leaseAmendmentState, leaseReference));
+        }
         final LeaseAmendment amendment = leaseAmendmentRepository.upsert(lease, leaseAmendmentTemplate, leaseAmendmentState, startDate, endDate);
         if (amendment.getState()==LeaseAmendmentState.APPLIED) return Lists.newArrayList(amendment);
+        if (amendment.getState()==LeaseAmendmentState.REFUSED) {
+            amendment.setDateRefused(getDateRefused());
+            if (amendment.getLeasePreview()!=null) {
+                amendment.getLeasePreview().remove("Amendment refused");
+            }
+        }
         if (amendment.getState()==LeaseAmendmentState.SIGNED && dateSigned!=null) amendment.setDateSigned(dateSigned);
         
         if (discountPercentage!=null && discountApplicableTo!=null && discountStartDate!=null && discountEndDate!=null) {
