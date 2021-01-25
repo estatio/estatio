@@ -254,13 +254,17 @@ public class LeaseAmendment extends Agreement {
     }
 
     @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
-    public LeaseAmendment markAsRefused(){
+    public LeaseAmendment markAsRefused(final LocalDate dateRefused){
         setState(LeaseAmendmentState.REFUSED);
-        setDateRefused(clockService.now());
+        setDateRefused(dateRefused);
         if (getLeasePreview()!=null) {
             getLeasePreview().remove("amendment refused");
         }
         return this;
+    }
+
+    public LocalDate default0MarkAsRefused(){
+        return clockService.now();
     }
 
     public boolean hideMarkAsRefused(){
