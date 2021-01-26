@@ -14,7 +14,8 @@ public enum EstatioRole {
     USER("estatio-user"),
     ADMINISTRATOR("estatio-admin"),
     SUPERUSER("estatio-superuser"),
-    CAPEX_USER("estatio-capex-user");
+    CAPEX_USER("estatio-capex-user"),
+    EXTERNAL_APPROVER("estatio-external-approver");
 
     @Getter
     private String roleName;
