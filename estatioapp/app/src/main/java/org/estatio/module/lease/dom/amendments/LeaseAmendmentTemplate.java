@@ -36,6 +36,29 @@ public enum LeaseAmendmentTemplate {
             new LocalDate(2020,12,31),
             false,
             "/BEL"),
+    COVID1_BEL(
+            LeaseAmendmentType.COVID_WAVE_1,
+            new LocalDate(2020,3,18), // min date because of lease selection
+            new BigDecimal("50.00"),
+            Arrays.asList(
+                    LeaseItemType.RENT,
+                    LeaseItemType.RENT_DISCOUNT
+            ),
+            new LocalDate(2020,3,18),
+            new LocalDate(2020,5,10),
+            Arrays.asList(
+                    new Tuple<>(null, "BE2053") // DEFAULT
+            ),
+            new LocalDate(2020,7,1),
+            null,
+            null,
+            null,
+            null,
+            "-A1",
+            new LocalDate(2020,1,1),
+            new LocalDate(2020,12,31),
+            false,
+            "/BEL"),
     COVID_FRA_50_PERC(
             LeaseAmendmentType.COVID_WAVE_1,
             new LocalDate(2020,3,16), // min date because of lease selection
