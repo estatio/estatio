@@ -109,6 +109,18 @@ public class OrderMenu {
         return null;
     }
 
+    public List<Property> choices0CreateOrder() {
+        if (EstatioRole.EXTERNAL_APPROVER.isApplicableFor(userService.getUser())) {
+            if (personRepository.me()!=null) {
+                return propertiesOfPerson(personRepository.me());
+            } else {
+                return new ArrayList<>();
+            }
+        } else {
+            return propertyRepository.allProperties();
+        }
+    }
+
     public List<Party> autoComplete4CreateOrder(@MinLength(3) final String searchPhrase) {
         return partyRepository.autoCompleteWithRole(searchPhrase, IncomingInvoiceRoleTypeEnum.ECP);
     }
