@@ -117,11 +117,11 @@ public class LeaseAmendmentManager {
     }
 
     @Action(semantics = SemanticsOf.SAFE)
-    public LeaseAmendmentManager filterByType(@Nullable final LeaseAmendmentTemplate leaseAmendmentTemplate){
+    public LeaseAmendmentManager filterByTemplate(@Nullable final LeaseAmendmentTemplate leaseAmendmentTemplate){
         return new LeaseAmendmentManager(getProperty(), leaseAmendmentTemplate, getState());
     }
 
-    public List<LeaseAmendmentTemplate> choices0FilterByType() {
+    public List<LeaseAmendmentTemplate> choices0FilterByTemplate() {
         if (getProperty()!=null) {
             return Arrays.asList(LeaseAmendmentTemplate.values())
                     .stream()
@@ -200,7 +200,7 @@ public class LeaseAmendmentManager {
     }
 
     @Action(commandPersistence = CommandPersistence.NOT_PERSISTED)
-    public Blob downloadNewAmendmentProposalsForType(final LeaseAmendmentTemplate leaseAmendmentTemplate, @Nullable final String fileName){
+    public Blob downloadNewAmendmentProposalsForTemplate(final LeaseAmendmentTemplate leaseAmendmentTemplate, @Nullable final String fileName){
         List<LeaseAmendmentImportLine> newLines = new ArrayList<>();
         for (Lease lease : activeLeasesOnAmendmentStartdateForProperty(leaseAmendmentTemplate)){
             final LeaseAmendment amendment = leaseAmendmentRepository.findUnique(lease, leaseAmendmentTemplate);
@@ -221,7 +221,7 @@ public class LeaseAmendmentManager {
         return excelService.toExcel(newLines, LeaseAmendmentImportLine.class, "lines", fileNameToUse);
     }
 
-    public LeaseAmendmentTemplate default0DownloadNewAmendmentProposalsForType(){
+    public LeaseAmendmentTemplate default0DownloadNewAmendmentProposalsForTemplate(){
         return this.getLeaseAmendmentTemplate();
     }
 

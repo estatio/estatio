@@ -20,7 +20,7 @@
         </bs3:col>
         <bs3:col span="6">
             <cpt:fieldSet name="Type and state selection" id="leaseAmendmentTemplate">
-                <cpt:action id="filterByType" position="PANEL"/>
+                <cpt:action id="filterByTemplate" position="PANEL"/>
                 <cpt:action id="filterByState" position="PANEL"/>
                 <cpt:property id="leaseAmendmentTemplate"/>
                 <cpt:property id="state"/>
@@ -30,7 +30,7 @@
     <bs3:row>
         <bs3:col span="12">
             <cpt:collection id="lines">
-                <cpt:action id="downloadNewAmendmentProposalsForType" position="PANEL"/>
+                <cpt:action id="downloadNewAmendmentProposalsForTemplate" position="PANEL"/>
                 <cpt:action id="download" position="PANEL"/>
                 <cpt:action id="importAmendments" position="PANEL"/>
                 <cpt:action id="applyAll" position="PANEL"/>
