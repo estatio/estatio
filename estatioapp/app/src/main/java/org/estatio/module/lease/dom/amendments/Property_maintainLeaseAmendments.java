@@ -1,15 +1,15 @@
 package org.estatio.module.lease.dom.amendments;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import javax.annotation.Nullable;
 
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.Mixin;
 
 import org.estatio.module.asset.dom.Property;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Mixin
 public class Property_maintainLeaseAmendments {
@@ -30,7 +30,7 @@ public class Property_maintainLeaseAmendments {
                 .stream()
                 .filter(lat -> property.getAtPath().startsWith(lat.getAtPath()))
                 .collect(Collectors.toList());
-        if (property.getAtPath().startsWith("/ITA")) {
+        if (property.getAtPath().startsWith("/ITA") || property.getAtPath().startsWith("/BEL")) {
             return templatesForAtPath
                     .stream()
                     .filter(lat -> lat.getLeaseAmendmentType() == LeaseAmendmentType.COVID_WAVE_2)

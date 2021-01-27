@@ -13,6 +13,29 @@ import lombok.Getter;
 
 public enum LeaseAmendmentTemplate {
 
+    COVID2_BEL(
+            LeaseAmendmentType.COVID_WAVE_2,
+            new LocalDate(2020,11,2), // min date because of lease selection
+            new BigDecimal("50.00"),
+            Arrays.asList(
+                    LeaseItemType.RENT,
+                    LeaseItemType.RENT_DISCOUNT
+            ),
+            new LocalDate(2020,11,2),
+            new LocalDate(2020,11,30),
+            Arrays.asList(
+                    new Tuple<>(null, "BE2054") // DEFAULT
+            ),
+            new LocalDate(2020,11,2),
+            null,
+            null,
+            null,
+            null,
+            "-C2",
+            new LocalDate(2020,10,1),
+            new LocalDate(2021,3,31),
+            false,
+            "/BEL"),
     COVID_BEL(
             LeaseAmendmentType.COVID_WAVE_1,
             new LocalDate(2020,3,18), // min date because of lease selection
