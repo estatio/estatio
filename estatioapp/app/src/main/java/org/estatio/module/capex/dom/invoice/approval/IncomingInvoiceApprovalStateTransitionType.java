@@ -14,6 +14,7 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
 import org.estatio.module.asset.dom.Property;
+import org.estatio.module.asset.dom.role.FixedAssetRole;
 import org.estatio.module.asset.dom.role.FixedAssetRoleTypeEnum;
 import org.estatio.module.capex.dom.bankaccount.verification.BankAccountVerificationChecker;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
@@ -878,15 +879,15 @@ public enum IncomingInvoiceApprovalStateTransitionType
     }
 
     static boolean hasPropertyInvoiceManager(final Property property) {
-        return !Lists.newArrayList(property.getRoles()).stream()
+        return Lists.newArrayList(property.getRoles()).stream()
                 .filter(x -> x.getType() == FixedAssetRoleTypeEnum.PROPERTY_INV_MANAGER)
-                .collect(Collectors.toList()).isEmpty();
+                .anyMatch(FixedAssetRole::isCurrent);
     }
 
     static boolean hasCenterManager(final Property property) {
-        return !Lists.newArrayList(property.getRoles()).stream()
+        return Lists.newArrayList(property.getRoles()).stream()
                 .filter(x -> x.getType() == FixedAssetRoleTypeEnum.CENTER_MANAGER)
-                .collect(Collectors.toList()).isEmpty();
+                .anyMatch(FixedAssetRole::isCurrent);
     }
 
     public static boolean hasPreferredManagerAndDirector(Party buyer) {
