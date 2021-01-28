@@ -253,7 +253,7 @@ public class PeriodUtilTest {
     }
 
     @Test
-    public void nine_months_financial_year_from_interval_works() throws Exception {
+    public void six_months_financial_year_from_interval_works() throws Exception {
 
         // given
         LocalDateInterval localDateInterval;

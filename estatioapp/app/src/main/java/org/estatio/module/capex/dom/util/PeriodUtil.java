@@ -37,7 +37,7 @@ public class PeriodUtil {
         LocalDate endDate = null;
         if (financialYearPattern.matcher(period).matches()){
             Integer year = Integer.valueOf(period.substring(1,5));
-            // F2021 has 9 months; After 2021 financial year equals calendar year
+            // F2021 has 6 months; After 2021 financial year equals calendar year
             if (year<=2021) {
                 startDate = new LocalDate(year - 1, 7, 1);
                 endDate = year == 2021 ? new LocalDate(year - 1, 12, 31) : new LocalDate(year, 6, 30);
@@ -62,7 +62,7 @@ public class PeriodUtil {
             return String.valueOf(endDate.getYear());
         }
         if (matchesFinancialYear(interval)){
-            if (endDate.equals(new LocalDate(2020,12,31))) return "F2021"; // this is the only 9 months financial year
+            if (endDate.equals(new LocalDate(2020,12,31))) return "F2021"; // this is the only 6 months financial year
             return "F".concat(String.valueOf(endDate.getYear()));
         }
         return null;
