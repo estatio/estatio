@@ -81,7 +81,7 @@ public class AmortisationScheduleRepository {
         return result;
     }
 
-    private AmortisationSchedule create(
+    public AmortisationSchedule create(
             final Lease lease,
             final Charge charge,
             final BigDecimal scheduledAmount,
