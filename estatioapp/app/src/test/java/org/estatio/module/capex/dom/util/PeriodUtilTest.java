@@ -38,14 +38,14 @@ public class PeriodUtilTest {
 
         // given
         String financialYear2020 = "F2020"; // represents the 2019/2020 financial year which is 12 months (this is the single financial year having this. After 2020 the financial year equals the calendar year)
-        String financialYear2021 = "F2021"; // represents the 2021 financial year which is 6 months
+        String financialYear2021 = "F2021"; // represents the 2021 financial year which is now also is 12 months
         String financialYear2022 = "F2022"; // the 2022 financial year does not exist because since 1-1-2021 financial and calendar year are in sync
 
         // then
         Assertions.assertThat(PeriodUtil.yearFromPeriod(financialYear2020).toString())
                 .isEqualTo("2019-07-01/2020-07-01");
         Assertions.assertThat(PeriodUtil.yearFromPeriod(financialYear2021).toString())
-                .isEqualTo("2020-07-01/2021-01-01");
+                .isEqualTo("2020-07-01/2021-07-01");
         Assertions.assertThat(PeriodUtil.yearFromPeriod(financialYear2022).toString())
                 .isEqualTo("----------/----------");
 
@@ -154,16 +154,7 @@ public class PeriodUtilTest {
 
         // then
         Assertions.assertThat(PeriodUtil.periodFromInterval(interval))
-                .isEqualTo("F2021");
-
-        // when
-        startDate = new LocalDate(2020,07,01);
-        endDate = new LocalDate(2020, 12,31);
-        interval = new LocalDateInterval(startDate, endDate);
-
-        // then
-        Assertions.assertThat(PeriodUtil.periodFromInterval(interval))
-                .isEqualTo("F2021");
+                .isNull();
 
         // when
         startDate = new LocalDate(2020,07,01);
@@ -172,7 +163,7 @@ public class PeriodUtilTest {
 
         // then
         Assertions.assertThat(PeriodUtil.periodFromInterval(interval))
-                .isNull();
+                .isEqualTo("F2021");
 
         // when
         startDate = new LocalDate(2021,01,01);
@@ -266,8 +257,12 @@ public class PeriodUtilTest {
         // when
         localDateInterval = LocalDateInterval.including(new LocalDate(2020,7,1), new LocalDate(2020,12,31));
         // then
-        Assertions.assertThat(PeriodUtil.periodFromInterval(localDateInterval)).isEqualTo("F2021");
+        Assertions.assertThat(PeriodUtil.periodFromInterval(localDateInterval)).isNull();
 
+        // when
+        localDateInterval = LocalDateInterval.including(new LocalDate(2020,7,1), new LocalDate(2021,6,30));
+        // then
+        Assertions.assertThat(PeriodUtil.periodFromInterval(localDateInterval)).isEqualTo("F2021");
 
     }
 

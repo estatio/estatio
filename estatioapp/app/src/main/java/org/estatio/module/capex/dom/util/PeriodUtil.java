@@ -40,7 +40,9 @@ public class PeriodUtil {
             // F2021 has 6 months; After 2021 financial year equals calendar year
             if (year<=2021) {
                 startDate = new LocalDate(year - 1, 7, 1);
-                endDate = year == 2021 ? new LocalDate(year - 1, 12, 31) : new LocalDate(year, 6, 30);
+                // ECP-1335 : the users may want to extend again to 31-12-2021 but for the moment we extend to 30-6-2021, so a 'regular' financial year
+//                endDate = year == 2021 ? new LocalDate(year - 1, 12, 31) : new LocalDate(year, 6, 30);
+                endDate = new LocalDate(year, 6, 30);
             } else {
                 //
             }
@@ -62,7 +64,7 @@ public class PeriodUtil {
             return String.valueOf(endDate.getYear());
         }
         if (matchesFinancialYear(interval)){
-            if (endDate.equals(new LocalDate(2020,12,31))) return "F2021"; // this is the only 6 months financial year
+//            if (endDate.equals(new LocalDate(2020,12,31))) return "F2021"; // this is the only 6 months financial year
             return "F".concat(String.valueOf(endDate.getYear()));
         }
         return null;
@@ -109,8 +111,8 @@ public class PeriodUtil {
     }
 
     private static boolean matchesEndFinancialYear(final LocalDate date){
-        if (date.equals(new LocalDate(2020,12,31))) return true; // the last financial year end date that we can recognize as such ...
-        if (date.getYear()>2020) return false;
+        if (date.equals(new LocalDate(2021,6,30))) return true; // the last financial year end date that we can recognize as such ...
+        if (date.getYear()>2021) return false;
         return date.getDayOfMonth() == 30 && date.getMonthOfYear() == 6 ? true : false;
     }
 
