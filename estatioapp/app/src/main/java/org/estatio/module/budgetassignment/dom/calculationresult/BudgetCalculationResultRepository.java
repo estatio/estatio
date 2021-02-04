@@ -14,7 +14,6 @@ import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.module.charge.dom.Charge;
-import org.estatio.module.lease.dom.LeaseTermForServiceCharge;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
 
 @DomainService(repositoryFor = BudgetCalculationResult.class, nature = NatureOfService.DOMAIN)
@@ -60,16 +59,8 @@ public class BudgetCalculationResultRepository extends UdoDomainRepositoryAndFac
         return uniqueMatch("findUnique", "budget", budget, "occupancy", occupancy, "invoiceCharge", invoiceCharge, "type", type);
     }
 
-    public List<BudgetCalculationResult> findByLeaseTerm(final LeaseTermForServiceCharge leaseTerm){
-        return allMatches("findByLeaseTerm", "leaseTerm", leaseTerm);
-    }
-
     public List<BudgetCalculationResult> findByBudget(final Budget budget) {
         return allMatches("findByBudget", "budget", budget);
-    }
-
-    public List<BudgetCalculationResult> findByLeaseTermAndBudgetAndType(final LeaseTermForServiceCharge term, final Budget budget, final BudgetCalculationType type) {
-        return allMatches("findByLeaseTermAndBudgetAndType", "leaseTerm", term, "budget", budget, "type", type);
     }
 
     public List<BudgetCalculationResult> findByBudgetAndOccupancyAndType(final Budget budget, final Occupancy occupancy, final BudgetCalculationType type) {

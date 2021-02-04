@@ -1,6 +1,7 @@
 package org.estatio.module.budgetassignment.contributions;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -11,7 +12,7 @@ import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResult;
-import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResultRepository;
+import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResultLeaseTermLinkRepository;
 import org.estatio.module.lease.dom.LeaseTermForServiceCharge;
 
 /**
@@ -28,10 +29,11 @@ public class LeaseTerm_BudgetCalculationResults {
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     public List<BudgetCalculationResult> budgetCalculationResults() {
-        return budgetCalculationResultRepository.findByLeaseTerm(term);
+        return budgetCalculationResultLeaseTermLinkRepository
+                .findByLeaseTerm(term).stream().map(l->l.getBudgetCalculationResult()).collect(Collectors.toList());
     }
 
     @Inject
-    private BudgetCalculationResultRepository budgetCalculationResultRepository;
+    private BudgetCalculationResultLeaseTermLinkRepository budgetCalculationResultLeaseTermLinkRepository;
 
 }

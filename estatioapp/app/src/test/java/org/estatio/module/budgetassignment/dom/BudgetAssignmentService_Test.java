@@ -19,7 +19,8 @@ import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResult;
-import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResultRepository;
+import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResultLeaseTermLink;
+import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResultLeaseTermLinkRepository;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.lease.dom.InvoicingFrequency;
@@ -249,13 +250,13 @@ public class BudgetAssignmentService_Test {
 
     }
 
-    @Mock BudgetCalculationResultRepository mockBudgetCalculationResultRepository;
+    @Mock BudgetCalculationResultLeaseTermLinkRepository mockBudgetCalculationResultLeaseTermLinkRepository;
 
     @Test
     public void upsertLeaseTermForServiceCharge_works_when_new_term_created(){
 
         // given
-        budgetAssignmentService.budgetCalculationResultRepository = mockBudgetCalculationResultRepository;
+        budgetAssignmentService.budgetCalculationResultLeaseTermLinkRepository = mockBudgetCalculationResultLeaseTermLinkRepository;
 
         BudgetCalculationResult result = new BudgetCalculationResult();
         Budget budget = new Budget();
@@ -288,17 +289,21 @@ public class BudgetAssignmentService_Test {
         };
         serviceChargeItem.setType(LeaseItemType.SERVICE_CHARGE);
 
+        BudgetCalculationResultLeaseTermLink link1 = new BudgetCalculationResultLeaseTermLink(result, termForServiceCharge);
+        BudgetCalculationResultLeaseTermLink link2 = new BudgetCalculationResultLeaseTermLink(previousResult1, termForServiceCharge);
+        BudgetCalculationResultLeaseTermLink link3 = new BudgetCalculationResultLeaseTermLink(previousResult2, termForServiceCharge);
+
         // expect
         context.checking(new Expectations(){{
-            oneOf(mockBudgetCalculationResultRepository).findByLeaseTerm(with(any(LeaseTermForServiceCharge.class)));
-            will(returnValue(Arrays.asList(result, previousResult1, previousResult2)));
+            oneOf(mockBudgetCalculationResultLeaseTermLinkRepository).findOrCreate(result, termForServiceCharge);
+            oneOf(mockBudgetCalculationResultLeaseTermLinkRepository).findByLeaseTerm(with(any(LeaseTermForServiceCharge.class)));
+            will(returnValue(Arrays.asList(link1, link2, link3)));
         }});
 
         // when
         budgetAssignmentService.upsertLeaseTermForServiceCharge(serviceChargeItem, result);
 
         // then
-        assertThat(result.getLeaseTerm()).isEqualTo(termForServiceCharge);
         assertThat(termForServiceCharge.getAuditedValue()).isEqualTo(result.getValue());
         assertThat(termForServiceCharge.getBudgetedValue()).isEqualTo(previousResult1.getValue().add(previousResult2.getValue()));
     }
@@ -307,7 +312,7 @@ public class BudgetAssignmentService_Test {
     public void upsertLeaseTermForServiceCharge_works_when_existing_term_found(){
 
         // given
-        budgetAssignmentService.budgetCalculationResultRepository = mockBudgetCalculationResultRepository;
+        budgetAssignmentService.budgetCalculationResultLeaseTermLinkRepository = mockBudgetCalculationResultLeaseTermLinkRepository;
 
         BudgetCalculationResult result = new BudgetCalculationResult();
         Budget budget = new Budget();
@@ -341,17 +346,21 @@ public class BudgetAssignmentService_Test {
         };
         serviceChargeItem.setType(LeaseItemType.SERVICE_CHARGE);
 
+        BudgetCalculationResultLeaseTermLink link1 = new BudgetCalculationResultLeaseTermLink(result, termForServiceCharge);
+        BudgetCalculationResultLeaseTermLink link2 = new BudgetCalculationResultLeaseTermLink(previousResult1, termForServiceCharge);
+        BudgetCalculationResultLeaseTermLink link3 = new BudgetCalculationResultLeaseTermLink(previousResult2, termForServiceCharge);
+
         // expect
         context.checking(new Expectations(){{
-            oneOf(mockBudgetCalculationResultRepository).findByLeaseTerm(with(any(LeaseTermForServiceCharge.class)));
-            will(returnValue(Arrays.asList(result, previousResult1, previousResult2)));
+            oneOf(mockBudgetCalculationResultLeaseTermLinkRepository).findOrCreate(result, termForServiceCharge);
+            oneOf(mockBudgetCalculationResultLeaseTermLinkRepository).findByLeaseTerm(with(any(LeaseTermForServiceCharge.class)));
+            will(returnValue(Arrays.asList(link1, link2, link3)));
         }});
 
         // when
         budgetAssignmentService.upsertLeaseTermForServiceCharge(serviceChargeItem, result);
 
         // then
-        assertThat(result.getLeaseTerm()).isEqualTo(termForServiceCharge);
         assertThat(termForServiceCharge.getAuditedValue()).isEqualTo(result.getValue());
         assertThat(termForServiceCharge.getBudgetedValue()).isEqualTo(previousResult1.getValue().add(previousResult2.getValue()));
     }

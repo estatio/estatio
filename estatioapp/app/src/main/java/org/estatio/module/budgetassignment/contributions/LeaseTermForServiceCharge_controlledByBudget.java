@@ -8,7 +8,7 @@ import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.Mixin;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
-import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResultRepository;
+import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResultLeaseTermLinkRepository;
 import org.estatio.module.lease.dom.LeaseTermForServiceCharge;
 
 @Mixin
@@ -23,9 +23,10 @@ public class LeaseTermForServiceCharge_controlledByBudget {
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     public boolean $$() {
-        return !budgetCalculationResultRepository.findByLeaseTerm(leaseTermForServiceCharge).isEmpty();
+        return !budgetCalculationResultLeaseTermLinkRepository
+                .findByLeaseTerm(leaseTermForServiceCharge).isEmpty();
     }
 
     @Inject
-    BudgetCalculationResultRepository budgetCalculationResultRepository;
+    BudgetCalculationResultLeaseTermLinkRepository budgetCalculationResultLeaseTermLinkRepository;
 }

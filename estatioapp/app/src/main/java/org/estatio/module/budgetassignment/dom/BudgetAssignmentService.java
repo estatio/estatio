@@ -22,11 +22,11 @@ import org.estatio.module.asset.dom.UnitRepository;
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculation;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationRepository;
-import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationService;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.module.budget.dom.budgetcalculation.InMemBudgetCalculation;
 import org.estatio.module.budget.dom.budgetcalculation.Status;
 import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResult;
+import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResultLeaseTermLinkRepository;
 import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResultRepository;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.invoice.dom.PaymentMethod;
@@ -116,7 +116,7 @@ public class BudgetAssignmentService {
     @Programmatic
     public void assignNonAssignedCalculationResultsToLeases(final List<BudgetCalculationResult> results) {
 
-        List<BudgetCalculationResult> nonAssignedResults = results.stream().filter(r->r.getLeaseTerm()==null).collect(Collectors.toList());
+        List<BudgetCalculationResult> nonAssignedResults = results.stream().filter(r->budgetCalculationResultLeaseTermLinkRepository.findByBudgetCalculationResult(r).isEmpty()).collect(Collectors.toList());
         List<Occupancy> distinctOccupanciesInResults = nonAssignedResults.stream().map(r->r.getOccupancy()).distinct().collect(Collectors.toList());
         for (Occupancy occupancy : distinctOccupanciesInResults){
 
@@ -154,7 +154,7 @@ public class BudgetAssignmentService {
         if (termIfAny==null){
             termIfAny = (LeaseTermForServiceCharge) serviceChargeItem.newTerm(result.getBudget().getStartDate(), result.getBudget().getEndDate());
         }
-        result.setLeaseTerm(termIfAny);
+        budgetCalculationResultLeaseTermLinkRepository.findOrCreate(result, termIfAny);
         recalculateTerm(termIfAny);
     }
 
@@ -163,7 +163,8 @@ public class BudgetAssignmentService {
         term.setBudgetedValue(null);
         term.setAuditedValue(null);
 
-        final List<BudgetCalculationResult> resultsForTerm = budgetCalculationResultRepository.findByLeaseTerm(term);
+        final List<BudgetCalculationResult> resultsForTerm = budgetCalculationResultLeaseTermLinkRepository.findByLeaseTerm(term)
+                .stream().map(l->l.getBudgetCalculationResult()).collect(Collectors.toList());
         for (BudgetCalculationResult result : resultsForTerm){
 
             BigDecimal newValue;
@@ -260,7 +261,7 @@ public class BudgetAssignmentService {
 
     @Inject BudgetCalculationResultRepository budgetCalculationResultRepository;
 
-    @Inject BudgetCalculationService budgetCalculationService;
+    @Inject BudgetCalculationResultLeaseTermLinkRepository budgetCalculationResultLeaseTermLinkRepository;
 
     @Inject BudgetService budgetService;
 

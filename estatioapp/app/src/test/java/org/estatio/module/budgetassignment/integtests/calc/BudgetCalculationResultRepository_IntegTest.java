@@ -72,7 +72,6 @@ public class BudgetCalculationResultRepository_IntegTest extends BudgetAssignmen
         assertThat(budgetCalculationResultRepository.allBudgetCalculationResults()).hasSize(1);
         final BudgetCalculationResult result = budgetCalculationResultRepository.allBudgetCalculationResults().get(0);
         assertThat(result.getBudget()).isEqualTo(budget2015);
-        assertThat(result.getLeaseTerm()).isNull();
         assertThat(result.getValue()).isEqualTo(value);
         assertThat(result.getInvoiceCharge()).isEqualTo(invoiceCharge);
         assertThat(result.getOccupancy()).isEqualTo(occupancy);
@@ -87,7 +86,6 @@ public class BudgetCalculationResultRepository_IntegTest extends BudgetAssignmen
         assertThat(updatedResult.getValue()).isEqualTo(updatedValue);
         // and no changes further
         assertThat(updatedResult.getBudget()).isEqualTo(budget2015);
-        assertThat(updatedResult.getLeaseTerm()).isNull();
         assertThat(updatedResult.getInvoiceCharge()).isEqualTo(invoiceCharge);
         assertThat(updatedResult.getOccupancy()).isEqualTo(occupancy);
         assertThat(updatedResult.getType()).isEqualTo(BudgetCalculationType.BUDGETED);

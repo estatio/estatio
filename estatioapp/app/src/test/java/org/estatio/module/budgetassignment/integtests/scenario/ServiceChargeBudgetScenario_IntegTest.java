@@ -29,6 +29,8 @@ import org.estatio.module.budget.fixtures.partitioning.enums.Partitioning_enum;
 import org.estatio.module.budgetassignment.contributions.Budget_assign;
 import org.estatio.module.budgetassignment.contributions.Budget_reconcile;
 import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResult;
+import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResultLeaseTermLink;
+import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResultLeaseTermLinkRepository;
 import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResultRepository;
 import org.estatio.module.budgetassignment.integtests.BudgetAssignmentModuleIntegTestAbstract;
 import org.estatio.module.charge.dom.Charge;
@@ -47,6 +49,9 @@ public class ServiceChargeBudgetScenario_IntegTest extends BudgetAssignmentModul
 
     @Inject
     BudgetCalculationResultRepository budgetCalculationResultRepository;
+
+    @Inject
+    BudgetCalculationResultLeaseTermLinkRepository budgetCalculationResultLeaseTermLinkRepository;
 
     @Inject
     BudgetCalculationRepository budgetCalculationRepository;
@@ -238,14 +243,14 @@ public class ServiceChargeBudgetScenario_IntegTest extends BudgetAssignmentModul
         assertThat(firstScItem.getTerms()).hasSize(1);
         final LeaseTermForServiceCharge term = (LeaseTermForServiceCharge) firstScItem.getTerms().first();
         assertThat(term.getBudgetedValue()).isEqualTo(U4_BVAL_1.add(U7_BVAL_1));
-        assertThat(budgetCalculationResultRepository.findByLeaseTerm(term)).hasSize(2);
+        assertThat(budgetCalculationResultLeaseTermLinkRepository.findByLeaseTerm(term)).hasSize(2);
 
         final LeaseItem secondScItem = leaseDago.findItemsOfType(LeaseItemType.SERVICE_CHARGE).get(1);
         assertThat(secondScItem.getCharge()).isEqualTo(invoiceCharge2);
         assertThat(secondScItem.getTerms()).hasSize(1);
         final LeaseTermForServiceCharge term2 = (LeaseTermForServiceCharge) secondScItem.getTerms().first();
         assertThat(term2.getBudgetedValue()).isEqualTo(U4_BVAL_2.add(U7_BVAL_2));
-        assertThat(budgetCalculationResultRepository.findByLeaseTerm(term2)).hasSize(2);
+        assertThat(budgetCalculationResultLeaseTermLinkRepository.findByLeaseTerm(term2)).hasSize(2);
 
     }
 
@@ -365,7 +370,10 @@ public class ServiceChargeBudgetScenario_IntegTest extends BudgetAssignmentModul
         assertThat(calcsForLease).hasSize(result.getNumberOfResults());
 
         for (int i=0; i < result.numberOfResults; i++){
-            final LeaseTermForServiceCharge term = calcsForLease.get(i).getLeaseTerm();
+            final List<BudgetCalculationResultLeaseTermLink> links = budgetCalculationResultLeaseTermLinkRepository
+                    .findByBudgetCalculationResult(calcsForLease.get(i));
+            assertThat(links).hasSize(1);
+            final LeaseTermForServiceCharge term = links.get(0).getLeaseTerm();
             assertThat(term.getBudgetedValue()).isEqualTo(result.getBudgetedValues().get(i));
             assertThat(term.getAuditedValue()).isEqualTo(result.getAuditedValues().get(i));
             assertThat(term.getLeaseItem().getCharge()).isEqualTo(result.getInvoiceCharges().get(i));
@@ -382,8 +390,9 @@ public class ServiceChargeBudgetScenario_IntegTest extends BudgetAssignmentModul
                 .filter(r -> r.getOccupancy().getLease().equals(lease)).collect(Collectors.toList());
         assertThat(calcsForLease).hasSize(numberOfResultsForAudited);
         for (int i=0; i < numberOfResultsForAudited; i++){
-            final LeaseTermForServiceCharge term = calcsForLease.get(i).getLeaseTerm();
-            assertThat(term).isNull();
+            final List<BudgetCalculationResultLeaseTermLink> links = budgetCalculationResultLeaseTermLinkRepository
+                    .findByBudgetCalculationResult(calcsForLease.get(i));
+            assertThat(links).isEmpty();
         }
     }
 
