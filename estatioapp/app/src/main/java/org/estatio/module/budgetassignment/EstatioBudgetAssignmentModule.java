@@ -32,6 +32,7 @@ import org.incode.module.fixturesupport.dom.scripts.TeardownFixtureAbstract;
 
 import org.estatio.module.budget.EstatioBudgetModule;
 import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResult;
+import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResultLeaseTermLink;
 import org.estatio.module.capex.EstatioCapexModule;
 import org.estatio.module.lease.EstatioLeaseModule;
 
@@ -54,6 +55,7 @@ public final class EstatioBudgetAssignmentModule extends ModuleAbstract {
         return new TeardownFixtureAbstract() {
             @Override
             protected void execute(final FixtureScript.ExecutionContext executionContext) {
+                deleteFrom(BudgetCalculationResultLeaseTermLink.class);
                 deleteFrom(BudgetCalculationResult.class);
             }
         };
