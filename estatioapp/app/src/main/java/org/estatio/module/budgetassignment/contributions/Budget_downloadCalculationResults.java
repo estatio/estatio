@@ -71,7 +71,9 @@ public class Budget_downloadCalculationResults {
                         if (vm.getLeaseReference()==null) {
                             BigDecimal newShortFall = vm.getShortfallBudgeted() == null ? calculation.getValue() : vm.getShortfallBudgeted().add(calculation.getValue());
                             vm.setShortfallBudgeted(newShortFall);
-                            BigDecimal newEffVal = vm.getBudgetedValue().subtract(vm.getShortfallBudgeted());
+                            final BigDecimal budgetedValue = vm.getBudgetedValue()==null ? BigDecimal.ZERO : vm.getBudgetedValue();
+                            final BigDecimal shortfallBudgeted = vm.getShortfallBudgeted()==null ? BigDecimal.ZERO : vm.getShortfallBudgeted();
+                            BigDecimal newEffVal = budgetedValue.subtract(shortfallBudgeted);
                             vm.setEffectiveBudgetedValue(newEffVal);
                         } else {
                             vm.setEffectiveBudgetedValue(newVal);
@@ -82,7 +84,9 @@ public class Budget_downloadCalculationResults {
                         if (vm.getLeaseReference()==null) {
                             BigDecimal newShortFall = vm.getShortfallActual() == null ? calculation.getValue() : vm.getShortfallActual().add(calculation.getValue());
                             vm.setShortfallActual(newShortFall);
-                            BigDecimal newEffVal = vm.getActualValue().subtract(vm.getShortfallBudgeted());
+                            final BigDecimal actualValue = vm.getActualValue()==null ? BigDecimal.ZERO : vm.getActualValue();
+                            final BigDecimal shortfallBudgeted = vm.getShortfallBudgeted()==null ? BigDecimal.ZERO : vm.getShortfallBudgeted();
+                            BigDecimal newEffVal = actualValue.subtract(shortfallBudgeted);
                             vm.setEffectiveActualValue(newEffVal);
                         } else {
                             vm.setEffectiveActualValue(newVal);
