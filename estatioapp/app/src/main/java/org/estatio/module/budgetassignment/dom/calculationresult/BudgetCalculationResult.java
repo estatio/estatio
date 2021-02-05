@@ -11,6 +11,8 @@ import javax.jdo.annotations.Query;
 import javax.jdo.annotations.Unique;
 import javax.jdo.annotations.VersionStrategy;
 
+import com.google.api.client.util.Lists;
+
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Auditing;
@@ -31,6 +33,7 @@ import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculation;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationRepository;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.module.charge.dom.Charge;
+import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
 
 import lombok.Getter;
@@ -123,6 +126,52 @@ public class BudgetCalculationResult extends UdoDomainObject2<BudgetCalculationR
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     public List<BudgetCalculation> getBudgetCalculations(){
         return budgetCalculationRepository.findByBudgetAndUnitAndInvoiceChargeAndType(getBudget(), getOccupancy().getUnit(), getInvoiceCharge(), getType());
+    }
+
+    @Programmatic
+    public boolean occupancyCoversLeaseEffectiveInterval(){
+        return getOccupancy().getInterval().contains(getOccupancy().getLease().getEffectiveInterval());
+    }
+
+    @Programmatic
+    public boolean leaseCoversBudgetInterval(){
+        return getOccupancy().getLease().getEffectiveInterval().contains(getBudget().getInterval());
+    }
+
+    @Programmatic
+    public boolean occupanciesOfleaseAndLeaseRenewalsCoverBudgetInterval(){
+        if (this.leaseCoversBudgetInterval() && this.occupancyCoversLeaseEffectiveInterval()) return true;
+        // find first linked lease for budget
+        Lease firstLeaseIfAny = this.getOccupancy().getLease();
+        while (firstLeaseIfAny!=null && !firstLeaseIfAny.getEffectiveInterval().contains(this.getBudget().getStartDate())){
+            firstLeaseIfAny = (Lease) firstLeaseIfAny.getPrevious();
+        }
+        if (firstLeaseIfAny==null) return false;
+        // find last linked lease for budget
+        Lease lastLeaseIfAny = this.getOccupancy().getLease();
+        while (lastLeaseIfAny!=null && !lastLeaseIfAny.getEffectiveInterval().contains(this.getBudget().getEndDate())){
+            lastLeaseIfAny = (Lease) lastLeaseIfAny.getNext();
+        }
+        if (lastLeaseIfAny==null) return false;
+
+        // at this point we have a first and last lease covering the budget period
+        // we now check if the relevant occupancies are covering the lease effective interval for each
+        Lease leaseToCheck = firstLeaseIfAny;
+        if (!occupancyIntervalCoversLeaseInterval(leaseToCheck)) return false;
+        while (!leaseToCheck.getNext().equals(lastLeaseIfAny)){
+            leaseToCheck = (Lease) firstLeaseIfAny.getNext();
+            if (!occupancyIntervalCoversLeaseInterval(leaseToCheck)) return false;
+        }
+        if (!occupancyIntervalCoversLeaseInterval(lastLeaseIfAny)) return false;
+
+        return true;
+    }
+
+    private boolean occupancyIntervalCoversLeaseInterval(final Lease lease){
+        final Occupancy firstOcc = Lists.newArrayList(lease.getOccupancies()).stream()
+                .filter(o -> o.getUnit().equals(this.getOccupancy().getUnit())).findFirst().orElse(null);
+        if (firstOcc==null || !firstOcc.getInterval().contains(lease.getEffectiveInterval())) return false;
+        return true;
     }
 
     @Programmatic

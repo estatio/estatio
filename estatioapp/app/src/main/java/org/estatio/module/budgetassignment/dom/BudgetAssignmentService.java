@@ -2,11 +2,13 @@ package org.estatio.module.budgetassignment.dom;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
+import org.assertj.core.util.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -112,40 +114,165 @@ public class BudgetAssignmentService {
         return overlappingOccupanciesFound;
     }
 
-
     @Programmatic
-    public void assignNonAssignedCalculationResultsToLeases(final List<BudgetCalculationResult> results) {
-
-        List<BudgetCalculationResult> nonAssignedResults = results.stream().filter(r->budgetCalculationResultLeaseTermLinkRepository.findByBudgetCalculationResult(r).isEmpty()).collect(Collectors.toList());
+    public void assignNonAssignedCalculationResultsToLeases(final Budget budget) {
+        final List<BudgetCalculationResult> calculationResultsForBudget = budgetCalculationResultRepository.findByBudget(budget);
+        List<BudgetCalculationResult> nonAssignedResults = calculationResultsForBudget.stream().filter(r->budgetCalculationResultLeaseTermLinkRepository.findByBudgetCalculationResult(r).isEmpty()).collect(Collectors.toList());
         List<Occupancy> distinctOccupanciesInResults = nonAssignedResults.stream().map(r->r.getOccupancy()).distinct().collect(Collectors.toList());
         for (Occupancy occupancy : distinctOccupanciesInResults){
+            List<BudgetCalculationResult> nonAssignedResultsForOccupancy = nonAssignedResults.stream().filter(r->r.getOccupancy().equals(occupancy)).collect(Collectors.toList());
+            assignNonAssignedCalculationResultsToLeaseFor(occupancy, nonAssignedResultsForOccupancy);
+        }
+    }
 
-            List<BudgetCalculationResult> resultsForOccupancy = nonAssignedResults.stream().filter(r->r.getOccupancy().equals(occupancy)).collect(Collectors.toList());
-            List<Charge> distinctInvoiceChargesForOccupancy = nonAssignedResults.stream().map(r->r.getInvoiceCharge()).distinct().collect(Collectors.toList());
-            Lease lease = occupancy.getLease();
+    /* Convenience for possible mixin on a lease */
+    @Programmatic
+    public void assignNonAssignedCalculationResultsToLeaseFor(final Lease lease, final Budget budget){
+        for (Occupancy occupancy : lease.getOccupancies()){
+            List<BudgetCalculationResult> nonAssignedResultsForOccupancy = budgetCalculationResultRepository.findByBudget(budget).stream()
+                    .filter(cr -> cr.getOccupancy().equals(occupancy))
+                    .filter(r->budgetCalculationResultLeaseTermLinkRepository.findByBudgetCalculationResult(r).isEmpty())
+                    .collect(Collectors.toList());
+            assignNonAssignedCalculationResultsToLeaseFor(occupancy, nonAssignedResultsForOccupancy);
+        }
+    }
 
-            if (resultsForOccupancy.size() != distinctInvoiceChargesForOccupancy.size()){
-                // this should not be possible
-                String message = String.format("Multiple budget calculation results with same invoice charge found for occupancy %s.", occupancy.title());
-                message.concat(String.format("The calculation results were not assigned to lease %s.", lease.getReference()));
-                messageService.warnUser(message);
-                LOG.warn(message);
-                break;
+    @Programmatic
+    public void assignNonAssignedCalculationResultsToLeaseFor(final Occupancy occupancy, List<BudgetCalculationResult> nonAssignedResultsForOccupancy){
+
+        List<Charge> distinctInvoiceChargesForOccupancy = nonAssignedResultsForOccupancy.stream().map(r->r.getInvoiceCharge()).distinct().collect(Collectors.toList());
+        Lease lease = occupancy.getLease();
+
+        if (nonAssignedResultsForOccupancy.size() != distinctInvoiceChargesForOccupancy.size()){
+            // this should not be possible
+            String message = String.format("Multiple budget calculation results with same invoice charge found for occupancy %s.", occupancy.title());
+            message.concat(String.format("The calculation results were not assigned to lease %s.", lease.getReference()));
+            messageService.warnUser(message);
+            LOG.warn(message);
+            return;
+        }
+
+        for (BudgetCalculationResult result : nonAssignedResultsForOccupancy){
+
+            /*
+                When type = BUDGETED we update all service charge terms found on lease items with charge corresponding to budgetcalculation result that are active during the budget period.
+                - if no lease item is found we create one with a term for the budget period
+                - if a term is found that exceeds the budget enddate, we will split the term
+                - we need to support multiple lease items on the lease (for instance Quarterly and Monthly with same charge)
+                - in order to support multiple occupancies on a lease, we need to check if the term is already linked for type BUDGETED
+                  and make sure to add and not replace the value
+            */
+
+            if (result.getType()==BudgetCalculationType.BUDGETED &&
+                    !Arrays.asList(
+                            org.estatio.module.budget.dom.budget.Status.RECONCILING,
+                            org.estatio.module.budget.dom.budget.Status.RECONCILED
+                    )
+                    .contains(result.getBudget().getStatus())){
+
+                List<LeaseItem> serviceChargeItemsToUpdate = findExistingLeaseItemsOrCreateNewForServiceCharge(lease, result);
+                // TODO: update method
+                // revisit
+                upsertLeaseTermForServiceCharge(null, null);
+                // to loop over
+
             }
 
-            for (BudgetCalculationResult result : resultsForOccupancy){
-                if (result.getType()==BudgetCalculationType.AUDITED && !result.getOccupancy().getEffectiveInterval().contains(result.getBudget().getInterval())){
-                    String message = String.format("Occupancy %s for lease %s needs custom assignment for AUDITED because the occupancy does not cover the entire budget period", occupancy.title(), occupancy.getLease().getReference());
-                    messageService.warnUser(message);
-                    LOG.warn(message);
-                } else {
-                    LeaseItem serviceChargeItem = findOrCreateLeaseItemForServiceCharge(lease, result);
-                    upsertLeaseTermForServiceCharge(serviceChargeItem, result);
-                }
+            /*
+                When type = AUDITED we update all service charge terms found on lease with lease items with charge corresponding to budgetcalculation result
+                for leases that are active for the entire budget period or that have previous/next together covering the entire budget period.
+                If not, we log a warning and do not assign. These are left for manual treatment for the moment.
+                - if no lease item is found DO NOT create one and log a warning
+                - if a term is found that exceeds the budget enddate, we will split the term
+                - in order to support multiple occupancies on a lease, we need to check if the term is already linked for type AUDITED
+                  and make sure to add and not replace the value
+            */
+
+            if (result.getType()==BudgetCalculationType.AUDITED){
+
+                List<LeaseItem> serviceChargeItemsToUpdate = findLeaseItemsForServiceChargeToUpdateForAudited(lease, result);
+                // TODO: update method
+                // possibly use
+                upsertLeaseTermForServiceCharge(null, null);
+                // or create a new method
+                // to loop over
+
             }
 
         }
 
+    }
+
+    List<LeaseItem> findLeaseItemsForServiceChargeToUpdateForAudited(
+            final Lease lease,
+            final BudgetCalculationResult budgetCalculationResult) {
+
+        if (budgetCalculationResult.leaseCoversBudgetInterval()){
+
+            if (budgetCalculationResult.occupancyCoversLeaseEffectiveInterval()){
+                return findExistingLeaseItemsForServiceCharge(lease, budgetCalculationResult);
+
+            } else {
+                String msg = String.format("Lease %s covers budget interval but the occupancy does not - handle manually", budgetCalculationResult.getOccupancy().getLease().getReference());
+                messageService.warnUser(msg);
+                LOG.warn(msg);
+                return Lists.emptyList();
+            }
+
+        } else {
+
+            if (budgetCalculationResult.occupanciesOfleaseAndLeaseRenewalsCoverBudgetInterval()){
+
+                return findExistingLeaseItemsForServiceCharge(lease, budgetCalculationResult);
+
+            } else {
+                String msg = String.format("Lease %s has started or ended during budget interval and has/is no renewal - handle manually", budgetCalculationResult.getOccupancy().getLease().getReference());
+                messageService.warnUser(msg);
+                LOG.warn(msg);
+                return Lists.emptyList();
+            }
+
+        }
+    }
+
+
+
+    List<LeaseItem> findExistingLeaseItemsForServiceCharge(final Lease lease, final BudgetCalculationResult result){
+        return lease.findItemsOfType(LeaseItemType.SERVICE_CHARGE).stream()
+                .filter(li -> li.getCharge().equals(result.getInvoiceCharge()))
+                .filter(li -> li.getEffectiveInterval().overlaps(result.getBudget().getInterval()))
+                .collect(Collectors.toList());
+    }
+
+    List<LeaseItem> findExistingLeaseItemsOrCreateNewForServiceCharge(
+            final Lease lease,
+            final BudgetCalculationResult result) {
+        final List<LeaseItem> leaseItems = findExistingLeaseItemsForServiceCharge(lease, result);
+        if (leaseItems.isEmpty()){
+            LeaseItem itemToCopyFrom = findItemToCopyFrom(lease); // tries to copy invoice frequency and payment method from another lease item
+            LeaseItem leaseItem = lease.newItem(
+                    LeaseItemType.SERVICE_CHARGE,
+                    LeaseAgreementRoleTypeEnum.LANDLORD,
+                    result.getInvoiceCharge(),
+                    itemToCopyFrom!=null ? itemToCopyFrom.getInvoicingFrequency() : InvoicingFrequency.QUARTERLY_IN_ADVANCE,
+                    itemToCopyFrom!=null ? itemToCopyFrom.getPaymentMethod() : PaymentMethod.DIRECT_DEBIT,
+                    result.getBudget().getStartDate());
+            leaseItems.add(leaseItem);
+        }
+        return leaseItems;
+    }
+
+    LeaseItem findItemToCopyFrom(final Lease lease){
+        LeaseItem itemToCopyFrom = lease.findFirstItemOfType(LeaseItemType.SERVICE_CHARGE);
+        if (itemToCopyFrom==null){
+            // then try rent item
+            itemToCopyFrom = lease.findFirstItemOfType(LeaseItemType.RENT);
+        }
+        if (itemToCopyFrom==null && lease.getItems().size()>0) {
+            // then try any item
+            itemToCopyFrom = lease.getItems().first();
+        }
+        return itemToCopyFrom;
     }
 
     void upsertLeaseTermForServiceCharge(final LeaseItem serviceChargeItem, final BudgetCalculationResult result) {
@@ -184,36 +311,6 @@ public class BudgetAssignmentService {
             }
 
         }
-    }
-
-    LeaseItem findOrCreateLeaseItemForServiceCharge(final Lease lease, final BudgetCalculationResult calculationResult){
-
-        LeaseItem leaseItem = lease.findFirstActiveItemOfTypeAndChargeInInterval(LeaseItemType.SERVICE_CHARGE, calculationResult.getInvoiceCharge(), calculationResult.getBudget().getInterval());
-
-        if (leaseItem==null){
-            LeaseItem itemToCopyFrom = findItemToCopyFrom(lease); // try to copy invoice frequency and payment method from another lease item
-            leaseItem = lease.newItem(
-                    LeaseItemType.SERVICE_CHARGE,
-                    LeaseAgreementRoleTypeEnum.LANDLORD,
-                    calculationResult.getInvoiceCharge(),
-                    itemToCopyFrom!=null ? itemToCopyFrom.getInvoicingFrequency() : InvoicingFrequency.QUARTERLY_IN_ADVANCE,
-                    itemToCopyFrom!=null ? itemToCopyFrom.getPaymentMethod() : PaymentMethod.DIRECT_DEBIT,
-                    calculationResult.getBudget().getStartDate());
-        }
-        return leaseItem;
-    }
-
-    LeaseItem findItemToCopyFrom(final Lease lease){
-        LeaseItem itemToCopyFrom = lease.findFirstItemOfType(LeaseItemType.SERVICE_CHARGE);
-        if (itemToCopyFrom==null){
-            // then try rent item
-            itemToCopyFrom = lease.findFirstItemOfType(LeaseItemType.RENT);
-        }
-        if (itemToCopyFrom==null && lease.getItems().size()>0) {
-            // then try any item
-            itemToCopyFrom = lease.getItems().first();
-        }
-        return itemToCopyFrom;
     }
 
     /**

@@ -1,7 +1,5 @@
 package org.estatio.module.budgetassignment.contributions;
 
-import java.util.List;
-
 import javax.inject.Inject;
 
 import org.apache.isis.applib.annotation.Action;
@@ -16,7 +14,6 @@ import org.estatio.module.budget.dom.budget.Status;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationService;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.module.budgetassignment.dom.BudgetAssignmentService;
-import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResult;
 
 /**
  * This currently could be inlined into Budget, however it is incomplete and my suspicion is that eventually it
@@ -36,10 +33,11 @@ public class Budget_reconcile {
             @ParameterLayout(describedAs = "When checked, this will persist the calculations and put the budget on Reconciled, but will NOT impact the lease terms")
     final boolean doNotImpactLeaseTerms) {
         budgetCalculationService.calculate(budget, BudgetCalculationType.AUDITED, budget.getStartDate(), budget.getEndDate(), true);
-        List<BudgetCalculationResult> results = budgetAssignmentService
+        budgetAssignmentService
                 .calculateResults(budget, BudgetCalculationType.AUDITED);
+        budget.setStatus(Status.RECONCILING);
         if (!doNotImpactLeaseTerms) {
-            budgetAssignmentService.assignNonAssignedCalculationResultsToLeases(results);
+            budgetAssignmentService.assignNonAssignedCalculationResultsToLeases(budget);
         }
         budget.setStatus(Status.RECONCILED);
         return budget;
