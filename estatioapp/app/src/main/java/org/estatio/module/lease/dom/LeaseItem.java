@@ -852,6 +852,13 @@ public class LeaseItem
         return false;
     }
 
+    @Programmatic
+    public List<LeaseTerm> findTermsActiveDuring(final LocalDateInterval interval) {
+        return Lists.newArrayList(this.getTerms()).stream()
+                .filter(t->t.getInterval().overlaps(interval))
+                .collect(Collectors.toList());
+    }
+
     // //////////////////////////////////////
 
     public static class Predicates {

@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 
 import org.assertj.core.util.Lists;
+import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,6 +38,7 @@ import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
 import org.estatio.module.lease.dom.LeaseItem;
 import org.estatio.module.lease.dom.LeaseItemType;
+import org.estatio.module.lease.dom.LeaseTerm;
 import org.estatio.module.lease.dom.LeaseTermForServiceCharge;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
 import org.estatio.module.lease.dom.occupancy.OccupancyRepository;
@@ -171,10 +173,7 @@ public class BudgetAssignmentService {
                     .contains(result.getBudget().getStatus())){
 
                 List<LeaseItem> serviceChargeItemsToUpdate = findExistingLeaseItemsOrCreateNewForServiceCharge(lease, result);
-                // TODO: update method
-                // revisit
-                upsertLeaseTermForServiceCharge(null, null);
-                // to loop over
+                serviceChargeItemsToUpdate.forEach(li->upsertLeaseTermForServiceCharge(li, result));
 
             }
 
@@ -191,11 +190,7 @@ public class BudgetAssignmentService {
             if (result.getType()==BudgetCalculationType.AUDITED){
 
                 List<LeaseItem> serviceChargeItemsToUpdate = findLeaseItemsForServiceChargeToUpdateForAudited(lease, result);
-                // TODO: update method
-                // possibly use
-                upsertLeaseTermForServiceCharge(null, null);
-                // or create a new method
-                // to loop over
+                serviceChargeItemsToUpdate.forEach(li-> updateLeaseTermsForServiceCharge(li, result));
 
             }
 
@@ -277,22 +272,53 @@ public class BudgetAssignmentService {
 
     void upsertLeaseTermForServiceCharge(final LeaseItem serviceChargeItem, final BudgetCalculationResult result) {
 
-        LeaseTermForServiceCharge termIfAny = (LeaseTermForServiceCharge) serviceChargeItem.findTerm(result.getBudget().getStartDate());
-        if (termIfAny==null){
-            termIfAny = (LeaseTermForServiceCharge) serviceChargeItem.newTerm(result.getBudget().getStartDate(), result.getBudget().getEndDate());
+        final Budget budget = result.getBudget();
+        final LocalDate budgetStartDate = budget.getStartDate();
+        final LocalDate budgetEndDate = budget.getEndDate();
+
+        final List<LeaseTerm> overlappingTermsIfAny = serviceChargeItem.findTermsActiveDuring(budget.getInterval());
+
+        if (overlappingTermsIfAny.isEmpty()) {
+            serviceChargeItem.newTerm(budgetStartDate, budgetEndDate);
         }
-        budgetCalculationResultLeaseTermLinkRepository.findOrCreate(result, termIfAny);
-        recalculateTerm(termIfAny);
+
+        updateLeaseTermsForServiceCharge(serviceChargeItem, result);
+
     }
 
-    void recalculateTerm(final LeaseTermForServiceCharge term) {
+    void updateLeaseTermsForServiceCharge(final LeaseItem serviceChargeItem, final BudgetCalculationResult result) {
+        final Budget budget = result.getBudget();
+        final LocalDate budgetStartDate = budget.getStartDate();
+        final LocalDate budgetEndDate = budget.getEndDate();
 
-        term.setBudgetedValue(null);
-        term.setAuditedValue(null);
+        final List<LeaseTerm> overlappingTermsIfAny = serviceChargeItem.findTermsActiveDuring(budget.getInterval());
+        for (LeaseTerm overlappingTerm : overlappingTermsIfAny){
+            LeaseTermForServiceCharge termToUpDate = (LeaseTermForServiceCharge) overlappingTerm;
+            // split term if needed
+            if (termToUpDate.getStartDate()==null || termToUpDate.getStartDate().isBefore(budgetStartDate)){
+                // split on budget start date
+                termToUpDate = (LeaseTermForServiceCharge) termToUpDate.split(budgetStartDate);
+            }
+            if (termToUpDate.getEndDate()==null || termToUpDate.getEndDate().isAfter(budgetEndDate)){
+                // split term day after budget end date
+                termToUpDate = (LeaseTermForServiceCharge) termToUpDate.split(budgetEndDate.plusDays(1));
+            }
+            budgetCalculationResultLeaseTermLinkRepository.findOrCreate(result, termToUpDate);
+            recalculateTerm(termToUpDate, result.getType());
+        }
+    }
 
-        final List<BudgetCalculationResult> resultsForTerm = budgetCalculationResultLeaseTermLinkRepository.findByLeaseTerm(term)
-                .stream().map(l->l.getBudgetCalculationResult()).collect(Collectors.toList());
-        for (BudgetCalculationResult result : resultsForTerm){
+    void recalculateTerm(final LeaseTermForServiceCharge term, final BudgetCalculationType budgetCalculationType) {
+
+        if (budgetCalculationType==BudgetCalculationType.BUDGETED) term.setBudgetedValue(null);
+        if (budgetCalculationType == BudgetCalculationType.AUDITED) term.setAuditedValue(null);
+
+        final List<BudgetCalculationResult> resultsForTermAndType = budgetCalculationResultLeaseTermLinkRepository.findByLeaseTerm(term)
+                .stream()
+                .map(l->l.getBudgetCalculationResult())
+                .filter(bcr->bcr.getType()==budgetCalculationType)
+                .collect(Collectors.toList());
+        for (BudgetCalculationResult result : resultsForTermAndType){
 
             BigDecimal newValue;
 

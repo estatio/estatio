@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.TreeSet;
 
+import org.assertj.core.util.Lists;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
@@ -28,7 +29,6 @@ import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
 import org.estatio.module.lease.dom.LeaseItem;
 import org.estatio.module.lease.dom.LeaseItemType;
-import org.estatio.module.lease.dom.LeaseTerm;
 import org.estatio.module.lease.dom.LeaseTermForServiceCharge;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
 
@@ -83,33 +83,41 @@ public class BudgetAssignmentService_Test {
 
 
     @Test
-    public void findOrCreateLeaseItemForServiceCharge_returns_active_item_when_found() throws Exception {
+    public void findExistingLeaseItemsOrCreateNewForServiceCharge_returns_active_item_when_found() throws Exception {
 
         // given
-        LeaseItem itemToBeFound = new LeaseItem();
-        Lease lease = new Lease(){
-            @Override
-            public LeaseItem findFirstActiveItemOfTypeAndChargeInInterval(final LeaseItemType leaseItemType, final Charge charge, final LocalDateInterval interval){
-                return itemToBeFound;
-            }
-        };
+        final Charge charge = new Charge();
         BudgetCalculationResult budgetCalculationResult = new BudgetCalculationResult();
+        budgetCalculationResult.setInvoiceCharge(charge);
         Budget budget = new Budget();
         budget.setStartDate(new LocalDate(2018,1,1));
         budgetCalculationResult.setBudget(budget);
+        LeaseItem itemToBeFound = new LeaseItem(){
+            @Override public LocalDateInterval getEffectiveInterval() {
+                return LocalDateInterval.including(budget.getStartDate().plusMonths(1), null);
+            }
+        };
+        itemToBeFound.setCharge(charge);
+        Lease lease = new Lease(){
+            @Override
+            public List<LeaseItem> findItemsOfType(final LeaseItemType leaseItemType){
+                return Arrays.asList(itemToBeFound);
+            }
+        };
 
         // when
-//        LeaseItem itemFound = budgetAssignmentService.findOrCreateLeaseItemForServiceCharge(lease, budgetCalculationResult);
+        List<LeaseItem> itemsFound = budgetAssignmentService.findExistingLeaseItemsOrCreateNewForServiceCharge(lease, budgetCalculationResult);
 
         // then
-//        assertThat(itemFound).isEqualTo(itemToBeFound);
+        assertThat(itemsFound).hasSize(1);
+        assertThat(itemsFound.get(0)).isEqualTo(itemToBeFound);
         
     }
 
     @Mock Lease mockLease;
 
     @Test
-    public void findOrCreateLeaseItemForServiceCharge_works_when_item_to_copy_from_found() throws Exception {
+    public void findExistingLeaseItemsOrCreateNewForServiceCharge_works_when_item_to_copy_from_found() throws Exception {
 
         // given
         LeaseItem leaseItemToCopyFrom = new LeaseItem();
@@ -131,8 +139,8 @@ public class BudgetAssignmentService_Test {
 
         // expect
         context.checking(new Expectations(){{
-            oneOf(mockLease).findFirstActiveItemOfTypeAndChargeInInterval(LeaseItemType.SERVICE_CHARGE, charge, budget.getInterval());
-            will(returnValue(null));
+            oneOf(mockLease).findItemsOfType(LeaseItemType.SERVICE_CHARGE);
+            will(returnValue(Lists.emptyList()));
             oneOf(mockLease).newItem(
                     LeaseItemType.SERVICE_CHARGE,
                     LeaseAgreementRoleTypeEnum.LANDLORD,
@@ -143,13 +151,13 @@ public class BudgetAssignmentService_Test {
         }});
 
         // when
-//        budgetAssignmentService.findOrCreateLeaseItemForServiceCharge(mockLease, budgetCalculationResult);
+        budgetAssignmentService.findExistingLeaseItemsOrCreateNewForServiceCharge(mockLease, budgetCalculationResult);
     }
 
 
 
     @Test
-    public void findOrCreateLeaseItemForServiceCharge_works_when_no_item_to_copy_from_found() throws Exception {
+    public void findExistingLeaseItemsOrCreateNewForServiceCharge_works_when_no_item_to_copy_from_found() throws Exception {
 
         // given
         BudgetAssignmentService budgetAssignmentService = new BudgetAssignmentService(){
@@ -171,8 +179,8 @@ public class BudgetAssignmentService_Test {
 
         // expect
         context.checking(new Expectations(){{
-            oneOf(mockLease).findFirstActiveItemOfTypeAndChargeInInterval(LeaseItemType.SERVICE_CHARGE, charge, budget.getInterval());
-            will(returnValue(null));
+            oneOf(mockLease).findItemsOfType(LeaseItemType.SERVICE_CHARGE);
+            will(returnValue(Lists.emptyList()));
             oneOf(mockLease).newItem(
                     LeaseItemType.SERVICE_CHARGE,
                     LeaseAgreementRoleTypeEnum.LANDLORD,
@@ -183,7 +191,7 @@ public class BudgetAssignmentService_Test {
         }});
 
         // when
-//        budgetAssignmentService.findOrCreateLeaseItemForServiceCharge(mockLease, budgetCalculationResult);
+        budgetAssignmentService.findExistingLeaseItemsOrCreateNewForServiceCharge(mockLease, budgetCalculationResult);
     }
 
     @Test
@@ -250,119 +258,231 @@ public class BudgetAssignmentService_Test {
 
     }
 
-    @Mock BudgetCalculationResultLeaseTermLinkRepository mockBudgetCalculationResultLeaseTermLinkRepository;
-
+    @Mock LeaseItem mockLeaseItem;
     @Test
     public void upsertLeaseTermForServiceCharge_works_when_new_term_created(){
 
         // given
-        budgetAssignmentService.budgetCalculationResultLeaseTermLinkRepository = mockBudgetCalculationResultLeaseTermLinkRepository;
-
-        BudgetCalculationResult result = new BudgetCalculationResult();
-        Budget budget = new Budget();
-        LocalDate startDate = new LocalDate(2018, 1, 1);
-        LocalDate endDate = new LocalDate(2018, 12, 31);
-        budget.setStartDate(startDate);
-        budget.setEndDate(endDate);
-        result.setBudget(budget);
-        result.setType(BudgetCalculationType.AUDITED);
-        result.setValue(new BigDecimal("123.45"));
-
-        BudgetCalculationResult previousResult1 = new BudgetCalculationResult();
-        previousResult1.setBudget(budget);
-        previousResult1.setType(BudgetCalculationType.BUDGETED);
-        previousResult1.setValue(new BigDecimal("55.55"));
-        BudgetCalculationResult previousResult2 = new BudgetCalculationResult();
-        previousResult2.setBudget(budget);
-        previousResult2.setType(BudgetCalculationType.BUDGETED);
-        previousResult2.setValue(new BigDecimal("40.00"));
-
-
-        final LeaseTermForServiceCharge termForServiceCharge = new LeaseTermForServiceCharge();
-
-        final LeaseItem serviceChargeItem = new LeaseItem(){
-            @Override
-            public LeaseTerm newTerm(final LocalDate startDate,
-                    final LocalDate endDate){
-                return termForServiceCharge;
+        BudgetAssignmentService budgetAssignmentService = new BudgetAssignmentService(){
+            @Override void updateLeaseTermsForServiceCharge(
+                    final LeaseItem serviceChargeItem, final BudgetCalculationResult result) {
+                return;
             }
         };
-        serviceChargeItem.setType(LeaseItemType.SERVICE_CHARGE);
 
-        BudgetCalculationResultLeaseTermLink link1 = new BudgetCalculationResultLeaseTermLink(result, termForServiceCharge);
-        BudgetCalculationResultLeaseTermLink link2 = new BudgetCalculationResultLeaseTermLink(previousResult1, termForServiceCharge);
-        BudgetCalculationResultLeaseTermLink link3 = new BudgetCalculationResultLeaseTermLink(previousResult2, termForServiceCharge);
+        BudgetCalculationResult result = new BudgetCalculationResult();
+        LocalDate budgetStartDate = new LocalDate(2020,1,1);
+        LocalDate budgetEndDate = new LocalDate(2020,12,31);
+        Budget budget = new Budget();
+        budget.setStartDate(budgetStartDate);
+        budget.setEndDate(budgetEndDate);
+        result.setBudget(budget);
 
         // expect
         context.checking(new Expectations(){{
-            oneOf(mockBudgetCalculationResultLeaseTermLinkRepository).findOrCreate(result, termForServiceCharge);
-            oneOf(mockBudgetCalculationResultLeaseTermLinkRepository).findByLeaseTerm(with(any(LeaseTermForServiceCharge.class)));
-            will(returnValue(Arrays.asList(link1, link2, link3)));
+            oneOf(mockLeaseItem).findTermsActiveDuring(budget.getInterval());
+            will(returnValue(Lists.emptyList()));
+            oneOf(mockLeaseItem).newTerm(budgetStartDate, budgetEndDate);
         }});
 
         // when
-        budgetAssignmentService.upsertLeaseTermForServiceCharge(serviceChargeItem, result);
+        budgetAssignmentService.upsertLeaseTermForServiceCharge(mockLeaseItem, result);
 
-        // then
-        assertThat(termForServiceCharge.getAuditedValue()).isEqualTo(result.getValue());
-        assertThat(termForServiceCharge.getBudgetedValue()).isEqualTo(previousResult1.getValue().add(previousResult2.getValue()));
     }
 
     @Test
     public void upsertLeaseTermForServiceCharge_works_when_existing_term_found(){
 
         // given
-        budgetAssignmentService.budgetCalculationResultLeaseTermLinkRepository = mockBudgetCalculationResultLeaseTermLinkRepository;
-
-        BudgetCalculationResult result = new BudgetCalculationResult();
-        Budget budget = new Budget();
-        LocalDate startDate = new LocalDate(2018, 1, 1);
-        LocalDate endDate = new LocalDate(2018, 12, 31);
-        budget.setStartDate(startDate);
-        budget.setEndDate(endDate);
-        result.setBudget(budget);
-        result.setType(BudgetCalculationType.AUDITED);
-        result.setValue(new BigDecimal("123.45"));
-
-        BudgetCalculationResult previousResult1 = new BudgetCalculationResult();
-        previousResult1.setBudget(budget);
-        previousResult1.setType(BudgetCalculationType.BUDGETED);
-        previousResult1.setValue(new BigDecimal("55.55"));
-        BudgetCalculationResult previousResult2 = new BudgetCalculationResult();
-        previousResult2.setBudget(budget);
-        previousResult2.setType(BudgetCalculationType.BUDGETED);
-        previousResult2.setValue(new BigDecimal("40.00"));
-
-
-        final LeaseTermForServiceCharge termForServiceCharge = new LeaseTermForServiceCharge();
-        termForServiceCharge.setBudgetedValue(BigDecimal.TEN);
-        termForServiceCharge.setAuditedValue(BigDecimal.TEN);
-
-        final LeaseItem serviceChargeItem = new LeaseItem(){
-            @Override
-            public LeaseTerm findTerm(final LocalDate startDate){
-                return termForServiceCharge;
+        BudgetAssignmentService budgetAssignmentService = new BudgetAssignmentService(){
+            @Override void updateLeaseTermsForServiceCharge(
+                    final LeaseItem serviceChargeItem, final BudgetCalculationResult result) {
+                return;
             }
         };
-        serviceChargeItem.setType(LeaseItemType.SERVICE_CHARGE);
 
-        BudgetCalculationResultLeaseTermLink link1 = new BudgetCalculationResultLeaseTermLink(result, termForServiceCharge);
-        BudgetCalculationResultLeaseTermLink link2 = new BudgetCalculationResultLeaseTermLink(previousResult1, termForServiceCharge);
-        BudgetCalculationResultLeaseTermLink link3 = new BudgetCalculationResultLeaseTermLink(previousResult2, termForServiceCharge);
+        BudgetCalculationResult result = new BudgetCalculationResult();
+        LocalDate budgetStartDate = new LocalDate(2020,1,1);
+        LocalDate budgetEndDate = new LocalDate(2020,12,31);
+        Budget budget = new Budget();
+        budget.setStartDate(budgetStartDate);
+        budget.setEndDate(budgetEndDate);
+        result.setBudget(budget);
 
         // expect
         context.checking(new Expectations(){{
-            oneOf(mockBudgetCalculationResultLeaseTermLinkRepository).findOrCreate(result, termForServiceCharge);
-            oneOf(mockBudgetCalculationResultLeaseTermLinkRepository).findByLeaseTerm(with(any(LeaseTermForServiceCharge.class)));
-            will(returnValue(Arrays.asList(link1, link2, link3)));
+            oneOf(mockLeaseItem).findTermsActiveDuring(budget.getInterval());
+            will(returnValue(Arrays.asList(new LeaseTermForServiceCharge())));
         }});
 
         // when
-        budgetAssignmentService.upsertLeaseTermForServiceCharge(serviceChargeItem, result);
+        budgetAssignmentService.upsertLeaseTermForServiceCharge(mockLeaseItem, result);
+
+    }
+
+    @Mock BudgetCalculationResultLeaseTermLinkRepository mockBudgetCalculationResultLeaseTermLinkRepository;
+    @Mock LeaseTermForServiceCharge term1;
+    @Mock LeaseTermForServiceCharge term2;
+
+    @Test
+    public void updateLeaseTermForServiceCharge_works_when_no_splitting() throws Exception {
+
+        // given
+        BudgetAssignmentService budgetAssignmentService = new BudgetAssignmentService(){
+            @Override
+            void recalculateTerm(
+                    final LeaseTermForServiceCharge term, final BudgetCalculationType budgetCalculationType) {
+                return;
+            }
+        };
+        budgetAssignmentService.budgetCalculationResultLeaseTermLinkRepository = mockBudgetCalculationResultLeaseTermLinkRepository;
+        BudgetCalculationResult result = new BudgetCalculationResult();
+        LocalDate budgetStartDate = new LocalDate(2020,1,1);
+        LocalDate budgetEndDate = new LocalDate(2020,12,31);
+        Budget budget = new Budget();
+        budget.setStartDate(budgetStartDate);
+        budget.setEndDate(budgetEndDate);
+        result.setBudget(budget);
+
+        // expect
+        context.checking(new Expectations(){{
+            oneOf(mockLeaseItem).findTermsActiveDuring(budget.getInterval());
+            will(returnValue(Arrays.asList(term1, term2)));
+            allowing(term1).getStartDate();
+            will(returnValue(budgetStartDate));
+            allowing(term1).getEndDate();
+            will(returnValue(budgetEndDate.minusMonths(1)));
+            allowing(term2).getStartDate();
+            will(returnValue(budgetEndDate.minusMonths(1).plusDays(1)));
+            allowing(term2).getEndDate();
+            will(returnValue(budgetEndDate));
+            oneOf(mockBudgetCalculationResultLeaseTermLinkRepository).findOrCreate(result, term1);
+            oneOf(mockBudgetCalculationResultLeaseTermLinkRepository).findOrCreate(result, term2);
+        }});
+
+        // when
+        budgetAssignmentService.updateLeaseTermsForServiceCharge(mockLeaseItem, result);
+
+    }
+
+    @Test
+    public void updateLeaseTermForServiceCharge_works_when_splitting() throws Exception {
+
+        // given
+        BudgetAssignmentService budgetAssignmentService = new BudgetAssignmentService(){
+            @Override
+            void recalculateTerm(
+                    final LeaseTermForServiceCharge term, final BudgetCalculationType budgetCalculationType) {
+                return;
+            }
+        };
+        budgetAssignmentService.budgetCalculationResultLeaseTermLinkRepository = mockBudgetCalculationResultLeaseTermLinkRepository;
+        BudgetCalculationResult result = new BudgetCalculationResult();
+        LocalDate budgetStartDate = new LocalDate(2020,1,1);
+        LocalDate budgetEndDate = new LocalDate(2020,12,31);
+        Budget budget = new Budget();
+        budget.setStartDate(budgetStartDate);
+        budget.setEndDate(budgetEndDate);
+        result.setBudget(budget);
+
+        // expect
+        context.checking(new Expectations(){{
+            oneOf(mockLeaseItem).findTermsActiveDuring(budget.getInterval());
+            will(returnValue(Arrays.asList(term1, term2)));
+            allowing(term1).getStartDate();
+            will(returnValue(budgetStartDate.minusDays(1)));
+            allowing(term1).getEndDate();
+            will(returnValue(budgetEndDate.minusMonths(1)));
+            oneOf(term1).split(budgetStartDate);
+            will(returnValue(term1));
+            allowing(term2).getStartDate();
+            will(returnValue(budgetEndDate.minusMonths(1).plusDays(1)));
+            allowing(term2).getEndDate();
+            will(returnValue(budgetEndDate.plusDays(1)));
+            oneOf(term2).split(budgetEndDate.plusDays(1));
+            will(returnValue(term2));
+            oneOf(mockBudgetCalculationResultLeaseTermLinkRepository).findOrCreate(result, term1);
+            oneOf(mockBudgetCalculationResultLeaseTermLinkRepository).findOrCreate(result, term2);
+        }});
+
+        // when
+        budgetAssignmentService.updateLeaseTermsForServiceCharge(mockLeaseItem, result);
+
+    }
+
+    @Test
+    public void recalculateTerm_clears_existing_values_on_term() throws Exception {
+
+        // given
+        budgetAssignmentService.budgetCalculationResultLeaseTermLinkRepository = mockBudgetCalculationResultLeaseTermLinkRepository;
+        LeaseTermForServiceCharge term = new LeaseTermForServiceCharge();
+
+        // expect
+        context.checking(new Expectations(){{
+            allowing(mockBudgetCalculationResultLeaseTermLinkRepository).findByLeaseTerm(term);
+            will(returnValue(Lists.emptyList())); // just for this test; should not happen in prod
+        }});
+
+        // when
+        term.setBudgetedValue(new BigDecimal("123.45"));
+        term.setAuditedValue(new BigDecimal("234.56"));
+        budgetAssignmentService.recalculateTerm(term, BudgetCalculationType.BUDGETED);
+        // then
+        assertThat(term.getBudgetedValue()).isNull();
+        assertThat(term.getAuditedValue()).isNotNull();
+        // and when
+        term.setBudgetedValue(new BigDecimal("123.45"));
+        budgetAssignmentService.recalculateTerm(term, BudgetCalculationType.AUDITED);
+        // then
+        assertThat(term.getBudgetedValue()).isNotNull();
+        assertThat(term.getAuditedValue()).isNull();
+
+    }
+
+    @Test
+    public void recalculateTerm_works() throws Exception {
+
+        // given
+        budgetAssignmentService.budgetCalculationResultLeaseTermLinkRepository = mockBudgetCalculationResultLeaseTermLinkRepository;
+        LeaseTermForServiceCharge term = new LeaseTermForServiceCharge();
+        BudgetCalculationResult result1 = new BudgetCalculationResult();
+        result1.setValue(new BigDecimal("123.45"));
+        BudgetCalculationResult result2 = new BudgetCalculationResult();
+        result2.setValue(new BigDecimal("100.00"));
+
+        // expect
+        context.checking(new Expectations(){{
+            allowing(mockBudgetCalculationResultLeaseTermLinkRepository).findByLeaseTerm(term);
+            will(returnValue(Arrays.asList(new BudgetCalculationResultLeaseTermLink(result1, term), new BudgetCalculationResultLeaseTermLink(result2, term))));
+        }});
+
+        // when
+        result1.setType(BudgetCalculationType.BUDGETED);
+        result2.setType(BudgetCalculationType.BUDGETED);
+        budgetAssignmentService.recalculateTerm(term, BudgetCalculationType.BUDGETED);
 
         // then
-        assertThat(termForServiceCharge.getAuditedValue()).isEqualTo(result.getValue());
-        assertThat(termForServiceCharge.getBudgetedValue()).isEqualTo(previousResult1.getValue().add(previousResult2.getValue()));
+        assertThat(term.getBudgetedValue()).isEqualTo(result1.getValue().add(result2.getValue()));
+        assertThat(term.getBudgetedValue()).isEqualTo(new BigDecimal("223.45"));
+
+        // when
+        result1.setType(BudgetCalculationType.AUDITED);
+        result2.setType(BudgetCalculationType.AUDITED);
+        budgetAssignmentService.recalculateTerm(term, BudgetCalculationType.AUDITED);
+
+        // then
+        assertThat(term.getAuditedValue()).isEqualTo(result1.getValue().add(result2.getValue()));
+        assertThat(term.getAuditedValue()).isEqualTo(new BigDecimal("223.45"));
+
+        // when
+        result1.setType(BudgetCalculationType.BUDGETED);
+        result2.setType(BudgetCalculationType.AUDITED);
+        budgetAssignmentService.recalculateTerm(term, BudgetCalculationType.AUDITED);
+
+        // then
+        assertThat(term.getAuditedValue()).isEqualTo(result2.getValue());
+        assertThat(term.getAuditedValue()).isEqualTo(new BigDecimal("100.00"));
+
     }
 
 } 
