@@ -235,7 +235,12 @@ public class BudgetService {
         for (Occupancy occupancy : lease.getOccupancies()) {
             com.google.common.collect.Lists.newArrayList(budget.getItems()).stream().sorted(Comparator.comparing(BudgetItem::getCharge))
                     .forEach(bi -> {
-                        invoiceItemValuesForLease.addAll(invoiceItemValuesForBudgetItemAndInterval(bi, occupancy.getEffectiveInterval(), occupancy.getUnit().getReference()));
+                        final LocalDateInterval calculationInterval = occupancy.getEffectiveInterval()
+                                .overlap(budget.getEffectiveInterval());
+                        if (calculationInterval!=null) {
+                            invoiceItemValuesForLease.addAll(invoiceItemValuesForBudgetItemAndInterval(bi,
+                                    calculationInterval, occupancy.getUnit().getReference()));
+                        }
                     });
         }
         List<InvoiceItemValueForBudgetItem> iiVms = new ArrayList<>();
