@@ -365,7 +365,7 @@ public class BudgetAssignmentService {
                 if (occupancy.getEffectiveInterval().overlaps(budget.getInterval())){
                     final List<InMemBudgetCalculation> inMemCalcs = budgetService
                             .auditedCalculationsForBudgetAndUnitAndCalculationInterval(budget, occupancy.getUnit(),
-                                    occupancy.getEffectiveInterval());
+                                    occupancy.getEffectiveInterval().overlap(budget.getInterval()));
                     List<BudgetCalculation> calculations = new ArrayList<>();
                     inMemCalcs.forEach(c->{
                         calculations.add(budgetCalculationRepository.findOrCreateBudgetCalculation(c));

@@ -199,11 +199,14 @@ public class BudgetService {
     public List<CalculationVMForLease> calculationVmsForLease(final Lease lease, final Budget budget){
         final List<CalculationVMForLease> calcVmsForLease = new ArrayList<>();
         for (Occupancy occupancy : lease.getOccupancies()){
-            auditedCalculationsForBudgetAndUnitAndCalculationInterval(
-                    budget,
-                    occupancy.getUnit(),
-                    occupancy.getEffectiveInterval()
-            ).forEach(c->calcVmsForLease.add(inMemCalculationToVMForLease(lease, c)));
+            final LocalDateInterval calculationInterval = occupancy.getEffectiveInterval().overlap(budget.getInterval());
+            if (calculationInterval!=null) {
+                auditedCalculationsForBudgetAndUnitAndCalculationInterval(
+                        budget,
+                        occupancy.getUnit(),
+                        calculationInterval
+                ).forEach(c -> calcVmsForLease.add(inMemCalculationToVMForLease(lease, c)));
+            }
         }
         return calcVmsForLease;
     }
