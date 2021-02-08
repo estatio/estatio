@@ -37,7 +37,7 @@ public class Budget_reconcile {
                 .calculateResults(budget, BudgetCalculationType.AUDITED);
         budget.setStatus(Status.RECONCILING);
         if (!doNotImpactLeaseTerms) {
-            budgetAssignmentService.assignNonAssignedCalculationResultsToLeases(budget);
+            budgetAssignmentService.assignNonAssignedCalculationResultsToLeases(budget, BudgetCalculationType.AUDITED);
         }
         budget.setStatus(Status.RECONCILED);
         return budget;

@@ -117,35 +117,39 @@ public class BudgetAssignmentService {
     }
 
     @Programmatic
-    public void assignNonAssignedCalculationResultsToLeases(final Budget budget) {
+    public void assignNonAssignedCalculationResultsToLeases(final Budget budget, final BudgetCalculationType budgetCalculationType) {
         final List<BudgetCalculationResult> calculationResultsForBudget = budgetCalculationResultRepository.findByBudget(budget);
-        List<BudgetCalculationResult> nonAssignedResults = calculationResultsForBudget.stream().filter(r->budgetCalculationResultLeaseTermLinkRepository.findByBudgetCalculationResult(r).isEmpty()).collect(Collectors.toList());
-        List<Occupancy> distinctOccupanciesInResults = nonAssignedResults.stream().map(r->r.getOccupancy()).distinct().collect(Collectors.toList());
+        List<BudgetCalculationResult> nonAssignedResultsForType = calculationResultsForBudget.stream()
+                .filter(r->budgetCalculationResultLeaseTermLinkRepository.findByBudgetCalculationResult(r).isEmpty())
+                .filter(r->r.getType() == budgetCalculationType)
+                .collect(Collectors.toList());
+        List<Occupancy> distinctOccupanciesInResults = nonAssignedResultsForType.stream().map(r->r.getOccupancy()).distinct().collect(Collectors.toList());
         for (Occupancy occupancy : distinctOccupanciesInResults){
-            List<BudgetCalculationResult> nonAssignedResultsForOccupancy = nonAssignedResults.stream().filter(r->r.getOccupancy().equals(occupancy)).collect(Collectors.toList());
+            List<BudgetCalculationResult> nonAssignedResultsForOccupancy = nonAssignedResultsForType.stream().filter(r->r.getOccupancy().equals(occupancy)).collect(Collectors.toList());
             assignNonAssignedCalculationResultsToLeaseFor(occupancy, nonAssignedResultsForOccupancy);
         }
     }
 
     /* Convenience for possible mixin on a lease */
     @Programmatic
-    public void assignNonAssignedCalculationResultsToLeaseFor(final Lease lease, final Budget budget){
+    public void assignNonAssignedCalculationResultsToLeaseFor(final Lease lease, final Budget budget, final BudgetCalculationType budgetCalculationType){
         for (Occupancy occupancy : lease.getOccupancies()){
             List<BudgetCalculationResult> nonAssignedResultsForOccupancy = budgetCalculationResultRepository.findByBudget(budget).stream()
                     .filter(cr -> cr.getOccupancy().equals(occupancy))
                     .filter(r->budgetCalculationResultLeaseTermLinkRepository.findByBudgetCalculationResult(r).isEmpty())
+                    .filter(r->r.getType()==budgetCalculationType)
                     .collect(Collectors.toList());
             assignNonAssignedCalculationResultsToLeaseFor(occupancy, nonAssignedResultsForOccupancy);
         }
     }
 
     @Programmatic
-    public void assignNonAssignedCalculationResultsToLeaseFor(final Occupancy occupancy, List<BudgetCalculationResult> nonAssignedResultsForOccupancy){
+    void assignNonAssignedCalculationResultsToLeaseFor(final Occupancy occupancy, List<BudgetCalculationResult> nonAssignedResultsForOccupancyAndType){
 
-        List<Charge> distinctInvoiceChargesForOccupancy = nonAssignedResultsForOccupancy.stream().map(r->r.getInvoiceCharge()).distinct().collect(Collectors.toList());
+        List<Charge> distinctInvoiceChargesForOccupancy = nonAssignedResultsForOccupancyAndType.stream().map(r->r.getInvoiceCharge()).distinct().collect(Collectors.toList());
         Lease lease = occupancy.getLease();
 
-        if (nonAssignedResultsForOccupancy.size() != distinctInvoiceChargesForOccupancy.size()){
+        if (nonAssignedResultsForOccupancyAndType.size() != distinctInvoiceChargesForOccupancy.size()){
             // this should not be possible
             String message = String.format("Multiple budget calculation results with same invoice charge found for occupancy %s.", occupancy.title());
             message.concat(String.format("The calculation results were not assigned to lease %s.", lease.getReference()));
@@ -154,7 +158,7 @@ public class BudgetAssignmentService {
             return;
         }
 
-        for (BudgetCalculationResult result : nonAssignedResultsForOccupancy){
+        for (BudgetCalculationResult result : nonAssignedResultsForOccupancyAndType){
 
             /*
                 When type = BUDGETED we update all service charge terms found on lease items with charge corresponding to budgetcalculation result that are active during the budget period.

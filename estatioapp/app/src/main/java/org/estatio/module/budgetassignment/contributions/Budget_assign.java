@@ -36,7 +36,7 @@ public class Budget_assign {
         budgetCalculationService.calculate(budget, BudgetCalculationType.BUDGETED, budget.getStartDate(), budget.getEndDate(), true);
         List<BudgetCalculationResult> results = budgetAssignmentService.calculateResults(budget, BudgetCalculationType.BUDGETED);
         if (!doNotImpactLeaseTerms){
-            budgetAssignmentService.assignNonAssignedCalculationResultsToLeases(budget);
+            budgetAssignmentService.assignNonAssignedCalculationResultsToLeases(budget, BudgetCalculationType.BUDGETED);
         }
         budget.setStatus(Status.ASSIGNED);
         return budget;
