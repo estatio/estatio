@@ -155,6 +155,7 @@ public class OccupancyRepository extends UdoDomainRepositoryAndFactory<Occupancy
     @Programmatic
     public List<Occupancy> occupanciesByUnitAndInterval(final Unit unit, final LocalDateInterval localDateInterval) {
         return findByUnit(unit).stream()
+                .filter(occupancy -> occupancy.getEffectiveInterval()!=null)
                 .filter(occupancy -> occupancy.getEffectiveInterval().overlaps(localDateInterval))
                 .collect(Collectors.toList());
     }
