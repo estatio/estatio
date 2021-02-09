@@ -67,36 +67,80 @@ public class BudgetAssignmentService {
         if (!occupanciesForUnitDuringBudgetInterval.isEmpty()) {
 
             if (overlappingOccupanciesFoundIn(occupanciesForUnitDuringBudgetInterval)) {
+
                 String message = String.format("Overlapping occupancies found for unit %s", unit.getReference());
                 message.concat(". No calculation results made for this unit.");
                 messageService.warnUser(message);
                 LOG.warn(message);
+
             } else {
 
                 List<BudgetCalculation> calculationsForUnitAndType = budgetCalculationRepository.findByBudgetAndUnitAndType(budget, unit, type);
-                List<Charge> invoiceChargesUsed = calculationsForUnitAndType.stream().map(c -> c.getInvoiceCharge()).distinct().collect(Collectors.toList());
 
                 for (Occupancy occupancy : occupanciesForUnitDuringBudgetInterval) {
+                    // we calculate an audited result only when no manual intervention is needed
+                    // this is the case when lease and occupancy cover budget period
+                    // or when prev/next and their occs together cover budget period
+                    if (type==BudgetCalculationType.BUDGETED
+                            || leaseAndOccupancyCoverBudgetInterval(occupancy, budget)
+                            || occupanciesOfleaseAndLeaseRenewalsCoverBudgetInterval(occupancy, budget)) {
 
-                    for (Charge charge : invoiceChargesUsed) {
-                        BigDecimal value = BigDecimal.ZERO;
-                        List<BudgetCalculation> calculationsForCharge = calculationsForUnitAndType.stream().filter(c -> c.getInvoiceCharge().equals(charge)).collect(Collectors.toList());
-                        for (BudgetCalculation calc : calculationsForCharge) {
-                            value = value.add(calc.getValue());
+                        results.addAll(calculateResultsForOccupancy(budget, occupancy, type, calculationsForUnitAndType));
+
+                    } else {
+
+                        if (occupancy.getLease().getEffectiveInterval().contains(budget.getInterval()) && !occupancy.getEffectiveInterval().contains(budget.getInterval())) {
+
+                            String msg = String
+                                    .format("Lease %s covers budget interval but the occupancy does not - handle manually",
+                                            occupancy.getLease().getReference());
+                            messageService.warnUser(msg);
+                            LOG.warn(msg);
+                            return Lists.emptyList();
+
+                        } else {
+
+                            String msg = String
+                                    .format("Lease %s has started or ended during budget interval and has/is no renewal - handle manually",
+                                            occupancy.getLease().getReference());
+                            messageService.warnUser(msg);
+                            LOG.warn(msg);
+                            return Lists.emptyList();
+
                         }
-                        BudgetCalculationResult calcResult = budgetCalculationResultRepository.upsertBudgetCalculationResult(budget, occupancy, charge, type, value);
-                        results.add(calcResult);
+
                     }
 
                 }
 
-                // finalize calculations
-                calculationsForUnitAndType.stream().forEach(c -> c.setStatus(Status.ASSIGNED));
-
             }
+
         }
 
         return results;
+    }
+
+    List<BudgetCalculationResult> calculateResultsForOccupancy(final Budget budget, final Occupancy occupancy, final BudgetCalculationType type, final List<BudgetCalculation> calculationsForUnitAndType){
+
+        List<BudgetCalculationResult> results = new ArrayList<>();
+        List<Charge> invoiceChargesUsed = calculationsForUnitAndType.stream().map(c -> c.getInvoiceCharge()).distinct().collect(Collectors.toList());
+
+        for (Charge charge : invoiceChargesUsed) {
+            BigDecimal value = BigDecimal.ZERO;
+            List<BudgetCalculation> calculationsForCharge = calculationsForUnitAndType.stream()
+                    .filter(c -> c.getInvoiceCharge().equals(charge)).collect(Collectors.toList());
+            for (BudgetCalculation calc : calculationsForCharge) {
+                value = value.add(calc.getValue());
+            }
+            BudgetCalculationResult calcResult = budgetCalculationResultRepository
+                    .upsertBudgetCalculationResult(budget, occupancy, charge, type, value);
+            results.add(calcResult);
+        }
+
+        calculationsForUnitAndType.stream().forEach(c -> c.setStatus(Status.ASSIGNED));
+
+        return results;
+
     }
 
     boolean overlappingOccupanciesFoundIn(final List<Occupancy> occupancies){
@@ -182,8 +226,9 @@ public class BudgetAssignmentService {
             }
 
             /*
-                When type = AUDITED we update all service charge terms found on lease with lease items with charge corresponding to budgetcalculation result
-                for leases that are active for the entire budget period or that have previous/next together covering the entire budget period.
+                When type = AUDITED we update all service charge terms found on lease with lease items with charge corresponding to budgetcalculation result.
+                There shoud be audited calculation results only for leases that are active for the entire budget period or that have previous/next
+                together covering the entire budget period.
                 If not, we log a warning and do not assign. These are left for manual treatment for the moment.
                 - if no lease item is found DO NOT create one and log a warning
                 - if a term is found that exceeds the budget enddate, we will split the term
@@ -206,26 +251,20 @@ public class BudgetAssignmentService {
             final Lease lease,
             final BudgetCalculationResult budgetCalculationResult) {
 
-        if (budgetCalculationResult.leaseCoversBudgetInterval()){
+        if (leaseAndOccupancyCoverBudgetInterval(budgetCalculationResult.getOccupancy(), budgetCalculationResult.getBudget())){
 
-            if (budgetCalculationResult.occupancyCoversLeaseEffectiveInterval()){
                 return findExistingLeaseItemsForServiceCharge(lease, budgetCalculationResult);
-
-            } else {
-                String msg = String.format("Lease %s covers budget interval but the occupancy does not - handle manually", budgetCalculationResult.getOccupancy().getLease().getReference());
-                messageService.warnUser(msg);
-                LOG.warn(msg);
-                return Lists.emptyList();
-            }
 
         } else {
 
-            if (budgetCalculationResult.occupanciesOfleaseAndLeaseRenewalsCoverBudgetInterval()){
+            if (occupanciesOfleaseAndLeaseRenewalsCoverBudgetInterval(budgetCalculationResult.getOccupancy(), budgetCalculationResult.getBudget())){
 
                 return findExistingLeaseItemsForServiceCharge(lease, budgetCalculationResult);
 
             } else {
-                String msg = String.format("Lease %s has started or ended during budget interval and has/is no renewal - handle manually", budgetCalculationResult.getOccupancy().getLease().getReference());
+
+                // we should not hit this code, because there should be no budget calculation results for this case
+                String msg = String.format("WARNING: trying to update lease item(s) with audited value - Lease %s has started or ended during budget interval and has/is no renewal - handle manually", budgetCalculationResult.getOccupancy().getLease().getReference());
                 messageService.warnUser(msg);
                 LOG.warn(msg);
                 return Lists.emptyList();
@@ -355,14 +394,14 @@ public class BudgetAssignmentService {
         if (budget.getStatus()!= org.estatio.module.budget.dom.budget.Status.RECONCILED) return result; // safeguard
 
         for (Occupancy occupancy : lease.getOccupancies()){
-            // check if the occupancy effective interval contains budget interval
-            // if so, just return the calculation results that are there already
+
             if (occupancy.getEffectiveInterval().contains(budget.getInterval())) {
 
                 result.addAll(budgetCalculationResultRepository
                         .findByBudgetAndOccupancyAndType(budget, occupancy, BudgetCalculationType.AUDITED));
 
             } else {
+
                 if (occupancy.getEffectiveInterval().overlaps(budget.getInterval())){
                     final List<InMemBudgetCalculation> inMemCalcs = budgetService
                             .auditedCalculationsForBudgetAndUnitAndCalculationInterval(budget, occupancy.getUnit(),
@@ -371,17 +410,53 @@ public class BudgetAssignmentService {
                     inMemCalcs.forEach(c->{
                         calculations.add(budgetCalculationRepository.findOrCreateBudgetCalculation(c));
                     });
-                    // TODO: create BudgetCalculationResults - however: there is already a budget calculation result for the occupancy,
-                    // but it is just not connected to the lease items
-                    // If the users decide to create a new budget item with a fixed amount for reconciliation we may need to delete the assigned budget calc result,
-                    // create a new one (pro rata) and assign this for the fixed item. Also we may have to do some magic to create the term - a calculation that
-                    // looks for already invoiced amounts and deducts them from the total audited amount of all the (pro rata) calculation results ...
-
-                    // TODO: set calculations to ASSIGNED (these
+                    result.addAll(calculateResultsForOccupancy(budget, occupancy, BudgetCalculationType.AUDITED, calculations));
                 }
+
             }
         }
         return result;
+    }
+
+    @Programmatic
+    public boolean leaseAndOccupancyCoverBudgetInterval(final Occupancy occupancy, final Budget budget){
+        return occupancy.getEffectiveInterval().contains(budget.getInterval()) && occupancy.getLease().getEffectiveInterval().contains(budget.getInterval());
+    }
+
+    @Programmatic
+    public boolean occupanciesOfleaseAndLeaseRenewalsCoverBudgetInterval(final Occupancy occupancy, final Budget budget){
+        if (leaseAndOccupancyCoverBudgetInterval(occupancy, budget)) return true;
+        // find first linked lease for budget
+        Lease firstLeaseIfAny = occupancy.getLease();
+        while (firstLeaseIfAny!=null && !firstLeaseIfAny.getEffectiveInterval().contains(budget.getStartDate())){
+            firstLeaseIfAny = (Lease) firstLeaseIfAny.getPrevious();
+        }
+        if (firstLeaseIfAny==null) return false;
+        // find last linked lease for budget
+        Lease lastLeaseIfAny = occupancy.getLease();
+        while (lastLeaseIfAny!=null && !lastLeaseIfAny.getEffectiveInterval().contains(budget.getEndDate())){
+            lastLeaseIfAny = (Lease) lastLeaseIfAny.getNext();
+        }
+        if (lastLeaseIfAny==null) return false;
+
+        // at this point we have a first and last lease covering the budget period
+        // we now check if the relevant occupancies are covering the lease effective interval for each
+        Lease leaseToCheck = firstLeaseIfAny;
+        if (!firstOccupancyForUnitIntervalCoversLeaseInterval(leaseToCheck, occupancy.getUnit())) return false;
+        while (!leaseToCheck.getNext().equals(lastLeaseIfAny)){
+            leaseToCheck = (Lease) firstLeaseIfAny.getNext();
+            if (!firstOccupancyForUnitIntervalCoversLeaseInterval(leaseToCheck, occupancy.getUnit())) return false;
+        }
+        if (!firstOccupancyForUnitIntervalCoversLeaseInterval(lastLeaseIfAny, occupancy.getUnit())) return false;
+
+        return true;
+    }
+
+    private boolean firstOccupancyForUnitIntervalCoversLeaseInterval(final Lease lease, final Unit unit){
+        final Occupancy firstOcc = com.google.api.client.util.Lists.newArrayList(lease.getOccupancies()).stream()
+                .filter(o -> o.getUnit().equals(unit)).findFirst().orElse(null);
+        if (firstOcc==null || !firstOcc.getInterval().contains(lease.getEffectiveInterval())) return false;
+        return true;
     }
 
     @Inject UnitRepository unitRepository;

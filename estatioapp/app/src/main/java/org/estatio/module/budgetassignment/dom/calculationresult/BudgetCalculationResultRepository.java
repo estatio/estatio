@@ -67,6 +67,10 @@ public class BudgetCalculationResultRepository extends UdoDomainRepositoryAndFac
         return allMatches("findByBudgetAndOccupancyAndType", "budget", budget, "occupancy", occupancy, "type", type);
     }
 
+    public List<BudgetCalculationResult> findByOccupancy(final Occupancy occupancy){
+        return allMatches("findByOccupancy", "occupancy", occupancy);
+    }
+
     public List<BudgetCalculationResult> allBudgetCalculationResults(){
         return allInstances();
     }

@@ -31,6 +31,7 @@ import org.estatio.module.budget.dom.budget.Status;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.module.budget.dom.budgetcalculation.CalculationVMForLease;
 import org.estatio.module.budget.dom.partioning.PartitioningRepository;
+import org.estatio.module.budgetassignment.dom.BudgetAssignmentService;
 import org.estatio.module.budgetassignment.dom.BudgetService;
 import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResult;
 import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResultRepository;
@@ -131,6 +132,20 @@ public class BudgetMenu {
                 Collectors.toList());
     }
 
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
+    public List<BudgetCalculationResult> calculateAuditedBudgetCalculationResultsForLease(final Lease lease, final Budget budget){
+        return budgetAssignmentService.calculateAuditedResultsForLease(budget, lease);
+    }
+
+    public List<Lease> autoComplete0CalculateAuditedBudgetCalculationResultsForLease(@MinLength(5) final String search){
+        return leaseRepository.autoComplete(search);
+    }
+
+    public List<Budget> choices1CalculateAuditedBudgetCalculationResultsForLease(final Lease lease, final Budget budget){
+        return budgetRepository.findByProperty(lease.getProperty()).stream().filter(b->b.getStatus()==Status.RECONCILED).collect(
+                Collectors.toList());
+    }
+
     @Inject BudgetService budgetService;
 
     @Inject ExcelService excelService;
@@ -144,5 +159,7 @@ public class BudgetMenu {
     @Inject LeaseRepository leaseRepository;
 
     @Inject PartitioningRepository partitioningRepository;
+
+    @Inject BudgetAssignmentService budgetAssignmentService;
 
 }

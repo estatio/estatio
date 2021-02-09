@@ -19,10 +19,10 @@ import org.estatio.module.lease.dom.LeaseTermForServiceCharge;
  * This cannot be inlined because Lease doesn't know about BudgetCalculationResultLinkRepository.
  */
 @Mixin
-public class LeaseTerm_BudgetCalculationResults {
+public class LeaseTerm_budgetCalculationResults {
 
     private final LeaseTermForServiceCharge term;
-    public LeaseTerm_BudgetCalculationResults(LeaseTermForServiceCharge term){
+    public LeaseTerm_budgetCalculationResults(LeaseTermForServiceCharge term){
         this.term = term;
     }
 

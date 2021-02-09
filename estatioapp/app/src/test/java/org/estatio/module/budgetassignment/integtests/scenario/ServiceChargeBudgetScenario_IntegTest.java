@@ -26,6 +26,7 @@ import org.estatio.module.budget.dom.budgetcalculation.Status;
 import org.estatio.module.budget.dom.keytable.KeyTable;
 import org.estatio.module.budget.fixtures.budgets.enums.Budget_enum;
 import org.estatio.module.budget.fixtures.partitioning.enums.Partitioning_enum;
+import org.estatio.module.budgetassignment.app.BudgetMenu;
 import org.estatio.module.budgetassignment.contributions.Budget_assign;
 import org.estatio.module.budgetassignment.contributions.Budget_reconcile;
 import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResult;
@@ -122,6 +123,7 @@ public class ServiceChargeBudgetScenario_IntegTest extends BudgetAssignmentModul
         assign_budget();
         calculate_audited();
         reconcile_budget();
+        calculate_for_lease();
     }
 
     public static BigDecimal U1_BVAL_1 = new BigDecimal("1928.57");
@@ -300,16 +302,16 @@ public class ServiceChargeBudgetScenario_IntegTest extends BudgetAssignmentModul
 
         // then
         final List<BudgetCalculation> assignedAuditedCalculations = budgetCalculationRepository.findByBudgetAndTypeAndStatus(budget, BudgetCalculationType.AUDITED, Status.ASSIGNED);
-        assertThat(assignedAuditedCalculations).hasSize(28);
+        assertThat(assignedAuditedCalculations).hasSize(5);
 
         final List<BudgetCalculation> newAuditedCalculations = budgetCalculationRepository.findByBudgetAndTypeAndStatus(budget, BudgetCalculationType.AUDITED, Status.NEW);
-        assertThat(newAuditedCalculations).hasSize(5);
+        assertThat(newAuditedCalculations).hasSize(28);
 
         final List<BudgetCalculationResult> allResults = budgetCalculationResultRepository.findByBudget(budget);
         final List<BudgetCalculationResult> budgetedResults = allResults.stream().filter(r->r.getType()==BudgetCalculationType.BUDGETED).collect(Collectors.toList());
         assertThat(budgetedResults).hasSize(14); // still
         final List<BudgetCalculationResult> auditedResults = allResults.stream().filter(r->r.getType()==BudgetCalculationType.AUDITED).collect(Collectors.toList());
-        assertThat(auditedResults).hasSize(14);
+        assertThat(auditedResults).hasSize(2);
 
         // check lease poison
         LeaseItem item1 = leasePoison.findFirstItemOfTypeAndCharge(LeaseItemType.SERVICE_CHARGE, invoiceCharge1);
@@ -325,12 +327,36 @@ public class ServiceChargeBudgetScenario_IntegTest extends BudgetAssignmentModul
         checkResultsAndTermsForLease(leasePoison, BudgetCalculationType.AUDITED, new ExpectedTestResult(2, Arrays.asList(U1_BVAL_1,U1_BVAL_2), Arrays.asList(U1_BVAL_1.subtract(BigDecimal.valueOf(357.14)),U1_BVAL_2), Arrays.asList(invoiceCharge1, invoiceCharge2)));
         checkResultsAndTermsForLease(leaseHello6, BudgetCalculationType.AUDITED, new ExpectedTestResult(0, Arrays.asList(), Arrays.asList(), Arrays.asList()));
 
-        // all other occupancies do no cover the budget period and therefore the lease terms are not touched
+        // all other occupancies do no cover the budget period and therefore there are no calculation results yet the lease terms are not touched
+        checkLeaseTermsNotTouchedForReconciliation(leaseMiracle,0);
+        checkLeaseTermsNotTouchedForReconciliation(leaseHello3, 0);
+        checkLeaseTermsNotTouchedForReconciliation(leaseDago, 0);
+        checkLeaseTermsNotTouchedForReconciliation(leaseNlBank, 0);
+        checkLeaseTermsNotTouchedForReconciliation(leaseHyper, 0);
+
+    }
+
+    public void calculate_for_lease() throws Exception {
+
+        // when
+        budgetMenu.calculateAuditedBudgetCalculationResultsForLease(leaseMiracle, budget);
+
+        // then
+        final List<BudgetCalculation> assignedAuditedCalculations = budgetCalculationRepository.findByBudgetAndTypeAndStatus(budget, BudgetCalculationType.AUDITED, Status.ASSIGNED);
+        assertThat(assignedAuditedCalculations).hasSize(10);
+        final List<BudgetCalculation> newAuditedCalculations = budgetCalculationRepository.findByBudgetAndTypeAndStatus(budget, BudgetCalculationType.AUDITED, Status.NEW);
+        assertThat(newAuditedCalculations).hasSize(28); // still... because we created new calculations with different start and enddate
+
+        final List<BudgetCalculation> calcsForMiracle = assignedAuditedCalculations.stream()
+                .filter(c -> c.getUnit().equals(leaseMiracle.getOccupancies().first().getUnit())).collect(Collectors.toList());
+        assertThat(calcsForMiracle).hasSize(5);
+
+        calcsForMiracle.forEach(c->{
+            assertThat(c.getCalculationStartDate()).isEqualTo(budget.getStartDate());
+            assertThat(c.getCalculationEndDate()).isEqualTo(leaseMiracle.getOccupancies().first().getEndDate());
+        });
+        
         checkLeaseTermsNotTouchedForReconciliation(leaseMiracle,2);
-        checkLeaseTermsNotTouchedForReconciliation(leaseHello3, 2);
-        checkLeaseTermsNotTouchedForReconciliation(leaseDago, 4);
-        checkLeaseTermsNotTouchedForReconciliation(leaseNlBank, 2);
-        checkLeaseTermsNotTouchedForReconciliation(leaseHyper, 2);
 
     }
 
@@ -412,5 +438,7 @@ public class ServiceChargeBudgetScenario_IntegTest extends BudgetAssignmentModul
     }
 
     @Inject BudgetCalculationService budgetCalculationService;
+
+    @Inject BudgetMenu budgetMenu;
 
 }

@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.TreeSet;
 
+import org.assertj.core.api.Assertions;
 import org.assertj.core.util.Lists;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
@@ -17,6 +18,8 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
+import org.estatio.module.agreement.dom.Agreement;
+import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
 import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResult;
@@ -484,5 +487,181 @@ public class BudgetAssignmentService_Test {
         assertThat(term.getAuditedValue()).isEqualTo(new BigDecimal("100.00"));
 
     }
+
+    @Test
+    public void leaseCoversBudgetInterval_works() throws Exception {
+
+        // given
+        final LocalDate startDate = new LocalDate(2020, 1, 1);
+        final LocalDate endDate = new LocalDate(2023, 1, 1);
+        final Budget budget = new Budget();
+        budget.setStartDate(startDate);
+        budget.setEndDate(endDate);
+        Lease lease = new Lease();
+        lease.setStartDate(startDate);
+        Occupancy occupancy = new Occupancy();
+        occupancy.setLease(lease);
+
+        // when
+        lease.setTenancyEndDate(null);
+        // then
+        Assertions.assertThat(budgetAssignmentService.leaseAndOccupancyCoverBudgetInterval(occupancy, budget)).isTrue();
+        // and when
+        lease.setTenancyEndDate(endDate);
+        // then
+        Assertions.assertThat(budgetAssignmentService.leaseAndOccupancyCoverBudgetInterval(occupancy, budget)).isTrue();
+        // and when
+        lease.setTenancyEndDate(endDate.minusDays(1));
+        // then
+        Assertions.assertThat(budgetAssignmentService.leaseAndOccupancyCoverBudgetInterval(occupancy, budget)).isFalse();
+        // and when
+        lease.setStartDate(startDate.plusDays(1));
+        lease.setTenancyEndDate(endDate);
+        // then
+        Assertions.assertThat(budgetAssignmentService.leaseAndOccupancyCoverBudgetInterval(occupancy, budget)).isFalse();
+        // and when
+        lease.setStartDate(startDate);
+        lease.setTenancyEndDate(endDate);
+        occupancy.setStartDate(startDate.plusDays(1));
+        // then
+        Assertions.assertThat(budgetAssignmentService.leaseAndOccupancyCoverBudgetInterval(occupancy, budget)).isFalse();
+
+    }
+
+    @Test
+    public void occupanciesOfleaseAndLeaseRenewalsCoverBudgetInterval_no_renewals_works() throws Exception {
+
+        // given
+        final LocalDate startDate = new LocalDate(2020, 1, 1);
+        final LocalDate endDate = new LocalDate(2023, 1, 1);
+        final Budget budget = new Budget();
+        budget.setStartDate(startDate);
+        budget.setEndDate(endDate);
+        final Lease lease = new Lease();
+        lease.setStartDate(startDate);
+        lease.setTenancyEndDate(endDate);
+        Occupancy occupancy = new Occupancy();
+        occupancy.setLease(lease);
+        Unit unit = new Unit();
+        occupancy.setUnit(unit);
+
+        // when lease covers budget interval and occupancy covers lease eff interval
+        // then
+        Assertions.assertThat(budgetAssignmentService.occupanciesOfleaseAndLeaseRenewalsCoverBudgetInterval(occupancy, budget)).isTrue();
+
+        // when lease covers budget interval and occupancy does not cover lease eff interval
+        occupancy.setStartDate(startDate.plusDays(1));
+        // then
+        Assertions.assertThat(budgetAssignmentService.occupanciesOfleaseAndLeaseRenewalsCoverBudgetInterval(occupancy, budget)).isFalse();
+
+        // when lease starts during budget interval and no previous
+        lease.setStartDate(startDate.plusDays(1));
+        // then
+        Assertions.assertThat(budgetAssignmentService.occupanciesOfleaseAndLeaseRenewalsCoverBudgetInterval(occupancy, budget)).isFalse();
+
+        // when lease ends during budget interval and no next
+        lease.setStartDate(startDate);
+        lease.setTenancyEndDate(endDate.minusDays(1));
+        // then
+        Assertions.assertThat(budgetAssignmentService.occupanciesOfleaseAndLeaseRenewalsCoverBudgetInterval(occupancy, budget)).isFalse();
+
+    }
+
+    @Mock
+    Lease previousLease;
+
+    @Test
+    public void occupanciesOfleaseAndLeaseRenewalsCoverBudgetInterval_has_previous_works() throws Exception {
+
+        // given
+        final LocalDate startDate = new LocalDate(2020, 1, 1);
+        final LocalDate endDate = new LocalDate(2023, 1, 1);
+        final Budget budget = new Budget();
+        budget.setStartDate(startDate);
+        budget.setEndDate(endDate);
+        final Lease lease = new Lease(){
+            @Override public Agreement getPrevious() {
+                return previousLease;
+            }
+        };
+        lease.setTenancyEndDate(endDate);
+        Occupancy occupancy = new Occupancy();
+        occupancy.setLease(lease);
+        Unit unit = new Unit();
+        occupancy.setUnit(unit);
+        lease.getOccupancies().add(occupancy);
+
+        Occupancy previousOcc = new Occupancy();
+        previousOcc.setUnit(unit);
+
+        // expect
+        context.checking(new Expectations(){{
+            allowing(previousLease).getEffectiveInterval();
+            will(returnValue(LocalDateInterval.including(startDate.minusYears(1), startDate)));
+            allowing(previousLease).getOccupancies();
+            will(returnValue(new TreeSet<>(Arrays.asList(previousOcc))));
+            allowing(previousLease).getNext();
+            will(returnValue(lease));
+        }});
+
+        // when lease starts during budget interval and has previous
+        lease.setStartDate(startDate.plusDays(1));
+        // then
+        Assertions.assertThat(budgetAssignmentService.occupanciesOfleaseAndLeaseRenewalsCoverBudgetInterval(occupancy, budget)).isTrue();
+
+        // when previous occ not covering prev lease eff interval
+        previousOcc.setEndDate(startDate.minusDays(1));
+        // then
+        Assertions.assertThat(budgetAssignmentService.occupanciesOfleaseAndLeaseRenewalsCoverBudgetInterval(occupancy, budget)).isFalse();
+
+    }
+
+    @Mock
+    Lease nextLease;
+
+    @Test
+    public void occupanciesOfleaseAndLeaseRenewalsCoverBudgetInterval_has_next_works() throws Exception {
+
+        // given
+        final LocalDate startDate = new LocalDate(2020, 1, 1);
+        final LocalDate endDate = new LocalDate(2023, 1, 1);
+        final Budget budget = new Budget();
+        budget.setStartDate(startDate);
+        budget.setEndDate(endDate);
+        final Lease lease = new Lease(){
+            @Override public Agreement getNext() {
+                return nextLease;
+            }
+        };
+        lease.setStartDate(startDate);
+        Occupancy occupancy = new Occupancy();
+        occupancy.setLease(lease);
+        Unit unit = new Unit();
+        occupancy.setUnit(unit);
+        lease.getOccupancies().add(occupancy);
+
+        Occupancy nextOccupancy = new Occupancy();
+        nextOccupancy.setUnit(unit);
+
+        // expect
+        context.checking(new Expectations(){{
+            allowing(nextLease).getEffectiveInterval();
+            will(returnValue(LocalDateInterval.including(endDate.minusDays(1), endDate.plusYears(1))));
+            allowing(nextLease).getOccupancies();
+            will(returnValue(new TreeSet<>(Arrays.asList(nextOccupancy))));
+        }});
+
+        // when lease ends during budget interval and has next
+        lease.setTenancyEndDate(endDate.minusDays(1));
+        // then
+        Assertions.assertThat(budgetAssignmentService.occupanciesOfleaseAndLeaseRenewalsCoverBudgetInterval(occupancy, budget)).isTrue();
+
+        // when next occ not covering prev lease eff interval
+        nextOccupancy.setStartDate(endDate.plusDays(1));
+        // then
+        Assertions.assertThat(budgetAssignmentService.occupanciesOfleaseAndLeaseRenewalsCoverBudgetInterval(occupancy, budget)).isFalse();
+
+    }
+
 
 } 
