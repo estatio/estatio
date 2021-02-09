@@ -352,10 +352,11 @@ public class BudgetAssignmentService {
     @Programmatic
     public List<BudgetCalculationResult> calculateAuditedResultsForLease(final Budget budget, final Lease lease){
         List<BudgetCalculationResult> result = new ArrayList<>();
-        if (budget.getStatus()!= org.estatio.module.budget.dom.budget.Status.RECONCILED) return result;
+        if (budget.getStatus()!= org.estatio.module.budget.dom.budget.Status.RECONCILED) return result; // safeguard
+
         for (Occupancy occupancy : lease.getOccupancies()){
             // check if the occupancy effective interval contains budget interval
-            // if so, there should be calculation results already ...
+            // if so, just return the calculation results that are there already
             if (occupancy.getEffectiveInterval().contains(budget.getInterval())) {
 
                 result.addAll(budgetCalculationResultRepository
@@ -370,8 +371,13 @@ public class BudgetAssignmentService {
                     inMemCalcs.forEach(c->{
                         calculations.add(budgetCalculationRepository.findOrCreateBudgetCalculation(c));
                     });
-                    // TODO: create BudgetCalculationResults
-                    // TODO: set calculations to ASSIGNED
+                    // TODO: create BudgetCalculationResults - however: there is already a budget calculation result for the occupancy,
+                    // but it is just not connected to the lease items
+                    // If the users decide to create a new budget item with a fixed amount for reconciliation we may need to delete the assigned budget calc result,
+                    // create a new one (pro rata) and assign this for the fixed item. Also we may have to do some magic to create the term - a calculation that
+                    // looks for already invoiced amounts and deducts them from the total audited amount of all the (pro rata) calculation results ...
+
+                    // TODO: set calculations to ASSIGNED (these
                 }
             }
         }

@@ -1,8 +1,6 @@
 package org.estatio.module.budgetassignment.dom;
 
 import java.math.BigDecimal;
-import java.math.MathContext;
-import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -83,7 +81,7 @@ public class BudgetService_Test {
         BudgetService service = new BudgetService();
 
         LocalDate calculationStartDate = new LocalDate(2019, 7, 1);
-        LocalDate calculationEndDate = new LocalDate(2020,9,10);
+        LocalDate calculationEndDate = new LocalDate(2019,7,30);
         LocalDateInterval calculationInterval = LocalDateInterval.including(calculationStartDate, calculationEndDate);
 
         BigDecimal invoiceItemNetAmount = new BigDecimal("1234.56");
@@ -123,9 +121,17 @@ public class BudgetService_Test {
         invoiceItem.setChargeEndDate(calculationEndDate.plusDays(2));
         // then
         Assertions.assertThat(service.netamountForInvoiceItemAndCalculationInterval(invoiceItem, calculationInterval))
-                .isEqualTo(invoiceItemNetAmount.divide(new BigDecimal("3", MathContext.DECIMAL64)).setScale(6, RoundingMode.HALF_UP));
+                .isEqualTo(invoiceItemNetAmount.divide(new BigDecimal("3"), 6, BigDecimal.ROUND_HALF_UP));
         Assertions.assertThat(service.netamountForInvoiceItemAndCalculationInterval(invoiceItem, calculationInterval))
                 .isEqualTo(new BigDecimal("411.520000"));
+
+        // when calculation interval contained by charge interval
+        invoiceItem.setChargeStartDate(calculationStartDate);
+        invoiceItem.setChargeEndDate(calculationEndDate.plusDays(1));
+        Assertions.assertThat(service.netamountForInvoiceItemAndCalculationInterval(invoiceItem, calculationInterval))
+                .isEqualTo(invoiceItemNetAmount.multiply(new BigDecimal("30")).divide(new BigDecimal("31"), 6, BigDecimal.ROUND_HALF_UP));
+        Assertions.assertThat(service.netamountForInvoiceItemAndCalculationInterval(invoiceItem, calculationInterval))
+                .isEqualTo(new BigDecimal("1194.735484"));
 
         // A little scenario
 

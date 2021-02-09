@@ -140,12 +140,12 @@ public class BudgetService {
 
     BigDecimal netamountForInvoiceItemAndCalculationInterval(final IncomingInvoiceItem invoiceItem, final LocalDateInterval calculationInterval){
         final LocalDateInterval chargeInterval = LocalDateInterval
-                .including(invoiceItem.getChargeStartDate(), invoiceItem.getChargeEndDate());
+                .including(
+                        invoiceItem.getChargeStartDate()!=null ? invoiceItem.getChargeStartDate() : calculationInterval.startDate(),
+                        invoiceItem.getChargeEndDate()!=null ? invoiceItem.getChargeEndDate() : calculationInterval.endDate());
         if (calculationInterval.overlaps(chargeInterval) && invoiceItem.getNetAmount()!=null){
 
             if (calculationInterval.contains(chargeInterval)) return invoiceItem.getNetAmount();
-            if (chargeInterval.contains(calculationInterval)) return invoiceItem.getNetAmount();
-
             final int denominator = chargeInterval.days();
             final int numerator = chargeInterval.overlap(calculationInterval).days();
             return invoiceItem.getNetAmount().multiply(BigDecimal.valueOf(numerator)).divide(BigDecimal.valueOf(denominator), MathContext.DECIMAL64).setScale(
