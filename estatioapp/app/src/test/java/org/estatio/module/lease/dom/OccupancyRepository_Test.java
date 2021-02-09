@@ -27,13 +27,13 @@ import org.junit.Test;
 
 import org.apache.isis.applib.query.Query;
 
+import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 import org.incode.module.unittestsupport.dom.repo.FinderInteraction;
 import org.incode.module.unittestsupport.dom.repo.FinderInteraction.FinderMethod;
+
 import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
 import org.estatio.module.lease.dom.occupancy.OccupancyRepository;
-
-import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -123,12 +123,16 @@ public class OccupancyRepository_Test {
 
         @Before
         public void setup() {
-            Occupancy occupancy2015 = new Occupancy();
-            occupancy2015.setStartDate(new LocalDate(2015, 01, 01));
-            occupancy2015.setEndDate(new LocalDate(2015, 12, 31));
-            Occupancy occupancy2016 = new Occupancy();
-            occupancy2016.setStartDate(new LocalDate(2016, 01, 01));
-            occupancy2016.setEndDate(new LocalDate(2016, 12, 31));
+            Occupancy occupancy2015 = new Occupancy(){
+                @Override public LocalDateInterval getEffectiveInterval() {
+                    return LocalDateInterval.including(new LocalDate(2015, 01, 01), new LocalDate(2015, 12, 31));
+                }
+            };
+            Occupancy occupancy2016 = new Occupancy(){
+                @Override public LocalDateInterval getEffectiveInterval() {
+                    return LocalDateInterval.including(new LocalDate(2016, 01, 01), new LocalDate(2016, 12, 31));
+                }
+            };
             occupancyRepository = new OccupancyRepository() {
                 @Override
                 public List<Occupancy> findByUnit(final Unit unit) {

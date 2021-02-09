@@ -142,6 +142,7 @@ public class BudgetMenu {
     }
 
     public List<Budget> choices1CalculateAuditedBudgetCalculationResultsForLease(final Lease lease, final Budget budget){
+        if (lease==null) return null;
         return budgetRepository.findByProperty(lease.getProperty()).stream().filter(b->b.getStatus()==Status.RECONCILED).collect(
                 Collectors.toList());
     }

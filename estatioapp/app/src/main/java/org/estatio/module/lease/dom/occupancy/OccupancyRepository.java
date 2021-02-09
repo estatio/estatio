@@ -24,8 +24,6 @@ import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
-import org.estatio.module.lease.dom.occupancy.tags.Activity;
-import org.estatio.module.lease.dom.occupancy.tags.Sector;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.DomainService;
@@ -45,7 +43,9 @@ import org.estatio.module.asset.dom.UnitRepository;
 import org.estatio.module.base.dom.UdoDomainRepositoryAndFactory;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseRepository;
+import org.estatio.module.lease.dom.occupancy.tags.Activity;
 import org.estatio.module.lease.dom.occupancy.tags.Brand;
+import org.estatio.module.lease.dom.occupancy.tags.Sector;
 
 @DomainService(menuOrder = "40", repositoryFor = Occupancy.class, nature = NatureOfService.DOMAIN)
 public class OccupancyRepository extends UdoDomainRepositoryAndFactory<Occupancy> {
@@ -155,7 +155,7 @@ public class OccupancyRepository extends UdoDomainRepositoryAndFactory<Occupancy
     @Programmatic
     public List<Occupancy> occupanciesByUnitAndInterval(final Unit unit, final LocalDateInterval localDateInterval) {
         return findByUnit(unit).stream()
-                .filter(occupancy -> occupancy.getInterval().overlaps(localDateInterval))
+                .filter(occupancy -> occupancy.getEffectiveInterval().overlaps(localDateInterval))
                 .collect(Collectors.toList());
     }
 
