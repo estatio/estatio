@@ -1,5 +1,9 @@
 package org.estatio.module.lease.dom.amendments;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import javax.inject.Inject;
 
 import org.apache.isis.applib.annotation.Action;
@@ -8,10 +12,6 @@ import org.apache.isis.applib.annotation.Mixin;
 import org.estatio.module.lease.dom.InvoicingFrequency;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseStatus;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Mixin
 public class Lease_createLeaseAmendment {
@@ -49,14 +49,10 @@ public class Lease_createLeaseAmendment {
                 .stream()
                 .filter(lat -> lease.getAtPath().startsWith(lat.getAtPath()))
                 .collect(Collectors.toList());
-        if (lease.getAtPath().startsWith("/ITA")) {
-            return templatesForAtPath
-                    .stream()
-                    .filter(lat -> lat.getLeaseAmendmentType() == LeaseAmendmentType.COVID_WAVE_2)
-                    .collect(Collectors.toList());
-        }
-
-        return templatesForAtPath;
+        return templatesForAtPath
+                .stream()
+                .filter(lat -> lat.getLeaseAmendmentType() == LeaseAmendmentType.COVID_WAVE_2)
+                .collect(Collectors.toList());
     }
 
     public String validate$$(

@@ -82,6 +82,78 @@ public enum LeaseAmendmentTemplate {
             new LocalDate(2020,12,31),
             false,
             "/BEL"),
+    COVID2_FRA_66_PERC(
+            LeaseAmendmentType.COVID_WAVE_2,
+            new LocalDate(2020,11,1),
+            new BigDecimal("66.00"),
+            Arrays.asList(
+                    LeaseItemType.RENT,
+                    LeaseItemType.RENT_DISCOUNT,
+                    LeaseItemType.RENT_DISCOUNT_FIXED
+            ),
+            new LocalDate(2020,11,1),
+            new LocalDate(2020,11,30),
+            Arrays.asList(
+                    new Tuple<>(null, "FR2055") // DEFAULT
+            ),
+            new LocalDate(2020,11,1),
+            null,
+            null,
+            null,
+            null,
+            "-66C2",
+            new LocalDate(2020,10,1),
+            new LocalDate(2020,12,31),
+            false,
+            "/FRA"),
+    COVID2_FRA_100_PERC(
+            LeaseAmendmentType.COVID_WAVE_2,
+            new LocalDate(2020,11,1),
+            new BigDecimal("100.00"),
+            Arrays.asList(
+                    LeaseItemType.RENT,
+                    LeaseItemType.RENT_DISCOUNT,
+                    LeaseItemType.RENT_DISCOUNT_FIXED
+            ),
+            new LocalDate(2020,11,1),
+            new LocalDate(2020,11,30),
+            Arrays.asList(
+                    new Tuple<>(null, "FR2055") // DEFAULT
+            ),
+            new LocalDate(2020,11,1),
+            null,
+            null,
+            null,
+            null,
+            "-100C2",
+            new LocalDate(2020,10,1),
+            new LocalDate(2020,12,31),
+            false,
+            "/FRA"),
+    COVID2_FRA_FREESTYLE(
+            LeaseAmendmentType.COVID_WAVE_2,
+            new LocalDate(2020,11,1),
+            new BigDecimal("0.00"),
+            Arrays.asList(
+                    LeaseItemType.RENT,
+                    LeaseItemType.RENT_DISCOUNT,
+                    LeaseItemType.RENT_DISCOUNT_FIXED
+            ),
+            new LocalDate(2020,11,1),
+            new LocalDate(2020,11,30),
+            Arrays.asList(
+                    new Tuple<>(null, "FR2056") // DEFAULT
+            ),
+            new LocalDate(2020,11,1),
+            null,
+            null,
+            null,
+            null,
+            "-FSC2",
+            new LocalDate(2020,10,1),
+            new LocalDate(2020,12,31),
+            false,
+            "/FRA"),
     COVID_FRA_50_PERC(
             LeaseAmendmentType.COVID_WAVE_1,
             new LocalDate(2020,3,16), // min date because of lease selection

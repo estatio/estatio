@@ -30,14 +30,10 @@ public class Property_maintainLeaseAmendments {
                 .stream()
                 .filter(lat -> property.getAtPath().startsWith(lat.getAtPath()))
                 .collect(Collectors.toList());
-        if (property.getAtPath().startsWith("/ITA") || property.getAtPath().startsWith("/BEL")) {
             return templatesForAtPath
                     .stream()
                     .filter(lat -> lat.getLeaseAmendmentType() == LeaseAmendmentType.COVID_WAVE_2)
                     .collect(Collectors.toList());
-        }
-
-        return templatesForAtPath;
     }
 
 }
