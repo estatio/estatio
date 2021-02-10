@@ -1,6 +1,7 @@
 package org.estatio.module.budgetassignment.dom;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.TreeSet;
@@ -14,6 +15,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import org.apache.isis.applib.services.message.MessageService;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
@@ -21,10 +23,14 @@ import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 import org.estatio.module.agreement.dom.Agreement;
 import org.estatio.module.asset.dom.Unit;
 import org.estatio.module.budget.dom.budget.Budget;
+import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculation;
+import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationRepository;
 import org.estatio.module.budget.dom.budgetcalculation.BudgetCalculationType;
+import org.estatio.module.budget.dom.budgetcalculation.Status;
 import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResult;
 import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResultLeaseTermLink;
 import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResultLeaseTermLinkRepository;
+import org.estatio.module.budgetassignment.dom.calculationresult.BudgetCalculationResultRepository;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.lease.dom.InvoicingFrequency;
@@ -34,6 +40,7 @@ import org.estatio.module.lease.dom.LeaseItem;
 import org.estatio.module.lease.dom.LeaseItemType;
 import org.estatio.module.lease.dom.LeaseTermForServiceCharge;
 import org.estatio.module.lease.dom.occupancy.Occupancy;
+import org.estatio.module.lease.dom.occupancy.OccupancyRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -47,6 +54,304 @@ public class BudgetAssignmentService_Test {
     @Before
     public void before() throws Exception {
         budgetAssignmentService = new BudgetAssignmentService();
+    }
+
+    @Mock OccupancyRepository mockOccupancyRepository;
+    @Mock MessageService mockMessageService;
+    @Test
+    public void calculatResultsForUnit_when_overlapping_occupancies_works() throws Exception {
+
+        // given
+        budgetAssignmentService.occupancyRepository = mockOccupancyRepository;
+        budgetAssignmentService.messageService = mockMessageService;
+
+        Budget budget = new Budget();
+        Unit unit = new Unit();
+        Occupancy occupancy1 = new Occupancy();
+        Occupancy occupancy2 = new Occupancy();
+
+        // expect
+        context.checking(new Expectations(){{
+            oneOf(mockOccupancyRepository).occupanciesByUnitAndInterval(unit, budget.getInterval());
+            will(returnValue(Arrays.asList(occupancy1, occupancy2)));
+            oneOf(mockMessageService).warnUser("Overlapping occupancies found for unit null");
+        }});
+
+        // when
+        BudgetCalculationType type = BudgetCalculationType.BUDGETED;
+        budgetAssignmentService.calculatResultsForUnit(budget, type, unit);
+    }
+
+    @Mock BudgetCalculationRepository mockBudgetCalculationRepository;
+
+    @Test
+    public void calculatResultsForUnit_when_budgeted_works() throws Exception {
+
+        // given
+        budgetAssignmentService.occupancyRepository = mockOccupancyRepository;
+        budgetAssignmentService.budgetCalculationRepository = mockBudgetCalculationRepository;
+
+        Budget budget = new Budget();
+        Unit unit = new Unit();
+        Occupancy occupancy1 = new Occupancy();
+        occupancy1.setEndDate(new LocalDate(2020,12,31));
+        Occupancy occupancy2 = new Occupancy();
+        occupancy2.setStartDate(new LocalDate(2021,1,1));
+
+        BudgetCalculationType type = BudgetCalculationType.BUDGETED;
+
+        // expect
+        context.checking(new Expectations(){{
+            oneOf(mockOccupancyRepository).occupanciesByUnitAndInterval(unit, budget.getInterval());
+            will(returnValue(Arrays.asList(occupancy1, occupancy2)));
+            oneOf(mockBudgetCalculationRepository).findByBudgetAndUnitAndType(budget, unit, type);
+        }});
+
+        // when
+        budgetAssignmentService.calculatResultsForUnit(budget, type, unit);
+    }
+
+    @Test
+    public void calculatResultsForUnit_when_audited_when_lease_and_occupancy_cover_budget_interval_works() throws Exception {
+
+        // given
+        budgetAssignmentService.occupancyRepository = mockOccupancyRepository;
+        budgetAssignmentService.budgetCalculationRepository = mockBudgetCalculationRepository;
+
+        LocalDate budgetStartDate = new LocalDate(2020,1,1);
+        LocalDate budgetEndDate = new LocalDate(2020,12,31);
+        final LocalDateInterval budgetInterval = LocalDateInterval.including(budgetStartDate, budgetEndDate);
+        Budget budget = new Budget(){
+            @Override public LocalDateInterval getInterval() {
+                return budgetInterval;
+            }
+        };
+        Unit unit = new Unit();
+        Occupancy occupancy = new Occupancy(){
+            @Override public LocalDateInterval getEffectiveInterval() {
+                return budgetInterval;
+            }
+        };
+        Lease lease = new Lease(){
+            @Override public LocalDateInterval getEffectiveInterval() {
+                return budgetInterval;
+            }
+        };
+        occupancy.setLease(lease);
+
+        BudgetCalculationType type = BudgetCalculationType.AUDITED;
+
+        // expect
+        context.checking(new Expectations(){{
+            oneOf(mockOccupancyRepository).occupanciesByUnitAndInterval(unit, budget.getInterval());
+            will(returnValue(Arrays.asList(occupancy)));
+            oneOf(mockBudgetCalculationRepository).findByBudgetAndUnitAndType(budget, unit, type);
+        }});
+
+        // when
+        budgetAssignmentService.calculatResultsForUnit(budget, type, unit);
+    }
+
+    @Test
+    public void calculatResultsForUnit_when_audited_when_lease_does_but_occupancy_does_not_cover_budget_interval_works() throws Exception {
+
+        // given
+        budgetAssignmentService.occupancyRepository = mockOccupancyRepository;
+        budgetAssignmentService.budgetCalculationRepository = mockBudgetCalculationRepository;
+        budgetAssignmentService.messageService = mockMessageService;
+
+        LocalDate budgetStartDate = new LocalDate(2020,1,1);
+        LocalDate budgetEndDate = new LocalDate(2020,12,31);
+        final LocalDateInterval budgetInterval = LocalDateInterval.including(budgetStartDate, budgetEndDate);
+        Budget budget = new Budget(){
+            @Override public LocalDateInterval getInterval() {
+                return budgetInterval;
+            }
+        };
+        Unit unit = new Unit();
+        Occupancy occupancy1 = new Occupancy(){
+            private final LocalDateInterval localDateInterval = LocalDateInterval.including(budgetStartDate, budgetEndDate.minusDays(1));
+
+            @Override public LocalDateInterval getEffectiveInterval() {
+                return localDateInterval;
+            }
+            @Override public LocalDateInterval getInterval() {
+                return localDateInterval;
+            }
+        };
+        Occupancy occupancy2 = new Occupancy(){
+            private final LocalDateInterval localDateInterval = LocalDateInterval.including(budgetEndDate, budgetEndDate.plusYears(1));
+
+            @Override public LocalDateInterval getEffectiveInterval() {
+                return localDateInterval;
+            }
+            @Override public LocalDateInterval getInterval() {
+                return localDateInterval;
+            }
+        };
+        Lease lease = new Lease(){
+            private final LocalDateInterval localDateInterval = LocalDateInterval.including(budgetStartDate, budgetEndDate.minusDays(1));
+            @Override public LocalDateInterval getEffectiveInterval() {
+                return localDateInterval;
+            }
+        };
+        occupancy1.setLease(lease);
+        occupancy2.setLease(lease);
+
+        BudgetCalculationType type = BudgetCalculationType.AUDITED;
+
+        // expect
+        context.checking(new Expectations(){{
+            oneOf(mockOccupancyRepository).occupanciesByUnitAndInterval(unit, budget.getInterval());
+            will(returnValue(Arrays.asList(occupancy1, occupancy2)));
+            oneOf(mockBudgetCalculationRepository).findByBudgetAndUnitAndType(budget, unit, type);
+            exactly(2).of(mockMessageService).warnUser("Lease null has started or ended during budget interval and has/is no renewal - handle manually");
+        }});
+
+        // when
+        budgetAssignmentService.calculatResultsForUnit(budget, type, unit);
+    }
+
+    @Test
+    public void calculatResultsForUnit_when_audited_when_lease_does_not_cover_budget_interval_works() throws Exception {
+
+        // given
+        budgetAssignmentService.occupancyRepository = mockOccupancyRepository;
+        budgetAssignmentService.budgetCalculationRepository = mockBudgetCalculationRepository;
+        budgetAssignmentService.messageService = mockMessageService;
+
+        LocalDate budgetStartDate = new LocalDate(2020,1,1);
+        LocalDate budgetEndDate = new LocalDate(2020,12,31);
+        final LocalDateInterval budgetInterval = LocalDateInterval.including(budgetStartDate, budgetEndDate);
+        Budget budget = new Budget(){
+            @Override public LocalDateInterval getInterval() {
+                return budgetInterval;
+            }
+        };
+        Unit unit = new Unit();
+        Occupancy occupancy1 = new Occupancy(){
+            private final LocalDateInterval localDateInterval = LocalDateInterval.including(budgetStartDate, budgetEndDate.minusDays(1));
+
+            @Override public LocalDateInterval getEffectiveInterval() {
+                return localDateInterval;
+            }
+            @Override public LocalDateInterval getInterval() {
+                return localDateInterval;
+            }
+        };
+        Occupancy occupancy2 = new Occupancy(){
+            private final LocalDateInterval localDateInterval = LocalDateInterval.including(budgetEndDate, budgetEndDate.plusYears(1));
+
+            @Override public LocalDateInterval getEffectiveInterval() {
+                return localDateInterval;
+            }
+            @Override public LocalDateInterval getInterval() {
+                return localDateInterval;
+            }
+        };
+        Lease lease = new Lease(){
+            @Override public LocalDateInterval getEffectiveInterval() {
+                return budgetInterval;
+            }
+        };
+        occupancy1.setLease(lease);
+        occupancy2.setLease(lease);
+
+        BudgetCalculationType type = BudgetCalculationType.AUDITED;
+
+        // expect
+        context.checking(new Expectations(){{
+            oneOf(mockOccupancyRepository).occupanciesByUnitAndInterval(unit, budget.getInterval());
+            will(returnValue(Arrays.asList(occupancy1, occupancy2)));
+            oneOf(mockBudgetCalculationRepository).findByBudgetAndUnitAndType(budget, unit, type);
+            exactly(2).of(mockMessageService).warnUser("Lease null covers budget interval but the occupancy does not - handle manually");
+        }});
+
+        // when
+        budgetAssignmentService.calculatResultsForUnit(budget, type, unit);
+    }
+
+    @Mock BudgetCalculationResultRepository mockBudgetCalculationResultRepository;
+
+    @Test
+    public void calculateResultsForOccupancy_works() throws Exception {
+
+        // given
+        budgetAssignmentService.budgetCalculationResultRepository = mockBudgetCalculationResultRepository;
+        Budget budget = new Budget();
+        Occupancy occupancy = new Occupancy();
+        BudgetCalculationType type = BudgetCalculationType.AUDITED;
+        Charge ch1 = new Charge();
+        Charge ch2 = new Charge();
+
+        final BigDecimal c1_value = new BigDecimal("100.00");
+        final BigDecimal c2_value = new BigDecimal("23.45");
+        final BigDecimal c3_value = new BigDecimal("333.33");
+
+        BudgetCalculation c1 = new BudgetCalculation();
+        c1.setInvoiceCharge(ch1);
+        c1.setValue(c1_value);
+        c1.setCalculationType(type);
+        c1.setStatus(Status.NEW);
+
+        BudgetCalculation c2 = new BudgetCalculation();
+        c2.setInvoiceCharge(ch1);
+        c2.setValue(c2_value);
+        c2.setCalculationType(type);
+        c2.setStatus(Status.NEW);
+
+        BudgetCalculation c3 = new BudgetCalculation();
+        c3.setInvoiceCharge(ch2);
+        c3.setValue(c3_value);
+        c3.setCalculationType(type);
+        c3.setStatus(Status.NEW);
+
+
+        List<BudgetCalculation> calculationsForUnitAndType = new ArrayList<>();
+
+        // when empty list of calculations
+        List<BudgetCalculationResult> budgetCalculationResults = budgetAssignmentService
+                .calculateResultsForOccupancy(budget, occupancy, type, calculationsForUnitAndType);
+        assertThat(budgetCalculationResults).isEmpty();
+
+        // expect
+        context.checking(new Expectations(){{
+            oneOf(mockBudgetCalculationResultRepository).upsertBudgetCalculationResult(budget, occupancy, ch1, type, c1_value);
+            will(returnValue(new BudgetCalculationResult()));
+            allowing(mockBudgetCalculationResultRepository).upsertBudgetCalculationResult(budget, occupancy, ch1, type, c1_value.add(c2_value));
+            will(returnValue(new BudgetCalculationResult()));
+            oneOf(mockBudgetCalculationResultRepository).upsertBudgetCalculationResult(budget, occupancy, ch2, type, c3_value);
+            will(returnValue(new BudgetCalculationResult()));
+
+        }});
+
+        // when single charge, single calculation
+        calculationsForUnitAndType.add(c1);
+        budgetCalculationResults = budgetAssignmentService.calculateResultsForOccupancy(budget, occupancy, type, calculationsForUnitAndType);
+
+        // then
+        assertThat(budgetCalculationResults).hasSize(1);
+        assertThat(c1.getStatus()).isEqualTo(Status.ASSIGNED);
+
+        // when single charge, multiple calculations
+        calculationsForUnitAndType.add(c2);
+        budgetCalculationResults = budgetAssignmentService.calculateResultsForOccupancy(budget, occupancy, type, calculationsForUnitAndType);
+
+        // then
+        assertThat(budgetCalculationResults).hasSize(1);
+        assertThat(c1.getStatus()).isEqualTo(Status.ASSIGNED);
+        assertThat(c2.getStatus()).isEqualTo(Status.ASSIGNED);
+
+        // when multiple charge, multiple calculations
+        calculationsForUnitAndType.add(c3);
+        budgetCalculationResults = budgetAssignmentService.calculateResultsForOccupancy(budget, occupancy, type, calculationsForUnitAndType);
+
+        // then
+        assertThat(budgetCalculationResults).hasSize(2);
+        assertThat(c1.getStatus()).isEqualTo(Status.ASSIGNED);
+        assertThat(c2.getStatus()).isEqualTo(Status.ASSIGNED);
+        assertThat(c3.getStatus()).isEqualTo(Status.ASSIGNED);
+
     }
 
     @Test
@@ -660,6 +965,109 @@ public class BudgetAssignmentService_Test {
         nextOccupancy.setStartDate(endDate.plusDays(1));
         // then
         Assertions.assertThat(budgetAssignmentService.occupanciesOfleaseAndLeaseRenewalsCoverBudgetInterval(occupancy, budget)).isFalse();
+
+    }
+
+    @Test
+    public void findLeaseItemsForServiceChargeToUpdateForAudited_when_leaseAndOccupancyCoverBudgetInterval_works() throws Exception {
+
+        // given
+        BudgetAssignmentService budgetAssignmentService = new BudgetAssignmentService(){
+            @Override public boolean leaseAndOccupancyCoverBudgetInterval(
+                    final Occupancy occupancy, final Budget budget) {
+                return true;
+            }
+        };
+        Budget budget = new Budget();
+        Charge invoiceCharge = new Charge();
+        Lease lease = new Lease();
+        BudgetCalculationResult budgetCalculationResult = new BudgetCalculationResult();
+        budgetCalculationResult.setInvoiceCharge(invoiceCharge);
+        budgetCalculationResult.setBudget(budget);
+        LeaseItem scItem = new LeaseItem();
+        scItem.setType(LeaseItemType.SERVICE_CHARGE);
+        scItem.setCharge(invoiceCharge);
+        scItem.setLease(lease);
+        lease.getItems().add(scItem);
+        LeaseItem rentItem = new LeaseItem();
+        rentItem.setType(LeaseItemType.RENT);
+        lease.getItems().add(rentItem);
+
+        // when
+        final List<LeaseItem> leaseItemsForServiceChargeToUpdateForAudited = budgetAssignmentService
+                .findLeaseItemsForServiceChargeToUpdateForAudited(lease, budgetCalculationResult);
+        // then
+        Assertions.assertThat(leaseItemsForServiceChargeToUpdateForAudited).contains(scItem);
+
+    }
+
+    @Test
+    public void findLeaseItemsForServiceChargeToUpdateForAudited_when_occupanciesOfleaseAndLeaseRenewalsCoverBudgetInterval_works() throws Exception {
+
+        // given
+        BudgetAssignmentService budgetAssignmentService = new BudgetAssignmentService(){
+            @Override public boolean leaseAndOccupancyCoverBudgetInterval(
+                    final Occupancy occupancy, final Budget budget) {
+                return false;
+            }
+            @Override public boolean occupanciesOfleaseAndLeaseRenewalsCoverBudgetInterval(
+                    final Occupancy occupancy, final Budget budget) {
+                return true;
+            }
+        };
+        Budget budget = new Budget();
+        Charge invoiceCharge = new Charge();
+        Lease lease = new Lease();
+        BudgetCalculationResult budgetCalculationResult = new BudgetCalculationResult();
+        budgetCalculationResult.setInvoiceCharge(invoiceCharge);
+        budgetCalculationResult.setBudget(budget);
+        LeaseItem scItem = new LeaseItem();
+        scItem.setType(LeaseItemType.SERVICE_CHARGE);
+        scItem.setCharge(invoiceCharge);
+        scItem.setLease(lease);
+        lease.getItems().add(scItem);
+        LeaseItem rentItem = new LeaseItem();
+        rentItem.setType(LeaseItemType.RENT);
+        lease.getItems().add(rentItem);
+
+        // when
+        final List<LeaseItem> leaseItemsForServiceChargeToUpdateForAudited = budgetAssignmentService
+                .findLeaseItemsForServiceChargeToUpdateForAudited(lease, budgetCalculationResult);
+        // then
+        Assertions.assertThat(leaseItemsForServiceChargeToUpdateForAudited).contains(scItem);
+
+    }
+
+    @Test
+    public void findLeaseItemsForServiceChargeToUpdateForAudited_when_fails_works() throws Exception {
+
+        // given
+        BudgetAssignmentService budgetAssignmentService = new BudgetAssignmentService(){
+            @Override public boolean leaseAndOccupancyCoverBudgetInterval(
+                    final Occupancy occupancy, final Budget budget) {
+                return false;
+            }
+            @Override public boolean occupanciesOfleaseAndLeaseRenewalsCoverBudgetInterval(
+                    final Occupancy occupancy, final Budget budget) {
+                return false;
+            }
+        };
+        budgetAssignmentService.messageService = mockMessageService;
+        Lease lease = new Lease();
+        lease.setReference("LeaseRef");
+        Occupancy occupancy = new Occupancy();
+        occupancy.setLease(lease);
+        BudgetCalculationResult budgetCalculationResult = new BudgetCalculationResult();
+        budgetCalculationResult.setOccupancy(occupancy);
+
+        // expect
+        context.checking(new Expectations(){{
+            oneOf(mockMessageService).warnUser("WARNING: trying to update lease item(s) with audited value - Lease LeaseRef has started or ended during budget interval and has/is no renewal - handle manually");
+        }});
+
+        // when
+        final List<LeaseItem> leaseItemsForServiceChargeToUpdateForAudited = budgetAssignmentService
+                .findLeaseItemsForServiceChargeToUpdateForAudited(lease, budgetCalculationResult);
 
     }
 

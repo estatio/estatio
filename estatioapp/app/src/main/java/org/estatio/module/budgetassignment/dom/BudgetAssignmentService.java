@@ -96,7 +96,6 @@ public class BudgetAssignmentService {
                                             occupancy.getLease().getReference());
                             messageService.warnUser(msg);
                             LOG.warn(msg);
-                            return Lists.emptyList();
 
                         } else {
 
@@ -105,7 +104,6 @@ public class BudgetAssignmentService {
                                             occupancy.getLease().getReference());
                             messageService.warnUser(msg);
                             LOG.warn(msg);
-                            return Lists.emptyList();
 
                         }
 
@@ -123,7 +121,10 @@ public class BudgetAssignmentService {
     List<BudgetCalculationResult> calculateResultsForOccupancy(final Budget budget, final Occupancy occupancy, final BudgetCalculationType type, final List<BudgetCalculation> calculationsForUnitAndType){
 
         List<BudgetCalculationResult> results = new ArrayList<>();
-        List<Charge> invoiceChargesUsed = calculationsForUnitAndType.stream().map(c -> c.getInvoiceCharge()).distinct().collect(Collectors.toList());
+        List<Charge> invoiceChargesUsed = calculationsForUnitAndType
+                .stream()
+                .filter(c->c.getCalculationType()==type) // should be redundant, but you never now ...
+                .map(c -> c.getInvoiceCharge()).distinct().collect(Collectors.toList());
 
         for (Charge charge : invoiceChargesUsed) {
             BigDecimal value = BigDecimal.ZERO;
