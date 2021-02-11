@@ -73,12 +73,11 @@ public class LeaseAmendmentManager {
     @Getter @Setter
     private LeaseAmendmentState state;
 
-    private String myAtPath() {
-        if (meService==null) return "/";
-        return meService.me().getAtPath();
+    List<String> myAtPaths(){
+        final String myAtPath = meService !=null ? meService.me().getAtPath() : "/";
+        if (myAtPath==null) return Arrays.asList("/");
+        return Lists.newArrayList(myAtPath.split(";"));
     }
-
-    final private ArrayList<String> myAtPaths = Lists.newArrayList(myAtPath().split(";"));
 
     @Action(semantics = SemanticsOf.SAFE)
     public List<LeaseAmendmentImportLine> getLines(){
@@ -95,13 +94,13 @@ public class LeaseAmendmentManager {
                 }
             } else {
                 if (getState() != null) {
-                    for (String at : myAtPaths){
+                    for (String at : myAtPaths()){
                         createLinesAndAddToResult(result, leaseAmendmentRepository.findByState(getState()).stream()
                                 .filter(la->la.getAtPath().contains(at))
                                 .collect(Collectors.toList()));
                     }
                 } else {
-                    for (String at : myAtPaths){
+                    for (String at : myAtPaths()){
                         createLinesAndAddToResult(result, leaseAmendmentRepository.listAll().stream()
                                 .filter(la->la.getAtPath().contains(at))
                                 .collect(Collectors.toList()));
@@ -175,7 +174,7 @@ public class LeaseAmendmentManager {
         } else {
 
             final List<LeaseAmendmentTemplate> result = new ArrayList<>();
-            for (String at : myAtPaths){
+            for (String at : myAtPaths()){
                 result.addAll(Arrays.asList(LeaseAmendmentTemplate.values()).stream()
                         .filter(lt->lt.getAtPath().contains(at))
                         .collect(Collectors.toList()));

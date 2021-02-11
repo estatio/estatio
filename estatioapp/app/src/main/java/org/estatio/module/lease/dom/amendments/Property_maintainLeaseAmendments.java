@@ -24,10 +24,8 @@ public class Property_maintainLeaseAmendments {
 
     @Action()
     public LeaseAmendmentManager $$(@Nullable final LeaseAmendmentTemplate leaseAmendmentTemplate, @Nullable final LeaseAmendmentState leaseAmendmentState) {
-        final LeaseAmendmentManager leaseAmendmentManager = new LeaseAmendmentManager(property, leaseAmendmentTemplate,
+        return new LeaseAmendmentManager(property, leaseAmendmentTemplate,
                 leaseAmendmentState);
-        serviceRegistry2.injectServicesInto(leaseAmendmentManager);
-        return leaseAmendmentManager;
     }
 
     public List<LeaseAmendmentTemplate> choices0$$() {

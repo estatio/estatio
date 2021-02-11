@@ -12,6 +12,9 @@ import org.junit.Test;
 
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 
+import org.isisaddons.module.security.app.user.MeService;
+import org.isisaddons.module.security.dom.user.ApplicationUser;
+
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import org.estatio.module.lease.dom.Lease;
@@ -174,4 +177,47 @@ public class LeaseAmendmentManager_Test {
         assertThat(line.getLeaseAmendmentState()).isEqualTo(LeaseAmendmentState.PROPOSED);
         assertThat(line.getStartDate()).isEqualTo(LeaseAmendmentTemplate.COVID_ITA_FREQ_CHANGE_ONLY.getAmendmentStartDate());
     }
+
+    @Mock MeService meService;
+
+    @Test
+    public void myAtPaths() throws Exception {
+
+        // given
+        LeaseAmendmentManager manager = new LeaseAmendmentManager();
+        manager.meService = meService;
+        final ApplicationUser applicationUser = new ApplicationUser();
+
+        // expect
+        context.checking(new Expectations(){{
+            allowing(meService).me();
+            will(returnValue(applicationUser));
+        }});
+
+        // when
+        applicationUser.setAtPath("/FRA;/BEL");
+        // then
+        assertThat(manager.myAtPaths()).hasSize(2);
+        assertThat(manager.myAtPaths()).contains("/FRA");
+        assertThat(manager.myAtPaths()).contains("/BEL");
+
+        // and when
+        applicationUser.setAtPath("/ITA");
+        // then
+        assertThat(manager.myAtPaths()).hasSize(1);
+        assertThat(manager.myAtPaths()).contains("/ITA");
+
+        // and when
+        applicationUser.setAtPath("/");
+        // then
+        assertThat(manager.myAtPaths()).hasSize(1);
+        assertThat(manager.myAtPaths()).contains("/");
+
+        // and when
+        applicationUser.setAtPath(null);
+        // then
+        assertThat(manager.myAtPaths()).hasSize(1);
+        assertThat(manager.myAtPaths()).contains("/");
+    }
+
 }
