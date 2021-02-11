@@ -63,6 +63,9 @@ import org.estatio.module.lease.dom.LeaseRepository;
 import org.estatio.module.lease.dom.LeaseRoleTypeEnum;
 import org.estatio.module.lease.dom.LeaseType;
 import org.estatio.module.lease.dom.LeaseTypeRepository;
+import org.estatio.module.lease.dom.amendments.LeaseAmendmentManager;
+import org.estatio.module.lease.dom.amendments.LeaseAmendmentState;
+import org.estatio.module.lease.dom.amendments.LeaseAmendmentTemplate;
 import org.estatio.module.lease.dom.occupancy.tags.Brand;
 import org.estatio.module.party.dom.Party;
 import org.estatio.module.party.dom.PartyRepository;
@@ -280,6 +283,13 @@ public class LeaseMenu {
         }
         Period p = new Period(dt, DateTime.now());
         return String.format("Verified %d leases in %s", leases.size(), JodaPeriodUtils.asString(p));
+    }
+
+    @Action(semantics = SemanticsOf.SAFE)
+    public LeaseAmendmentManager maintainLeaseAmendments(@Nullable final Property property, @Nullable
+            LeaseAmendmentTemplate leaseAmendmentTemplate, @Nullable LeaseAmendmentState leaseAmendmentState){
+        return new LeaseAmendmentManager(property, leaseAmendmentTemplate,
+                leaseAmendmentState);
     }
 
     @Inject

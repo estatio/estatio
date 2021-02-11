@@ -163,6 +163,10 @@ public class LeaseAmendmentManager {
         return new LeaseAmendmentManager(getProperty(), leaseAmendmentTemplate, getState());
     }
 
+    public LeaseAmendmentTemplate default0FilterByTemplate(){
+        return getLeaseAmendmentTemplate();
+    }
+
     public List<LeaseAmendmentTemplate> choices0FilterByTemplate() {
         if (getProperty()!=null) {
 
@@ -189,9 +193,22 @@ public class LeaseAmendmentManager {
         return new LeaseAmendmentManager(getProperty(), getLeaseAmendmentTemplate(), leaseAmendmentState);
     }
 
+    public LeaseAmendmentState default0FilterByState(){
+        return getState();
+    }
+
     @Action(semantics = SemanticsOf.SAFE)
     public LeaseAmendmentManager selectProperty(@Nullable final Property property){
         return new LeaseAmendmentManager(property, getLeaseAmendmentTemplate(), getState());
+    }
+
+    public Property default0SelectProperty(){
+        return getProperty();
+    }
+
+    @Action(semantics = SemanticsOf.SAFE)
+    public LeaseAmendmentManager clearProperty(){
+        return new LeaseAmendmentManager(null, getLeaseAmendmentTemplate(), getState());
     }
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
