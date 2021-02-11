@@ -5,9 +5,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.Mixin;
+import org.apache.isis.applib.services.registry.ServiceRegistry2;
 
 import org.estatio.module.asset.dom.Property;
 
@@ -22,7 +24,10 @@ public class Property_maintainLeaseAmendments {
 
     @Action()
     public LeaseAmendmentManager $$(@Nullable final LeaseAmendmentTemplate leaseAmendmentTemplate, @Nullable final LeaseAmendmentState leaseAmendmentState) {
-        return new LeaseAmendmentManager(property, leaseAmendmentTemplate, leaseAmendmentState);
+        final LeaseAmendmentManager leaseAmendmentManager = new LeaseAmendmentManager(property, leaseAmendmentTemplate,
+                leaseAmendmentState);
+        serviceRegistry2.injectServicesInto(leaseAmendmentManager);
+        return leaseAmendmentManager;
     }
 
     public List<LeaseAmendmentTemplate> choices0$$() {
@@ -35,5 +40,7 @@ public class Property_maintainLeaseAmendments {
                     .filter(lat -> lat.getLeaseAmendmentType() == LeaseAmendmentType.COVID_WAVE_2)
                     .collect(Collectors.toList());
     }
+
+    @Inject ServiceRegistry2 serviceRegistry2;
 
 }

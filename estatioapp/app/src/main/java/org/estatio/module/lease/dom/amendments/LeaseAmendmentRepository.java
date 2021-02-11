@@ -163,7 +163,7 @@ public class LeaseAmendmentRepository {
     }
 
     @Programmatic
-    public List<LeaseAmendment> findByTypeAndStateAndProperty(final LeaseAmendmentTemplate leaseAmendmentTemplate, final LeaseAmendmentState state, final Property property){
+    public List<LeaseAmendment> findByTemplateAndStateAndProperty(final LeaseAmendmentTemplate leaseAmendmentTemplate, final LeaseAmendmentState state, final Property property){
         return findByTemplateAndState(leaseAmendmentTemplate, state).stream()
                 .filter(a->a.getLease()!=null)
                 .filter(a->a.getLease().getProperty()!=null)

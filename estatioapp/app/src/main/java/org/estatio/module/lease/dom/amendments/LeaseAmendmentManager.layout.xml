@@ -15,7 +15,9 @@
     <bs3:row>
         <bs3:col span="6">
             <cpt:fieldSet name="Property" id="property">
-                <cpt:property id="property"/>
+                <cpt:property id="property">
+                    <cpt:action id="selectProperty" position="PANEL"/>
+                </cpt:property>
             </cpt:fieldSet>
         </bs3:col>
         <bs3:col span="6">

@@ -105,10 +105,10 @@ public class LeaseAmendmentRepository_IntegTest extends LeaseModuleIntegTestAbst
                 LeaseAmendmentTemplate.DEMO_TYPE, LeaseAmendmentState.PROPOSED);
         final List<LeaseAmendment> resultsForDemoTypeAndSigned = leaseAmendmentRepository.findByTemplateAndState(
                 LeaseAmendmentTemplate.DEMO_TYPE, LeaseAmendmentState.SIGNED);
-        final List<LeaseAmendment> resultsForDemoTypeAndProposedForOxf = leaseAmendmentRepository.findByTypeAndStateAndProperty(
+        final List<LeaseAmendment> resultsForDemoTypeAndProposedForOxf = leaseAmendmentRepository.findByTemplateAndStateAndProperty(
                 LeaseAmendmentTemplate.DEMO_TYPE, LeaseAmendmentState.PROPOSED,
                 Property_enum.OxfGb.findUsing(serviceRegistry));
-        final List<LeaseAmendment> resultsForDemoTypeAndProposedForRon = leaseAmendmentRepository.findByTypeAndStateAndProperty(
+        final List<LeaseAmendment> resultsForDemoTypeAndProposedForRon = leaseAmendmentRepository.findByTemplateAndStateAndProperty(
                 LeaseAmendmentTemplate.DEMO_TYPE, LeaseAmendmentState.PROPOSED,
                 Property_enum.RonIt.findUsing(serviceRegistry));
         final List<LeaseAmendment> resultsForOtherType = leaseAmendmentRepository.findByTemplate(LeaseAmendmentTemplate.COVID_ITA_FREQ_CHANGE_ONLY);

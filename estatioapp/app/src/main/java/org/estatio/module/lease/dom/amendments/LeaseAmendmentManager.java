@@ -1,6 +1,11 @@
 package org.estatio.module.lease.dom.amendments;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
@@ -21,6 +26,7 @@ import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.value.Blob;
 
 import org.isisaddons.module.excel.dom.ExcelService;
+import org.isisaddons.module.security.app.user.MeService;
 
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
@@ -67,23 +73,60 @@ public class LeaseAmendmentManager {
     @Getter @Setter
     private LeaseAmendmentState state;
 
+    private String myAtPath() {
+        if (meService==null) return "/";
+        return meService.me().getAtPath();
+    }
+
+    final private ArrayList<String> myAtPaths = Lists.newArrayList(myAtPath().split(";"));
+
     @Action(semantics = SemanticsOf.SAFE)
     public List<LeaseAmendmentImportLine> getLines(){
         List<LeaseAmendmentImportLine> result = new ArrayList<>();
-        if (getProperty()==null) return result; // Should not be possible
-        if (getLeaseAmendmentTemplate()!=null){
-            if (getState()==null) {
-                createLinesAndAddToResult(result, leaseAmendmentRepository.findByTemplateAndProperty(
-                        getLeaseAmendmentTemplate(), getProperty()));
+
+        if (getProperty()==null) {
+
+            if (getLeaseAmendmentTemplate() != null) {
+                if (getState() == null) {
+                    createLinesAndAddToResult(result, leaseAmendmentRepository.findByTemplate(getLeaseAmendmentTemplate()));
+                } else {
+                    createLinesAndAddToResult(result, leaseAmendmentRepository.findByTemplateAndState(
+                            getLeaseAmendmentTemplate(), getState()));
+                }
             } else {
-                createLinesAndAddToResult(result, leaseAmendmentRepository.findByTypeAndStateAndProperty(
-                        getLeaseAmendmentTemplate(), getState(), getProperty()));
+                if (getState() != null) {
+                    for (String at : myAtPaths){
+                        createLinesAndAddToResult(result, leaseAmendmentRepository.findByState(getState()).stream()
+                                .filter(la->la.getAtPath().contains(at))
+                                .collect(Collectors.toList()));
+                    }
+                } else {
+                    for (String at : myAtPaths){
+                        createLinesAndAddToResult(result, leaseAmendmentRepository.listAll().stream()
+                                .filter(la->la.getAtPath().contains(at))
+                                .collect(Collectors.toList()));
+                    }
+                }
             }
+
+
         } else {
-            if (getState()!=null) {
-                createLinesAndAddToResult(result, leaseAmendmentRepository.findByPropertyAndState(getProperty(), getState()));
+
+            if (getLeaseAmendmentTemplate() != null) {
+                if (getState() == null) {
+                    createLinesAndAddToResult(result, leaseAmendmentRepository.findByTemplateAndProperty(
+                            getLeaseAmendmentTemplate(), getProperty()));
+                } else {
+                    createLinesAndAddToResult(result, leaseAmendmentRepository.findByTemplateAndStateAndProperty(
+                            getLeaseAmendmentTemplate(), getState(), getProperty()));
+                }
             } else {
-                createLinesAndAddToResult(result, leaseAmendmentRepository.findByProperty(getProperty()));
+                if (getState() != null) {
+                    createLinesAndAddToResult(result,
+                            leaseAmendmentRepository.findByPropertyAndState(getProperty(), getState()));
+                } else {
+                    createLinesAndAddToResult(result, leaseAmendmentRepository.findByProperty(getProperty()));
+                }
             }
         }
         return result
@@ -123,17 +166,33 @@ public class LeaseAmendmentManager {
 
     public List<LeaseAmendmentTemplate> choices0FilterByTemplate() {
         if (getProperty()!=null) {
+
             return Arrays.asList(LeaseAmendmentTemplate.values())
                     .stream()
                     .filter(lat -> getProperty().getAtPath().startsWith(lat.getAtPath()))
                     .collect(Collectors.toList());
+
+        } else {
+
+            final List<LeaseAmendmentTemplate> result = new ArrayList<>();
+            for (String at : myAtPaths){
+                result.addAll(Arrays.asList(LeaseAmendmentTemplate.values()).stream()
+                        .filter(lt->lt.getAtPath().contains(at))
+                        .collect(Collectors.toList()));
+            }
+            return result;
+
         }
-        return Arrays.asList(LeaseAmendmentTemplate.values());
     }
 
     @Action(semantics = SemanticsOf.SAFE)
     public LeaseAmendmentManager filterByState(@Nullable final LeaseAmendmentState leaseAmendmentState){
         return new LeaseAmendmentManager(getProperty(), getLeaseAmendmentTemplate(), leaseAmendmentState);
+    }
+
+    @Action(semantics = SemanticsOf.SAFE)
+    public LeaseAmendmentManager selectProperty(@Nullable final Property property){
+        return new LeaseAmendmentManager(property, getLeaseAmendmentTemplate(), getState());
     }
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
@@ -163,7 +222,14 @@ public class LeaseAmendmentManager {
         if (optional.isPresent()) {
             return null;
         } else {
-            return String.format("No amendments with status APPLY present for property %s and type %s", getProperty().getReference(), getLeaseAmendmentTemplate()!=null ? getLeaseAmendmentTemplate() : "all types");
+            if (getProperty()!=null) {
+                return String.format("No amendments with status APPLY present for property %s and type %s",
+                        getProperty().getReference(),
+                        getLeaseAmendmentTemplate() != null ? getLeaseAmendmentTemplate() : "all types");
+            } else {
+                return String.format("No amendments with status APPLY present for type %s",
+                        getLeaseAmendmentTemplate() != null ? getLeaseAmendmentTemplate() : "all types");
+            }
         }
     }
 
@@ -225,6 +291,11 @@ public class LeaseAmendmentManager {
         return this.getLeaseAmendmentTemplate();
     }
 
+    public String disableDownloadNewAmendmentProposalsForTemplate(){
+        if (getProperty()==null) return "A property should be chosen in order to use this action";
+        return null;
+    }
+
     List<LeaseAmendmentImportLine> newLinesForLease(final Lease lease, final LeaseAmendmentTemplate leaseAmendmentTemplate){
         List<LeaseAmendmentImportLine> result = new ArrayList<>();
         final List<LeaseItem> discountCandidates = Lists.newArrayList(lease.getItems()).stream()
@@ -271,7 +342,11 @@ public class LeaseAmendmentManager {
     public Blob download(@Nullable final String fileName){
         String fileNameToUse;
         if (fileName==null) {
-            fileNameToUse = "Amendments-" + property.getReference();
+            if (getProperty()!=null) {
+                fileNameToUse = "Amendments-" + property.getReference();
+            } else {
+                fileNameToUse = "Amendments-";
+            }
             if (getLeaseAmendmentTemplate()==null) {
                 fileNameToUse = fileNameToUse + "-all-types";
             } else {
@@ -319,5 +394,8 @@ public class LeaseAmendmentManager {
 
     @Inject
     BackgroundService2 backgroundService2;
+
+    @Inject
+    MeService meService;
 
 }
