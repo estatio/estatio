@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 
 import org.assertj.core.util.Lists;
-import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.CollectionLayout;
@@ -25,6 +24,7 @@ import org.isisaddons.module.excel.dom.WorksheetContent;
 import org.isisaddons.module.excel.dom.WorksheetSpec;
 
 import org.estatio.module.asset.dom.Property;
+import org.estatio.module.budget.contributions.PropertyService;
 import org.estatio.module.budget.dom.budget.Budget;
 import org.estatio.module.budget.dom.budget.BudgetRepository;
 import org.estatio.module.budget.dom.budget.Status;
@@ -60,15 +60,14 @@ public class BudgetMenu {
     public Budget newBudget(
             final Property property,
             final int year) {
-        Budget budget = budgetRepository.newBudget(property, new LocalDate(year, 1, 1), new LocalDate(year, 12, 31));
-        budget.findOrCreatePartitioningForBudgeting();
+        Budget budget = propertyService.newBudget(property, year);
         return budget;
     }
 
     public String validateNewBudget(
             final Property property,
             final int year) {
-        return budgetRepository.validateNewBudget(property, year);
+        return propertyService.validateNewBudget(property, year);
     }
 
     @Action(semantics = SemanticsOf.SAFE)
@@ -162,5 +161,7 @@ public class BudgetMenu {
     @Inject PartitioningRepository partitioningRepository;
 
     @Inject BudgetAssignmentService budgetAssignmentService;
+
+    @Inject PropertyService propertyService;
 
 }
