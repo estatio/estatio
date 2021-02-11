@@ -207,7 +207,7 @@ public class LeaseAmendmentManager {
     }
 
     @Action(semantics = SemanticsOf.SAFE)
-    public LeaseAmendmentManager clearProperty(){
+    public LeaseAmendmentManager noProperty(){
         return new LeaseAmendmentManager(null, getLeaseAmendmentTemplate(), getState());
     }
 

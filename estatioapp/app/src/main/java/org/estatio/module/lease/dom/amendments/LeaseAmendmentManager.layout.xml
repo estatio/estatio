@@ -17,7 +17,7 @@
             <cpt:fieldSet name="Property" id="property">
                 <cpt:property id="property">
                     <cpt:action id="selectProperty" position="PANEL"/>
-                    <cpt:action id="clearProperty" position="PANEL"/>
+                    <cpt:action id="noProperty" position="PANEL"/>
                 </cpt:property>
             </cpt:fieldSet>
         </bs3:col>
