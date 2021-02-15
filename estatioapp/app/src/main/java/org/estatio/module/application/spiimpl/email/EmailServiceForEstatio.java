@@ -18,6 +18,7 @@
  */
 package org.estatio.module.application.spiimpl.email;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -27,10 +28,21 @@ import javax.inject.Inject;
 
 import com.google.common.base.Strings;
 
+import org.assertj.core.util.Lists;
+
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.email.EmailService;
 import org.apache.isis.core.commons.config.IsisConfiguration;
+
+import org.isisaddons.module.security.app.user.MeService;
+
+import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelRepository;
+import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelType;
+import org.incode.module.communications.dom.impl.commchannel.EmailAddress;
+
+import org.estatio.module.party.dom.Person;
+import org.estatio.module.party.dom.PersonRepository;
 
 @DomainService(menuOrder = "99")
 public class EmailServiceForEstatio implements EmailService {
@@ -68,10 +80,38 @@ public class EmailServiceForEstatio implements EmailService {
         return !Strings.isNullOrEmpty(configuration.getString("isis.service.email.sender.hostname"));
     }
 
+    public boolean sendToCurrentUser(final String subject, final String body){
+        // try to get email address from user as Person
+        final Person userAsPerson = personRepository.findByUsername(meService.me().getUsername());
+        String emailAddress = null;
+        if (userAsPerson!=null){
+            final EmailAddress address = (EmailAddress) communicationChannelRepository.findByOwnerAndType(userAsPerson, CommunicationChannelType.EMAIL_ADDRESS).first();
+            if (address!=null) {
+                emailAddress = address.getEmailAddress();
+            }
+        }
+        if (emailAddress==null){
+            // fallback to ApplicationUser#getEmailAddreess()
+            emailAddress = meService.me().getEmailAddress();
+        }
+        if (emailAddress!=null){
+            return this.send(Arrays.asList(emailAddress), Lists.emptyList(), Lists.emptyList(),
+                    subject,
+                    body);
+        }
+        return false;
+    }
+
     @Inject
     EmailServiceThrowingException delegate;
 
     @javax.inject.Inject
     IsisConfiguration configuration;
+
+    @Inject PersonRepository personRepository;
+
+    @Inject MeService meService;
+
+    @Inject CommunicationChannelRepository communicationChannelRepository;
 
 }
