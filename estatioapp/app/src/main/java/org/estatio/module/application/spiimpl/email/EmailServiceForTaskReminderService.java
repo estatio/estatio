@@ -7,7 +7,7 @@ import javax.activation.DataSource;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Programmatic;
 
-@DomainService(menuOrder = "99")
+@DomainService(menuOrder = "99", objectType = "email.EmailServiceForTaskReminderService")
 public class EmailServiceForTaskReminderService extends EmailServiceForEstatio implements EmailService2 {
 
     @Programmatic
