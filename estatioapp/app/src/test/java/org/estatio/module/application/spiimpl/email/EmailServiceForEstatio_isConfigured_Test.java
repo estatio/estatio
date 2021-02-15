@@ -163,11 +163,12 @@ public class EmailServiceForEstatio_isConfigured_Test {
         final Person personWithRoleIncInvManager = new Person();
         final EmailAddress emailAddress = new EmailAddress();
         emailAddress.setEmailAddress("some email address");
+        final String atPath = "/SOMETHING";
 
 
         // expect
         context.checking(new Expectations(){{
-            oneOf(personRepository).findByRoleType(PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER);
+            oneOf(personRepository).findByRoleTypeAndAtPath(PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER, atPath);
             will(returnValue(Collections.singletonList(personWithRoleIncInvManager)));
             oneOf(communicationChannelRepository).findByOwnerAndType(personWithRoleIncInvManager, CommunicationChannelType.EMAIL_ADDRESS);
             will(returnValue(new TreeSet<EmailAddress>(Arrays.asList(emailAddress))));
@@ -177,7 +178,7 @@ public class EmailServiceForEstatio_isConfigured_Test {
 
         // when
         final boolean result = esfe
-                .sendToUsersWithRoleType(PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER, "Subject", "Message");
+                .sendToUsersWithRoleTypeAndAtPath(PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER, atPath,"Subject", "Message");
         // then
         assertThat(result).isTrue();
 
@@ -196,11 +197,12 @@ public class EmailServiceForEstatio_isConfigured_Test {
         final Person personWithRoleIncInvManager2 = new Person();
         final EmailAddress emailAddress2 = new EmailAddress();
         emailAddress2.setEmailAddress("some email address");
+        final String atPath = "/SOMETHING";
 
 
         // expect
         context.checking(new Expectations(){{
-            oneOf(personRepository).findByRoleType(PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER);
+            oneOf(personRepository).findByRoleTypeAndAtPath(PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER, atPath);
             will(returnValue(Arrays.asList(personWithRoleIncInvManager1, personWithRoleIncInvManager2)));
             oneOf(communicationChannelRepository).findByOwnerAndType(personWithRoleIncInvManager1, CommunicationChannelType.EMAIL_ADDRESS);
             will(returnValue(new TreeSet<EmailAddress>(Arrays.asList(emailAddress1))));
@@ -212,7 +214,7 @@ public class EmailServiceForEstatio_isConfigured_Test {
 
         // when
         final boolean result = esfe
-                .sendToUsersWithRoleType(PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER, "Subject", "Message");
+                .sendToUsersWithRoleTypeAndAtPath(PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER, atPath,"Subject", "Message");
         // then
         assertThat(result).isTrue();
 
@@ -225,16 +227,16 @@ public class EmailServiceForEstatio_isConfigured_Test {
         esfe.personRepository = personRepository;
         esfe.communicationChannelRepository = communicationChannelRepository;
         esfe.delegate = emailServiceThrowingException;
-
+        final String atPath = "/SOMETHING";
 
         // expect
         context.checking(new Expectations(){{
-            oneOf(personRepository).findByRoleType(PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER);
+            oneOf(personRepository).findByRoleTypeAndAtPath(PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER, atPath);
         }});
 
         // when
         final boolean result = esfe
-                .sendToUsersWithRoleType(PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER, "Subject", "Message");
+                .sendToUsersWithRoleTypeAndAtPath(PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER, atPath,"Subject", "Message");
         // then
         assertThat(result).isFalse();
 

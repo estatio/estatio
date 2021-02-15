@@ -104,8 +104,8 @@ public class EmailServiceForEstatio implements EmailService {
         return false;
     }
 
-    public boolean sendToUsersWithRoleType(final IPartyRoleType roleType, final String subject, final String body){
-        final List<Person> personsForRoleType = personRepository.findByRoleType(roleType);
+    public boolean sendToUsersWithRoleTypeAndAtPath(final IPartyRoleType roleType, final String atPath, final String subject, final String body){
+        final List<Person> personsForRoleType = personRepository.findByRoleTypeAndAtPath(roleType, atPath);
         final List<String> to = new ArrayList<>();
         for (Person person : personsForRoleType){
             final EmailAddress address = (EmailAddress) communicationChannelRepository.findByOwnerAndType(person, CommunicationChannelType.EMAIL_ADDRESS).first();
