@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.SortedSet;
 
 import javax.activation.DataSource;
 import javax.annotation.PostConstruct;
@@ -38,6 +39,7 @@ import org.apache.isis.core.commons.config.IsisConfiguration;
 
 import org.isisaddons.module.security.app.user.MeService;
 
+import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelRepository;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelType;
 import org.incode.module.communications.dom.impl.commchannel.EmailAddress;
@@ -108,13 +110,20 @@ public class EmailServiceForEstatio implements EmailService {
         final List<Person> personsForRoleType = personRepository.findByRoleTypeAndAtPath(roleType, atPath);
         final List<String> to = new ArrayList<>();
         for (Person person : personsForRoleType){
-            final EmailAddress address = (EmailAddress) communicationChannelRepository.findByOwnerAndType(person, CommunicationChannelType.EMAIL_ADDRESS).first();
+            final SortedSet<CommunicationChannel> byOwnerAndType = communicationChannelRepository
+                    .findByOwnerAndType(person, CommunicationChannelType.EMAIL_ADDRESS);
+            EmailAddress address = byOwnerAndType.isEmpty() ? null : (EmailAddress) byOwnerAndType.first();
             if (address!=null) {
                 to.add(address.getEmailAddress());
             }
         }
         if (!to.isEmpty()) {
-            return send(to, Collections.emptyList(), Collections.emptyList(), subject, body);
+            try {
+                return send(to, Collections.emptyList(), Collections.emptyList(), subject, body);
+            } catch (Exception e ){
+                // ignore
+                return false;
+            }
         } else {
             return false;
         }
