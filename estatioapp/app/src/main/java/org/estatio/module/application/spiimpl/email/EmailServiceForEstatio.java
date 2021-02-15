@@ -48,7 +48,7 @@ import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.PersonRepository;
 import org.estatio.module.party.dom.role.IPartyRoleType;
 
-@DomainService(menuOrder = "99")
+@DomainService(menuOrder = "99", objectType = "email.EmailServiceForEstatio")
 public class EmailServiceForEstatio implements EmailService {
 
     private static final String ISIS_SERVICE_EMAIL_OVERRIDE_TO = "isis.service.email.override.to";
