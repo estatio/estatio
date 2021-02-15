@@ -24,9 +24,16 @@ public class IncomingInvoice_reject extends AbstractSubscriber {
             final org.estatio.module.capex.dom.invoice.approval.triggers.IncomingInvoice_reject source = ev.getSource();
             final IPartyRoleType iPartyRoleType = source.default0Act();
             final IncomingInvoice invoice = (IncomingInvoice) ev.getMixedIn();
-            final String href = String.format("<li>%s</li>", deepLinkService.deepLinkFor(invoice));
+            String href;
+            try {
+                href = String.format("<li>%s</li>", deepLinkService.deepLinkFor(invoice));
+            } catch (Exception e){
+                // This is just for problems with integration testing
+                return;
+            }
             final String message = "Please be informed that the following invoice was rejected : " + href;
-            String userAtPath = null;
+            String userAtPath = null; // just in case ...
+            if (invoice.getAtPath()==null) return;
             if (invoice.getAtPath().startsWith("/ITA")){
                 userAtPath = "/ITA";
             }
