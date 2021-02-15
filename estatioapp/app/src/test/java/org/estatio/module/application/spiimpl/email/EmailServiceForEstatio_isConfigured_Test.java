@@ -22,6 +22,7 @@ import org.incode.module.communications.dom.impl.commchannel.EmailAddress;
 
 import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.PersonRepository;
+import org.estatio.module.party.dom.role.PartyRoleTypeEnum;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -149,6 +150,93 @@ public class EmailServiceForEstatio_isConfigured_Test {
 
         // when
         esfe.sendToCurrentUser("Subject", "Message");
+
+    }
+
+    @Test
+    public void sendToUsersWithRoleType_works_when_1_person_found() throws Exception {
+
+        // given
+        esfe.personRepository = personRepository;
+        esfe.communicationChannelRepository = communicationChannelRepository;
+        esfe.delegate = emailServiceThrowingException;
+        final Person personWithRoleIncInvManager = new Person();
+        final EmailAddress emailAddress = new EmailAddress();
+        emailAddress.setEmailAddress("some email address");
+
+
+        // expect
+        context.checking(new Expectations(){{
+            oneOf(personRepository).findByRoleType(PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER);
+            will(returnValue(Collections.singletonList(personWithRoleIncInvManager)));
+            oneOf(communicationChannelRepository).findByOwnerAndType(personWithRoleIncInvManager, CommunicationChannelType.EMAIL_ADDRESS);
+            will(returnValue(new TreeSet<EmailAddress>(Arrays.asList(emailAddress))));
+            oneOf(emailServiceThrowingException).send(Collections.singletonList(emailAddress.getEmailAddress()), Collections.emptyList(), Collections.emptyList(), "Subject", "Message");
+            will(returnValue(true));
+        }});
+
+        // when
+        final boolean result = esfe
+                .sendToUsersWithRoleType(PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER, "Subject", "Message");
+        // then
+        assertThat(result).isTrue();
+
+    }
+
+    @Test
+    public void sendToUsersWithRoleType_works_when_multiple_persons_found() throws Exception {
+
+        // given
+        esfe.personRepository = personRepository;
+        esfe.communicationChannelRepository = communicationChannelRepository;
+        esfe.delegate = emailServiceThrowingException;
+        final Person personWithRoleIncInvManager1 = new Person();
+        final EmailAddress emailAddress1 = new EmailAddress();
+        emailAddress1.setEmailAddress("some email address");
+        final Person personWithRoleIncInvManager2 = new Person();
+        final EmailAddress emailAddress2 = new EmailAddress();
+        emailAddress2.setEmailAddress("some email address");
+
+
+        // expect
+        context.checking(new Expectations(){{
+            oneOf(personRepository).findByRoleType(PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER);
+            will(returnValue(Arrays.asList(personWithRoleIncInvManager1, personWithRoleIncInvManager2)));
+            oneOf(communicationChannelRepository).findByOwnerAndType(personWithRoleIncInvManager1, CommunicationChannelType.EMAIL_ADDRESS);
+            will(returnValue(new TreeSet<EmailAddress>(Arrays.asList(emailAddress1))));
+            oneOf(communicationChannelRepository).findByOwnerAndType(personWithRoleIncInvManager2, CommunicationChannelType.EMAIL_ADDRESS);
+            will(returnValue(new TreeSet<EmailAddress>(Arrays.asList(emailAddress2))));
+            oneOf(emailServiceThrowingException).send(Arrays.asList(emailAddress1.getEmailAddress(), emailAddress2.getEmailAddress()), Collections.emptyList(), Collections.emptyList(), "Subject", "Message");
+            will(returnValue(true));
+        }});
+
+        // when
+        final boolean result = esfe
+                .sendToUsersWithRoleType(PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER, "Subject", "Message");
+        // then
+        assertThat(result).isTrue();
+
+    }
+
+    @Test
+    public void sendToUsersWithRoleType_works_when_no_person_found() throws Exception {
+
+        // given
+        esfe.personRepository = personRepository;
+        esfe.communicationChannelRepository = communicationChannelRepository;
+        esfe.delegate = emailServiceThrowingException;
+
+
+        // expect
+        context.checking(new Expectations(){{
+            oneOf(personRepository).findByRoleType(PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER);
+        }});
+
+        // when
+        final boolean result = esfe
+                .sendToUsersWithRoleType(PartyRoleTypeEnum.INCOMING_INVOICE_MANAGER, "Subject", "Message");
+        // then
+        assertThat(result).isFalse();
 
     }
 

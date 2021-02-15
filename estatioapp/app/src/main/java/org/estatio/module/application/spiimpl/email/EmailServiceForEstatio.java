@@ -18,6 +18,7 @@
  */
 package org.estatio.module.application.spiimpl.email;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -43,6 +44,7 @@ import org.incode.module.communications.dom.impl.commchannel.EmailAddress;
 
 import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.PersonRepository;
+import org.estatio.module.party.dom.role.IPartyRoleType;
 
 @DomainService(menuOrder = "99")
 public class EmailServiceForEstatio implements EmailService {
@@ -100,6 +102,22 @@ public class EmailServiceForEstatio implements EmailService {
                     body);
         }
         return false;
+    }
+
+    public boolean sendToUsersWithRoleType(final IPartyRoleType roleType, final String subject, final String body){
+        final List<Person> personsForRoleType = personRepository.findByRoleType(roleType);
+        final List<String> to = new ArrayList<>();
+        for (Person person : personsForRoleType){
+            final EmailAddress address = (EmailAddress) communicationChannelRepository.findByOwnerAndType(person, CommunicationChannelType.EMAIL_ADDRESS).first();
+            if (address!=null) {
+                to.add(address.getEmailAddress());
+            }
+        }
+        if (!to.isEmpty()) {
+            return send(to, Collections.emptyList(), Collections.emptyList(), subject, body);
+        } else {
+            return false;
+        }
     }
 
     @Inject
