@@ -20,9 +20,7 @@ import org.estatio.module.capex.dom.payment.PaymentLineRepository;
 import org.estatio.module.capex.dom.payment.approval.PaymentBatchApprovalState;
 import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.role.IPartyRoleType;
-import org.estatio.module.task.dom.state.StateTransitionRepository;
 import org.estatio.module.task.dom.state.StateTransitionService;
-import org.estatio.module.task.dom.state.StateTransitionType;
 
 /**
  * This mixin cannot (easily) be inlined because it inherits functionality from its superclass, and in any case
@@ -43,7 +41,7 @@ public class IncomingInvoice_reject extends IncomingInvoice_triggerAbstract {
     }
 
     @Action(
-            domainEvent = IncomingInvoice_next.ActionDomainEvent.class,
+            domainEvent = ActionDomainEvent.class,
             semantics = SemanticsOf.IDEMPOTENT
     )
     @ActionLayout(cssClassFa = "fa-thumbs-o-down", cssClass = "btn-warning")
