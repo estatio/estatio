@@ -2,7 +2,12 @@ package org.estatio.module.application.app;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
@@ -12,14 +17,26 @@ import javax.servlet.http.HttpSession;
 import com.google.common.collect.Lists;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.isis.applib.annotation.*;
-import org.apache.isis.applib.annotation.Collection;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.apache.isis.applib.ViewModel;
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
+import org.apache.isis.applib.annotation.Collection;
+import org.apache.isis.applib.annotation.CollectionLayout;
+import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.ParameterLayout;
+import org.apache.isis.applib.annotation.Property;
+import org.apache.isis.applib.annotation.Publishing;
+import org.apache.isis.applib.annotation.RestrictTo;
+import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.background.BackgroundService2;
 import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.applib.services.config.ConfigurationProperty;
@@ -80,7 +97,6 @@ import org.estatio.module.lease.dom.LeaseTerm;
 import org.estatio.module.lease.dom.amendments.LeaseAmendmentItemForDiscount;
 import org.estatio.module.lease.dom.amendments.LeaseAmendmentItemType;
 import org.estatio.module.lease.dom.amendments.LeaseAmendmentRepository;
-import org.estatio.module.lease.dom.amendments.LeaseAmendmentState;
 import org.estatio.module.lease.dom.amendments.Lease_amendments;
 import org.estatio.module.lease.dom.amendments.Lease_closeOldAndOpenNewLeaseItem;
 import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
@@ -666,8 +682,10 @@ public class AdminDashboard implements ViewModel {
         });
     }
 
-    public void recreateLeasePreviewsForAllLeaseAmendmentsNotApplied(){
-        leaseAmendmentRepository.listAll().stream().filter(la->la.getState()!=LeaseAmendmentState.APPLIED).forEach(la->{
+    public void recreateLeasePreviewsForAllNonFinalLeaseAmendments(){
+        leaseAmendmentRepository.listAll().stream()
+                .filter(la->!la.getState().isFinalState)
+                .forEach(la->{
             backgroundService2.execute(la).createOrRenewLeasePreview();
         });
     }

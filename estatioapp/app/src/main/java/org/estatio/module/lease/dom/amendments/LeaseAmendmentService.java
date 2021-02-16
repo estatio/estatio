@@ -53,7 +53,7 @@ public class LeaseAmendmentService {
 
     public void apply(final LeaseAmendment leaseAmendment, final boolean preview) {
 
-        if (leaseAmendment.getState()==LeaseAmendmentState.APPLIED) return;
+        if (leaseAmendment.getState().isFinalState) return;
         
         final String message = String.format("Applying amendment %s for lease %s", leaseAmendment.getReference(), preview ? leaseAmendment.getLeasePreview().getReference() : leaseAmendment.getLease().getReference());
         LOG.info(message);

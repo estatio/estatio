@@ -43,7 +43,7 @@ public class LeaseAmendmentItemForFrequencyChange extends LeaseAmendmentItem {
 
     public String disableChangeFrequencies(){
         final String warning = String.format("Amendment in state of %s cannot be changed", getLeaseAmendment().getState());
-        return getLeaseAmendment().amendmentDataIsImmutable() ? warning : null;
+        return !getLeaseAmendment().getState().isMutable ? warning : null;
     }
 
     @Action(semantics = SemanticsOf.SAFE)

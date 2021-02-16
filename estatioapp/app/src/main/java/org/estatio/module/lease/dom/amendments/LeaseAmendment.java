@@ -160,15 +160,11 @@ public class LeaseAmendment extends Agreement {
     public LeaseAmendment sign(final LocalDate dateSigned){
         setState(LeaseAmendmentState.SIGNED);
         setDateSigned(dateSigned);
-//        findItemsOfType(LeaseAmendmentItemType.DISCOUNT).forEach(lai->{
-//            LeaseAmendmentItemForDiscount castedItem = (LeaseAmendmentItemForDiscount) lai;
-//            castedItem.setAmortisationEndDate(leaseAmendmentService.getAmortisationEndDateFor(castedItem));
-//        });
         return this;
     }
 
     public boolean hideSign(){
-        return getState()!=LeaseAmendmentState.PROPOSED;
+        return !getState().canTransitionTo.contains(LeaseAmendmentState.SIGNED);
     }
 
     public LocalDate default0Sign(){
@@ -220,7 +216,7 @@ public class LeaseAmendment extends Agreement {
     }
 
     public String disableRemove(){
-        if (amendmentDataIsImmutable()) return "The amendment is immutable";
+        if (!getState().isMutable) return "The amendment is immutable";
         return null;
     }
 
@@ -239,7 +235,7 @@ public class LeaseAmendment extends Agreement {
     }
 
     public boolean hideApply(){
-        return !Arrays.asList(LeaseAmendmentState.SIGNED, LeaseAmendmentState.APPLY).contains(getState());
+        return !getState().canTransitionTo.contains(LeaseAmendmentState.APPLIED);
     }
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
@@ -250,7 +246,7 @@ public class LeaseAmendment extends Agreement {
     }
 
     public boolean hideAppliedManually(){
-        return !Arrays.asList(LeaseAmendmentState.SIGNED, LeaseAmendmentState.APPLY).contains(getState());
+        return !getState().canTransitionTo.contains(LeaseAmendmentState.APPLIED);
     }
 
     @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
@@ -268,20 +264,40 @@ public class LeaseAmendment extends Agreement {
     }
 
     public boolean hideMarkAsRefused(){
-        return getState()!=LeaseAmendmentState.PROPOSED;
+        return !getState().canTransitionTo.contains(LeaseAmendmentState.REFUSED);
     }
+
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    public LeaseAmendment changeState(final LeaseAmendmentState newState){
+        setState(newState);
+        return this;
+    }
+
+    public List<LeaseAmendmentState> choices0ChangeState(){
+        return Arrays.asList(LeaseAmendmentState.PROPOSED, LeaseAmendmentState.EXPECTED, LeaseAmendmentState.LITIGATION);
+    }
+    
+    public LeaseAmendmentState default0ChangeState(){
+        return getState();
+    }
+
+
+    public String disableChangeState(){
+        final String warning = String.format("Amendment in state of %s cannot be changed", getState());
+        return !getState().isMutable ? warning : null;
+    }
+
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     public LeaseAmendment createOrRenewLeasePreview(){
-        if (getState()==LeaseAmendmentState.REFUSED) return this; // extra guard when for called programmatically by import
+        if (getState().isFinalState) return this; // extra guard when for called programmatically by import
         if (getLeasePreview()!=null) getLeasePreview().remove("Replacing preview");
         leaseAmendmentService.getLeasePreviewFor(this);
         return this;
     }
 
     public String disableCreateOrRenewLeasePreview(){
-        if (getState()==LeaseAmendmentState.REFUSED) return "This amendment is refused";
-        if (getState()==LeaseAmendmentState.APPLIED) return "This amendment is applied";
+        if (getState().isFinalState) return "This amendment is in a final state";
         return null;
     }
 
@@ -346,13 +362,9 @@ public class LeaseAmendment extends Agreement {
     @Override
     public String disableChangeDates(){
         final String warning = String.format("Amendment in state of %s cannot be changed", getState());
-        return amendmentDataIsImmutable() ? warning : null;
+        return !getState().isMutable ? warning : null;
     }
 
-    @Programmatic
-    public boolean amendmentDataIsImmutable() {
-        return getState()!=LeaseAmendmentState.PROPOSED;
-    }
     @Inject
     RepositoryService repositoryService;
 

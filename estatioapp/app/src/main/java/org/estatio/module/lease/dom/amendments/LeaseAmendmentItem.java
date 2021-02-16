@@ -101,7 +101,7 @@ public abstract class LeaseAmendmentItem extends UdoDomainObject2<LeaseAmendment
 
     public String disableChangeApplicableTo(){
         final String warning = String.format("Amendment in state of %s cannot be changed", getLeaseAmendment().getState());
-        return getLeaseAmendment().amendmentDataIsImmutable() ? warning : null;
+        return !getLeaseAmendment().getState().isMutable ? warning : null;
     }
 
     @Programmatic
@@ -127,7 +127,7 @@ public abstract class LeaseAmendmentItem extends UdoDomainObject2<LeaseAmendment
 
     public String disableChangeDates(){
         final String warning = String.format("Amendment in state of %s cannot be changed", getLeaseAmendment().getState());
-        return getLeaseAmendment().amendmentDataIsImmutable() ? warning : null;
+        return !getLeaseAmendment().getState().isMutable ? warning : null;
     }
 
     public String validateChangeDates(final LocalDate startDate, final LocalDate endDate){
@@ -155,7 +155,7 @@ public abstract class LeaseAmendmentItem extends UdoDomainObject2<LeaseAmendment
     }
 
     public String disableRemove(){
-        if (getLeaseAmendment().amendmentDataIsImmutable()) return "The lease amendment is immutable";
+        if (!getLeaseAmendment().getState().isMutable) return "The lease amendment is immutable";
         return null;
     }
 

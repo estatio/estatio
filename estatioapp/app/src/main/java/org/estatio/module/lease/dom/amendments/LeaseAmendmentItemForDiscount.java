@@ -49,7 +49,7 @@ public class LeaseAmendmentItemForDiscount extends LeaseAmendmentItem {
 
     public String disableChangeDiscountPercentage(){
         final String warning = String.format("Amendment in state of %s cannot be changed", getLeaseAmendment().getState());
-        return getLeaseAmendment().amendmentDataIsImmutable() ? warning : null;
+        return !getLeaseAmendment().getState().isMutable ? warning : null;
     }
 
     @Column(allowsNull = "true", scale = 2)
@@ -64,7 +64,7 @@ public class LeaseAmendmentItemForDiscount extends LeaseAmendmentItem {
     }
 
     public String disableChangeManualDiscountAmount(){
-        if (getLeaseAmendment().amendmentDataIsImmutable()) return "The amendment is immutable";
+        if (!getLeaseAmendment().getState().isMutable) return "The amendment is immutable";
         return null;
     }
 
