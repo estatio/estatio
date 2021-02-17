@@ -37,13 +37,17 @@ import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.role.FixedAssetRole;
 import org.estatio.module.asset.dom.role.FixedAssetRoleRepository;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
+import org.estatio.module.capex.dom.invoice.IncomingInvoiceItem;
+import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
 import org.estatio.module.capex.dom.order.Order;
 import org.estatio.module.capex.dom.order.OrderItem;
-import org.estatio.module.charge.dom.Charge;
-import org.estatio.module.invoice.dom.InvoiceItem;
-import org.estatio.module.invoice.dom.InvoiceItemForTesting;
+import org.estatio.module.capex.dom.order.approval.OrderApprovalStateTransition;
+import org.estatio.module.capex.dom.project.Project;
+import org.estatio.module.financial.dom.bankaccount.verification.BankAccountVerificationStateTransition;
 import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.PersonRepository;
+import org.estatio.module.task.dom.state.StateTransitionService;
+import org.estatio.module.task.dom.task.Task;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -227,6 +231,39 @@ public class ApplicationTenancyEvaluatorForEstatio_Test {
 
     }
 
+    @Mock StateTransitionService mockStateTransitionService;
+
+    @Test
+    public void hides_when_task_not_visible_for_italian_external_user() throws Exception {
+
+        // given
+        evaluator.personRepository = mockPersonRepository;
+        evaluator.fixedAssetRoleRepository = mockFixedAssetRoleRepository;
+        evaluator.stateTransitionService = mockStateTransitionService;
+        ApplicationUser externalUserIta = new ApplicationUser();
+        externalUserIta.setUsername("user1@external.ecpnv.com");
+        externalUserIta.setAtPath("/ITA");
+        Person person = new Person();
+        FixedAssetRole far = new FixedAssetRole();
+        Property property = new Property();
+        far.setAsset(property);
+        Task task = new Task(null, null, null, null, null,null);
+
+        // expect
+        context.checking(new Expectations(){{
+            oneOf(mockPersonRepository).findByUsername(externalUserIta.getUsername());
+            will(returnValue(person));
+            oneOf(mockFixedAssetRoleRepository).findByParty(person);
+            will(returnValue(Arrays.asList(far)));
+            oneOf(mockStateTransitionService).findFor(task);
+            will(returnValue(null));
+        }});
+
+        // when, then
+        Assertions.assertThat(evaluator.hides(task, externalUserIta)).isEqualTo("Task not visible for user");
+
+    }
+
     @Test
     public void invoiceVisibleForExternalUser_false_when_no_property_on_invoice() throws Exception {
 
@@ -256,7 +293,7 @@ public class ApplicationTenancyEvaluatorForEstatio_Test {
     }
 
     @Test
-    public void invoiceVisibleForExternalUser_false_when_no_qualifying_charge_ref_found_on_invoice_items() throws Exception {
+    public void invoiceVisibleForExternalUser_false_when_no_qualifying_project_ref_found_on_invoice_items() throws Exception {
 
         Property property = new Property();
         property.setReference("COL");
@@ -280,10 +317,11 @@ public class ApplicationTenancyEvaluatorForEstatio_Test {
         Property otherProperty = new Property();
         IncomingInvoice invoice = new IncomingInvoice();
         List<Property> propertiesForUser = new ArrayList<>();
-        InvoiceItem invoiceItem = new InvoiceItemForTesting(invoice);
-        final Charge qualifyingCharge = new Charge();
-        qualifyingCharge.setReference(ApplicationTenancyEvaluatorForEstatio.CHARGE_COL_EXT);
-        invoiceItem.setCharge(qualifyingCharge);
+        IncomingInvoiceItem invoiceItem = new IncomingInvoiceItem();
+        invoiceItem.setInvoice(invoice);
+        final Project qualifyingProject = new Project();
+        qualifyingProject.setReference(ApplicationTenancyEvaluatorForEstatio.PROJECT_COL_EXT);
+        invoiceItem.setProject(qualifyingProject);
         invoice.getItems().add(invoiceItem);
 
 
@@ -303,10 +341,11 @@ public class ApplicationTenancyEvaluatorForEstatio_Test {
         property.setReference("COL");
         IncomingInvoice invoice = new IncomingInvoice();
         List<Property> propertiesForUser = new ArrayList<>();
-        InvoiceItem invoiceItem = new InvoiceItemForTesting(invoice);
-        final Charge qualifyingCharge = new Charge();
-        qualifyingCharge.setReference(ApplicationTenancyEvaluatorForEstatio.CHARGE_COL_EXT);
-        invoiceItem.setCharge(qualifyingCharge);
+        IncomingInvoiceItem invoiceItem = new IncomingInvoiceItem();
+        invoiceItem.setInvoice(invoice);
+        final Project qualifyingProject = new Project();
+        qualifyingProject.setReference(ApplicationTenancyEvaluatorForEstatio.PROJECT_COL_EXT);
+        invoiceItem.setProject(qualifyingProject);
         invoice.getItems().add(invoiceItem);
 
         // when
@@ -347,7 +386,7 @@ public class ApplicationTenancyEvaluatorForEstatio_Test {
     }
 
     @Test
-    public void orderVisibleForExternalUser_false_when_no_qualifying_charge_ref_found_on_invoice_items() throws Exception {
+    public void orderVisibleForExternalUser_false_when_no_qualifying_project_ref_found_on_invoice_items() throws Exception {
 
         Property property = new Property();
         property.setReference("COL");
@@ -372,9 +411,9 @@ public class ApplicationTenancyEvaluatorForEstatio_Test {
         Order order = new Order();
         List<Property> propertiesForUser = new ArrayList<>();
         OrderItem orderItem = new OrderItem();
-        final Charge qualifyingCharge = new Charge();
-        qualifyingCharge.setReference(ApplicationTenancyEvaluatorForEstatio.CHARGE_COL_EXT);
-        orderItem.setCharge(qualifyingCharge);
+        final Project qualifyingProject = new Project();
+        qualifyingProject.setReference(ApplicationTenancyEvaluatorForEstatio.PROJECT_COL_EXT);
+        orderItem.setProject(qualifyingProject);
         order.getItems().add(orderItem);
 
 
@@ -395,9 +434,9 @@ public class ApplicationTenancyEvaluatorForEstatio_Test {
         Order order = new Order();
         List<Property> propertiesForUser = new ArrayList<>();
         OrderItem orderItem = new OrderItem();
-        final Charge qualifyingCharge = new Charge();
-        qualifyingCharge.setReference(ApplicationTenancyEvaluatorForEstatio.CHARGE_COL_EXT);
-        orderItem.setCharge(qualifyingCharge);
+        final Project qualifyingProject = new Project();
+        qualifyingProject.setReference(ApplicationTenancyEvaluatorForEstatio.PROJECT_COL_EXT);
+        orderItem.setProject(qualifyingProject);
         order.getItems().add(orderItem);
 
         // when
@@ -406,6 +445,70 @@ public class ApplicationTenancyEvaluatorForEstatio_Test {
 
         // then
         Assertions.assertThat(evaluator.orderVisibleForExternalUser(order, propertiesForUser)).isTrue();
+
+    }
+
+    @Test
+    public void taskVisibleForExternalUser_false_when_task_not_attached_to_invoice_or_order() throws Exception {
+
+        // given
+        evaluator.stateTransitionService = mockStateTransitionService;
+        Task task = new Task(null, null, null, null, null, null);
+        List<Property> propertiesForUser = new ArrayList<>();
+        BankAccountVerificationStateTransition stateTransition = new BankAccountVerificationStateTransition();
+
+        // expect
+        context.checking(new Expectations(){{
+            allowing(mockStateTransitionService).findFor(task);
+            will(returnValue(stateTransition));
+        }});
+
+        // then
+        Assertions.assertThat(evaluator.taskVisibleForExternalUser(task, propertiesForUser)).isFalse();
+        
+    }
+
+    @Test
+    public void taskVisibleForExternalUser_false_when_task_attached_to_invoice_but_invoice_not_visible() throws Exception {
+
+        // given
+        evaluator.stateTransitionService = mockStateTransitionService;
+        Task task = new Task(null, null, null, null, null, null);
+        List<Property> propertiesForUser = new ArrayList<>();
+        IncomingInvoice invoice = new IncomingInvoice();
+        IncomingInvoiceApprovalStateTransition stateTransition = new IncomingInvoiceApprovalStateTransition();
+        stateTransition.setInvoice(invoice);
+
+        // expect
+        context.checking(new Expectations(){{
+            oneOf(mockStateTransitionService).findFor(task);
+            will(returnValue(stateTransition));
+        }});
+
+        // then
+        Assertions.assertThat(evaluator.taskVisibleForExternalUser(task, propertiesForUser)).isFalse();
+
+    }
+
+    @Test
+    public void taskVisibleForExternalUser_false_when_task_attached_to_order_but_order_not_visible() throws Exception {
+
+        // given
+        evaluator.stateTransitionService = mockStateTransitionService;
+        Task task = new Task(null, null, null, null, null, null);
+        List<Property> propertiesForUser = new ArrayList<>();
+        Order order = new Order();
+        OrderApprovalStateTransition stateTransition = new OrderApprovalStateTransition();
+        stateTransition.setOrdr(order);
+
+        // expect
+        context.checking(new Expectations(){{
+            oneOf(mockStateTransitionService).findFor(task);
+            will(returnValue(stateTransition));
+        }});
+
+        // then
+        Assertions.assertThat(evaluator.taskVisibleForExternalUser(task, propertiesForUser)).isFalse();
 
     }
 

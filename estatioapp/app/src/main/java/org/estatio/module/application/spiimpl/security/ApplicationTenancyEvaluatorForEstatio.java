@@ -37,11 +37,15 @@ import org.isisaddons.module.security.dom.user.ApplicationUser;
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.role.FixedAssetRoleRepository;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
+import org.estatio.module.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.module.capex.dom.order.Order;
 import org.estatio.module.capex.dom.order.OrderItem;
 import org.estatio.module.invoice.dom.InvoiceItem;
 import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.PersonRepository;
+import org.estatio.module.task.dom.state.StateTransition;
+import org.estatio.module.task.dom.state.StateTransitionService;
+import org.estatio.module.task.dom.task.Task;
 
 @DomainService(nature = NatureOfService.DOMAIN, menuOrder = "99", objectType = "security.ApplicationTenancyEvaluatorForEstatio")
 public class ApplicationTenancyEvaluatorForEstatio implements ApplicationTenancyEvaluator {
@@ -54,6 +58,9 @@ public class ApplicationTenancyEvaluatorForEstatio implements ApplicationTenancy
 
     @Inject
     FixedAssetRoleRepository fixedAssetRoleRepository;
+
+    @Inject
+    StateTransitionService stateTransitionService;
 
     public boolean handles(Class<?> cls) {
         return HasAtPath.class.isAssignableFrom(cls);
@@ -91,6 +98,13 @@ public class ApplicationTenancyEvaluatorForEstatio implements ApplicationTenancy
 
             }
 
+            if (domainObject instanceof Task){
+
+                Task task = (Task) domainObject;
+                if (!taskVisibleForExternalUser(task, properties)) return "Task not visible for user";
+
+            }
+
         }
 
         final String objectTenancyPath = applicationTenancyPathForCached(domainObject);
@@ -108,21 +122,41 @@ public class ApplicationTenancyEvaluatorForEstatio implements ApplicationTenancy
         return String.format("User with tenancy \'%s\' is not permitted to view object with tenancy \'%s\'", userTenancyPath, objectTenancyPath);
     }
 
+    boolean taskVisibleForExternalUser(final Task task, final List<Property> propertiesForUser){
+
+        final StateTransition stateTransition = stateTransitionService.findFor(task);
+        if (stateTransition==null) return false;
+
+        final Object domainObject = stateTransition.getDomainObject();
+
+        if (domainObject instanceof IncomingInvoice){
+            IncomingInvoice invoice = (IncomingInvoice) domainObject;
+            return invoiceVisibleForExternalUser(invoice, propertiesForUser);
+        }
+
+        if (domainObject instanceof Order){
+            Order order = (Order) domainObject;
+            return orderVisibleForExternalUser(order, propertiesForUser);
+        }
+
+        return false;
+    }
+
     boolean invoiceVisibleForExternalUser(final IncomingInvoice invoice, final List<Property> propertiesForUser){
         final Property propertyOnInvoice = invoice.getProperty();
         if (propertyOnInvoice == null ) return false;
 
         switch (propertyOnInvoice.getReference()){
         case "COL":
-            if (!atLeastOneItemHasChargeWithReference(invoice, CHARGE_COL_EXT)) return false;
+            if (!atLeastOneItemHasProjectWithReference(invoice, PROJECT_COL_EXT)) return false;
             break;
 
         case "GIG":
-            if (!atLeastOneItemHasChargeWithReference(invoice, CHARGE_GIG_EXT)) return false;
+            if (!atLeastOneItemHasProjectWithReference(invoice, PROJECT_GIG_EXT)) return false;
             break;
 
         case "FAB":
-            if (!atLeastOneItemHasChargeWithReference(invoice, CHARGE_FAB_EXT)) return false;
+            if (!atLeastOneItemHasProjectWithReference(invoice, PROJECT_FAB_EXT)) return false;
             break;
 
         default:
@@ -140,15 +174,15 @@ public class ApplicationTenancyEvaluatorForEstatio implements ApplicationTenancy
 
         switch (propertyOnOrder.getReference()){
         case "COL":
-            if (!atLeastOneItemHasChargeWithReference(order, CHARGE_COL_EXT)) return false;
+            if (!atLeastOneItemHasProjectWithReference(order, PROJECT_COL_EXT)) return false;
             break;
 
         case "GIG":
-            if (!atLeastOneItemHasChargeWithReference(order, CHARGE_GIG_EXT)) return false;
+            if (!atLeastOneItemHasProjectWithReference(order, PROJECT_GIG_EXT)) return false;
             break;
 
         case "FAB":
-            if (!atLeastOneItemHasChargeWithReference(order, CHARGE_FAB_EXT)) return false;
+            if (!atLeastOneItemHasProjectWithReference(order, PROJECT_FAB_EXT)) return false;
             break;
 
         default:
@@ -160,27 +194,28 @@ public class ApplicationTenancyEvaluatorForEstatio implements ApplicationTenancy
         return false;
     }
 
-    private boolean atLeastOneItemHasChargeWithReference(final IncomingInvoice invoice, final String chargeExt) {
+    private boolean atLeastOneItemHasProjectWithReference(final IncomingInvoice invoice, final String projectRefExt) {
         for (InvoiceItem ii : invoice.getItems()){
-            if (ii.getCharge()!=null && ii.getCharge().getReference().equals(chargeExt)) {
+            IncomingInvoiceItem cii = (IncomingInvoiceItem) ii;
+            if (cii.getProject()!=null && cii.getProject().getReference().equals(projectRefExt)) {
                 return true;
             }
         }
         return false;
     }
 
-    private boolean atLeastOneItemHasChargeWithReference(final Order order, final String chargeExt) {
+    private boolean atLeastOneItemHasProjectWithReference(final Order order, final String projectRefExt) {
         for (OrderItem oi : order.getItems()){
-            if (oi.getCharge()!=null && oi.getCharge().getReference().equals(chargeExt)) {
+            if (oi.getProject()!=null && oi.getProject().getReference().equals(projectRefExt)) {
                 return true;
             }
         }
         return false;
     }
 
-    public static String CHARGE_COL_EXT = "ITPR285";
-    public static String CHARGE_GIG_EXT = "ITPR286";
-    public static String CHARGE_FAB_EXT = "ITPR287";
+    public static String PROJECT_COL_EXT = "ITPR285";
+    public static String PROJECT_GIG_EXT = "ITPR286";
+    public static String PROJECT_FAB_EXT = "ITPR287";
 
     public String disables(Object domainObject, ApplicationUser applicationUser) {
         final String objectTenancyPath = applicationTenancyPathForCached(domainObject);
