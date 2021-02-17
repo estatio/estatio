@@ -14,11 +14,12 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.module.base.spiimpl.security;
+package org.estatio.module.application.spiimpl.security;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.Callable;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -33,17 +34,65 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyEvaluator;
 import org.isisaddons.module.security.dom.tenancy.HasAtPath;
 import org.isisaddons.module.security.dom.user.ApplicationUser;
 
-@DomainService(nature = NatureOfService.DOMAIN, menuOrder = "99")
+import org.estatio.module.asset.dom.Property;
+import org.estatio.module.asset.dom.role.FixedAssetRoleRepository;
+import org.estatio.module.capex.dom.invoice.IncomingInvoice;
+import org.estatio.module.capex.dom.order.Order;
+import org.estatio.module.capex.dom.order.OrderItem;
+import org.estatio.module.invoice.dom.InvoiceItem;
+import org.estatio.module.party.dom.Person;
+import org.estatio.module.party.dom.PersonRepository;
+
+@DomainService(nature = NatureOfService.DOMAIN, menuOrder = "99", objectType = "security.ApplicationTenancyEvaluatorForEstatio")
 public class ApplicationTenancyEvaluatorForEstatio implements ApplicationTenancyEvaluator {
 
     @Inject
     QueryResultsCache queryResultsCache;
+
+    @Inject
+    PersonRepository personRepository;
+
+    @Inject
+    FixedAssetRoleRepository fixedAssetRoleRepository;
 
     public boolean handles(Class<?> cls) {
         return HasAtPath.class.isAssignableFrom(cls);
     }
 
     public String hides(Object domainObject, ApplicationUser applicationUser) {
+
+        if (applicationUser.getUsername().contains("external.ecpnv") && applicationUser.getAtPath().startsWith("/ITA")){
+
+            final Person userAsPerson = personRepository.findByUsername(applicationUser.getUsername());
+
+            if (userAsPerson==null) return "Person for external user not found";
+
+            // NOTE: for the moment we support just one fixed asset for an external user
+            final List<Property> properties = fixedAssetRoleRepository.findByParty(userAsPerson).stream()
+                    .map(r->r.getAsset())
+                    .filter(a -> a.getClass().isAssignableFrom(Property.class))
+                    .map(Property.class::cast)
+                    .collect(Collectors.toList());
+
+            if (properties.isEmpty()) return "No property could be derived for user";
+
+
+            if (domainObject instanceof IncomingInvoice){
+
+                IncomingInvoice invoice = (IncomingInvoice) domainObject;
+                if (!invoiceVisibleForExternalUser(invoice, properties)) return "Invoice not visible for user";
+
+            }
+
+            if (domainObject instanceof Order){
+
+                Order order = (Order) domainObject;
+                if (!orderVisibleForExternalUser(order, properties)) return "Order not visible for user";
+
+            }
+
+        }
+
         final String objectTenancyPath = applicationTenancyPathForCached(domainObject);
         if(objectTenancyPath == null) {
             return null;
@@ -58,6 +107,80 @@ public class ApplicationTenancyEvaluatorForEstatio implements ApplicationTenancy
         }
         return String.format("User with tenancy \'%s\' is not permitted to view object with tenancy \'%s\'", userTenancyPath, objectTenancyPath);
     }
+
+    boolean invoiceVisibleForExternalUser(final IncomingInvoice invoice, final List<Property> propertiesForUser){
+        final Property propertyOnInvoice = invoice.getProperty();
+        if (propertyOnInvoice == null ) return false;
+
+        switch (propertyOnInvoice.getReference()){
+        case "COL":
+            if (!atLeastOneItemHasChargeWithReference(invoice, CHARGE_COL_EXT)) return false;
+            break;
+
+        case "GIG":
+            if (!atLeastOneItemHasChargeWithReference(invoice, CHARGE_GIG_EXT)) return false;
+            break;
+
+        case "FAB":
+            if (!atLeastOneItemHasChargeWithReference(invoice, CHARGE_FAB_EXT)) return false;
+            break;
+
+        default:
+            return false;
+        }
+
+        if (propertiesForUser.contains(propertyOnInvoice)) return true;
+
+        return false;
+    }
+
+    boolean orderVisibleForExternalUser(final Order order, final List<Property> propertiesForUser){
+        final Property propertyOnOrder = order.getProperty();
+        if (propertyOnOrder == null ) return false;
+
+        switch (propertyOnOrder.getReference()){
+        case "COL":
+            if (!atLeastOneItemHasChargeWithReference(order, CHARGE_COL_EXT)) return false;
+            break;
+
+        case "GIG":
+            if (!atLeastOneItemHasChargeWithReference(order, CHARGE_GIG_EXT)) return false;
+            break;
+
+        case "FAB":
+            if (!atLeastOneItemHasChargeWithReference(order, CHARGE_FAB_EXT)) return false;
+            break;
+
+        default:
+            return false;
+        }
+
+        if (propertiesForUser.contains(propertyOnOrder)) return true;
+
+        return false;
+    }
+
+    private boolean atLeastOneItemHasChargeWithReference(final IncomingInvoice invoice, final String chargeExt) {
+        for (InvoiceItem ii : invoice.getItems()){
+            if (ii.getCharge()!=null && ii.getCharge().getReference().equals(chargeExt)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean atLeastOneItemHasChargeWithReference(final Order order, final String chargeExt) {
+        for (OrderItem oi : order.getItems()){
+            if (oi.getCharge()!=null && oi.getCharge().getReference().equals(chargeExt)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static String CHARGE_COL_EXT = "ITPR285";
+    public static String CHARGE_GIG_EXT = "ITPR286";
+    public static String CHARGE_FAB_EXT = "ITPR287";
 
     public String disables(Object domainObject, ApplicationUser applicationUser) {
         final String objectTenancyPath = applicationTenancyPathForCached(domainObject);
