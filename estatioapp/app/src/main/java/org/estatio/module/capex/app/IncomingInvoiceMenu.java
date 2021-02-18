@@ -11,31 +11,33 @@ import java.util.stream.Collectors;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 
-import org.apache.isis.applib.annotation.*;
-import org.apache.isis.applib.services.factory.FactoryService;
-import org.apache.isis.applib.services.user.UserService;
-import org.estatio.module.asset.contributions.Person_fixedAssetRoles;
-import org.estatio.module.asset.dom.FixedAsset;
-import org.estatio.module.asset.dom.PropertyRepository;
-import org.estatio.module.asset.dom.role.FixedAssetRole;
-import org.estatio.module.base.dom.EstatioRole;
-import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
-import org.estatio.module.invoice.dom.InvoiceStatus;
-import org.estatio.module.lease.dom.invoicing.InvoiceForLease;
-import org.estatio.module.party.dom.*;
-import org.isisaddons.module.security.dom.user.ApplicationUserRepository;
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.DomainServiceLayout;
+import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.annotation.ParameterLayout;
+import org.apache.isis.applib.annotation.RestrictTo;
+import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.clock.ClockService;
+import org.apache.isis.applib.services.factory.FactoryService;
+import org.apache.isis.applib.services.user.UserService;
 
 import org.isisaddons.module.security.app.user.MeService;
 
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import org.estatio.module.asset.dom.Property;
+import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceRepository;
+import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.module.invoice.dom.InvoiceRepository;
+import org.estatio.module.party.dom.Organisation;
+import org.estatio.module.party.dom.Party;
+import org.estatio.module.party.dom.PartyRepository;
+import org.estatio.module.party.dom.PersonRepository;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -65,13 +67,12 @@ public class IncomingInvoiceMenu {
             @ParameterLayout(named = "Invoice Date (Approximately)")
             @Nullable final LocalDate invoiceDate
     ) {
-        return filterByPropertiesOfExternalPersonIfPossible(
-                new IncomingInvoiceFinder(invoiceRepository, incomingInvoiceRepository, partyRepository)
+        return new IncomingInvoiceFinder(invoiceRepository, incomingInvoiceRepository, partyRepository)
                 .filterOrFindByDocumentName(barcode)
                 .filterOrFindBySeller(sellerNameOrReference)
                 .filterOrFindByGrossAmount(grossAmount)
                 .filterOrFindByInvoiceDate(invoiceDate)
-                .getResult());
+                .getResult();
     }
 
     public String validateFindInvoice(final String barcode, final String sellerNameOfReference, final BigDecimal grossAmount, final LocalDate invoiceDate) {
@@ -82,24 +83,6 @@ public class IncomingInvoiceMenu {
             return "Give at least 3 characters for seller name or reference";
         }
         return null;
-    }
-
-    private List<Property> propertiesOfPerson(final Person person) {
-        return factoryService.mixin(Person_fixedAssetRoles.class, person).act()
-                .stream()
-                .map(FixedAssetRole::getAsset)
-                .filter(fixedAsset -> fixedAsset instanceof Property)
-                .map(fixedAsset -> (Property) fixedAsset)
-                .collect(Collectors.toList());
-    }
-
-    private List<IncomingInvoice> filterByPropertiesOfExternalPersonIfPossible(List<IncomingInvoice> invoices) {
-        if (personRepository.me()!=null && EstatioRole.EXTERNAL_APPROVER.isApplicableFor(userService.getUser())) {
-            final List<Property> properties = propertiesOfPerson(personRepository.me());
-            return invoices.stream().filter(invoice -> properties.contains(invoice.getProperty())).collect(Collectors.toList());
-        } else {
-            return invoices;
-        }
     }
 
     static class IncomingInvoiceFinder {
@@ -288,7 +271,7 @@ public class IncomingInvoiceMenu {
 
     @Action(semantics = SemanticsOf.SAFE)
     public List<IncomingInvoice> findInvoicesByInvoiceDateBetween(final LocalDate fromDate, final LocalDate toDate) {
-        return filterByPropertiesOfExternalPersonIfPossible(incomingInvoiceRepository.findByInvoiceDateBetween(fromDate, toDate));
+        return incomingInvoiceRepository.findByInvoiceDateBetween(fromDate, toDate);
     }
 
     public LocalDate default0FindInvoicesByInvoiceDateBetween() {
@@ -303,7 +286,7 @@ public class IncomingInvoiceMenu {
 
     @Action(semantics = SemanticsOf.SAFE)
     public List<IncomingInvoice> findInvoicesByDueDateBetween(final LocalDate fromDate, final LocalDate toDate) {
-        return filterByPropertiesOfExternalPersonIfPossible(incomingInvoiceRepository.findByDueDateBetween(fromDate, toDate));
+        return incomingInvoiceRepository.findByDueDateBetween(fromDate, toDate);
     }
 
     public LocalDate default0FindInvoicesByDueDateBetween() {
@@ -318,16 +301,12 @@ public class IncomingInvoiceMenu {
 
     @Action(semantics = SemanticsOf.SAFE)
     public List<IncomingInvoice> findInvoicesByPropertyAndDateReceivedBetween(final Property property, final LocalDate fromDate, final LocalDate toDate) {
-        return filterByPropertiesOfExternalPersonIfPossible(incomingInvoiceRepository.findByPropertyAndDateReceivedBetween(property, fromDate, toDate));
+        return incomingInvoiceRepository.findByPropertyAndDateReceivedBetween(property, fromDate, toDate);
     }
 
     public List<Property> choices0FindInvoicesByPropertyAndDateReceivedBetween() {
-        if (EstatioRole.EXTERNAL_APPROVER.isApplicableFor(userService.getUser())) {
-            if (personRepository.me()!=null) {
-                return propertiesOfPerson(personRepository.me());
-            } else {
-                return new ArrayList<>();
-            }
+        if (externalUserService.isForExternalUser()) {
+            return externalUserService.getPropertiesForExternalUser();
         } else {
             return propertyRepository.allProperties();
         }
@@ -347,8 +326,7 @@ public class IncomingInvoiceMenu {
     public List<IncomingInvoice> findInvoicesPayableByBankTransferWithDifferentHistoricalPaymentMethods(
             final LocalDate fromDueDate,
             final LocalDate toDueDate) {
-        return filterByPropertiesOfExternalPersonIfPossible(
-                incomingInvoiceRepository.findInvoicesPayableByBankTransferWithDifferentHistoricalPaymentMethods(fromDueDate, toDueDate, meService.me().getFirstAtPathUsingSeparator(';')));
+        return incomingInvoiceRepository.findInvoicesPayableByBankTransferWithDifferentHistoricalPaymentMethods(fromDueDate, toDueDate, meService.me().getFirstAtPathUsingSeparator(';'));
     }
 
     ///////////////////////////////////////////
@@ -378,7 +356,7 @@ public class IncomingInvoiceMenu {
 
     public List<Property> choices2FindInvoicesBySupplierAndApprovalStateAndProperties() {
         if (personRepository.me()!=null) {
-            return propertiesOfPerson(personRepository.me());
+            return externalUserService.getPropertiesForExternalUser();
         } else {
             return new ArrayList<>();
         }
@@ -398,5 +376,7 @@ public class IncomingInvoiceMenu {
     UserService userService;
     @Inject
     PropertyRepository propertyRepository;
+    @Inject
+    ExternalUserService externalUserService;
 
 }
