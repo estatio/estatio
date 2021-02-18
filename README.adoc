@@ -50,6 +50,22 @@ mvn clean install -DskipTests
 ----
 
 
+==== Download and build Estatio (using Intellij)
+
+1. Go to "File" -> "New" -> "Project from version control"
+2. Select "Git" in the "Version control" dropdown.
+3. In the URL, copy-paste "https://github.com/estatio/estatio.git".
+4. Click "Clone"
+5. Wait until Intellij is done downloading and indexing all the Maven dependencies (You will see a progress bar at the bottom of the IDE).
+6. Once the last step is done, click "Project" at the top left hand side.
+7. Click "estatio", to make sure that it is selected.
+8. Go to the menu at the top and click "Build", you should see various options "clean", "compile", "test".... If you don't see them, then it is probably because you have not selected "estatio" (top level directory of the project)
+9. Click "clean" in the "Build" dropdown menu.
+10. Once the last step is done, click "install". This will take a while (around 4-5 minutes) to finish.
+
+The clone is approx 400Mb, and takes approximately 5 minutes to build.
+
+
 ==== Download and build Estatio
 
 Download using git:
@@ -88,6 +104,20 @@ isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionPassword=
 
 The JDBC driver for HSQLDB is on the classpath.
 If you want to connect to some other database, be sure to update the `pom.xml` to add the driver as a `<dependency>`.
+
+
+=== Run Estatio (using Intellij)
+
+1. Click "Run" from the menu at the top.
+2. Click "Edit Configurations".
+3. Click "+" at the top left for adding a new configuration.
+4. Select "Maven" from the list.
+5. In the "Name" field, enter "estatio-webapp-run".
+6. For the "Working Directory", select estatioapp/webapp directory.
+7. In the "Command Line" field, copy-paste this "jetty:run".
+8. Click on "Apply" button.
+9. Click "Run" button to run this profile.
+
 
 === Run Estatio
 
