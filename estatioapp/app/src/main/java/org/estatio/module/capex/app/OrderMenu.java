@@ -9,12 +9,6 @@ import java.util.stream.Collectors;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 
-import org.apache.isis.applib.services.factory.FactoryService;
-import org.estatio.module.asset.contributions.Person_fixedAssetRoles;
-import org.estatio.module.asset.dom.PropertyRepository;
-import org.estatio.module.asset.dom.role.FixedAssetRole;
-import org.estatio.module.capex.dom.invoice.IncomingInvoice;
-import org.estatio.module.party.dom.*;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
@@ -37,15 +31,20 @@ import org.isisaddons.module.security.dom.user.ApplicationUser;
 import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import org.estatio.module.asset.dom.Property;
+import org.estatio.module.asset.dom.PropertyRepository;
 import org.estatio.module.base.dom.EstatioRole;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceRoleTypeEnum;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceType;
 import org.estatio.module.capex.dom.order.Order;
 import org.estatio.module.capex.dom.order.OrderRepository;
 import org.estatio.module.capex.dom.project.Project;
+import org.estatio.module.capex.dom.project.ProjectRepository;
 import org.estatio.module.capex.imports.OrderProjectImportAdapter;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
+import org.estatio.module.party.dom.Organisation;
+import org.estatio.module.party.dom.Party;
+import org.estatio.module.party.dom.PartyRepository;
 import org.estatio.module.tax.dom.Tax;
 
 import lombok.Getter;
@@ -110,18 +109,25 @@ public class OrderMenu {
     }
 
     public List<Property> choices0CreateOrder() {
-        if (EstatioRole.EXTERNAL_APPROVER.isApplicableFor(userService.getUser())) {
-            if (personRepository.me()!=null) {
-                return propertiesOfPerson(personRepository.me());
-            } else {
-                return new ArrayList<>();
-            }
+        if (externalUserService.isForExternalUser()) {
+            return externalUserService.getPropertiesForExternalUser();
         } else {
             return propertyRepository.allProperties();
         }
     }
 
+    public List<Project> autoComplete2CreateOrder(@MinLength(3) final String searchPhrase) {
+        if (externalUserService.isForExternalUser()) {
+            return externalUserService.getProjectsForExternalUser();
+        } else {
+            return projectRepository.autoComplete(searchPhrase);
+        }
+    }
+
     public List<Party> autoComplete4CreateOrder(@MinLength(3) final String searchPhrase) {
+        if (externalUserService.isForExternalUser()) {
+            return externalUserService.getBuyersForExternalUser();
+        }
         return partyRepository.autoCompleteWithRole(searchPhrase, IncomingInvoiceRoleTypeEnum.ECP);
     }
 
@@ -155,24 +161,6 @@ public class OrderMenu {
         return hideIfNotItalian;
     }
 
-    private List<Property> propertiesOfPerson(final Person person) {
-        return factoryService.mixin(Person_fixedAssetRoles.class, person).act()
-                .stream()
-                .map(FixedAssetRole::getAsset)
-                .filter(fixedAsset -> fixedAsset instanceof Property)
-                .map(fixedAsset -> (Property) fixedAsset)
-                .collect(Collectors.toList());
-    }
-
-    private List<Order> filterByPropertiesOfExternalPersonIfPossible(List<Order> orders) {
-        if (personRepository.me()!=null && EstatioRole.EXTERNAL_APPROVER.isApplicableFor(userService.getUser())) {
-            final List<Property> properties = propertiesOfPerson(personRepository.me());
-            return orders.stream().filter(order -> properties.contains(order.getProperty())).collect(Collectors.toList());
-        } else {
-            return orders;
-        }
-    }
-
     @Action(semantics = SemanticsOf.SAFE)
     public List<Order> findOrder(
             @Nullable final String barcodeOrOrderNumber,
@@ -180,12 +168,11 @@ public class OrderMenu {
             @ParameterLayout(named = "Order Date (Approximately)")
             @Nullable final LocalDate orderDate
     ) {
-        return filterByPropertiesOfExternalPersonIfPossible(
-                new OrderMenu.OrderFinder(orderRepository, partyRepository)
+        return new OrderMenu.OrderFinder(orderRepository, partyRepository)
                 .filterOrFindByDocumentName(barcodeOrOrderNumber)
                 .filterOrFindBySeller(sellerNameOrReference)
                 .filterOrFindByOrderDate(orderDate)
-                .getResult());
+                .getResult();
     }
 
     public String validateFindOrder(final String barcodeOrOrderNumber, final String sellerNameOfReference, final LocalDate orderDate) {
@@ -200,16 +187,12 @@ public class OrderMenu {
 
     @Action(semantics = SemanticsOf.SAFE)
     public List<Order> findOrdersByCenter(final Property center) {
-        return filterByPropertiesOfExternalPersonIfPossible(orderRepository.findByProperty(center));
+        return orderRepository.findByProperty(center);
     }
 
     public List<Property> choices0FindOrdersByCenter() {
-        if (EstatioRole.EXTERNAL_APPROVER.isApplicableFor(userService.getUser())) {
-            if (personRepository.me()!=null) {
-                return propertiesOfPerson(personRepository.me());
-            } else {
-                return new ArrayList<>();
-            }
+        if (externalUserService.isForExternalUser()) {
+            return externalUserService.getPropertiesForExternalUser();
         } else {
             return propertyRepository.allProperties();
         }
@@ -220,16 +203,12 @@ public class OrderMenu {
             final Property center,
             final Organisation supplier
     ) {
-        return filterByPropertiesOfExternalPersonIfPossible(orderRepository.findByPropertyAndSeller(center, supplier));
+        return orderRepository.findByPropertyAndSeller(center, supplier);
     }
 
     public List<Property> choices0FindOrdersByCenterAndSupplier() {
-        if (EstatioRole.EXTERNAL_APPROVER.isApplicableFor(userService.getUser())) {
-            if (personRepository.me()!=null) {
-                return propertiesOfPerson(personRepository.me());
-            } else {
-                return new ArrayList<>();
-            }
+        if (externalUserService.isForExternalUser()) {
+            return externalUserService.getPropertiesForExternalUser();
         } else {
             return propertyRepository.allProperties();
         }
@@ -358,7 +337,7 @@ public class OrderMenu {
 
     @Action(semantics = SemanticsOf.SAFE)
     public List<Order> findOrdersByOrderDate(final LocalDate fromDate, final LocalDate toDate) {
-        return filterByPropertiesOfExternalPersonIfPossible(orderRepository.findByOrderDateBetween(fromDate, toDate));
+        return orderRepository.findByOrderDateBetween(fromDate, toDate);
     }
 
     public LocalDate default0FindOrdersByOrderDate() {
@@ -373,7 +352,7 @@ public class OrderMenu {
 
     @Action(semantics = SemanticsOf.SAFE)
     public List<Order> findOrdersByEntryDate(final LocalDate fromDate, final LocalDate toDate) {
-        return filterByPropertiesOfExternalPersonIfPossible(orderRepository.findByEntryDateBetween(fromDate, toDate));
+        return orderRepository.findByEntryDateBetween(fromDate, toDate);
     }
 
     public LocalDate default0FindOrdersByEntryDate() {
@@ -388,7 +367,7 @@ public class OrderMenu {
 
     @Action(semantics = SemanticsOf.SAFE)
     public List<Order> findOrderByOrderNumber(final String orderNumber) {
-        return filterByPropertiesOfExternalPersonIfPossible(orderRepository.matchByOrderNumber(orderNumber));
+        return orderRepository.matchByOrderNumber(orderNumber);
     }
 
     ///////////////////////////////////////////
@@ -418,9 +397,6 @@ public class OrderMenu {
     ClockService clockService;
 
     @Inject
-    NumeratorAtPathRepository numeratorAtPathRepository;
-
-    @Inject
     MeService meService;
 
     @Inject
@@ -435,12 +411,10 @@ public class OrderMenu {
     NumeratorForOrdersRepository numeratorForOrdersRepository;
 
     @Inject
-    PersonRepository personRepository;
-
-    @Inject
-    FactoryService factoryService;
-
-    @Inject
     PropertyRepository propertyRepository;
 
+    @Inject
+    ExternalUserService externalUserService;
+
+    @Inject ProjectRepository projectRepository;
 }

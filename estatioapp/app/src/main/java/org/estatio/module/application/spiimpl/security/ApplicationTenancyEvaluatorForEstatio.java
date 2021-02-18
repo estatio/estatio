@@ -17,11 +17,9 @@
 package org.estatio.module.application.spiimpl.security;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.Callable;
-import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -38,13 +36,13 @@ import org.isisaddons.module.security.dom.user.ApplicationUser;
 
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.role.FixedAssetRoleRepository;
+import org.estatio.module.capex.app.ExternalUserService;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceItem;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalConfigurationUtil;
 import org.estatio.module.capex.dom.order.Order;
 import org.estatio.module.capex.dom.order.OrderItem;
 import org.estatio.module.invoice.dom.InvoiceItem;
-import org.estatio.module.party.dom.Person;
 import org.estatio.module.party.dom.PersonRepository;
 import org.estatio.module.task.dom.state.StateTransition;
 import org.estatio.module.task.dom.state.StateTransitionService;
@@ -64,6 +62,8 @@ public class ApplicationTenancyEvaluatorForEstatio implements ApplicationTenancy
 
     @Inject
     StateTransitionService stateTransitionService;
+
+    @Inject ExternalUserService externalUserService;
 
     public boolean handles(Class<?> cls) {
         return HasAtPath.class.isAssignableFrom(cls);
@@ -291,13 +291,7 @@ public class ApplicationTenancyEvaluatorForEstatio implements ApplicationTenancy
     }
 
     private List<Property> propertiesForUserAsPerson(final ApplicationUser applicationUser){
-        final Person userAsPerson = personRepository.findByUsername(applicationUser.getUsername());
-        if (userAsPerson==null) return Collections.EMPTY_LIST;
-        return fixedAssetRoleRepository.findByParty(userAsPerson).stream()
-                .map(r->r.getAsset())
-                .filter(a -> a.getClass().isAssignableFrom(Property.class))
-                .map(Property.class::cast)
-                .collect(Collectors.toList());
+        return externalUserService.getPropertiesForExternalUser();
     }
 
     private String applicationTenancyPathForCached(final Object domainObject) {
