@@ -38,6 +38,7 @@ import org.estatio.module.asset.dom.role.FixedAssetRole;
 import org.estatio.module.asset.dom.role.FixedAssetRoleRepository;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceItem;
+import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalConfigurationUtil;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
 import org.estatio.module.capex.dom.order.Order;
 import org.estatio.module.capex.dom.order.OrderItem;
@@ -132,43 +133,18 @@ public class ApplicationTenancyEvaluatorForEstatio_Test {
     @Mock FixedAssetRoleRepository mockFixedAssetRoleRepository;
 
     @Test
-    public void hides_when_person_for_italian_external_user_not_found() throws Exception {
-
-        // given
-        evaluator.personRepository = mockPersonRepository;
-        ApplicationUser externalUserIta = new ApplicationUser();
-        externalUserIta.setUsername("user1@external.ecpnv.com");
-        externalUserIta.setAtPath("/ITA");
-
-        // expect
-        context.checking(new Expectations(){{
-            oneOf(mockPersonRepository).findByUsername(externalUserIta.getUsername());
-            will(returnValue(null));
-        }});
-
-        // when, then
-        Assertions.assertThat(evaluator.hides(null, externalUserIta)).isEqualTo("Person for external user not found");
-
-    }
-
-    @Test
     public void hides_when_property_for_italian_external_user_not_found() throws Exception {
 
         // given
-        evaluator.personRepository = mockPersonRepository;
-        evaluator.fixedAssetRoleRepository = mockFixedAssetRoleRepository;
+        ApplicationTenancyEvaluatorForEstatio evaluator = new ApplicationTenancyEvaluatorForEstatio(){
+            @Override
+            List<Property> propertiesForUserAsPersonCached(final ApplicationUser applicationUser){
+                return Collections.EMPTY_LIST;
+            }
+        };
         ApplicationUser externalUserIta = new ApplicationUser();
         externalUserIta.setUsername("user1@external.ecpnv.com");
         externalUserIta.setAtPath("/ITA");
-        Person person = new Person();
-
-        // expect
-        context.checking(new Expectations(){{
-            oneOf(mockPersonRepository).findByUsername(externalUserIta.getUsername());
-            will(returnValue(person));
-            oneOf(mockFixedAssetRoleRepository).findByParty(person);
-            will(returnValue(Collections.EMPTY_LIST));
-        }});
 
         // when, then
         Assertions.assertThat(evaluator.hides(null, externalUserIta)).isEqualTo("No property could be derived for user");
@@ -179,8 +155,12 @@ public class ApplicationTenancyEvaluatorForEstatio_Test {
     public void hides_when_incoming_invoice_not_visible_for_italian_external_user() throws Exception {
 
         // given
-        evaluator.personRepository = mockPersonRepository;
-        evaluator.fixedAssetRoleRepository = mockFixedAssetRoleRepository;
+        ApplicationTenancyEvaluatorForEstatio evaluator = new ApplicationTenancyEvaluatorForEstatio(){
+            @Override
+            List<Property> propertiesForUserAsPersonCached(final ApplicationUser applicationUser){
+                return Arrays.asList(new Property());
+            }
+        };
         ApplicationUser externalUserIta = new ApplicationUser();
         externalUserIta.setUsername("user1@external.ecpnv.com");
         externalUserIta.setAtPath("/ITA");
@@ -189,14 +169,6 @@ public class ApplicationTenancyEvaluatorForEstatio_Test {
         Property property = new Property();
         far.setAsset(property);
         IncomingInvoice invoice = new IncomingInvoice();
-
-        // expect
-        context.checking(new Expectations(){{
-            oneOf(mockPersonRepository).findByUsername(externalUserIta.getUsername());
-            will(returnValue(person));
-            oneOf(mockFixedAssetRoleRepository).findByParty(person);
-            will(returnValue(Arrays.asList(far)));
-        }});
 
         // when, then
         Assertions.assertThat(evaluator.hides(invoice, externalUserIta)).isEqualTo("Invoice not visible for user");
@@ -207,8 +179,12 @@ public class ApplicationTenancyEvaluatorForEstatio_Test {
     public void hides_when_order_not_visible_for_italian_external_user() throws Exception {
 
         // given
-        evaluator.personRepository = mockPersonRepository;
-        evaluator.fixedAssetRoleRepository = mockFixedAssetRoleRepository;
+        ApplicationTenancyEvaluatorForEstatio evaluator = new ApplicationTenancyEvaluatorForEstatio(){
+            @Override
+            List<Property> propertiesForUserAsPersonCached(final ApplicationUser applicationUser){
+                return Arrays.asList(new Property());
+            }
+        };
         ApplicationUser externalUserIta = new ApplicationUser();
         externalUserIta.setUsername("user1@external.ecpnv.com");
         externalUserIta.setAtPath("/ITA");
@@ -217,14 +193,6 @@ public class ApplicationTenancyEvaluatorForEstatio_Test {
         Property property = new Property();
         far.setAsset(property);
         Order order = new Order();
-
-        // expect
-        context.checking(new Expectations(){{
-            oneOf(mockPersonRepository).findByUsername(externalUserIta.getUsername());
-            will(returnValue(person));
-            oneOf(mockFixedAssetRoleRepository).findByParty(person);
-            will(returnValue(Arrays.asList(far)));
-        }});
 
         // when, then
         Assertions.assertThat(evaluator.hides(order, externalUserIta)).isEqualTo("Order not visible for user");
@@ -237,8 +205,12 @@ public class ApplicationTenancyEvaluatorForEstatio_Test {
     public void hides_when_task_not_visible_for_italian_external_user() throws Exception {
 
         // given
-        evaluator.personRepository = mockPersonRepository;
-        evaluator.fixedAssetRoleRepository = mockFixedAssetRoleRepository;
+        ApplicationTenancyEvaluatorForEstatio evaluator = new ApplicationTenancyEvaluatorForEstatio(){
+            @Override
+            List<Property> propertiesForUserAsPersonCached(final ApplicationUser applicationUser){
+                return Arrays.asList(new Property());
+            }
+        };
         evaluator.stateTransitionService = mockStateTransitionService;
         ApplicationUser externalUserIta = new ApplicationUser();
         externalUserIta.setUsername("user1@external.ecpnv.com");
@@ -251,10 +223,6 @@ public class ApplicationTenancyEvaluatorForEstatio_Test {
 
         // expect
         context.checking(new Expectations(){{
-            oneOf(mockPersonRepository).findByUsername(externalUserIta.getUsername());
-            will(returnValue(person));
-            oneOf(mockFixedAssetRoleRepository).findByParty(person);
-            will(returnValue(Arrays.asList(far)));
             oneOf(mockStateTransitionService).findFor(task);
             will(returnValue(null));
         }});
@@ -320,7 +288,7 @@ public class ApplicationTenancyEvaluatorForEstatio_Test {
         IncomingInvoiceItem invoiceItem = new IncomingInvoiceItem();
         invoiceItem.setInvoice(invoice);
         final Project qualifyingProject = new Project();
-        qualifyingProject.setReference(ApplicationTenancyEvaluatorForEstatio.PROJECT_COL_EXT);
+        qualifyingProject.setReference(IncomingInvoiceApprovalConfigurationUtil.PROPERTY_REF_EXTERNAL_PROJECT_REF_MAP.get("COL"));
         invoiceItem.setProject(qualifyingProject);
         invoice.getItems().add(invoiceItem);
 
@@ -344,7 +312,7 @@ public class ApplicationTenancyEvaluatorForEstatio_Test {
         IncomingInvoiceItem invoiceItem = new IncomingInvoiceItem();
         invoiceItem.setInvoice(invoice);
         final Project qualifyingProject = new Project();
-        qualifyingProject.setReference(ApplicationTenancyEvaluatorForEstatio.PROJECT_COL_EXT);
+        qualifyingProject.setReference(IncomingInvoiceApprovalConfigurationUtil.PROPERTY_REF_EXTERNAL_PROJECT_REF_MAP.get("COL"));
         invoiceItem.setProject(qualifyingProject);
         invoice.getItems().add(invoiceItem);
 
@@ -412,7 +380,7 @@ public class ApplicationTenancyEvaluatorForEstatio_Test {
         List<Property> propertiesForUser = new ArrayList<>();
         OrderItem orderItem = new OrderItem();
         final Project qualifyingProject = new Project();
-        qualifyingProject.setReference(ApplicationTenancyEvaluatorForEstatio.PROJECT_COL_EXT);
+        qualifyingProject.setReference(IncomingInvoiceApprovalConfigurationUtil.PROPERTY_REF_EXTERNAL_PROJECT_REF_MAP.get("COL"));
         orderItem.setProject(qualifyingProject);
         order.getItems().add(orderItem);
 
@@ -435,7 +403,7 @@ public class ApplicationTenancyEvaluatorForEstatio_Test {
         List<Property> propertiesForUser = new ArrayList<>();
         OrderItem orderItem = new OrderItem();
         final Project qualifyingProject = new Project();
-        qualifyingProject.setReference(ApplicationTenancyEvaluatorForEstatio.PROJECT_COL_EXT);
+        qualifyingProject.setReference(IncomingInvoiceApprovalConfigurationUtil.PROPERTY_REF_EXTERNAL_PROJECT_REF_MAP.get("COL"));
         orderItem.setProject(qualifyingProject);
         order.getItems().add(orderItem);
 
@@ -465,7 +433,7 @@ public class ApplicationTenancyEvaluatorForEstatio_Test {
 
         // then
         Assertions.assertThat(evaluator.taskVisibleForExternalUser(task, propertiesForUser)).isFalse();
-        
+
     }
 
     @Test

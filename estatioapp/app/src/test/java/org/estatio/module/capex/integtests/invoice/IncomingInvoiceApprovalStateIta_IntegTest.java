@@ -112,7 +112,8 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
                         IncomingInvoiceNoDocument_enum.invoiceForItaRecoverable,
                         IncomingInvoiceNoDocument_enum.invoiceForItaDirectDebit,
                         IncomingInvoiceNoDocument_enum.invoiceForItaWithPaidDate,
-                        Project_enum.GraProject
+                        Project_enum.GraProject,
+                        Project_enum.RonProjectExternal
                 );
             }
         });
@@ -471,9 +472,11 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
     }
 
     @Test
-    public void recoverable_invoice_for_property_having_center_manager_needs_to_be_approved_by_center_manager_when_NOT_over_100000() throws Exception {
+    public void invoice_for_center_manager_needs_to_be_approved_by_center_manager_when_NOT_over_100000() throws Exception {
 
         // given
+        IncomingInvoiceItem item = (IncomingInvoiceItem) recoverableInvoice.getItems().first();
+        item.setProject(Project_enum.RonProjectExternal.findUsing(serviceRegistry2));
         List<IncomingInvoiceApprovalStateTransition> transitionsOfInvoice;
         transitionsOfInvoice = incomingInvoiceStateTransitionRepository.findByDomainObject(recoverableInvoice);
         assertThat(transitionsOfInvoice).hasSize(2);
@@ -591,7 +594,7 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
     }
 
     @Test
-    public void recoverable_invoice_for_property_having_center_manager_needs_to_be_approved_by_center_manager_when_over_100000() throws Exception {
+    public void invoice_for_center_manager_needs_to_be_approved_by_country_director_when_over_100000() throws Exception {
 
         List<IncomingInvoiceApprovalStateTransition> transitionsOfInvoice;
 
@@ -599,6 +602,7 @@ public class IncomingInvoiceApprovalStateIta_IntegTest extends CapexModuleIntegT
         recoverableInvoice.changeAmounts(new BigDecimal("81967.22"), new BigDecimal("100000.01"));
         IncomingInvoiceItem item = (IncomingInvoiceItem) recoverableInvoice.getItems().first();
         item.addAmounts(new BigDecimal("0.01"), BigDecimal.ZERO, new BigDecimal("0.01"));
+        item.setProject(Project_enum.RonProjectExternal.findUsing(serviceRegistry2));
 
         queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
         sudoService.sudo(Person_enum.LoredanaPropertyInvoiceMgrIt.getRef().toLowerCase(), (Runnable) () ->

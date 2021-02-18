@@ -16,6 +16,8 @@
  */
 package org.estatio.module.application.spiimpl.security;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.Callable;
@@ -38,6 +40,7 @@ import org.estatio.module.asset.dom.Property;
 import org.estatio.module.asset.dom.role.FixedAssetRoleRepository;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceItem;
+import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalConfigurationUtil;
 import org.estatio.module.capex.dom.order.Order;
 import org.estatio.module.capex.dom.order.OrderItem;
 import org.estatio.module.invoice.dom.InvoiceItem;
@@ -70,16 +73,7 @@ public class ApplicationTenancyEvaluatorForEstatio implements ApplicationTenancy
 
         if (applicationUser.getUsername().contains("external.ecpnv") && applicationUser.getAtPath().startsWith("/ITA")){
 
-            final Person userAsPerson = personRepository.findByUsername(applicationUser.getUsername());
-
-            if (userAsPerson==null) return "Person for external user not found";
-
-            // NOTE: for the moment we support just one fixed asset for an external user
-            final List<Property> properties = fixedAssetRoleRepository.findByParty(userAsPerson).stream()
-                    .map(r->r.getAsset())
-                    .filter(a -> a.getClass().isAssignableFrom(Property.class))
-                    .map(Property.class::cast)
-                    .collect(Collectors.toList());
+            final List<Property> properties = propertiesForUserAsPersonCached(applicationUser);
 
             if (properties.isEmpty()) return "No property could be derived for user";
 
@@ -143,25 +137,11 @@ public class ApplicationTenancyEvaluatorForEstatio implements ApplicationTenancy
     }
 
     boolean invoiceVisibleForExternalUser(final IncomingInvoice invoice, final List<Property> propertiesForUser){
+
         final Property propertyOnInvoice = invoice.getProperty();
         if (propertyOnInvoice == null ) return false;
 
-        switch (propertyOnInvoice.getReference()){
-        case "COL":
-            if (!atLeastOneItemHasProjectWithReference(invoice, PROJECT_COL_EXT)) return false;
-            break;
-
-        case "GIG":
-            if (!atLeastOneItemHasProjectWithReference(invoice, PROJECT_GIG_EXT)) return false;
-            break;
-
-        case "FAB":
-            if (!atLeastOneItemHasProjectWithReference(invoice, PROJECT_FAB_EXT)) return false;
-            break;
-
-        default:
-            return false;
-        }
+        if (!IncomingInvoiceApprovalConfigurationUtil.isInvoiceForExternalCenterManager(invoice)) return false;
 
         if (propertiesForUser.contains(propertyOnInvoice)) return true;
 
@@ -169,25 +149,16 @@ public class ApplicationTenancyEvaluatorForEstatio implements ApplicationTenancy
     }
 
     boolean orderVisibleForExternalUser(final Order order, final List<Property> propertiesForUser){
+
         final Property propertyOnOrder = order.getProperty();
         if (propertyOnOrder == null ) return false;
 
-        switch (propertyOnOrder.getReference()){
-        case "COL":
-            if (!atLeastOneItemHasProjectWithReference(order, PROJECT_COL_EXT)) return false;
-            break;
+        final List<String> propertyRefsFound = new ArrayList<>();
+        IncomingInvoiceApprovalConfigurationUtil.PROPERTY_REF_EXTERNAL_PROJECT_REF_MAP.forEach((k,v)->{
+            if (k.equals(propertyOnOrder.getReference()) && atLeastOneItemHasProjectWithReference(order, v)) propertyRefsFound.add(k);
+        });
 
-        case "GIG":
-            if (!atLeastOneItemHasProjectWithReference(order, PROJECT_GIG_EXT)) return false;
-            break;
-
-        case "FAB":
-            if (!atLeastOneItemHasProjectWithReference(order, PROJECT_FAB_EXT)) return false;
-            break;
-
-        default:
-            return false;
-        }
+        if (propertyRefsFound.isEmpty()) return false;
 
         if (propertiesForUser.contains(propertyOnOrder)) return true;
 
@@ -212,10 +183,6 @@ public class ApplicationTenancyEvaluatorForEstatio implements ApplicationTenancy
         }
         return false;
     }
-
-    public static String PROJECT_COL_EXT = "ITPR285";
-    public static String PROJECT_GIG_EXT = "ITPR286";
-    public static String PROJECT_FAB_EXT = "ITPR287";
 
     public String disables(Object domainObject, ApplicationUser applicationUser) {
         final String objectTenancyPath = applicationTenancyPathForCached(domainObject);
@@ -314,7 +281,25 @@ public class ApplicationTenancyEvaluatorForEstatio implements ApplicationTenancy
                             .toList();
     }
 
-    //region > helpers: applicationTenancyPathForCached, applicationTenancyPathFor, userTenancyPathForCached, userTenancyPathFor
+    //region > helpers: propertiesForUserAsPersonCached, propertiesForUserAsPerson, applicationTenancyPathForCached, applicationTenancyPathFor, userTenancyPathForCached, userTenancyPathFor
+
+    List<Property> propertiesForUserAsPersonCached(final ApplicationUser applicationUser){
+        return (List<Property>)queryResultsCache.execute(
+                (Callable) () -> propertiesForUserAsPerson(applicationUser),
+                ApplicationTenancyEvaluatorForEstatio.class,
+                "propertiesForUserAsPersonCached", applicationUser);
+    }
+
+    private List<Property> propertiesForUserAsPerson(final ApplicationUser applicationUser){
+        final Person userAsPerson = personRepository.findByUsername(applicationUser.getUsername());
+        if (userAsPerson==null) return Collections.EMPTY_LIST;
+        return fixedAssetRoleRepository.findByParty(userAsPerson).stream()
+                .map(r->r.getAsset())
+                .filter(a -> a.getClass().isAssignableFrom(Property.class))
+                .map(Property.class::cast)
+                .collect(Collectors.toList());
+    }
+
     private String applicationTenancyPathForCached(final Object domainObject) {
         return (String)queryResultsCache.execute(
                 (Callable) () -> applicationTenancyPathFor(domainObject),

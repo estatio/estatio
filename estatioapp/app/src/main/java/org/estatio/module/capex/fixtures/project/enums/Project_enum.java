@@ -108,6 +108,10 @@ public enum Project_enum implements PersonaWithBuilderScript<Project, ProjectBui
                     )
             }
     ),
+    RonProjectExternal("TESTEXT", "Recoverable for ext uers", ld(2018, 1, 1), ld(2021, 7, 1), It,
+            new ItemSpec[]{
+            }
+    ),
     ;
 
     @AllArgsConstructor

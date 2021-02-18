@@ -1,13 +1,15 @@
 package org.estatio.module.capex.dom.invoice.approval;
 
+import java.math.BigInteger;
+
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
 import org.estatio.module.asset.dom.Property;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
+import org.estatio.module.capex.dom.invoice.IncomingInvoiceItem;
+import org.estatio.module.capex.dom.project.Project;
 import org.estatio.module.party.dom.Organisation;
-
-import static org.junit.Assert.*;
 
 public class IncomingInvoiceApprovalConfigurationUtil_Test {
 
@@ -100,6 +102,58 @@ public class IncomingInvoiceApprovalConfigurationUtil_Test {
         buyer.setReference("ITXX");
         // then
         Assertions.assertThat(IncomingInvoiceApprovalConfigurationUtil.hasRecoverableCompletedByPropertyInvoiceManager(invoice)).isFalse();
+
+    }
+
+    @Test
+    public void isInvoiceForExternalCenterManager_works() throws Exception {
+
+        // given
+        IncomingInvoice invoice = new IncomingInvoice();
+        // when, then
+        Assertions.assertThat(IncomingInvoiceApprovalConfigurationUtil.isInvoiceForExternalCenterManager(invoice)).isFalse();
+
+        // when
+        Property property = new Property();
+        invoice.setProperty(property);
+        // then
+        Assertions.assertThat(IncomingInvoiceApprovalConfigurationUtil.isInvoiceForExternalCenterManager(invoice)).isFalse();
+
+        // when
+        property.setReference("FAB");
+        // then
+        Assertions.assertThat(IncomingInvoiceApprovalConfigurationUtil.isInvoiceForExternalCenterManager(invoice)).isFalse();
+
+        // when
+        IncomingInvoiceItem itemWithoutProject = new IncomingInvoiceItem();
+        itemWithoutProject.setSequence(BigInteger.valueOf(1));
+        invoice.getItems().add(itemWithoutProject);
+        // then
+        Assertions.assertThat(IncomingInvoiceApprovalConfigurationUtil.isInvoiceForExternalCenterManager(invoice)).isFalse();
+
+        // when
+        Project nonQualifyingproject = new Project();
+        nonQualifyingproject.setReference(IncomingInvoiceApprovalConfigurationUtil.PROPERTY_REF_EXTERNAL_PROJECT_REF_MAP.get("COL"));
+        IncomingInvoiceItem itemWithNonQualifyingProject = new IncomingInvoiceItem();
+        itemWithNonQualifyingProject.setInvoice(invoice);
+        itemWithNonQualifyingProject.setSequence(BigInteger.valueOf(2));
+        itemWithNonQualifyingProject.setProject(nonQualifyingproject);
+        invoice.getItems().add(itemWithNonQualifyingProject);
+
+        // then
+        Assertions.assertThat(IncomingInvoiceApprovalConfigurationUtil.isInvoiceForExternalCenterManager(invoice)).isFalse();
+
+        // when
+        Project qualifyingproject = new Project();
+        qualifyingproject.setReference(IncomingInvoiceApprovalConfigurationUtil.PROPERTY_REF_EXTERNAL_PROJECT_REF_MAP.get("FAB"));
+        IncomingInvoiceItem itemWithQualifyingProject = new IncomingInvoiceItem();
+        itemWithQualifyingProject.setInvoice(invoice);
+        itemWithQualifyingProject.setSequence(BigInteger.valueOf(3));
+        itemWithQualifyingProject.setProject(qualifyingproject);
+        invoice.getItems().add(itemWithQualifyingProject);
+
+        // then (finally all conditions met
+        Assertions.assertThat(IncomingInvoiceApprovalConfigurationUtil.isInvoiceForExternalCenterManager(invoice)).isTrue();
 
     }
 }

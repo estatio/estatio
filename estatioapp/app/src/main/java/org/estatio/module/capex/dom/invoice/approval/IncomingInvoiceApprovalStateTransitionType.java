@@ -3,7 +3,6 @@ package org.estatio.module.capex.dom.invoice.approval;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -293,9 +292,7 @@ public enum IncomingInvoiceApprovalStateTransitionType
                 final IncomingInvoice domainObject, final ServiceRegistry2 serviceRegistry2) {
             if (isItalian(domainObject) && domainObject.getType() != null && domainObject.getProperty() != null) {
                 // case where center manager italy has to approve first (APPROVE_AS_CENTER_MANAGER)
-                // the isItalian part above may be superfluous, because type ITA_RECOVERABLE should imply this
-                if (domainObject.getType() == IncomingInvoiceType.ITA_RECOVERABLE && hasCenterManager(domainObject.getProperty()))
-                    return false;
+                if (IncomingInvoiceApprovalConfigurationUtil.isInvoiceForExternalCenterManager(domainObject)) return false;
             }
             if (isInvoiceWithMonitoring(domainObject) && domainObject.getApprovalState()!=IncomingInvoiceApprovalState.MONITORED) return false;
 
@@ -427,7 +424,7 @@ public enum IncomingInvoiceApprovalStateTransitionType
             if (incomingInvoice.getType() == null || incomingInvoice.getProperty() == null)
                 return false;
             if (isInvoiceWithMonitoring(incomingInvoice)) return false;
-            return incomingInvoice.getType() == IncomingInvoiceType.ITA_RECOVERABLE && hasCenterManager(incomingInvoice.getProperty());
+            return IncomingInvoiceApprovalConfigurationUtil.isInvoiceForExternalCenterManager(incomingInvoice);
         }
 
         @Override
@@ -881,12 +878,6 @@ public enum IncomingInvoiceApprovalStateTransitionType
     static boolean hasPropertyInvoiceManager(final Property property) {
         return Lists.newArrayList(property.getRoles()).stream()
                 .filter(x -> x.getType() == FixedAssetRoleTypeEnum.PROPERTY_INV_MANAGER)
-                .anyMatch(FixedAssetRole::isCurrent);
-    }
-
-    static boolean hasCenterManager(final Property property) {
-        return Lists.newArrayList(property.getRoles()).stream()
-                .filter(x -> x.getType() == FixedAssetRoleTypeEnum.CENTER_MANAGER)
                 .anyMatch(FixedAssetRole::isCurrent);
     }
 
