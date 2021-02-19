@@ -179,7 +179,6 @@
                                     </cpt:action>
                                 </cpt:property>
                                 <cpt:property id="codaInfo" hidden="ALL_TABLES"/>
-                                <cpt:collection id="codaOrchestrations" hidden="ALL_TABLES"/>
                             </cpt:fieldSet>
                         </bs3:col>
                     </bs3:row>
@@ -257,6 +256,13 @@
                     <bs3:row>
                         <bs3:col span="12">
                             <cpt:collection id="amortisationSchedules" defaultView="table"/>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
+                <bs3:tab name="Coda Orchestration">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:collection id="codaOrchestrations" defaultView="table"/>
                         </bs3:col>
                     </bs3:row>
                 </bs3:tab>
