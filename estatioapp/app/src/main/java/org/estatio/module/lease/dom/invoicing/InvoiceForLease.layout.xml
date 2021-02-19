@@ -179,6 +179,7 @@
                                     </cpt:action>
                                 </cpt:property>
                                 <cpt:property id="codaInfo" hidden="ALL_TABLES"/>
+                                <cpt:collection id="codaOrchestrations" hidden="ALL_TABLES"/>
                             </cpt:fieldSet>
                         </bs3:col>
                     </bs3:row>
