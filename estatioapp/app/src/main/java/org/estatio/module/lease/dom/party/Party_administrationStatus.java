@@ -24,6 +24,10 @@ public class Party_administrationStatus {
         return tenantAdministrationStatusRepository.findStatus(party);
     }
 
+    public boolean hideProp(){
+        return !party.isTenant();
+    }
+
     @Inject
     TenantAdministrationStatusRepository tenantAdministrationStatusRepository;
 }
