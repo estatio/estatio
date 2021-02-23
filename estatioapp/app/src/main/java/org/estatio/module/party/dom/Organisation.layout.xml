@@ -28,6 +28,13 @@
                                             </cpt:action>
                                         </cpt:property>
                                     </cpt:fieldSet>
+                                    <cpt:fieldSet name="Administration" id="administration">
+                                        <cpt:property id="administrationStatus">
+                                            <cpt:action id="changeAdministrationStatus">
+                                                <cpt:named>Change</cpt:named>
+                                            </cpt:action>
+                                        </cpt:property>
+                                    </cpt:fieldSet>
                                 </bs3:col>
                             </bs3:row>
                         </bs3:tab>
