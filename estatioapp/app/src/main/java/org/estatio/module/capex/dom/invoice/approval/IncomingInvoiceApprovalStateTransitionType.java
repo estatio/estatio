@@ -542,6 +542,16 @@ public enum IncomingInvoiceApprovalStateTransitionType
             if (isItalian(incomingInvoice) && !hasGrossAmountAboveThreshold(incomingInvoice)) {
                 return false;
             }
+            if (incomingInvoice.getType()!=null){
+
+                switch (incomingInvoice.getType()){
+                case PROPERTY_EXPENSES:
+                case SERVICE_CHARGES:
+                    if (IncomingInvoiceApprovalConfigurationUtil.hasItemWithChargeMarketingNR(incomingInvoice)) return false;
+                    break;
+                }
+
+            }
             return true;
         }
 
