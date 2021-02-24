@@ -648,6 +648,7 @@ public class IncomingInvoiceApprovalState_IntegTest extends CapexModuleIntegTest
         transitions = incomingInvoiceStateTransitionRepository.findByDomainObject(incomingInvoice);
 
         // then
+        Assertions.assertThat(incomingInvoice.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.APPROVED_BY_MARKETING_MANAGER);
         Assertions.assertThat(transitions).hasSize(5);
         final IncomingInvoiceApprovalStateTransition transitionForCountryDirApproval = transitions.get(0);
         Assertions.assertThat(transitionForCountryDirApproval.getTransitionType()).isEqualTo(IncomingInvoiceApprovalStateTransitionType.APPROVE_AS_COUNTRY_DIRECTOR);
