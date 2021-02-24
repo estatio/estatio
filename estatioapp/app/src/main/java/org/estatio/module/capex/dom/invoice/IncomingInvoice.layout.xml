@@ -196,6 +196,7 @@
                                             <cpt:action id="monitor"/>
                                             <cpt:action id="approve"/>
                                             <cpt:action id="approveAsCenterManager"/>
+                                            <cpt:action id="approveAsMarketingManager"/>
                                             <cpt:action id="approveAsCountryDirector"/>
                                             <cpt:action id="approveAsCorporateManager"/>
                                             <cpt:action id="approveLocalAsCountryDirector"/>

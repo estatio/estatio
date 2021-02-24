@@ -164,6 +164,12 @@ public enum Person_enum
             new FixedAssetRoleSpec[] {
             }),
 
+    // marketing manager
+    PerrineMarketingManagerFr("PMARKETING", "Perrine", "Marketing", null, true, FEMALE, Fr, Fr,
+            null, null,
+            new IPartyRoleType[] { PartyRoleTypeEnum.MARKETING_MANAGER },
+            new FixedAssetRoleSpec[] {}),
+
     // country director
     GabrielCountryDirectorFr("GRESPONSABLE", "Gabriel", "Responsable", null, true, FEMALE, Fr, Fr,
             null, null,

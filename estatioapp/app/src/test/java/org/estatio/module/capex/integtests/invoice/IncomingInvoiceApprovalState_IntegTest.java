@@ -28,12 +28,14 @@ import org.estatio.module.asset.fixtures.property.enums.Property_enum;
 import org.estatio.module.base.spiimpl.togglz.EstatioTogglzFeature;
 import org.estatio.module.capex.dom.invoice.IncomingInvoice;
 import org.estatio.module.capex.dom.invoice.IncomingInvoiceRepository;
+import org.estatio.module.capex.dom.invoice.IncomingInvoiceType;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalConfigurationUtil;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
 import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionType;
 import org.estatio.module.capex.dom.invoice.approval.triggers.IncomingInvoice_approve;
 import org.estatio.module.capex.dom.invoice.approval.triggers.IncomingInvoice_approveAsCountryDirector;
+import org.estatio.module.capex.dom.invoice.approval.triggers.IncomingInvoice_approveAsMarketingManager;
 import org.estatio.module.capex.dom.invoice.approval.triggers.IncomingInvoice_checkPayment;
 import org.estatio.module.capex.dom.invoice.approval.triggers.IncomingInvoice_complete;
 import org.estatio.module.capex.dom.invoice.approval.triggers.IncomingInvoice_monitor;
@@ -44,6 +46,7 @@ import org.estatio.module.capex.dom.project.ProjectRoleTypeEnum;
 import org.estatio.module.capex.fixtures.incominginvoice.enums.IncomingInvoice_enum;
 import org.estatio.module.capex.integtests.CapexModuleIntegTestAbstract;
 import org.estatio.module.capex.seed.DocumentTypesAndTemplatesForCapexFixture;
+import org.estatio.module.charge.dom.Applicability;
 import org.estatio.module.charge.dom.Charge;
 import org.estatio.module.charge.dom.ChargeRepository;
 import org.estatio.module.charge.fixtures.incoming.builders.IncomingChargesFraXlsxFixture;
@@ -52,6 +55,7 @@ import org.estatio.module.financial.dom.bankaccount.verification.BankAccountVeri
 import org.estatio.module.financial.dom.bankaccount.verification.BankAccountVerificationStateTransition;
 import org.estatio.module.financial.dom.bankaccount.verification.BankAccount_verificationState;
 import org.estatio.module.financial.fixtures.bankaccount.enums.BankAccount_enum;
+import org.estatio.module.invoice.dom.InvoiceItem;
 import org.estatio.module.invoice.dom.PaymentMethod;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.dom.Party;
@@ -94,11 +98,13 @@ public class IncomingInvoiceApprovalState_IntegTest extends CapexModuleIntegTest
                 ec.executeChild(this, new IncomingChargesFraXlsxFixture());
                 ec.executeChildren(this,
                         IncomingInvoice_enum.fakeInvoice2Pdf,
+                        IncomingInvoice_enum.fakeInvoice3Pdf,
                         BankAccount_enum.TopModelFr,
                         Person_enum.BrunoTreasurerFr,
                         Person_enum.BertrandIncomingInvoiceManagerFr,
                         Person_enum.OlivePropertyManagerFr,
                         Person_enum.PeterPanProjectManagerFr,
+                        Person_enum.PerrineMarketingManagerFr,
                         Person_enum.GabrielCountryDirectorFr);
             }
         });
@@ -594,6 +600,144 @@ public class IncomingInvoiceApprovalState_IntegTest extends CapexModuleIntegTest
         assertThat(approveTransition.getTransitionType()).isEqualTo(IncomingInvoiceApprovalStateTransitionType.APPROVE);
         Task approveTask = approveTransition.getTask();
         assertThat(approveTask.getAssignedTo()).isEqualTo(ProjectRoleTypeEnum.PROJECT_MANAGER.findUsing(partyRoleTypeRepository));
+
+    }
+
+    @Test
+    public void workflow_for_approval_by_marketing_manager_works() throws Exception {
+
+        // given
+        final Charge chargeForMarketingNR = chargeRepository
+                .findOrCreate("/FRA", IncomingInvoiceApprovalConfigurationUtil.CHARGE_REF_MARKETING_NR,
+                        IncomingInvoiceApprovalConfigurationUtil.CHARGE_REF_MARKETING_NR,
+                        IncomingInvoiceApprovalConfigurationUtil.CHARGE_REF_MARKETING_NR, Applicability.INCOMING);
+
+        incomingInvoice.setType(IncomingInvoiceType.PROPERTY_EXPENSES);
+        final InvoiceItem firstInvoiceItem = incomingInvoice.getItems().first();
+        firstInvoiceItem.setCharge(chargeForMarketingNR);
+        Assertions.assertThat(incomingInvoice.getType()).isEqualTo(IncomingInvoiceType.PROPERTY_EXPENSES);
+        Assertions.assertThat(incomingInvoice.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.NEW);
+        Assertions.assertThat(firstInvoiceItem.getCharge().getReference()).isEqualTo(IncomingInvoiceApprovalConfigurationUtil.CHARGE_REF_MARKETING_NR);
+
+        // when
+        queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
+        sudoService.sudo(Person_enum.BertrandIncomingInvoiceManagerFr.getRef().toLowerCase(), (Runnable) () ->
+                wrap(mixin(IncomingInvoice_complete.class, incomingInvoice)).act(FixedAssetRoleTypeEnum.PROPERTY_MANAGER.findUsing(partyRoleTypeRepository), null, null));
+        queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
+        sudoService.sudo(Person_enum.FloellaAssetManagerFr.getRef().toLowerCase(), (Runnable) () ->
+                wrap(mixin(IncomingInvoice_approve.class, incomingInvoice)).act(null, null, null, true));
+        Assertions.assertThat(incomingInvoice.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.APPROVED);
+
+        // then
+        List<IncomingInvoiceApprovalStateTransition> transitions = incomingInvoiceStateTransitionRepository
+                .findByDomainObject(incomingInvoice);
+        Assertions.assertThat(transitions).hasSize(4);
+        final IncomingInvoiceApprovalStateTransition transitionForMarketingMgrApproval = transitions.get(0);
+        Assertions.assertThat(transitionForMarketingMgrApproval.getTransitionType()).isEqualTo(IncomingInvoiceApprovalStateTransitionType.APPROVE_AS_MARKETING_MANAGER);
+        Assertions.assertThat(transitionForMarketingMgrApproval.getFromState()).isEqualTo(IncomingInvoiceApprovalState.APPROVED);
+        Assertions.assertThat(transitionForMarketingMgrApproval.getToState()).isEqualTo(null);
+        Assertions.assertThat(transitionForMarketingMgrApproval.getCompletedBy()).isEqualTo(null);
+        Task approveTaskForMarketingManager = transitionForMarketingMgrApproval.getTask();
+        Assertions.assertThat(approveTaskForMarketingManager.getAssignedTo()).isEqualTo(PartyRoleTypeEnum.MARKETING_MANAGER.findUsing(partyRoleTypeRepository));
+        Assertions.assertThat(approveTaskForMarketingManager.getPersonAssignedTo()).isEqualTo(Person_enum.PerrineMarketingManagerFr.findUsing(serviceRegistry));
+
+        // and when
+        queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
+        sudoService.sudo(Person_enum.PerrineMarketingManagerFr.getRef().toLowerCase(), (Runnable) () ->
+                wrap(mixin(IncomingInvoice_approveAsMarketingManager.class, incomingInvoice)).act(null, null, null, true));
+        transitions = incomingInvoiceStateTransitionRepository.findByDomainObject(incomingInvoice);
+
+        // then
+        Assertions.assertThat(transitions).hasSize(5);
+        final IncomingInvoiceApprovalStateTransition transitionForCountryDirApproval = transitions.get(0);
+        Assertions.assertThat(transitionForCountryDirApproval.getTransitionType()).isEqualTo(IncomingInvoiceApprovalStateTransitionType.APPROVE_AS_COUNTRY_DIRECTOR);
+
+    }
+
+    @Test
+    public void workflow_for_approval_by_marketing_manager_works_when_rejecting() throws Exception {
+
+        // given
+        final Charge chargeForMarketingNR = chargeRepository
+                .findOrCreate("/FRA", IncomingInvoiceApprovalConfigurationUtil.CHARGE_REF_MARKETING_NR,
+                        IncomingInvoiceApprovalConfigurationUtil.CHARGE_REF_MARKETING_NR,
+                        IncomingInvoiceApprovalConfigurationUtil.CHARGE_REF_MARKETING_NR, Applicability.INCOMING);
+
+        incomingInvoice.setType(IncomingInvoiceType.PROPERTY_EXPENSES);
+        final InvoiceItem firstInvoiceItem = incomingInvoice.getItems().first();
+        firstInvoiceItem.setCharge(chargeForMarketingNR);
+        Assertions.assertThat(incomingInvoice.getType()).isEqualTo(IncomingInvoiceType.PROPERTY_EXPENSES);
+        Assertions.assertThat(incomingInvoice.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.NEW);
+        Assertions.assertThat(firstInvoiceItem.getCharge().getReference()).isEqualTo(IncomingInvoiceApprovalConfigurationUtil.CHARGE_REF_MARKETING_NR);
+
+        // when
+        queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
+        sudoService.sudo(Person_enum.BertrandIncomingInvoiceManagerFr.getRef().toLowerCase(), (Runnable) () ->
+                wrap(mixin(IncomingInvoice_complete.class, incomingInvoice)).act(FixedAssetRoleTypeEnum.PROPERTY_MANAGER.findUsing(partyRoleTypeRepository), null, null));
+        queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
+        sudoService.sudo(Person_enum.FloellaAssetManagerFr.getRef().toLowerCase(), (Runnable) () ->
+                wrap(mixin(IncomingInvoice_approve.class, incomingInvoice)).act(null, null, null, true));
+        Assertions.assertThat(incomingInvoice.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.APPROVED);
+
+        // then
+        List<IncomingInvoiceApprovalStateTransition> transitions = incomingInvoiceStateTransitionRepository
+                .findByDomainObject(incomingInvoice);
+        Assertions.assertThat(transitions).hasSize(4);
+        final IncomingInvoiceApprovalStateTransition transitionForMarketingMgrApproval = transitions.get(0);
+        Assertions.assertThat(transitionForMarketingMgrApproval.getTransitionType()).isEqualTo(IncomingInvoiceApprovalStateTransitionType.APPROVE_AS_MARKETING_MANAGER);
+        Assertions.assertThat(transitionForMarketingMgrApproval.getFromState()).isEqualTo(IncomingInvoiceApprovalState.APPROVED);
+        Assertions.assertThat(transitionForMarketingMgrApproval.getToState()).isEqualTo(null);
+        Assertions.assertThat(transitionForMarketingMgrApproval.getCompletedBy()).isEqualTo(null);
+        Task approveTaskForMarketingManager = transitionForMarketingMgrApproval.getTask();
+        Assertions.assertThat(approveTaskForMarketingManager.getAssignedTo()).isEqualTo(PartyRoleTypeEnum.MARKETING_MANAGER.findUsing(partyRoleTypeRepository));
+        Assertions.assertThat(approveTaskForMarketingManager.getPersonAssignedTo()).isEqualTo(Person_enum.PerrineMarketingManagerFr.findUsing(serviceRegistry));
+
+        // and when
+        queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
+        sudoService.sudo(Person_enum.PerrineMarketingManagerFr.getRef().toLowerCase(), (Runnable) () ->
+                wrap(mixin(IncomingInvoice_reject.class, incomingInvoice)).act(null, null, "NO GOOD"));
+        transitions = incomingInvoiceStateTransitionRepository.findByDomainObject(incomingInvoice);
+
+        // then
+        Assertions.assertThat(transitions).hasSize(5);
+        final IncomingInvoiceApprovalStateTransition transitionForCountryDirApproval = transitions.get(0);
+        Assertions.assertThat(transitionForCountryDirApproval.getTransitionType()).isEqualTo(IncomingInvoiceApprovalStateTransitionType.COMPLETE);
+
+    }
+
+
+    @Test
+    public void workflow_for_approval_by_marketing_manager_only_for_charge_marketing_NR() throws Exception {
+
+        // given
+
+        incomingInvoice.setType(IncomingInvoiceType.PROPERTY_EXPENSES);
+        final InvoiceItem firstInvoiceItem = incomingInvoice.getItems().first();
+        Assertions.assertThat(incomingInvoice.getType()).isEqualTo(IncomingInvoiceType.PROPERTY_EXPENSES);
+        Assertions.assertThat(incomingInvoice.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.NEW);
+        Assertions.assertThat(firstInvoiceItem.getCharge().getReference()).isNotEqualTo(IncomingInvoiceApprovalConfigurationUtil.CHARGE_REF_MARKETING_NR);
+
+        // when
+        queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
+        sudoService.sudo(Person_enum.BertrandIncomingInvoiceManagerFr.getRef().toLowerCase(), (Runnable) () ->
+                wrap(mixin(IncomingInvoice_complete.class, incomingInvoice)).act(FixedAssetRoleTypeEnum.PROPERTY_MANAGER.findUsing(partyRoleTypeRepository), null, null));
+        queryResultsCache.resetForNextTransaction(); // workaround: clear MeService#me cache
+        sudoService.sudo(Person_enum.FloellaAssetManagerFr.getRef().toLowerCase(), (Runnable) () ->
+                wrap(mixin(IncomingInvoice_approve.class, incomingInvoice)).act(null, null, null, true));
+        Assertions.assertThat(incomingInvoice.getApprovalState()).isEqualTo(IncomingInvoiceApprovalState.APPROVED);
+
+        // then
+        List<IncomingInvoiceApprovalStateTransition> transitions = incomingInvoiceStateTransitionRepository
+                .findByDomainObject(incomingInvoice);
+        Assertions.assertThat(transitions).hasSize(4);
+        final IncomingInvoiceApprovalStateTransition transitionForCountryDirApproval = transitions.get(0);
+        Assertions.assertThat(transitionForCountryDirApproval.getTransitionType()).isEqualTo(IncomingInvoiceApprovalStateTransitionType.APPROVE_AS_COUNTRY_DIRECTOR);
+        Assertions.assertThat(transitionForCountryDirApproval.getFromState()).isEqualTo(IncomingInvoiceApprovalState.APPROVED);
+        Assertions.assertThat(transitionForCountryDirApproval.getToState()).isEqualTo(null);
+        Assertions.assertThat(transitionForCountryDirApproval.getCompletedBy()).isEqualTo(null);
+        Task approveTaskForCountryDir = transitionForCountryDirApproval.getTask();
+        Assertions.assertThat(approveTaskForCountryDir.getAssignedTo()).isEqualTo(PartyRoleTypeEnum.COUNTRY_DIRECTOR.findUsing(partyRoleTypeRepository));
+        Assertions.assertThat(approveTaskForCountryDir.getPersonAssignedTo()).isEqualTo(Person_enum.GabrielCountryDirectorFr.findUsing(serviceRegistry));
 
     }
 

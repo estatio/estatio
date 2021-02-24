@@ -1,8 +1,5 @@
 package org.estatio.module.party.dom.role;
 
-import java.util.Arrays;
-import java.util.List;
-
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 
@@ -19,7 +16,8 @@ public enum PartyRoleTypeEnum implements IPartyRoleType {
     PREFERRED_DIRECTOR,
     ADVISOR,
     TECHNICIAN,
-    SECTOR_MAINTAINER;
+    SECTOR_MAINTAINER,
+    MARKETING_MANAGER;
 
 
     @Override
