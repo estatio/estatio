@@ -1,6 +1,9 @@
 package org.estatio.module.lease.dom.party;
 
-import javax.jdo.annotations.*;
+import javax.jdo.annotations.Column;
+import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.Unique;
 
 import org.joda.time.LocalDate;
 
@@ -9,6 +12,8 @@ import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.SemanticsOf;
+
+import org.incode.module.base.dom.utils.TitleBuilder;
 
 import org.estatio.module.party.dom.Party;
 
@@ -32,6 +37,10 @@ import lombok.Setter;
 @Unique(name = "TenantAdministrationStatus_tenant_UNQ", members = {"tenant"})
 @DomainObject(objectType = "party.TenantAdministrationStatus")
 public class TenantAdministrationStatus {
+
+    public String title(){
+        return TitleBuilder.start().withParent(getTenant()).withName(getStatus()).toString();
+    }
 
     @Getter @Setter
     @Column(allowsNull = "false", name = "partyId")
