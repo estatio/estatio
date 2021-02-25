@@ -28,13 +28,6 @@
                                             </cpt:action>
                                         </cpt:property>
                                     </cpt:fieldSet>
-                                    <cpt:fieldSet name="Administration" id="administration">
-                                        <cpt:property id="administrationStatus">
-                                            <cpt:action id="changeAdministrationStatus">
-                                                <cpt:named>Change</cpt:named>
-                                            </cpt:action>
-                                        </cpt:property>
-                                    </cpt:fieldSet>
                                 </bs3:col>
                             </bs3:row>
                         </bs3:tab>
@@ -117,6 +110,19 @@
                             <bs3:row>
                                 <bs3:col span="12">
                                     <cpt:collection id="previousNames"/>
+                                </bs3:col>
+                            </bs3:row>
+                        </bs3:tab>
+                        <bs3:tab name="Administration Status">
+                            <bs3:row>
+                                <bs3:col span="12">
+                                    <cpt:fieldSet name="Administration" id="administration">
+                                        <cpt:property id="administrationStatus">
+                                            <cpt:action id="changeAdministrationStatus">
+                                                <cpt:named>Change</cpt:named>
+                                            </cpt:action>
+                                        </cpt:property>
+                                    </cpt:fieldSet>
                                 </bs3:col>
                             </bs3:row>
                         </bs3:tab>

@@ -1,15 +1,18 @@
 package org.estatio.module.lease.dom.party;
 
+import java.util.List;
+
+import javax.annotation.Nullable;
+import javax.inject.Inject;
+
+import org.joda.time.LocalDate;
+
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
-
 import org.apache.isis.applib.query.QueryDefault;
 import org.apache.isis.applib.services.repository.RepositoryService;
-import org.estatio.module.asset.dom.counts.Count;
-import org.estatio.module.budget.dom.budgetitem.BudgetItemValue;
-import org.estatio.module.party.dom.Party;
 
-import javax.inject.Inject;
+import org.estatio.module.party.dom.Party;
 
 @DomainService(nature = NatureOfService.DOMAIN,
         repositoryFor = TenantAdministrationStatus.class,
@@ -24,22 +27,28 @@ public class TenantAdministrationStatusRepository {
                         "tenant", tenant));
     }
 
-    public TenantAdministrationStatus upsert(final AdministrationStatus status, final Party tenant){
+    public TenantAdministrationStatus upsert(final AdministrationStatus status, final Party tenant, @Nullable final LocalDate judicalRedressDate){
         TenantAdministrationStatus tenantStatus = findStatus(tenant);
         if (tenantStatus != null) {
             tenantStatus.setStatus(status);
+            tenantStatus.setJudicialRedressDate(judicalRedressDate);
         } else {
-            tenantStatus = create(status, tenant);
+            tenantStatus = create(status, tenant, judicalRedressDate);
         }
         return tenantStatus;
     }
 
-    private TenantAdministrationStatus create(final AdministrationStatus status, final Party tenant) {
+    private TenantAdministrationStatus create(final AdministrationStatus status, final Party tenant, final LocalDate judicalRedressDate) {
         TenantAdministrationStatus tenantStatus = new TenantAdministrationStatus();
         tenantStatus.setTenant(tenant);
         tenantStatus.setStatus(status);
+        tenantStatus.setJudicialRedressDate(judicalRedressDate);
         repositoryService.persistAndFlush(tenantStatus);
         return tenantStatus;
+    }
+
+    public List<TenantAdministrationStatus> listAll(){
+        return repositoryService.allInstances(TenantAdministrationStatus.class);
     }
 
     @Inject

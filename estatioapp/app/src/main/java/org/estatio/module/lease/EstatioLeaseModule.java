@@ -73,6 +73,7 @@ import org.estatio.module.lease.dom.occupancy.tags.Activity;
 import org.estatio.module.lease.dom.occupancy.tags.Brand;
 import org.estatio.module.lease.dom.occupancy.tags.Sector;
 import org.estatio.module.lease.dom.occupancy.tags.UnitSize;
+import org.estatio.module.lease.dom.party.TenantAdministrationStatus;
 import org.estatio.module.settings.EstatioSettingsModule;
 
 @XmlRootElement(name = "module")
@@ -113,6 +114,7 @@ public final class EstatioLeaseModule extends ModuleAbstract {
                 String sql;
                 String table;
 
+                deleteFrom(TenantAdministrationStatus.class);
                 deleteFrom(EventSourceLinkForBreakOption.class);
 
                 // InvoiceAttribute
