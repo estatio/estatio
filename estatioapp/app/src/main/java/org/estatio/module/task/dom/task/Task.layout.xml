@@ -61,6 +61,9 @@
                                     <cpt:action id="approveIncomingInvoiceAsCenterManager">
                                         <cpt:named>Approve as Center Manager</cpt:named>
                                     </cpt:action>
+                                    <cpt:action id="approveIncomingInvoiceAsMarketingManager">
+                                        <cpt:named>Approve as Marketing Manager</cpt:named>
+                                    </cpt:action>
                                     <cpt:action id="advise"/>
                                     <cpt:action id="adviseToApprove"/>
                                     <cpt:action id="noAdvise"/>

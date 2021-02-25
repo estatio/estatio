@@ -14,6 +14,7 @@ public enum IncomingInvoiceApprovalState implements State<IncomingInvoiceApprova
     MONITORED                    (false, false),
     DISCARDED                    (false, true ),
     APPROVED                     (true,  false),
+    APPROVED_BY_MARKETING_MANAGER(true, false),
     APPROVED_BY_COUNTRY_DIRECTOR (true,  false),
     APPROVED_BY_CORPORATE_MANAGER(true,  false),
     PENDING_BANK_ACCOUNT_CHECK   (false, false),
@@ -45,6 +46,7 @@ public enum IncomingInvoiceApprovalState implements State<IncomingInvoiceApprova
                 IncomingInvoiceApprovalState.COMPLETED,
                 IncomingInvoiceApprovalState.MONITORED,
                 IncomingInvoiceApprovalState.APPROVED,
+                IncomingInvoiceApprovalState.APPROVED_BY_MARKETING_MANAGER,
                 IncomingInvoiceApprovalState.APPROVED_BY_CORPORATE_MANAGER,
                 IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_DIRECTOR,
                 IncomingInvoiceApprovalState.PENDING_BANK_ACCOUNT_CHECK);

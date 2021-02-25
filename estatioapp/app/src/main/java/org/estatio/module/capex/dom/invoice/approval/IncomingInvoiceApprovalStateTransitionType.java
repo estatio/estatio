@@ -466,9 +466,44 @@ public enum IncomingInvoiceApprovalStateTransitionType
             return domainObject.isApprovedFully();
         }
     },
+    APPROVE_AS_MARKETING_MANAGER(
+            IncomingInvoiceApprovalState.APPROVED,
+            IncomingInvoiceApprovalState.APPROVED_BY_MARKETING_MANAGER,
+            NextTransitionSearchStrategy.firstMatchingExcluding(REJECT),
+            TaskAssignmentStrategy.to(PartyRoleTypeEnum.MARKETING_MANAGER),
+            AdvancePolicy.AUTOMATIC){
+
+        @Override
+        public boolean isMatch(
+                final IncomingInvoice incomingInvoice,
+                final ServiceRegistry2 serviceRegistry2) {
+            if (isItalian(incomingInvoice))
+                return false; // superfluous but just to be explicit
+
+            if (incomingInvoice.getType()!=null){
+
+                switch (incomingInvoice.getType()){
+                case PROPERTY_EXPENSES:
+                case SERVICE_CHARGES:
+                    if (IncomingInvoiceApprovalConfigurationUtil.hasItemWithChargeMarketingNR(incomingInvoice)) return true;
+                    break;
+                }
+
+            }
+            return false;
+        }
+
+        @Override
+        public boolean isAutoGuardSatisfied(
+                final IncomingInvoice domainObject, final ServiceRegistry2 serviceRegistry2) {
+            return domainObject.isApprovedFully();
+        }
+
+    },
     APPROVE_AS_COUNTRY_DIRECTOR(
             Lists.newArrayList(
-                    IncomingInvoiceApprovalState.APPROVED
+                    IncomingInvoiceApprovalState.APPROVED,
+                    IncomingInvoiceApprovalState.APPROVED_BY_MARKETING_MANAGER
                     //ECP-1298
 //                    ,
 //                    IncomingInvoiceApprovalState.APPROVED_BY_CENTER_MANAGER
@@ -506,6 +541,16 @@ public enum IncomingInvoiceApprovalStateTransitionType
                 final ServiceRegistry2 serviceRegistry2) {
             if (isItalian(incomingInvoice) && !hasGrossAmountAboveThreshold(incomingInvoice)) {
                 return false;
+            }
+            if (incomingInvoice.getType()!=null && incomingInvoice.getApprovalState()!=IncomingInvoiceApprovalState.APPROVED_BY_MARKETING_MANAGER){
+
+                switch (incomingInvoice.getType()){
+                case PROPERTY_EXPENSES:
+                case SERVICE_CHARGES:
+                    if (IncomingInvoiceApprovalConfigurationUtil.hasItemWithChargeMarketingNR(incomingInvoice)) return false;
+                    break;
+                }
+
             }
             return true;
         }

@@ -33,6 +33,8 @@ public class IncomingInvoiceApprovalConfigurationUtil {
 
     private static List<String> buyerRefsHavingRecoverableCompletedByPropertyInvoiceManager = Arrays.asList("IT01");
 
+    public static String CHARGE_REF_MARKETING_NR = "MARKETING EXPENSES (NR)";
+
     // ECP-1346
     public static final Map<String, String> PROPERTY_REF_EXTERNAL_PROJECT_REF_MAP = ImmutableMap.of(
             "COL", "ITPR285",
@@ -92,4 +94,10 @@ public class IncomingInvoiceApprovalConfigurationUtil {
         return false;
     }
 
+    public static boolean hasItemWithChargeMarketingNR(final IncomingInvoice incomingInvoice) {
+        for (InvoiceItem ii : incomingInvoice.getItems()){
+            if (ii.getCharge()!=null && ii.getCharge().getReference().equals(CHARGE_REF_MARKETING_NR)) return true;
+        }
+        return false;
+    }
 }
