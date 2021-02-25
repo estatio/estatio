@@ -57,6 +57,14 @@ public class Task_approveIncomingInvoiceAsMarketingManager
         return mixin().disableAct();
     }
 
+    public IPartyRoleType default0Act() {
+        return mixin().default0Act();
+    }
+
+    public List<? extends IPartyRoleType> choices0Act() {
+        return mixin().choices0Act();
+    }
+
     public String validate2Act(String comment) {
         return validateCommentIfByProxy(comment);
     }

@@ -62,6 +62,14 @@ public class IncomingInvoice_approveAsMarketingManager extends IncomingInvoice_t
         return reasonGuardNotSatisified();
     }
 
+    public IPartyRoleType default0Act() {
+        return choices0Act().stream().findFirst().orElse(null);
+    }
+
+    public List<? extends IPartyRoleType> choices0Act() {
+        return enumPartyRoleType();
+    }
+
     public Person default1Act(final IPartyRoleType roleType) {
         return defaultPersonToAssignNextTo(roleType);
     }
