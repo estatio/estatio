@@ -59,6 +59,7 @@ public enum IncomingInvoiceApprovalStateTransitionType
                     IncomingInvoiceApprovalState.COMPLETED,
                     IncomingInvoiceApprovalState.MONITORED,
                     IncomingInvoiceApprovalState.APPROVED,
+                    IncomingInvoiceApprovalState.APPROVED_BY_MARKETING_MANAGER,
                     IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_DIRECTOR,
                     IncomingInvoiceApprovalState.PENDING_BANK_ACCOUNT_CHECK,
                     IncomingInvoiceApprovalState.PAYABLE,
