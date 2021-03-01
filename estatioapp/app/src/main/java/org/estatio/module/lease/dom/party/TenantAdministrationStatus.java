@@ -60,9 +60,13 @@ public class TenantAdministrationStatus {
         return this;
     }
 
+    public LocalDate default0ChangeJudicialRedressDate(){
+        return getJudicialRedressDate();
+    }
+
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
-    public String description(){
+    public String getDescription(){
         return getStatus().getDescription();
     }
 
