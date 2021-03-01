@@ -57,7 +57,7 @@ public class TenantAdministrationStatusRepository_IntegTest extends LeaseModuleI
         final Organisation tenant = Organisation_enum.TopModelGb.findUsing(serviceRegistry);
         final LocalDate judicalRedressDate = new LocalDate(2020, 1, 1);
         statusForTenant = tenantAdministrationStatusRepository.findStatus(tenant);
-        Assertions.assertThat(tenantAdministrationStatusRepository.listAll()).isNull();
+        Assertions.assertThat(tenantAdministrationStatusRepository.listAll()).isEmpty();
         Assertions.assertThat(statusForTenant).isNull();
 
         // when
