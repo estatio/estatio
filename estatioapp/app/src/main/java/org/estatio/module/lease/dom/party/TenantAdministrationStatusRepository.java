@@ -27,22 +27,22 @@ public class TenantAdministrationStatusRepository {
                         "tenant", tenant));
     }
 
-    public TenantAdministrationStatus upsert(final AdministrationStatus status, final Party tenant, @Nullable final LocalDate judicalRedressDate){
+    public TenantAdministrationStatus upsert(final AdministrationStatus status, final Party tenant, @Nullable final LocalDate judicialRedressDate){
         TenantAdministrationStatus tenantStatus = findStatus(tenant);
         if (tenantStatus != null) {
             tenantStatus.setStatus(status);
-            tenantStatus.setJudicialRedressDate(judicalRedressDate);
+            tenantStatus.setJudicialRedressDate(judicialRedressDate);
         } else {
-            tenantStatus = create(status, tenant, judicalRedressDate);
+            tenantStatus = create(status, tenant, judicialRedressDate);
         }
         return tenantStatus;
     }
 
-    private TenantAdministrationStatus create(final AdministrationStatus status, final Party tenant, final LocalDate judicalRedressDate) {
+    private TenantAdministrationStatus create(final AdministrationStatus status, final Party tenant, final LocalDate judicialRedressDate) {
         TenantAdministrationStatus tenantStatus = new TenantAdministrationStatus();
         tenantStatus.setTenant(tenant);
         tenantStatus.setStatus(status);
-        tenantStatus.setJudicialRedressDate(judicalRedressDate);
+        tenantStatus.setJudicialRedressDate(judicialRedressDate);
         repositoryService.persistAndFlush(tenantStatus);
         return tenantStatus;
     }
