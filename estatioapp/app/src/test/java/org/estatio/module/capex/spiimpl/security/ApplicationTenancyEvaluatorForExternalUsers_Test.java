@@ -220,6 +220,23 @@ public class ApplicationTenancyEvaluatorForExternalUsers_Test {
     }
 
     @Test
+    public void invoiceVisibleForExternalUser_true_when_property_has_external_asset_manager() throws Exception {
+
+        Property property = new Property();
+        property.setReference("FIO");
+        IncomingInvoice invoice = new IncomingInvoice();
+        List<Property> propertiesForUser = new ArrayList<>();
+
+        // when
+        invoice.setProperty(property);
+        propertiesForUser.add(property);
+
+        // then
+        Assertions.assertThat(evaluator.invoiceVisibleForExternalUser(invoice, propertiesForUser)).isTrue();
+
+    }
+
+    @Test
     public void invoiceVisibleForExternalUser_true_when_all_conditions_met() throws Exception {
 
         Property property = new Property();
@@ -308,6 +325,23 @@ public class ApplicationTenancyEvaluatorForExternalUsers_Test {
 
         // then
         Assertions.assertThat(evaluator.orderVisibleForExternalUser(order, propertiesForUser)).isFalse();
+
+    }
+
+    @Test
+    public void orderVisibleForExternalUser_true_when_property_has_external_asset_manager() throws Exception {
+
+        Property property = new Property();
+        property.setReference("FIO");
+        Order order = new Order();
+        List<Property> propertiesForUser = new ArrayList<>();
+
+        // when
+        order.setProperty(property);
+        propertiesForUser.add(property);
+
+        // then
+        Assertions.assertThat(evaluator.orderVisibleForExternalUser(order, propertiesForUser)).isTrue();
 
     }
 

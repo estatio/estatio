@@ -43,6 +43,10 @@ public class IncomingInvoiceApprovalConfigurationUtil {
             "RON", "TESTEXT"  // for intergration tests
     );
 
+    // INCSUP-730
+    public static List<String> propertyRefsWithExternalAssetManager = Arrays.asList("FIO");
+
+
     // ECP-1208
     public static boolean hasMonitoring(final IncomingInvoice incomingInvoice) {
         if (incomingInvoice.getProperty()!=null && propertyRefsWithMonitoring.contains(incomingInvoice.getProperty().getReference())) return true;
