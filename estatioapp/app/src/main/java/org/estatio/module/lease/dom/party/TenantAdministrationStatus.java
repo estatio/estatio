@@ -25,6 +25,8 @@ import org.estatio.module.party.dom.Party;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 @javax.jdo.annotations.PersistenceCapable(
         identityType = IdentityType.DATASTORE
         ,schema = "dbo"     // Isis' ObjectSpecId inferred from @Discriminator
@@ -103,5 +105,9 @@ public class TenantAdministrationStatus {
     @PropertyLayout(multiLine = 5, hidden = Where.ALL_TABLES, promptStyle = PromptStyle.INLINE)
     @Column(allowsNull = "true", length = NotesType.Meta.MAX_LEN)
     private String comments;
+
+    @Getter @Setter
+    @Column(allowsNull = "true")
+    private ContinuationPlan continuationPlan;
 
 }

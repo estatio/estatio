@@ -33,11 +33,10 @@ public class TenantAdministrationStatusRepository {
             final LocalDate judicialRedressDate) {
         TenantAdministrationStatus tenantStatus = findUnique(tenant, status);
         if (tenantStatus != null) {
-            tenantStatus.setStatus(status);
             tenantStatus.setJudicialRedressDate(judicialRedressDate);
             return tenantStatus;
         } else {
-            return create(status,tenant,judicialRedressDate, latestForParty(tenant));
+            return create(status, tenant, judicialRedressDate, latestForParty(tenant));
         }
     }
 
