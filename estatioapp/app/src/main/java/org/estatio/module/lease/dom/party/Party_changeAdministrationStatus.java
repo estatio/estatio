@@ -23,23 +23,13 @@ public class Party_changeAdministrationStatus {
 
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ACTION)
-    public Party act(final AdministrationStatus status, @Nullable final LocalDate judicalRedressDate) {
-        tenantAdministrationStatusRepository.upsert(status, party, judicalRedressDate);
+    public Party act(final AdministrationStatus status, @Nullable final LocalDate judicialRedressDate) {
+        tenantAdministrationStatusRepository.upsertOrCreateNext(status, party, judicialRedressDate);
         return party;
     }
 
     public boolean hideAct(){
         return !party.isTenant();
-    }
-
-    public AdministrationStatus default0Act(){
-        final TenantAdministrationStatus status = tenantAdministrationStatusRepository.findStatus(party);
-        return status != null ? status.getStatus() : null;
-    }
-
-    public LocalDate default1Act(){
-        final TenantAdministrationStatus status = tenantAdministrationStatusRepository.findStatus(party);
-        return status != null ? status.getJudicialRedressDate() : null;
     }
 
 

@@ -28,7 +28,6 @@ import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.module.lease.dom.party.AdministrationStatus;
-import org.estatio.module.lease.dom.party.Party_changeAdministrationStatus;
 import org.estatio.module.lease.dom.party.TenantAdministrationStatus;
 import org.estatio.module.lease.dom.party.TenantAdministrationStatusRepository;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
@@ -49,65 +48,98 @@ public class TenantAdministrationStatusRepository_IntegTest extends LeaseModuleI
     }
 
     @Test
-    public void upsert_and_finder_works() throws Exception {
+    public void upsert_or_create_next_works() throws Exception {
 
         TenantAdministrationStatus statusForTenant;
 
         // given
         final Organisation tenant = Organisation_enum.TopModelGb.findUsing(serviceRegistry);
-        final LocalDate judicalRedressDate = new LocalDate(2020, 1, 1);
-        statusForTenant = tenantAdministrationStatusRepository.findStatus(tenant);
+        final LocalDate judicialRedressDate = new LocalDate(2020, 1, 1);
+        final AdministrationStatus status = AdministrationStatus.SAFEGUARD_PLAN;
+        statusForTenant = tenantAdministrationStatusRepository.findUnique(tenant, status);
         Assertions.assertThat(tenantAdministrationStatusRepository.listAll()).isEmpty();
         Assertions.assertThat(statusForTenant).isNull();
 
         // when
         final TenantAdministrationStatus newStatus = tenantAdministrationStatusRepository
-                .upsert(AdministrationStatus.SAFEGUARD_PLAN, tenant,
-                        judicalRedressDate);
-        statusForTenant = tenantAdministrationStatusRepository.findStatus(tenant);
+                .upsertOrCreateNext(status, tenant, judicialRedressDate);
+        statusForTenant = tenantAdministrationStatusRepository.findUnique(tenant, status);
 
         // then
         Assertions.assertThat(tenantAdministrationStatusRepository.listAll()).hasSize(1);
         Assertions.assertThat(statusForTenant).isNotNull();
         Assertions.assertThat(statusForTenant).isEqualTo(newStatus);
-        Assertions.assertThat(statusForTenant.getStatus()).isEqualTo(AdministrationStatus.SAFEGUARD_PLAN);
-        Assertions.assertThat(statusForTenant.getJudicialRedressDate()).isEqualTo(judicalRedressDate);
+        Assertions.assertThat(statusForTenant.getStatus()).isEqualTo(status);
+        Assertions.assertThat(statusForTenant.getJudicialRedressDate()).isEqualTo(judicialRedressDate);
 
-        // when when
+        // when (idempotent)
         final TenantAdministrationStatus updatedStatus = tenantAdministrationStatusRepository
-                .upsert(AdministrationStatus.LEGAL_REDRESS, tenant,
-                        judicalRedressDate.plusDays(1));
-        statusForTenant = tenantAdministrationStatusRepository.findStatus(tenant);
+                .upsertOrCreateNext(status, tenant,
+                        judicialRedressDate);
+        statusForTenant = tenantAdministrationStatusRepository.findUnique(tenant, status);
 
         // then
         Assertions.assertThat(tenantAdministrationStatusRepository.listAll()).hasSize(1); // still -> idempotent
         Assertions.assertThat(statusForTenant).isNotNull();
         Assertions.assertThat(statusForTenant).isEqualTo(updatedStatus);
-        Assertions.assertThat(statusForTenant.getStatus()).isEqualTo(AdministrationStatus.LEGAL_REDRESS);
-        Assertions.assertThat(statusForTenant.getJudicialRedressDate()).isEqualTo(judicalRedressDate.plusDays(1));
+        Assertions.assertThat(statusForTenant.getStatus()).isEqualTo(status);
+        Assertions.assertThat(statusForTenant.getJudicialRedressDate()).isEqualTo(judicialRedressDate);
 
-    }
-
-    @Test
-    public void mixin_works() throws Exception {
-
-        TenantAdministrationStatus statusForTenant;
-
-        // given
-        final Organisation tenant = Organisation_enum.TopModelGb.findUsing(serviceRegistry);
-        final LocalDate judicalRedressDate = new LocalDate(2020, 1, 1);
-        Assertions.assertThat(tenantAdministrationStatusRepository.listAll()).isEmpty();
-
-        // when
-        mixin(Party_changeAdministrationStatus.class, tenant).act(AdministrationStatus.SAFEGUARD_PLAN, judicalRedressDate);
-        statusForTenant = tenantAdministrationStatusRepository.findStatus(tenant);
+        // when (date changes)
+        final TenantAdministrationStatus updatedStatus2 = tenantAdministrationStatusRepository
+                .upsertOrCreateNext(status, tenant,
+                        judicialRedressDate.plusDays(1));
+        statusForTenant = tenantAdministrationStatusRepository.findUnique(tenant, status);
 
         // then
         Assertions.assertThat(tenantAdministrationStatusRepository.listAll()).hasSize(1);
-        Assertions.assertThat(statusForTenant.getStatus()).isEqualTo(AdministrationStatus.SAFEGUARD_PLAN);
-        Assertions.assertThat(statusForTenant.getJudicialRedressDate()).isEqualTo(judicalRedressDate);
+        Assertions.assertThat(statusForTenant).isNotNull();
+        Assertions.assertThat(statusForTenant).isEqualTo(updatedStatus2);
+        Assertions.assertThat(statusForTenant.getStatus()).isEqualTo(status);
+        Assertions.assertThat(statusForTenant.getJudicialRedressDate()).isEqualTo(judicialRedressDate.plusDays(1));
+
+        // when
+        AdministrationStatus liquidation = AdministrationStatus.LIQUIDATION;
+        final TenantAdministrationStatus updatedStatus3 = tenantAdministrationStatusRepository
+                .upsertOrCreateNext(liquidation, tenant,
+                        judicialRedressDate);
+        transactionService.nextTransaction();
+
+        statusForTenant = tenantAdministrationStatusRepository.findUnique(tenant, liquidation);
+        TenantAdministrationStatus previousStatusForTenant = tenantAdministrationStatusRepository.findUnique(tenant, status);
+
+        // then
+        Assertions.assertThat(tenantAdministrationStatusRepository.listAll()).hasSize(2);
+        Assertions.assertThat(statusForTenant).isNotNull();
+        Assertions.assertThat(statusForTenant).isEqualTo(updatedStatus3);
+        Assertions.assertThat(statusForTenant.getStatus()).isEqualTo(liquidation);
+        Assertions.assertThat(statusForTenant.getJudicialRedressDate()).isEqualTo(judicialRedressDate);
+        Assertions.assertThat(statusForTenant.getPrevious()).isEqualTo(previousStatusForTenant);
+        Assertions.assertThat(previousStatusForTenant.getNext()).isEqualTo(statusForTenant);
+
 
     }
+
+//    @Test
+//    public void mixin_works() throws Exception {
+//
+//        TenantAdministrationStatus statusForTenant;
+//
+//        // given
+//        final Organisation tenant = Organisation_enum.TopModelGb.findUsing(serviceRegistry);
+//        final LocalDate judicalRedressDate = new LocalDate(2020, 1, 1);
+//        Assertions.assertThat(tenantAdministrationStatusRepository.listAll()).isEmpty();
+//
+//        // when
+//        mixin(Party_changeAdministrationStatus.class, tenant).act(AdministrationStatus.SAFEGUARD_PLAN, judicalRedressDate);
+//        statusForTenant = tenantAdministrationStatusRepository.findUnique(tenant);
+//
+//        // then
+//        Assertions.assertThat(tenantAdministrationStatusRepository.listAll()).hasSize(1);
+//        Assertions.assertThat(statusForTenant.getStatus()).isEqualTo(AdministrationStatus.SAFEGUARD_PLAN);
+//        Assertions.assertThat(statusForTenant.getJudicialRedressDate()).isEqualTo(judicalRedressDate);
+//
+//    }
 
     @Inject
     TenantAdministrationStatusRepository tenantAdministrationStatusRepository;

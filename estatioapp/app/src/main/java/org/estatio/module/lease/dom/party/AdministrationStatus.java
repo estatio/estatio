@@ -5,7 +5,8 @@ import lombok.Getter;
 public enum AdministrationStatus {
 
     SAFEGUARD_PLAN("Plan de Sauvegarde"),
-    LEGAL_REDRESS("Redressement Judiciaire");
+    LEGAL_REDRESS("Redressement Judiciaire"),
+    LIQUIDATION("Liquidation");
 
     AdministrationStatus(final String description) {
         this.description = description;

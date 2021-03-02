@@ -2,7 +2,6 @@ package org.estatio.module.lease.dom.party;
 
 import java.util.List;
 
-import javax.annotation.Nullable;
 import javax.inject.Inject;
 
 import org.joda.time.LocalDate;
@@ -19,30 +18,51 @@ import org.estatio.module.party.dom.Party;
         objectType = "party.TenantAdministrationStatusRepository")
 public class TenantAdministrationStatusRepository {
 
-    public TenantAdministrationStatus findStatus(final Party tenant){
+    public TenantAdministrationStatus findUnique(final Party tenant, final AdministrationStatus status){
         return repositoryService.uniqueMatch(
                 new QueryDefault<>(
                         TenantAdministrationStatus.class,
-                        "findStatus",
-                        "tenant", tenant));
+                        "findByTenantAndStatus",
+                        "tenant", tenant,
+                        "status", status));
     }
 
-    public TenantAdministrationStatus upsert(final AdministrationStatus status, final Party tenant, @Nullable final LocalDate judicialRedressDate){
-        TenantAdministrationStatus tenantStatus = findStatus(tenant);
+    public TenantAdministrationStatus upsertOrCreateNext(
+            final AdministrationStatus status,
+            final Party tenant,
+            final LocalDate judicialRedressDate) {
+        TenantAdministrationStatus tenantStatus = findUnique(tenant, status);
         if (tenantStatus != null) {
             tenantStatus.setStatus(status);
             tenantStatus.setJudicialRedressDate(judicialRedressDate);
+            return tenantStatus;
         } else {
-            tenantStatus = create(status, tenant, judicialRedressDate);
+            return create(status,tenant,judicialRedressDate, latestForParty(tenant));
         }
-        return tenantStatus;
     }
 
-    private TenantAdministrationStatus create(final AdministrationStatus status, final Party tenant, final LocalDate judicialRedressDate) {
+    public TenantAdministrationStatus latestForParty(final Party tenant){
+        return findByTenant(tenant).stream().filter(s->s.getNext()==null).findFirst().orElse(null);
+    }
+
+    public List<TenantAdministrationStatus> findByTenant(final Party tenant){
+        return repositoryService.allMatches(
+                new QueryDefault<>(
+                        TenantAdministrationStatus.class,
+                        "findByTenant",
+                        "tenant", tenant));
+    }
+
+    private TenantAdministrationStatus create(final AdministrationStatus status, final Party tenant, final LocalDate judicialRedressDate, final TenantAdministrationStatus previous) {
         TenantAdministrationStatus tenantStatus = new TenantAdministrationStatus();
         tenantStatus.setTenant(tenant);
         tenantStatus.setStatus(status);
         tenantStatus.setJudicialRedressDate(judicialRedressDate);
+        tenantStatus.setPrevious(previous);
+        if (previous!=null){
+            previous.setNext(tenantStatus);
+            tenantStatus.setComments(previous.getComments());
+        }
         repositoryService.persistAndFlush(tenantStatus);
         return tenantStatus;
     }
@@ -53,4 +73,5 @@ public class TenantAdministrationStatusRepository {
 
     @Inject
     RepositoryService repositoryService;
+
 }

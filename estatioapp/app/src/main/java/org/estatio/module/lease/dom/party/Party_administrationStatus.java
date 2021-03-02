@@ -21,7 +21,7 @@ public class Party_administrationStatus {
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     public TenantAdministrationStatus prop() {
-        return tenantAdministrationStatusRepository.findStatus(party);
+        return tenantAdministrationStatusRepository.latestForParty(party);
     }
 
     public boolean hideProp(){
