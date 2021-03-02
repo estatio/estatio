@@ -3,12 +3,12 @@ package org.estatio.module.lease.dom.party;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.isis.applib.annotation.DomainObject;
+import org.estatio.module.lease.dom.Lease;
+import org.incode.module.base.dom.types.MoneyType;
 import org.joda.time.LocalDate;
 
 import javax.jdo.annotations.*;
 import java.math.BigDecimal;
-import java.util.SortedSet;
-import java.util.TreeSet;
 
 @PersistenceCapable(
         identityType = IdentityType.DATASTORE
@@ -17,27 +17,24 @@ import java.util.TreeSet;
 @DatastoreIdentity(
         strategy = IdGeneratorStrategy.IDENTITY,
         column = "id")
-@DomainObject(objectType = "party.ContinuationPlanEntry")
-public class ContinuationPlanEntry {
+@Unique(name = "EntryValueForLease__continuationPlanEntry_leaseDetails_UNQ", members = {"continuationPlanEntry", "leaseDetails"})
+@DomainObject(objectType = "party.EntryValueForLease")
+public class EntryValueForLease {
 
 //    public String title(){
 //        return TitleBuilder.start().withParent(getTenant()).withName(getStatus()).toString();
 //    }
 
     @Getter @Setter
-    @Column(allowsNull = "false", name = "continuationPlanId")
-    private ContinuationPlan continuationPlan;
+    @Column(allowsNull = "false", name = "continuationPlanEntryId")
+    private ContinuationPlanEntry continuationPlanEntry;
 
     @Getter @Setter
-    @Column(allowsNull = "false")
-    private LocalDate date;
+    @Column(allowsNull = "false", name = "tenantAdministrationLeaseDetailsId")
+    private TenantAdministrationLeaseDetails leaseDetails;
 
     @Getter @Setter
-    @Column(allowsNull = "false", scale = 2)
-    private BigDecimal percentage;
-
-    @Persistent(mappedBy = "continuationPlanEntry", dependentElement = "true")
-    @Getter @Setter
-    private SortedSet<EntryValueForLease> entryValues = new TreeSet<>();
+    @Column(allowsNull = "false", scale = MoneyType.Meta.SCALE)
+    private BigDecimal amount;
 
 }

@@ -1,9 +1,6 @@
 package org.estatio.module.lease.dom.party;
 
-import javax.jdo.annotations.Column;
-import javax.jdo.annotations.IdGeneratorStrategy;
-import javax.jdo.annotations.IdentityType;
-import javax.jdo.annotations.Unique;
+import javax.jdo.annotations.*;
 
 import org.joda.time.LocalDate;
 
@@ -25,7 +22,8 @@ import org.estatio.module.party.dom.Party;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.math.BigDecimal;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 @javax.jdo.annotations.PersistenceCapable(
         identityType = IdentityType.DATASTORE
@@ -107,7 +105,11 @@ public class TenantAdministrationStatus {
     private String comments;
 
     @Getter @Setter
-    @Column(allowsNull = "true")
+    @Column(allowsNull = "true", name = "continuationPlanId")
     private ContinuationPlan continuationPlan;
+
+    @Persistent(mappedBy = "tenantAdministrationStatus", dependentElement = "true")
+    @Getter @Setter
+    private SortedSet<TenantAdministrationLeaseDetails> leaseDetails = new TreeSet<>();
 
 }

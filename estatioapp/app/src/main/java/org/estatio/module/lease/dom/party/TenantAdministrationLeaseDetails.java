@@ -4,16 +4,12 @@ import lombok.Getter;
 import lombok.Setter;
 import org.apache.isis.applib.annotation.*;
 import org.estatio.module.lease.dom.Lease;
-import org.estatio.module.party.dom.Party;
-import org.incode.module.base.dom.types.NotesType;
-import org.incode.module.base.dom.utils.TitleBuilder;
-import org.joda.time.LocalDate;
+import org.incode.module.base.dom.types.MoneyType;
 
-import javax.jdo.annotations.Column;
-import javax.jdo.annotations.IdGeneratorStrategy;
-import javax.jdo.annotations.IdentityType;
-import javax.jdo.annotations.Unique;
+import javax.jdo.annotations.*;
 import java.math.BigDecimal;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 @javax.jdo.annotations.PersistenceCapable(
         identityType = IdentityType.DATASTORE
@@ -22,7 +18,7 @@ import java.math.BigDecimal;
 @javax.jdo.annotations.DatastoreIdentity(
         strategy = IdGeneratorStrategy.IDENTITY,
         column = "id")
-//@Unique(name = "TenantAdministrationLeaseDetails_lease_UNQ", members = {"lease"})
+@Unique(name = "TenantAdministrationLeaseDetails__tenantAdministrationStatus_lease_UNQ", members = {"tenantAdministrationStatus", "lease"})
 @DomainObject(objectType = "party.TenantAdministrationLeaseDetails")
 public class TenantAdministrationLeaseDetails {
 
@@ -39,19 +35,23 @@ public class TenantAdministrationLeaseDetails {
     private Lease lease;
 
     @Getter @Setter
-    @Column(allowsNull = "true")
+    @Column(allowsNull = "true", scale = MoneyType.Meta.SCALE)
     private BigDecimal declaredAmountOfClaim;
 
     @Getter @Setter
     @Column(allowsNull = "true")
-    private boolean leaseContinued;
+    private Boolean debtAdmitted;
 
     @Getter @Setter
-    @Column(allowsNull = "true")
-    private boolean admittedDebt;
-
-    @Getter @Setter
-    @Column(allowsNull = "true")
+    @Column(allowsNull = "true", scale = MoneyType.Meta.SCALE)
     private BigDecimal admittedAmountOfClaim;
+
+    @Getter @Setter
+    @Column(allowsNull = "true")
+    private Boolean leaseContinued;
+
+    @Persistent(mappedBy = "leaseDetails", dependentElement = "true")
+    @Getter @Setter
+    private SortedSet<EntryValueForLease> entryValuesForLease = new TreeSet<>();
 
 }

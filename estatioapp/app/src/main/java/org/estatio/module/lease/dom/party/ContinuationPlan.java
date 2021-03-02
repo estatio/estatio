@@ -6,7 +6,6 @@ import org.apache.isis.applib.annotation.*;
 import org.joda.time.LocalDate;
 
 import javax.jdo.annotations.*;
-import java.math.BigInteger;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -17,6 +16,7 @@ import java.util.TreeSet;
 @javax.jdo.annotations.DatastoreIdentity(
         strategy = IdGeneratorStrategy.IDENTITY,
         column = "id")
+@Unique(name = "ContinuationPlan_tenantAdministrationStatus_UNQ", members = {"tenantAdministrationStatus"})
 @DomainObject(objectType = "party.ContinuationPlan")
 public class ContinuationPlan {
 
@@ -30,7 +30,7 @@ public class ContinuationPlan {
 
     @Getter @Setter
     @Column(allowsNull = "false")
-    private BigInteger duration;
+    private String duration;
 
     @Persistent(mappedBy = "continuationPlan", dependentElement = "true")
     @Getter @Setter
