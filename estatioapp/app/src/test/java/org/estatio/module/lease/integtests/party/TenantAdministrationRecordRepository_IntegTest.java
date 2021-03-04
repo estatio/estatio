@@ -28,14 +28,14 @@ import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.module.lease.dom.party.AdministrationStatus;
-import org.estatio.module.lease.dom.party.TenantAdministrationStatus;
-import org.estatio.module.lease.dom.party.TenantAdministrationStatusRepository;
+import org.estatio.module.lease.dom.party.TenantAdministrationRecord;
+import org.estatio.module.lease.dom.party.TenantAdministrationRecordRepository;
 import org.estatio.module.lease.fixtures.lease.enums.Lease_enum;
 import org.estatio.module.lease.integtests.LeaseModuleIntegTestAbstract;
 import org.estatio.module.party.dom.Organisation;
 import org.estatio.module.party.fixtures.organisation.enums.Organisation_enum;
 
-public class TenantAdministrationStatusRepository_IntegTest extends LeaseModuleIntegTestAbstract {
+public class TenantAdministrationRecordRepository_IntegTest extends LeaseModuleIntegTestAbstract {
 
     @Before
     public void setupData() {
@@ -50,49 +50,49 @@ public class TenantAdministrationStatusRepository_IntegTest extends LeaseModuleI
     @Test
     public void upsert_or_create_next_works() throws Exception {
 
-        TenantAdministrationStatus statusForTenant;
+        TenantAdministrationRecord statusForTenant;
 
         // given
         final Organisation tenant = Organisation_enum.TopModelGb.findUsing(serviceRegistry);
         final LocalDate judicialRedressDate = new LocalDate(2020, 1, 1);
         final AdministrationStatus status = AdministrationStatus.SAFEGUARD_PLAN;
-        statusForTenant = tenantAdministrationStatusRepository.findUnique(tenant, status);
-        Assertions.assertThat(tenantAdministrationStatusRepository.listAll()).isEmpty();
+        statusForTenant = tenantAdministrationRecordRepository.findUnique(tenant, status);
+        Assertions.assertThat(tenantAdministrationRecordRepository.listAll()).isEmpty();
         Assertions.assertThat(statusForTenant).isNull();
 
         // when
-        final TenantAdministrationStatus newStatus = tenantAdministrationStatusRepository
+        final TenantAdministrationRecord newStatus = tenantAdministrationRecordRepository
                 .upsertOrCreateNext(status, tenant, judicialRedressDate);
-        statusForTenant = tenantAdministrationStatusRepository.findUnique(tenant, status);
+        statusForTenant = tenantAdministrationRecordRepository.findUnique(tenant, status);
 
         // then
-        Assertions.assertThat(tenantAdministrationStatusRepository.listAll()).hasSize(1);
+        Assertions.assertThat(tenantAdministrationRecordRepository.listAll()).hasSize(1);
         Assertions.assertThat(statusForTenant).isNotNull();
         Assertions.assertThat(statusForTenant).isEqualTo(newStatus);
         Assertions.assertThat(statusForTenant.getStatus()).isEqualTo(status);
         Assertions.assertThat(statusForTenant.getJudicialRedressDate()).isEqualTo(judicialRedressDate);
 
         // when (idempotent)
-        final TenantAdministrationStatus updatedStatus = tenantAdministrationStatusRepository
+        final TenantAdministrationRecord updatedStatus = tenantAdministrationRecordRepository
                 .upsertOrCreateNext(status, tenant,
                         judicialRedressDate);
-        statusForTenant = tenantAdministrationStatusRepository.findUnique(tenant, status);
+        statusForTenant = tenantAdministrationRecordRepository.findUnique(tenant, status);
 
         // then
-        Assertions.assertThat(tenantAdministrationStatusRepository.listAll()).hasSize(1); // still -> idempotent
+        Assertions.assertThat(tenantAdministrationRecordRepository.listAll()).hasSize(1); // still -> idempotent
         Assertions.assertThat(statusForTenant).isNotNull();
         Assertions.assertThat(statusForTenant).isEqualTo(updatedStatus);
         Assertions.assertThat(statusForTenant.getStatus()).isEqualTo(status);
         Assertions.assertThat(statusForTenant.getJudicialRedressDate()).isEqualTo(judicialRedressDate);
 
         // when (date changes)
-        final TenantAdministrationStatus updatedStatus2 = tenantAdministrationStatusRepository
+        final TenantAdministrationRecord updatedStatus2 = tenantAdministrationRecordRepository
                 .upsertOrCreateNext(status, tenant,
                         judicialRedressDate.plusDays(1));
-        statusForTenant = tenantAdministrationStatusRepository.findUnique(tenant, status);
+        statusForTenant = tenantAdministrationRecordRepository.findUnique(tenant, status);
 
         // then
-        Assertions.assertThat(tenantAdministrationStatusRepository.listAll()).hasSize(1);
+        Assertions.assertThat(tenantAdministrationRecordRepository.listAll()).hasSize(1);
         Assertions.assertThat(statusForTenant).isNotNull();
         Assertions.assertThat(statusForTenant).isEqualTo(updatedStatus2);
         Assertions.assertThat(statusForTenant.getStatus()).isEqualTo(status);
@@ -100,16 +100,17 @@ public class TenantAdministrationStatusRepository_IntegTest extends LeaseModuleI
 
         // when
         AdministrationStatus liquidation = AdministrationStatus.LIQUIDATION;
-        final TenantAdministrationStatus updatedStatus3 = tenantAdministrationStatusRepository
+        final TenantAdministrationRecord updatedStatus3 = tenantAdministrationRecordRepository
                 .upsertOrCreateNext(liquidation, tenant,
                         judicialRedressDate);
         transactionService.nextTransaction();
 
-        statusForTenant = tenantAdministrationStatusRepository.findUnique(tenant, liquidation);
-        TenantAdministrationStatus previousStatusForTenant = tenantAdministrationStatusRepository.findUnique(tenant, status);
+        statusForTenant = tenantAdministrationRecordRepository.findUnique(tenant, liquidation);
+        TenantAdministrationRecord previousStatusForTenant = tenantAdministrationRecordRepository
+                .findUnique(tenant, status);
 
         // then
-        Assertions.assertThat(tenantAdministrationStatusRepository.listAll()).hasSize(2);
+        Assertions.assertThat(tenantAdministrationRecordRepository.listAll()).hasSize(2);
         Assertions.assertThat(statusForTenant).isNotNull();
         Assertions.assertThat(statusForTenant).isEqualTo(updatedStatus3);
         Assertions.assertThat(statusForTenant.getStatus()).isEqualTo(liquidation);
@@ -142,6 +143,6 @@ public class TenantAdministrationStatusRepository_IntegTest extends LeaseModuleI
 //    }
 
     @Inject
-    TenantAdministrationStatusRepository tenantAdministrationStatusRepository;
+    TenantAdministrationRecordRepository tenantAdministrationRecordRepository;
 
 }

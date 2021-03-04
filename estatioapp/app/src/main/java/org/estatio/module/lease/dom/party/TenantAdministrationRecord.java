@@ -1,6 +1,17 @@
 package org.estatio.module.lease.dom.party;
 
-import javax.jdo.annotations.*;
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.SortedSet;
+import java.util.TreeSet;
+
+import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.jdo.annotations.Column;
+import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.Persistent;
+import javax.jdo.annotations.Unique;
 
 import org.joda.time.LocalDate;
 
@@ -17,13 +28,12 @@ import org.apache.isis.applib.annotation.Where;
 import org.incode.module.base.dom.types.NotesType;
 import org.incode.module.base.dom.utils.TitleBuilder;
 
+import org.estatio.module.lease.contributions.PartyService;
+import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.party.dom.Party;
 
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.SortedSet;
-import java.util.TreeSet;
 
 @javax.jdo.annotations.PersistenceCapable(
         identityType = IdentityType.DATASTORE
@@ -36,18 +46,18 @@ import java.util.TreeSet;
         @javax.jdo.annotations.Query(
                 name = "findByTenant", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.module.lease.dom.party.TenantAdministrationStatus "
+                        + "FROM org.estatio.module.lease.dom.party.TenantAdministrationRecord "
                         + "WHERE tenant == :tenant"),
         @javax.jdo.annotations.Query(
                 name = "findByTenantAndStatus", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.module.lease.dom.party.TenantAdministrationStatus "
+                        + "FROM org.estatio.module.lease.dom.party.TenantAdministrationRecord "
                         + "WHERE tenant == :tenant && "
                         + "status == :status "),
 })
-@Unique(name = "TenantAdministrationStatus_tenant_status_UNQ", members = {"tenant", "status"})
-@DomainObject(objectType = "party.TenantAdministrationStatus")
-public class TenantAdministrationStatus {
+@Unique(name = "TenantAdministrationRecord_tenant_status_UNQ", members = {"tenant", "status"})
+@DomainObject(objectType = "party.TenantAdministrationRecord")
+public class TenantAdministrationRecord {
 
     public String title(){
         return TitleBuilder.start().withParent(getTenant()).withName(getStatus()).toString();
@@ -74,7 +84,7 @@ public class TenantAdministrationStatus {
     }
 
     @Action(semantics = SemanticsOf.IDEMPOTENT)
-    public TenantAdministrationStatus changeJudicialRedressDate(final LocalDate date) {
+    public TenantAdministrationRecord changeJudicialRedressDate(final LocalDate date) {
         setJudicialRedressDate(date);
         return this;
     }
@@ -92,11 +102,11 @@ public class TenantAdministrationStatus {
     @Getter @Setter
     @Column(allowsNull = "true", name = "previousId")
     @javax.jdo.annotations.Persistent(mappedBy = "next")
-    private TenantAdministrationStatus previous;
+    private TenantAdministrationRecord previous;
 
     @Getter @Setter
     @Column(allowsNull = "true", name = "nextId")
-    private TenantAdministrationStatus next;
+    private TenantAdministrationRecord next;
 
     @Getter @Setter
     @org.apache.isis.applib.annotation.Property(editing = Editing.ENABLED)
@@ -108,8 +118,43 @@ public class TenantAdministrationStatus {
     @Column(allowsNull = "true", name = "continuationPlanId")
     private ContinuationPlan continuationPlan;
 
-    @Persistent(mappedBy = "tenantAdministrationStatus", dependentElement = "true")
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
+    public ContinuationPlan createContinuationPlan(final LocalDate judgmentDate){
+        final ContinuationPlan plan = continuationPlanRepository.findOrCreate(this, judgmentDate);
+        setContinuationPlan(plan);
+        return plan;
+    }
+
+    public boolean hideCreateContinuationPlan(){
+        return getContinuationPlan()!=null;
+    }
+
+    @Persistent(mappedBy = "tenantAdministrationRecord", dependentElement = "true")
     @Getter @Setter
     private SortedSet<TenantAdministrationLeaseDetails> leaseDetails = new TreeSet<>();
+
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
+    public TenantAdministrationRecord addLeaseDetails(
+            final Lease lease,
+            final BigDecimal declaredAmountOfClaim,
+            @Nullable final Boolean debtAdmitted,
+            @Nullable final BigDecimal admittedAmountOfClaim,
+            @Nullable final Boolean leaseContinued){
+        tenantAdministrationLeaseDetailsRepository.upsert(this, lease, declaredAmountOfClaim, debtAdmitted, admittedAmountOfClaim, leaseContinued);
+        return this;
+    }
+
+    public List<Lease> choices0AddLeaseDetails(){
+        return partyService.allLeases(getTenant());
+    }
+
+    @Inject
+    TenantAdministrationLeaseDetailsRepository tenantAdministrationLeaseDetailsRepository;
+
+    @Inject
+    ContinuationPlanRepository continuationPlanRepository;
+
+    @Inject
+    PartyService partyService;
 
 }

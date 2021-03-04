@@ -20,8 +20,8 @@ public class Party_administrationStatus {
 
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
-    public TenantAdministrationStatus prop() {
-        return tenantAdministrationStatusRepository.latestForParty(party);
+    public TenantAdministrationRecord prop() {
+        return tenantAdministrationRecordRepository.latestForParty(party);
     }
 
     public boolean hideProp(){
@@ -29,5 +29,5 @@ public class Party_administrationStatus {
     }
 
     @Inject
-    TenantAdministrationStatusRepository tenantAdministrationStatusRepository;
+    TenantAdministrationRecordRepository tenantAdministrationRecordRepository;
 }

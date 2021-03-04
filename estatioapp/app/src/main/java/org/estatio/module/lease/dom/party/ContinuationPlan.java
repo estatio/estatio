@@ -1,13 +1,22 @@
 package org.estatio.module.lease.dom.party;
 
-import lombok.Getter;
-import lombok.Setter;
-import org.apache.isis.applib.annotation.*;
-import org.joda.time.LocalDate;
-
-import javax.jdo.annotations.*;
 import java.util.SortedSet;
 import java.util.TreeSet;
+
+import javax.jdo.annotations.Column;
+import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.Persistent;
+import javax.jdo.annotations.Unique;
+
+import org.joda.time.LocalDate;
+
+import org.apache.isis.applib.annotation.DomainObject;
+
+import org.incode.module.base.dom.utils.TitleBuilder;
+
+import lombok.Getter;
+import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(
         identityType = IdentityType.DATASTORE
@@ -16,25 +25,31 @@ import java.util.TreeSet;
 @javax.jdo.annotations.DatastoreIdentity(
         strategy = IdGeneratorStrategy.IDENTITY,
         column = "id")
+@javax.jdo.annotations.Queries({
+        @javax.jdo.annotations.Query(
+                name = "findUnique", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.module.lease.dom.party.ContinuationPlan "
+                        + "WHERE tenantAdministrationRecord == :tenantAdministrationRecord "),
+})
 @Unique(name = "ContinuationPlan_tenantAdministrationStatus_UNQ", members = {"tenantAdministrationStatus"})
 @DomainObject(objectType = "party.ContinuationPlan")
 public class ContinuationPlan {
 
+    public String title(){
+        return TitleBuilder.start().withParent(getTenantAdministrationRecord()).withName("continuation plan").toString();
+    }
+
     @Getter @Setter
     @Column(allowsNull = "false", name = "tenantAdministrationStatusId")
-    private TenantAdministrationStatus tenantAdministrationStatus;
+    private TenantAdministrationRecord tenantAdministrationRecord;
 
     @Getter @Setter
     @Column(allowsNull = "false")
     private LocalDate judgmentDate;
 
-    @Getter @Setter
-    @Column(allowsNull = "false")
-    private String duration;
-
     @Persistent(mappedBy = "continuationPlan", dependentElement = "true")
     @Getter @Setter
     private SortedSet<ContinuationPlanEntry> entries = new TreeSet<>();
-
 
 }

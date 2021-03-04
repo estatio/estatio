@@ -24,7 +24,7 @@ public class Party_changeAdministrationStatus {
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ACTION)
     public Party act(final AdministrationStatus status, @Nullable final LocalDate judicialRedressDate) {
-        tenantAdministrationStatusRepository.upsertOrCreateNext(status, party, judicialRedressDate);
+        tenantAdministrationRecordRepository.upsertOrCreateNext(status, party, judicialRedressDate);
         return party;
     }
 
@@ -34,5 +34,5 @@ public class Party_changeAdministrationStatus {
 
 
     @Inject
-    TenantAdministrationStatusRepository tenantAdministrationStatusRepository;
+    TenantAdministrationRecordRepository tenantAdministrationRecordRepository;
 }

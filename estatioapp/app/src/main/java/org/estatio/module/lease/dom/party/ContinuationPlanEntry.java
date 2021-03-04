@@ -1,14 +1,22 @@
 package org.estatio.module.lease.dom.party;
 
-import lombok.Getter;
-import lombok.Setter;
-import org.apache.isis.applib.annotation.DomainObject;
-import org.joda.time.LocalDate;
-
-import javax.jdo.annotations.*;
 import java.math.BigDecimal;
 import java.util.SortedSet;
 import java.util.TreeSet;
+
+import javax.jdo.annotations.Column;
+import javax.jdo.annotations.DatastoreIdentity;
+import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.PersistenceCapable;
+import javax.jdo.annotations.Persistent;
+
+import org.joda.time.LocalDate;
+
+import org.apache.isis.applib.annotation.DomainObject;
+
+import lombok.Getter;
+import lombok.Setter;
 
 @PersistenceCapable(
         identityType = IdentityType.DATASTORE

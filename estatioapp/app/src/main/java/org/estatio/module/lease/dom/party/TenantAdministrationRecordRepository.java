@@ -9,29 +9,30 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.query.QueryDefault;
+import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
 import org.estatio.module.party.dom.Party;
 
 @DomainService(nature = NatureOfService.DOMAIN,
-        repositoryFor = TenantAdministrationStatus.class,
-        objectType = "party.TenantAdministrationStatusRepository")
-public class TenantAdministrationStatusRepository {
+        repositoryFor = TenantAdministrationRecord.class,
+        objectType = "party.TenantAdministrationRecordRepository")
+public class TenantAdministrationRecordRepository {
 
-    public TenantAdministrationStatus findUnique(final Party tenant, final AdministrationStatus status){
+    public TenantAdministrationRecord findUnique(final Party tenant, final AdministrationStatus status){
         return repositoryService.uniqueMatch(
                 new QueryDefault<>(
-                        TenantAdministrationStatus.class,
+                        TenantAdministrationRecord.class,
                         "findByTenantAndStatus",
                         "tenant", tenant,
                         "status", status));
     }
 
-    public TenantAdministrationStatus upsertOrCreateNext(
+    public TenantAdministrationRecord upsertOrCreateNext(
             final AdministrationStatus status,
             final Party tenant,
             final LocalDate judicialRedressDate) {
-        TenantAdministrationStatus tenantStatus = findUnique(tenant, status);
+        TenantAdministrationRecord tenantStatus = findUnique(tenant, status);
         if (tenantStatus != null) {
             tenantStatus.setJudicialRedressDate(judicialRedressDate);
             return tenantStatus;
@@ -40,20 +41,20 @@ public class TenantAdministrationStatusRepository {
         }
     }
 
-    public TenantAdministrationStatus latestForParty(final Party tenant){
+    public TenantAdministrationRecord latestForParty(final Party tenant){
         return findByTenant(tenant).stream().filter(s->s.getNext()==null).findFirst().orElse(null);
     }
 
-    public List<TenantAdministrationStatus> findByTenant(final Party tenant){
+    public List<TenantAdministrationRecord> findByTenant(final Party tenant){
         return repositoryService.allMatches(
                 new QueryDefault<>(
-                        TenantAdministrationStatus.class,
+                        TenantAdministrationRecord.class,
                         "findByTenant",
                         "tenant", tenant));
     }
 
-    private TenantAdministrationStatus create(final AdministrationStatus status, final Party tenant, final LocalDate judicialRedressDate, final TenantAdministrationStatus previous) {
-        TenantAdministrationStatus tenantStatus = new TenantAdministrationStatus();
+    private TenantAdministrationRecord create(final AdministrationStatus status, final Party tenant, final LocalDate judicialRedressDate, final TenantAdministrationRecord previous) {
+        TenantAdministrationRecord tenantStatus = new TenantAdministrationRecord();
         tenantStatus.setTenant(tenant);
         tenantStatus.setStatus(status);
         tenantStatus.setJudicialRedressDate(judicialRedressDate);
@@ -62,15 +63,17 @@ public class TenantAdministrationStatusRepository {
             previous.setNext(tenantStatus);
             tenantStatus.setComments(previous.getComments());
         }
+        serviceRegistry2.injectServicesInto(tenantStatus);
         repositoryService.persistAndFlush(tenantStatus);
         return tenantStatus;
     }
 
-    public List<TenantAdministrationStatus> listAll(){
-        return repositoryService.allInstances(TenantAdministrationStatus.class);
+    public List<TenantAdministrationRecord> listAll(){
+        return repositoryService.allInstances(TenantAdministrationRecord.class);
     }
 
     @Inject
     RepositoryService repositoryService;
 
+    @Inject ServiceRegistry2 serviceRegistry2;
 }
