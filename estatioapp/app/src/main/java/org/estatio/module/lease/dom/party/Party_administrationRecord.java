@@ -11,10 +11,10 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.estatio.module.party.dom.Party;
 
 @Mixin(method = "prop")
-public class Party_administrationStatus {
+public class Party_administrationRecord {
     private final Party party;
 
-    public Party_administrationStatus(Party party) {
+    public Party_administrationRecord(Party party) {
         this.party = party;
     }
 

@@ -1,8 +1,10 @@
 package org.estatio.module.lease.dom.party;
 
+import java.math.BigDecimal;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import javax.inject.Inject;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
@@ -11,7 +13,9 @@ import javax.jdo.annotations.Unique;
 
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.incode.module.base.dom.utils.TitleBuilder;
 
@@ -32,7 +36,7 @@ import lombok.Setter;
                         + "FROM org.estatio.module.lease.dom.party.ContinuationPlan "
                         + "WHERE tenantAdministrationRecord == :tenantAdministrationRecord "),
 })
-@Unique(name = "ContinuationPlan_tenantAdministrationStatus_UNQ", members = {"tenantAdministrationStatus"})
+@Unique(name = "ContinuationPlan_tenantAdministrationRecord_UNQ", members = {"tenantAdministrationRecord"})
 @DomainObject(objectType = "party.ContinuationPlan")
 public class ContinuationPlan {
 
@@ -41,7 +45,7 @@ public class ContinuationPlan {
     }
 
     @Getter @Setter
-    @Column(allowsNull = "false", name = "tenantAdministrationStatusId")
+    @Column(allowsNull = "false", name = "tenantAdministrationRecordId")
     private TenantAdministrationRecord tenantAdministrationRecord;
 
     @Getter @Setter
@@ -51,5 +55,13 @@ public class ContinuationPlan {
     @Persistent(mappedBy = "continuationPlan", dependentElement = "true")
     @Getter @Setter
     private SortedSet<ContinuationPlanEntry> entries = new TreeSet<>();
+
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
+    public ContinuationPlanEntry addEntry(final LocalDate date, final BigDecimal percentage){
+        return continuationPlanEntryRepository.upsert(this, date, percentage);
+    }
+
+    @Inject
+    ContinuationPlanEntryRepository continuationPlanEntryRepository;
 
 }

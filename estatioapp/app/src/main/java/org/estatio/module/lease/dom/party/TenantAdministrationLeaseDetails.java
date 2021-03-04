@@ -34,7 +34,7 @@ import lombok.Setter;
 })
 @Unique(name = "TenantAdministrationLeaseDetails_tenantAdministrationRecord_lease_UNQ", members = {"tenantAdministrationRecord", "lease"})
 @DomainObject(objectType = "party.TenantAdministrationLeaseDetails")
-public class TenantAdministrationLeaseDetails {
+public class TenantAdministrationLeaseDetails implements Comparable{
 
     public String title(){
         return TitleBuilder.start().withParent(getTenantAdministrationRecord()).withName(getLease()).toString();
@@ -63,5 +63,11 @@ public class TenantAdministrationLeaseDetails {
     @Getter @Setter
     @Column(allowsNull = "true")
     private Boolean leaseContinued;
+
+    @Override
+    public int compareTo(final Object o) {
+        TenantAdministrationLeaseDetails casted = (TenantAdministrationLeaseDetails) o;
+        return getLease().compareTo(casted.getLease());
+    }
 
 }

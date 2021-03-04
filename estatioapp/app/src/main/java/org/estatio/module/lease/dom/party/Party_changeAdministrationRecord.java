@@ -14,10 +14,10 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.estatio.module.party.dom.Party;
 
 @Mixin(method = "act")
-public class Party_changeAdministrationStatus {
+public class Party_changeAdministrationRecord {
     private final Party party;
 
-    public Party_changeAdministrationStatus(Party party) {
+    public Party_changeAdministrationRecord(Party party) {
         this.party = party;
     }
 
