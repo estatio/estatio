@@ -54,7 +54,7 @@ public class TenantAdministrationLeaseDetailsRepository_IntegTest extends LeaseM
         final Organisation tenant = Organisation_enum.TopModelGb.findUsing(serviceRegistry);
         final Lease lease = Lease_enum.OxfTopModel001Gb.findUsing(serviceRegistry);
         final TenantAdministrationRecord record = tenantAdministrationRecordRepository
-                .upsertOrCreateNext(AdministrationStatus.SAFEGUARD_PLAN, tenant, new LocalDate(2020, 1, 1));
+                .upsertOrCreateNext(AdministrationStatus.SAFEGUARD_PLAN, tenant, new LocalDate(2020, 1, 1)); // TODO: make fixture?
         Assertions.assertThat(record).isNotNull();
         final BigDecimal declaredAmountOfClaim = new BigDecimal("1000.00");
         leaseDetails = tenantAdministrationLeaseDetailsRepository.findUnique(record, lease);

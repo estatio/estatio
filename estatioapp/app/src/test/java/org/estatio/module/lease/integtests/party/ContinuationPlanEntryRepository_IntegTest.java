@@ -54,7 +54,7 @@ public class ContinuationPlanEntryRepository_IntegTest extends LeaseModuleIntegT
         final TenantAdministrationRecord record = tenantAdministrationRecordRepository
                 .upsertOrCreateNext(AdministrationStatus.SAFEGUARD_PLAN, tenant, new LocalDate(2020, 1, 1)); // TODO: make fixture?
         Assertions.assertThat(record).isNotNull();
-        final ContinuationPlan continuationPlan = continuationPlanRepository.findOrCreate(record, new LocalDate(2020, 6, 1)); // TODO: make fixture?
+        final ContinuationPlan continuationPlan = record.createContinuationPlan(new LocalDate(2020, 6, 1));
         Assertions.assertThat(continuationPlan).isNotNull();
         final LocalDate date = new LocalDate(2021, 1, 1);
         final BigDecimal percentage = new BigDecimal("5.00");

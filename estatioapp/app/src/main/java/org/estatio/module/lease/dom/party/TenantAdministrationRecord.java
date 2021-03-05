@@ -114,15 +114,13 @@ public class TenantAdministrationRecord {
     @Column(allowsNull = "true", length = NotesType.Meta.MAX_LEN)
     private String comments;
 
-    @Getter @Setter
-    @Column(allowsNull = "true", name = "continuationPlanId")
-    private ContinuationPlan continuationPlan;
+    public ContinuationPlan getContinuationPlan() {
+        return continuationPlanRepository.findUnique(this);
+    }
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     public ContinuationPlan createContinuationPlan(final LocalDate judgmentDate){
-        final ContinuationPlan plan = continuationPlanRepository.findOrCreate(this, judgmentDate);
-        setContinuationPlan(plan);
-        return plan;
+        return continuationPlanRepository.findOrCreate(this, judgmentDate);
     }
 
     public boolean hideCreateContinuationPlan(){
