@@ -14,37 +14,16 @@
                     <bs3:row>
                         <bs3:col span="12">
                             <cpt:fieldSet name="General" id="general">
-                                <cpt:property id="tenant"/>
-                                <cpt:property id="status"/>
-                                <cpt:property id="description"/>
-                                <cpt:property id="continuationPlan"/>
+                                <cpt:property id="leaseDetails" hidden="PARENTED_TABLES"/>
+                                <cpt:property id="continuationPlanEntry" hidden="PARENTED_TABLES"/>
                             </cpt:fieldSet>
                         </bs3:col>
                     </bs3:row>
                     <bs3:row>
                         <bs3:col span="12">
-                            <cpt:fieldSet name="Dates" id="dates">
-                                <cpt:property id="judicialRedressDate">
-                                    <cpt:action id="changeJudicialRedressDate" position="PANEL"/>
-                                </cpt:property>
-                                <cpt:property id="liquidationDate"/>
-                            </cpt:fieldSet>
-                        </bs3:col>
-                    </bs3:row>
-                    <bs3:row>
-                        <bs3:col span="12">
-                            <cpt:fieldSet name="Related" id="related">
-                                <cpt:property id="previous"/>
-                                <cpt:property id="next"/>
-                            </cpt:fieldSet>
-                        </bs3:col>
-                    </bs3:row>
-                    <bs3:row>
-                        <bs3:col span="12">
-                            <cpt:fieldSet name="Comments" id="comments">
-                                <cpt:property id="comments">
-                                    <cpt:action id="changeComments"/>
-                                </cpt:property>
+                            <cpt:fieldSet name="Amount" id="amount">
+                                <cpt:property id="amount"/>
+                                <cpt:property id="paid"/>
                             </cpt:fieldSet>
                         </bs3:col>
                     </bs3:row>
@@ -86,9 +65,6 @@
             </bs3:tabGroup>
         </bs3:col>
         <bs3:col span="6">
-            <cpt:collection id="leaseDetails">
-                <cpt:action id="addLeaseDetails" position="PANEL"/>
-            </cpt:collection>
         </bs3:col>
     </bs3:row>
     <bs3:row>

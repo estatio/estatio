@@ -25,6 +25,15 @@ public class EntryValueForLeaseRepository {
         );
     }
 
+    public List<EntryValueForLease> findByLeaseDetails(final TenantAdministrationLeaseDetails leaseDetails) {
+        return repositoryService.allMatches(
+                new QueryDefault<>(
+                        EntryValueForLease.class,
+                        "findByLeaseDetails",
+                        "leaseDetails", leaseDetails)
+        );
+    }
+
     public EntryValueForLease upsert(final ContinuationPlanEntry continuationPlanEntry,
             final TenantAdministrationLeaseDetails leaseDetails,
             final BigDecimal amount){
@@ -55,5 +64,4 @@ public class EntryValueForLeaseRepository {
 
     @Inject
     RepositoryService repositoryService;
-
 }

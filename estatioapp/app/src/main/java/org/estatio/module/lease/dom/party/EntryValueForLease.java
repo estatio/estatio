@@ -10,6 +10,9 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Unique;
 
 import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.PromptStyle;
+import org.apache.isis.applib.annotation.PropertyLayout;
 
 import org.incode.module.base.dom.types.MoneyType;
 import org.incode.module.base.dom.utils.TitleBuilder;
@@ -31,6 +34,11 @@ import lombok.Setter;
                         + "FROM org.estatio.module.lease.dom.party.EntryValueForLease "
                         + "WHERE continuationPlanEntry == :continuationPlanEntry && "
                         + "leaseDetails == :leaseDetails "),
+        @javax.jdo.annotations.Query(
+                name = "findByLeaseDetails", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.module.lease.dom.party.EntryValueForLease "
+                        + "WHERE leaseDetails == :leaseDetails "),
 })
 @Unique(name = "EntryValueForLease__continuationPlanEntry_leaseDetails_UNQ", members = {"continuationPlanEntry", "leaseDetails"})
 @DomainObject(objectType = "party.EntryValueForLease")
@@ -51,6 +59,12 @@ public class EntryValueForLease implements Comparable{
     @Getter @Setter
     @Column(allowsNull = "false", scale = MoneyType.Meta.SCALE)
     private BigDecimal amount;
+
+    @Getter @Setter
+    @Column(allowsNull = "true")
+    @org.apache.isis.applib.annotation.Property(editing = Editing.ENABLED)
+    @PropertyLayout(promptStyle = PromptStyle.INLINE)
+    private Boolean paid;
 
     @Override
     public int compareTo(final Object o) {
