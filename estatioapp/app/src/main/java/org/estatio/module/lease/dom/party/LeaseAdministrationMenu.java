@@ -24,7 +24,7 @@ public class LeaseAdministrationMenu {
 
     @Action(semantics = SemanticsOf.SAFE)
     public Blob exportTenantAdministrationRecords(){
-        return tenantAdministrationImportExportService.export();
+        return tenantAdministrationImportExportService.exportTenantAdministrationRecords();
     }
 
     @Inject TenantAdministrationImportExportService tenantAdministrationImportExportService;

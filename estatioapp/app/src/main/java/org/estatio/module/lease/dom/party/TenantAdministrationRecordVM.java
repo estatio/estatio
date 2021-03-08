@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.jdo.annotations.Column;
 
 import org.joda.time.LocalDate;
 
@@ -77,6 +78,7 @@ public class TenantAdministrationRecordVM implements Importable {
     private String leaseReference;
 
     @Getter @Setter
+    @Column(scale = 2)
     @MemberOrder(sequence = "7")
     private BigDecimal declaredAmountOfClaim;
 
@@ -85,6 +87,7 @@ public class TenantAdministrationRecordVM implements Importable {
     private Boolean debtAdmitted;
 
     @Getter @Setter
+    @Column(scale = 2)
     @MemberOrder(sequence = "9")
     private BigDecimal admittedAmountOfClaim;
 
@@ -98,13 +101,7 @@ public class TenantAdministrationRecordVM implements Importable {
 
         TenantAdministrationRecord record = tenantAdministrationRecordRepository.upsertOrCreateNext(fetchStatus(getAdministrationStatus()), fetchTenant(getTenantReference()), getJudicialRedressDate());
         record.setLiquidationDate(getLiquidationDate());
-        if (getComments()!=null && getComments().length()>0){
-            if (record.getComments()!=null && record.getComments().length()>0){
-                record.setComments(record.getComments() + " | " + getComments());
-            } else {
-                record.setComments(getComments());
-            }
-        }
+        record.setComments(getComments());
 
         if (getLeaseReference()!=null){
             if (getDeclaredAmountOfClaim()==null) messageService2.raiseError(String.format("Declared amount should not be empty for lease with reference %s", getLeaseReference()));

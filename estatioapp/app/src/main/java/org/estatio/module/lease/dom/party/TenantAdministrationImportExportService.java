@@ -1,12 +1,16 @@
 package org.estatio.module.lease.dom.party;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedSet;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
 import com.google.api.client.util.Lists;
+
+import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
@@ -17,7 +21,7 @@ import org.isisaddons.module.excel.dom.ExcelService;
 @DomainService(nature = NatureOfService.DOMAIN, objectType = "party.TenantAdministrationImportExportService")
 public class TenantAdministrationImportExportService {
 
-    public Blob export(){
+    public Blob exportTenantAdministrationRecords(){
         List<TenantAdministrationRecordVM> vms = new ArrayList<>();
 
         final List<TenantAdministrationRecord> tenantAdministrationRecords = tenantAdministrationRecordRepository
@@ -60,6 +64,66 @@ public class TenantAdministrationImportExportService {
                 .fromExcel(sheet, TenantAdministrationRecordVM.class, "records");
         vms.forEach(vm->vm.importData(null));
         return vms;
+    }
+
+    public Blob exportEntries(final ContinuationPlan continuationPlan){
+        List<ContinuationPlanEntryVM> vms = new ArrayList<>();
+        Lists.newArrayList(continuationPlan.getEntries()).forEach(e->{
+            final SortedSet<EntryValueForLease> entryValues = e.getEntryValues();
+            if (entryValues.isEmpty()){
+                vms.add(new ContinuationPlanEntryVM(
+                        continuationPlan.getTenantAdministrationRecord().getTenant().getReference(),
+                        e.getDate(),
+                        e.getPercentage(),
+                        null,
+                        null,
+                        null
+                ));
+            } else {
+                Lists.newArrayList(entryValues).forEach(v->{
+                    vms.add(new ContinuationPlanEntryVM(
+                        continuationPlan.getTenantAdministrationRecord().getTenant().getReference(),
+                        e.getDate(),
+                        e.getPercentage(),
+                        v.getLeaseDetails().getLease().getReference(),
+                        v.getAmount(),
+                        v.getPaid()
+                    ));
+                });
+
+            }
+        });
+        return excelService.toExcel(vms, ContinuationPlanEntryVM.class, "entries", "ContinuationPlanExport.xlsx");
+    }
+
+    public Blob exportEntriesSample(final ContinuationPlan continuationPlan, final LocalDate date){
+        final SortedSet<TenantAdministrationLeaseDetails> leaseDetails = continuationPlan
+                .getTenantAdministrationRecord().getLeaseDetails();
+        final List<String> leaseRefs = Lists.newArrayList(leaseDetails).stream()
+                .map(ld -> ld.getLease().getReference()).collect(Collectors.toList());
+        final List<BigDecimal> leaseAmounts = Lists.newArrayList(leaseDetails).stream()
+                .map(ld->ld.getAdmittedAmountOfClaim()!=null ? ld.getAdmittedAmountOfClaim() : ld.getDeclaredAmountOfClaim())
+                .collect(Collectors.toList());
+        List<ContinuationPlanEntryVM> vms = new ArrayList<>();
+        for (int i = 0; i < leaseRefs.size() ; i++) {
+            ContinuationPlanEntryVM vm = new ContinuationPlanEntryVM(
+                    continuationPlan.getTenantAdministrationRecord().getTenant().getReference(),
+                    date,
+                    new BigDecimal("100.00"),
+                    leaseRefs.get(i),
+                    leaseAmounts.get(i),
+                    Boolean.FALSE
+            );
+            vms.add(vm);
+        }
+        return excelService.toExcel(vms, ContinuationPlanEntryVM.class, "entries", "ContinuationPlanExport.xlsx");
+    }
+
+    public List<ContinuationPlanEntryVM> importContinuationPlanEntries(final Blob sheet){
+        final List<ContinuationPlanEntryVM> entries = excelService
+                .fromExcel(sheet, ContinuationPlanEntryVM.class, "entries");
+        entries.forEach(e->e.importData(null));
+        return entries;
     }
 
     @Inject ExcelService excelService;

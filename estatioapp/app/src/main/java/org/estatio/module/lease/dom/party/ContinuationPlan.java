@@ -1,6 +1,7 @@
 package org.estatio.module.lease.dom.party;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -16,6 +17,7 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.value.Blob;
 
 import org.incode.module.base.dom.utils.TitleBuilder;
 
@@ -61,7 +63,25 @@ public class ContinuationPlan {
         return continuationPlanEntryRepository.upsert(this, date, percentage);
     }
 
+    @Action(semantics = SemanticsOf.SAFE)
+    public Blob exportEntries(){
+        return tenantAdministrationImportExportService.exportEntries(this);
+    }
+
+    @Action(semantics = SemanticsOf.SAFE)
+    public Blob exportEntriesSample(final LocalDate sampleEntryDate){
+        return tenantAdministrationImportExportService.exportEntriesSample(this, sampleEntryDate);
+    }
+
+    @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
+    public List<ContinuationPlanEntryVM> importEntries(final Blob sheet){
+        return tenantAdministrationImportExportService.importContinuationPlanEntries(sheet);
+    }
+
     @Inject
     ContinuationPlanEntryRepository continuationPlanEntryRepository;
+
+    @Inject
+    TenantAdministrationImportExportService tenantAdministrationImportExportService;
 
 }
