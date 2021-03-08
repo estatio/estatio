@@ -59,6 +59,7 @@ public enum IncomingInvoiceApprovalStateTransitionType
                     IncomingInvoiceApprovalState.COMPLETED,
                     IncomingInvoiceApprovalState.MONITORED,
                     IncomingInvoiceApprovalState.APPROVED,
+                    IncomingInvoiceApprovalState.APPROVED_BY_MARKETING_MANAGER,
                     IncomingInvoiceApprovalState.APPROVED_BY_COUNTRY_DIRECTOR,
                     IncomingInvoiceApprovalState.PENDING_BANK_ACCOUNT_CHECK,
                     IncomingInvoiceApprovalState.PAYABLE,
@@ -541,16 +542,6 @@ public enum IncomingInvoiceApprovalStateTransitionType
                 final ServiceRegistry2 serviceRegistry2) {
             if (isItalian(incomingInvoice) && !hasGrossAmountAboveThreshold(incomingInvoice)) {
                 return false;
-            }
-            if (incomingInvoice.getType()!=null && incomingInvoice.getApprovalState()!=IncomingInvoiceApprovalState.APPROVED_BY_MARKETING_MANAGER){
-
-                switch (incomingInvoice.getType()){
-                case PROPERTY_EXPENSES:
-                case SERVICE_CHARGES:
-                    if (IncomingInvoiceApprovalConfigurationUtil.hasItemWithChargeMarketingNR(incomingInvoice)) return false;
-                    break;
-                }
-
             }
             return true;
         }

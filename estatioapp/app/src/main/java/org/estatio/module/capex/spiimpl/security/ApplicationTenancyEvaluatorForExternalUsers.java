@@ -17,6 +17,7 @@
 package org.estatio.module.capex.spiimpl.security;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Callable;
 
@@ -119,6 +120,11 @@ public class ApplicationTenancyEvaluatorForExternalUsers implements ApplicationT
         final Property propertyOnInvoice = invoice.getProperty();
         if (propertyOnInvoice == null ) return false;
 
+        if (IncomingInvoiceApprovalConfigurationUtil.propertyRefsWithExternalAssetManager.contains(propertyOnInvoice.getReference())
+                && propertiesForUser.contains(propertyOnInvoice)) {
+            return true; // Exception for INCSUP-730
+        }
+
         if (!IncomingInvoiceApprovalConfigurationUtil.isInvoiceForExternalCenterManager(invoice)) return false;
 
         if (propertiesForUser.contains(propertyOnInvoice)) return true;
@@ -130,6 +136,11 @@ public class ApplicationTenancyEvaluatorForExternalUsers implements ApplicationT
 
         final Property propertyOnOrder = order.getProperty();
         if (propertyOnOrder == null ) return false;
+
+        if (IncomingInvoiceApprovalConfigurationUtil.propertyRefsWithExternalAssetManager.contains(propertyOnOrder.getReference())
+                && propertiesForUser.contains(propertyOnOrder)) {
+            return true; // Exception for INCSUP-730
+        }
 
         final List<String> propertyRefsFound = new ArrayList<>();
         IncomingInvoiceApprovalConfigurationUtil.PROPERTY_REF_EXTERNAL_PROJECT_REF_MAP.forEach((k,v)->{
