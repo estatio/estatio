@@ -32,10 +32,10 @@ public class TenantAdministrationRecordRepository {
             final AdministrationStatus status,
             final Party tenant,
             final LocalDate judicialRedressDate) {
-        TenantAdministrationRecord tenantStatus = findUnique(tenant, status);
-        if (tenantStatus != null) {
-            tenantStatus.setJudicialRedressDate(judicialRedressDate);
-            return tenantStatus;
+        TenantAdministrationRecord tenantAdministrationRecord = findUnique(tenant, status);
+        if (tenantAdministrationRecord != null) {
+            tenantAdministrationRecord.setJudicialRedressDate(judicialRedressDate);
+            return tenantAdministrationRecord;
         } else {
             return create(status, tenant, judicialRedressDate, latestForParty(tenant));
         }
@@ -54,18 +54,21 @@ public class TenantAdministrationRecordRepository {
     }
 
     private TenantAdministrationRecord create(final AdministrationStatus status, final Party tenant, final LocalDate judicialRedressDate, final TenantAdministrationRecord previous) {
-        TenantAdministrationRecord tenantStatus = new TenantAdministrationRecord();
-        tenantStatus.setTenant(tenant);
-        tenantStatus.setStatus(status);
-        tenantStatus.setJudicialRedressDate(judicialRedressDate);
-        tenantStatus.setPrevious(previous);
+        TenantAdministrationRecord tenantAdministrationRecord = new TenantAdministrationRecord();
+        serviceRegistry2.injectServicesInto(tenantAdministrationRecord);
+        tenantAdministrationRecord.setTenant(tenant);
+        tenantAdministrationRecord.setStatus(status);
+        tenantAdministrationRecord.setJudicialRedressDate(judicialRedressDate);
+        tenantAdministrationRecord.setPrevious(previous);
         if (previous!=null){
-            previous.setNext(tenantStatus);
-            tenantStatus.setComments(previous.getComments());
+            previous.setNext(tenantAdministrationRecord);
+            tenantAdministrationRecord.setComments(previous.getComments());
+            for (TenantAdministrationLeaseDetails ld : previous.getLeaseDetails()){
+                tenantAdministrationRecord.addLeaseDetails(ld.getLease(), ld.getDeclaredAmountOfClaim(), ld.getDebtAdmitted(), ld.getAdmittedAmountOfClaim(), ld.getLeaseContinued());
+            }
         }
-        serviceRegistry2.injectServicesInto(tenantStatus);
-        repositoryService.persistAndFlush(tenantStatus);
-        return tenantStatus;
+        repositoryService.persistAndFlush(tenantAdministrationRecord);
+        return tenantAdministrationRecord;
     }
 
     public List<TenantAdministrationRecord> listAll(){
