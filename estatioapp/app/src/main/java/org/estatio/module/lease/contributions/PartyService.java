@@ -31,6 +31,7 @@ import org.estatio.module.agreement.dom.role.AgreementRoleTypeRepository;
 import org.estatio.module.base.dom.UdoDomainService;
 import org.estatio.module.lease.dom.Lease;
 import org.estatio.module.lease.dom.LeaseAgreementRoleTypeEnum;
+import org.estatio.module.lease.dom.LeaseStatus;
 import org.estatio.module.party.dom.Party;
 
 @DomainService(menuOrder = "40", nature = NatureOfService.DOMAIN)
@@ -46,6 +47,7 @@ public class PartyService extends UdoDomainService<PartyService> {
                 .stream()
                 .filter(agreementRole -> agreementRole.getAgreement().getClass().isAssignableFrom(Lease.class))
                 .map((agreementRole) -> (Lease)agreementRole.getAgreement())
+                .filter(l->l.getStatus()!= LeaseStatus.PREVIEW)
                 .sorted()
                 .collect(Collectors.toList());
     }
@@ -56,6 +58,7 @@ public class PartyService extends UdoDomainService<PartyService> {
                 .stream()
                 .filter(agreementRole -> agreementRole.getAgreement().getClass().isAssignableFrom(Lease.class))
                 .map((agreementRole) -> (Lease)agreementRole.getAgreement())
+                .filter(l->l.getStatus()!= LeaseStatus.PREVIEW)
                 .sorted()
                 .collect(Collectors.toList());
     }
