@@ -21,7 +21,7 @@
                     <bs3:row>
                         <bs3:col span="12">
                             <cpt:fieldSet name="Date" id="date">
-                                <cpt:property id="judgmentdate"/>
+                                <cpt:property id="judgmentDate"/>
                             </cpt:fieldSet>
                         </bs3:col>
                     </bs3:row>
