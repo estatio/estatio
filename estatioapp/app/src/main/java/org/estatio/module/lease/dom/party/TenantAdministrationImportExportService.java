@@ -87,7 +87,7 @@ public class TenantAdministrationImportExportService {
                         e.getPercentage(),
                         v.getLeaseDetails().getLease().getReference(),
                         v.getAmount(),
-                        v.getPaid()
+                        v.getDatePaid()
                     ));
                 });
 
@@ -102,7 +102,7 @@ public class TenantAdministrationImportExportService {
         final List<String> leaseRefs = Lists.newArrayList(leaseDetails).stream()
                 .map(ld -> ld.getLease().getReference()).collect(Collectors.toList());
         final List<BigDecimal> leaseAmounts = Lists.newArrayList(leaseDetails).stream()
-                .map(ld->ld.getAdmittedAmountOfClaim()!=null ? ld.getAdmittedAmountOfClaim() : ld.getDeclaredAmountOfClaim())
+                .map(ld->ld.getAdmittedAmountOfClaim())
                 .collect(Collectors.toList());
         List<ContinuationPlanEntryVM> vms = new ArrayList<>();
         for (int i = 0; i < leaseRefs.size() ; i++) {
@@ -112,7 +112,7 @@ public class TenantAdministrationImportExportService {
                     new BigDecimal("100.00"),
                     leaseRefs.get(i),
                     leaseAmounts.get(i),
-                    Boolean.FALSE
+                    null
             );
             vms.add(vm);
         }
