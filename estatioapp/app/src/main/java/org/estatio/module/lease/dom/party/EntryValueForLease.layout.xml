@@ -26,6 +26,7 @@
                                 <cpt:property id="date" hidden="OBJECT_FORMS"/>
                                 <cpt:property id="amount"/>
                                 <cpt:property id="paid"/>
+                                <cpt:property id="datePaid"/>
                             </cpt:fieldSet>
                         </bs3:col>
                     </bs3:row>

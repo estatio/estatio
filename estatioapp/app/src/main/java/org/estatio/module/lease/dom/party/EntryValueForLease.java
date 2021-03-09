@@ -68,11 +68,15 @@ public class EntryValueForLease implements Comparable{
     @Column(allowsNull = "false", scale = MoneyType.Meta.SCALE)
     private BigDecimal amount;
 
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
+    private boolean isPaid() { return getDatePaid()!= null; }
+
     @Getter @Setter
     @Column(allowsNull = "true")
     @org.apache.isis.applib.annotation.Property(editing = Editing.ENABLED)
     @PropertyLayout(promptStyle = PromptStyle.INLINE)
-    private Boolean paid;
+    private LocalDate datePaid;
 
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)

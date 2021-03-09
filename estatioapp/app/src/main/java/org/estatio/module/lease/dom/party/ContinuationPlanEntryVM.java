@@ -35,14 +35,14 @@ public class ContinuationPlanEntryVM implements Importable {
             final BigDecimal percentage,
             final String leaseReference,
             final BigDecimal amountForLease,
-            final Boolean paid
+            final LocalDate datePaid
     ){
         this.tenantReference = tenantReference;
         this.entryDate = entryDate;
         this.percentage = percentage;
         this.leaseReference = leaseReference;
         this.amountForLease = amountForLease;
-        this.paid = paid;
+        this.datePaid = datePaid;
     }
 
     @Getter @Setter
@@ -69,7 +69,7 @@ public class ContinuationPlanEntryVM implements Importable {
 
     @Getter @Setter
     @MemberOrder(sequence = "6")
-    private Boolean paid;
+    private LocalDate datePaid;
 
 
     @Override
@@ -82,7 +82,7 @@ public class ContinuationPlanEntryVM implements Importable {
             if (getAmountForLease()==null) messageService2.raiseError(String.format("Amount for lease is mandatory for lease with reference %s", getLeaseReference()));
             final EntryValueForLease valueForLease = entry
                     .addValue(fetchLease(getLeaseReference()), getAmountForLease());
-            valueForLease.setPaid(getPaid());
+            valueForLease.setDatePaid(getDatePaid());
         }
 
         result.add(entry);
