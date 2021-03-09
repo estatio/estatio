@@ -15,6 +15,7 @@
                         <bs3:col span="12">
                             <cpt:fieldSet name="General" id="general">
                                 <cpt:property id="leaseDetails" hidden="PARENTED_TABLES"/>
+                                <cpt:property id="lease" hidden="OBJECT_FORMS"/>
                                 <cpt:property id="continuationPlanEntry" hidden="PARENTED_TABLES"/>
                             </cpt:fieldSet>
                         </bs3:col>
@@ -22,6 +23,7 @@
                     <bs3:row>
                         <bs3:col span="12">
                             <cpt:fieldSet name="Amount" id="amount">
+                                <cpt:property id="date" hidden="OBJECT_FORMS"/>
                                 <cpt:property id="amount"/>
                                 <cpt:property id="paid"/>
                             </cpt:fieldSet>

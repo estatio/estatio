@@ -9,13 +9,21 @@ import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Unique;
 
+import org.joda.time.LocalDate;
+
+import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
+import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.PromptStyle;
 import org.apache.isis.applib.annotation.PropertyLayout;
+import org.apache.isis.applib.annotation.SemanticsOf;
 
 import org.incode.module.base.dom.types.MoneyType;
 import org.incode.module.base.dom.utils.TitleBuilder;
+
+import org.estatio.module.lease.dom.Lease;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -65,6 +73,19 @@ public class EntryValueForLease implements Comparable{
     @org.apache.isis.applib.annotation.Property(editing = Editing.ENABLED)
     @PropertyLayout(promptStyle = PromptStyle.INLINE)
     private Boolean paid;
+
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
+    public Lease getLease(){
+        return getLeaseDetails().getLease();
+    }
+
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
+    public LocalDate getDate(){
+        return getContinuationPlanEntry().getDate();
+    }
+
 
     @Override
     public int compareTo(final Object o) {
