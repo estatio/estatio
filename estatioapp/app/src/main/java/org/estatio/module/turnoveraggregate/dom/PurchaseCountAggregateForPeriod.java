@@ -78,6 +78,10 @@ public class PurchaseCountAggregateForPeriod {
     @Column(allowsNull = "true")
     private boolean comparable;
 
+    @Getter @Setter
+    @Column(allowsNull = "true")
+    private BigInteger count2019;
+
     @Programmatic
     public void remove() {
         repositoryService.removeAndFlush(this);

@@ -105,6 +105,18 @@ public class TurnoverAggregateForPeriod {
     @Column(allowsNull = "true")
     private boolean comparable;
 
+    @Getter @Setter
+    @Column(allowsNull = "true", scale = MoneyType.Meta.SCALE)
+    private BigDecimal grossAmount2019;
+
+    @Getter @Setter
+    @Column(allowsNull = "true", scale = MoneyType.Meta.SCALE)
+    private BigDecimal netAmount2019;
+
+    @Getter @Setter
+    @Column(allowsNull = "true")
+    private Integer turnoverCount2019;
+
     @Programmatic
     public void remove() {
         repositoryService.removeAndFlush(this);
