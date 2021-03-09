@@ -331,6 +331,41 @@ public class TurnoverAggregationService {
                 turnoverAggregateForPeriod.getNonComparablePreviousYear()
                 ));
 
+        final TurnoverAggregation corrAgg2020IfAny = findCorrespondingAggregation2020(aggregation);
+        if (corrAgg2020IfAny!=null){
+            // we copy the appropriate values from corrAgg2020IfAny to turnoverAggregateForPeriod
+            final TurnoverAggregateForPeriod correspondingAggregateForPeriod2020 = correspondingAggregateForPeriod2020(
+                    corrAgg2020IfAny, turnoverAggregateForPeriod.getAggregationPeriod());
+            if (correspondingAggregateForPeriod2020!=null) {
+                turnoverAggregateForPeriod
+                        .setGrossAmount2019(correspondingAggregateForPeriod2020.getGrossAmountPreviousYear());
+                turnoverAggregateForPeriod
+                        .setNetAmount2019(correspondingAggregateForPeriod2020.getNetAmountPreviousYear());
+                turnoverAggregateForPeriod
+                        .setTurnoverCount2019(correspondingAggregateForPeriod2020.getTurnoverCountPreviousYear());
+            }
+        }
+
+    }
+
+    TurnoverAggregateForPeriod correspondingAggregateForPeriod2020(final TurnoverAggregation corrAgg2020, final AggregationPeriod aggregationPeriod){
+        switch (aggregationPeriod){
+        case P_1M:
+            return corrAgg2020.getAggregate1Month();
+        case P_2M:
+            return corrAgg2020.getAggregate2Month();
+        case P_3M:
+            return corrAgg2020.getAggregate3Month();
+        case P_6M:
+            return corrAgg2020.getAggregate6Month();
+        case P_9M:
+            return corrAgg2020.getAggregate9Month();
+        case P_12M:
+            return corrAgg2020.getAggregate12Month();
+        case P_12M_COVID:
+            return corrAgg2020.getAggregate12MonthCovid();
+        }
+        return null;
     }
 
     Integer determineTurnoverCount(final List<Turnover> turnovers, final Frequency frequency){
@@ -408,6 +443,44 @@ public class TurnoverAggregationService {
                 turnoverAggregateToDate.getNonComparableThisYear(),
                 turnoverAggregateToDate.getNonComparablePreviousYear()
         ));
+
+        final TurnoverAggregation corrAgg2020IfAny = findCorrespondingAggregation2020(aggregation);
+        if (corrAgg2020IfAny!=null){
+            // we copy the appropriate values from corrAgg2020IfAny to turnoverAggregateToDate
+            turnoverAggregateToDate.setGrossAmount2019(corrAgg2020IfAny.getAggregateToDate().getGrossAmountPreviousYear());
+            turnoverAggregateToDate.setNetAmount2019(corrAgg2020IfAny.getAggregateToDate().getNetAmountPreviousYear());
+            turnoverAggregateToDate.setTurnoverCount2019(corrAgg2020IfAny.getAggregateToDate().getTurnoverCountPreviousYear());
+        }
+
+    }
+
+    TurnoverAggregation findCorrespondingAggregation2020(final TurnoverAggregation currentTurnoverAggregation){
+        final LocalDate dateCorresponding2020Agg = currentTurnoverAggregation.getDate().withYear(2020);
+        TurnoverReportingConfig currentConfig = currentTurnoverAggregation.getTurnoverReportingConfig();
+        // We take the 'corresponding' aggregate of 2020 and from that one all the values for previous year (which is 2019)
+        // In theory this should save us some inspections of 'previous' configs
+        TurnoverAggregation corrAgg2020IfAny = turnoverAggregationRepository
+                .findUnique(currentConfig, dateCorresponding2020Agg);
+        while (corrAgg2020IfAny==null && previousConfig(currentConfig)==null){
+            currentConfig = previousConfig(currentConfig);
+            corrAgg2020IfAny = turnoverAggregationRepository
+                    .findUnique(currentConfig, dateCorresponding2020Agg);
+        }
+        return corrAgg2020IfAny;
+    }
+
+    TurnoverReportingConfig previousConfig(final TurnoverReportingConfig currentConfig){
+        final Lease previousLease = (Lease) currentConfig.getOccupancy().getLease().getPrevious();
+        if (previousLease==null) return null;
+        List<TurnoverReportingConfig> result = new ArrayList<>();
+        for (Occupancy o : previousLease.getOccupancies()){
+            result.addAll(turnoverReportingConfigRepository.findByOccupancyAndTypeAndFrequency(o, currentConfig.getType(), currentConfig.getFrequency()));
+        }
+        if (result.size()==1) return result.get(0);
+        // We don't know what to do yet when multiple configs are found
+        // In a next iteration we could inspect and see if there are links between the configs (and maybe set up links for those leases
+        // where we might encounter a many-to-one config
+        return null;
     }
 
     List<Turnover> getTurnoversForAggregateToDate(
@@ -581,6 +654,9 @@ public class TurnoverAggregationService {
         agg.setTurnoverCountPreviousYear(null);
         agg.setNonComparablePreviousYear(null);
         agg.setComparable(false);
+        agg.setGrossAmount2019(null);
+        agg.setNetAmount2019(null);
+        agg.setTurnoverCount2019(null);
     }
 
     private void resetTurnoverAggregateForPeriod(final TurnoverAggregateForPeriod agg){
@@ -593,12 +669,16 @@ public class TurnoverAggregationService {
         agg.setTurnoverCountPreviousYear(null);
         agg.setNonComparablePreviousYear(null);
         agg.setComparable(false);
+        agg.setGrossAmount2019(null);
+        agg.setNetAmount2019(null);
+        agg.setTurnoverCount2019(null);
     }
 
     private void resetPurchaseCountAggregateForPeriod(final PurchaseCountAggregateForPeriod agg){
         agg.setCount(null);
         agg.setCountPreviousYear(null);
         agg.setComparable(false);
+        agg.setCount2019(null);
     }
 
     public List<TurnoverReportingConfig> choicesForChildConfig(final TurnoverReportingConfig config) {
