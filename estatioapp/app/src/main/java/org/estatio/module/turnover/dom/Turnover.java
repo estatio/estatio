@@ -26,6 +26,7 @@ import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.incode.module.base.dom.types.MoneyType;
 import org.incode.module.base.dom.types.NotesType;
 import org.incode.module.base.dom.utils.TitleBuilder;
+import org.incode.module.base.dom.valuetypes.LocalDateInterval;
 
 import org.estatio.module.base.dom.UdoDomainObject2;
 import org.estatio.module.currency.dom.Currency;
@@ -243,6 +244,19 @@ public class Turnover extends UdoDomainObject2<Turnover> {
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
     public List<Turnover> getPrevious(){
         return turnoverRepository.findApprovedByConfigAndTypeAndFrequencyBeforeDate(getConfig(), getType(),getFrequency(), getDate());
+    }
+
+    @Programmatic
+    public LocalDateInterval getInterval(){
+        switch (getFrequency()){
+        case DAILY:
+            return LocalDateInterval.including(getDate(), getDate());
+        case MONTHLY:
+            return LocalDateInterval.excluding(getDate(), getDate().plusMonths(1));
+        case YEARLY:
+            return LocalDateInterval.excluding(getDate(), getDate().plusYears(1));
+        }
+        return null;
     }
 
     @Action(semantics = SemanticsOf.SAFE)
