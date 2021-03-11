@@ -488,26 +488,28 @@ public class TurnoverAggregationService_Test {
 
         // given
         TurnoverAggregationService service = new TurnoverAggregationService();
+        TurnoverAggregation aggregation = new TurnoverAggregation();
         final LocalDate aggregationDate = new LocalDate(2020, 1, 1);
+        aggregation.setDate(aggregationDate);
         final PurchaseCountAggregateForPeriod pafp = new PurchaseCountAggregateForPeriod();
 
         // when
         pafp.setAggregationPeriod(AggregationPeriod.P_2M);
         List<Turnover> objects = prepareTestTurnovers(LocalDateInterval.including(aggregationDate, aggregationDate));
-        service.calculatePurchaseCountAggregateForPeriod(pafp, aggregationDate, objects);
+        service.calculatePurchaseCountAggregateForPeriod(pafp, aggregation, objects);
 
         // then
         assertPurchaseCountAggregateForPeriod(pafp, new BigInteger("1"), null, false);
 
         // and when only this year
         List<Turnover> objectsCurYear = prepareTestTurnovers(LocalDateInterval.including(aggregationDate.minusMonths(11), aggregationDate));
-        service.calculatePurchaseCountAggregateForPeriod(pafp, aggregationDate, objectsCurYear);
+        service.calculatePurchaseCountAggregateForPeriod(pafp, aggregation, objectsCurYear);
         // then
         assertPurchaseCountAggregateForPeriod(pafp, new BigInteger("23"), null, false);
 
         // and when only last year
         List<Turnover> objectsPreviousYear = prepareTestTurnovers(LocalDateInterval.including(aggregationDate.minusYears(1).minusMonths(11), aggregationDate.minusYears(1)));
-        service.calculatePurchaseCountAggregateForPeriod(pafp, aggregationDate, objectsPreviousYear);
+        service.calculatePurchaseCountAggregateForPeriod(pafp, aggregation, objectsPreviousYear);
         // then
         assertPurchaseCountAggregateForPeriod(pafp, null, new BigInteger("23"), false);
 
@@ -515,13 +517,13 @@ public class TurnoverAggregationService_Test {
         List<Turnover> currentAndPrevYear = new ArrayList<>();
         currentAndPrevYear.addAll(objectsPreviousYear);
         currentAndPrevYear.addAll(objectsCurYear);
-        service.calculatePurchaseCountAggregateForPeriod(pafp, aggregationDate, currentAndPrevYear);
+        service.calculatePurchaseCountAggregateForPeriod(pafp, aggregation, currentAndPrevYear);
         // then
         assertPurchaseCountAggregateForPeriod(pafp, new BigInteger("23"), new BigInteger("23"), true);
 
         // and when for 12 M
         pafp.setAggregationPeriod(AggregationPeriod.P_12M);
-        service.calculatePurchaseCountAggregateForPeriod(pafp, aggregationDate, currentAndPrevYear);
+        service.calculatePurchaseCountAggregateForPeriod(pafp, aggregation, currentAndPrevYear);
         // then
         assertPurchaseCountAggregateForPeriod(pafp, new BigInteger("78"), new BigInteger("78"), true);
 
@@ -534,11 +536,13 @@ public class TurnoverAggregationService_Test {
         TurnoverAggregationService service = new TurnoverAggregationService();
         final PurchaseCountAggregateForPeriod countAggregateForPeriod = new PurchaseCountAggregateForPeriod();
         countAggregateForPeriod.setAggregationPeriod(AggregationPeriod.P_1M);
+        TurnoverAggregation aggregation = new TurnoverAggregation();
         final LocalDate aggregationDate = new LocalDate(2020, 1, 1);
+        aggregation.setDate(aggregationDate);
         List<Turnover> turnovers = new ArrayList<>();
 
         // when
-        service.calculatePurchaseCountAggregateForPeriod(countAggregateForPeriod, aggregationDate, turnovers);
+        service.calculatePurchaseCountAggregateForPeriod(countAggregateForPeriod, aggregation, turnovers);
 
         // then
         assertPurchaseCountAggregateForPeriod(countAggregateForPeriod, null, null,false);
@@ -546,42 +550,42 @@ public class TurnoverAggregationService_Test {
         // and when
         Turnover turnoverWithNUlls = setUpTurnover(null, null, null, aggregationDate);
         turnovers.add(turnoverWithNUlls);
-        service.calculatePurchaseCountAggregateForPeriod(countAggregateForPeriod, aggregationDate, turnovers);
+        service.calculatePurchaseCountAggregateForPeriod(countAggregateForPeriod, aggregation, turnovers);
         // then
         assertPurchaseCountAggregateForPeriod(countAggregateForPeriod, null, null,false);
 
         // and when
         Turnover turnoverWithNUllsPY = setUpTurnover(null, null, null, aggregationDate.minusYears(1));
         turnovers.add(turnoverWithNUllsPY);
-        service.calculatePurchaseCountAggregateForPeriod(countAggregateForPeriod, aggregationDate, turnovers);
+        service.calculatePurchaseCountAggregateForPeriod(countAggregateForPeriod, aggregation, turnovers);
         // then
         assertPurchaseCountAggregateForPeriod(countAggregateForPeriod, null, null,false);
 
         // and when
         Turnover turnoverWithZeroCount = setUpTurnover(null, null, BigInteger.valueOf(0), aggregationDate);
         turnovers.add(turnoverWithZeroCount);
-        service.calculatePurchaseCountAggregateForPeriod(countAggregateForPeriod, aggregationDate, turnovers);
+        service.calculatePurchaseCountAggregateForPeriod(countAggregateForPeriod, aggregation, turnovers);
         // then
         assertPurchaseCountAggregateForPeriod(countAggregateForPeriod, BigInteger.valueOf(0), null,false);
 
         // and when
         Turnover turnoverWithZeroCountPY = setUpTurnover(null, null, BigInteger.valueOf(0), aggregationDate.minusYears(1));
         turnovers.add(turnoverWithZeroCountPY);
-        service.calculatePurchaseCountAggregateForPeriod(countAggregateForPeriod, aggregationDate, turnovers);
+        service.calculatePurchaseCountAggregateForPeriod(countAggregateForPeriod, aggregation, turnovers);
         // then
         assertPurchaseCountAggregateForPeriod(countAggregateForPeriod, BigInteger.valueOf(0), BigInteger.valueOf(0),false);
 
         // and when
         Turnover turnoverWithNonZeroCount = setUpTurnover(null, null, BigInteger.valueOf(1), aggregationDate);
         turnovers.add(turnoverWithNonZeroCount);
-        service.calculatePurchaseCountAggregateForPeriod(countAggregateForPeriod, aggregationDate, turnovers);
+        service.calculatePurchaseCountAggregateForPeriod(countAggregateForPeriod, aggregation, turnovers);
         // then
         assertPurchaseCountAggregateForPeriod(countAggregateForPeriod, BigInteger.valueOf(1), BigInteger.valueOf(0),false);
 
         // and when
         Turnover turnoverWithNonZeroCountPY = setUpTurnover(null, null, BigInteger.valueOf(1), aggregationDate.minusYears(1));
         turnovers.add(turnoverWithNonZeroCountPY);
-        service.calculatePurchaseCountAggregateForPeriod(countAggregateForPeriod, aggregationDate, turnovers);
+        service.calculatePurchaseCountAggregateForPeriod(countAggregateForPeriod, aggregation, turnovers);
         // then
         assertPurchaseCountAggregateForPeriod(countAggregateForPeriod, BigInteger.valueOf(1), BigInteger.valueOf(1),true);
 

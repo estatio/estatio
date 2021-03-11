@@ -455,31 +455,40 @@ public class TurnoverAggregationService {
     }
 
     TurnoverAggregation findCorrespondingAggregation2020(final TurnoverAggregation currentTurnoverAggregation){
+
+        // this is only relevant for the year 2021 and up
+        if (currentTurnoverAggregation.getDate().getYear()<2021) return null;
+
         final LocalDate dateCorresponding2020Agg = currentTurnoverAggregation.getDate().withYear(2020);
         TurnoverReportingConfig currentConfig = currentTurnoverAggregation.getTurnoverReportingConfig();
+
         // We take the 'corresponding' aggregate of 2020 and from that one all the values for previous year (which is 2019)
         // In theory this should save us some inspections of 'previous' configs
         TurnoverAggregation corrAgg2020IfAny = turnoverAggregationRepository
                 .findUnique(currentConfig, dateCorresponding2020Agg);
+
         while (corrAgg2020IfAny==null && previousConfig(currentConfig)==null){
             currentConfig = previousConfig(currentConfig);
             corrAgg2020IfAny = turnoverAggregationRepository
                     .findUnique(currentConfig, dateCorresponding2020Agg);
         }
+
         return corrAgg2020IfAny;
     }
 
     TurnoverReportingConfig previousConfig(final TurnoverReportingConfig currentConfig){
+
         final Lease previousLease = (Lease) currentConfig.getOccupancy().getLease().getPrevious();
         if (previousLease==null) return null;
+
         List<TurnoverReportingConfig> result = new ArrayList<>();
         for (Occupancy o : previousLease.getOccupancies()){
             result.addAll(turnoverReportingConfigRepository.findByOccupancyAndTypeAndFrequency(o, currentConfig.getType(), currentConfig.getFrequency()));
         }
         if (result.size()==1) return result.get(0);
+
         // We don't know what to do yet when multiple configs are found
-        // In a next iteration we could inspect and see if there are links between the configs (and maybe set up links for those leases
-        // where we might encounter a many-to-one config
+        // In a next iteration we could inspect and see if there are links between the configs (and maybe set up links if needed for many to one) for those leases
         return null;
     }
 
@@ -501,11 +510,11 @@ public class TurnoverAggregationService {
 
     public void calculatePurchaseCountAggregateForPeriod(
             final PurchaseCountAggregateForPeriod purchaseCountAggregateForPeriod,
-            final LocalDate aggregationDate,
+            final TurnoverAggregation aggregation,
             final List<Turnover> turnovers) {
 
-        final List<Turnover> toCY = getTurnoversForPurchaseCountAggregateForPeriod(purchaseCountAggregateForPeriod, aggregationDate, turnovers, false);
-        final List<Turnover> toPY = getTurnoversForPurchaseCountAggregateForPeriod(purchaseCountAggregateForPeriod, aggregationDate, turnovers, true);
+        final List<Turnover> toCY = getTurnoversForPurchaseCountAggregateForPeriod(purchaseCountAggregateForPeriod, aggregation.getDate(), turnovers, false);
+        final List<Turnover> toPY = getTurnoversForPurchaseCountAggregateForPeriod(purchaseCountAggregateForPeriod, aggregation.getDate(), turnovers, true);
 
         if (toCY.isEmpty() && toPY.isEmpty()) return;
 
@@ -542,6 +551,31 @@ public class TurnoverAggregationService {
                 , false
         ));
 
+        final TurnoverAggregation corrAgg2020IfAny = findCorrespondingAggregation2020(aggregation);
+        if (corrAgg2020IfAny!=null){
+            // we copy the appropriate values from corrAgg2020IfAny to turnoverAggregateForPeriod
+            final PurchaseCountAggregateForPeriod correspondingAggregateForPeriod2020 = correspondingPurchaseCountForPeriod2020(
+                    corrAgg2020IfAny, purchaseCountAggregateForPeriod.getAggregationPeriod());
+            if (correspondingAggregateForPeriod2020!=null) {
+                purchaseCountAggregateForPeriod
+                        .setCount2019(correspondingAggregateForPeriod2020.getCountPreviousYear());
+            }
+        }
+
+    }
+
+    PurchaseCountAggregateForPeriod correspondingPurchaseCountForPeriod2020(final TurnoverAggregation corrAgg2020, final AggregationPeriod aggregationPeriod){
+        switch (aggregationPeriod){
+        case P_1M:
+            return corrAgg2020.getPurchaseCountAggregate1Month();
+        case P_3M:
+            return corrAgg2020.getPurchaseCountAggregate3Month();
+        case P_6M:
+            return corrAgg2020.getPurchaseCountAggregate6Month();
+        case P_12M:
+            return corrAgg2020.getPurchaseCountAggregate12Month();
+        }
+        return null;
     }
 
     List<Turnover> getTurnoversForPurchaseCountAggregateForPeriod(

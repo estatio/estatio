@@ -89,7 +89,7 @@ public class PurchaseCountAggregateForPeriod {
 
     @Programmatic
     public void calculate(final TurnoverAggregation aggregation, final List<Turnover> turnovers) {
-        turnoverAggregationService.calculatePurchaseCountAggregateForPeriod(this, aggregation.getDate(), turnovers);
+        turnoverAggregationService.calculatePurchaseCountAggregateForPeriod(this, aggregation, turnovers);
     }
 
     @Programmatic
