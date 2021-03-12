@@ -97,7 +97,7 @@ public class TenantAdministrationImportExportService {
         return excelService.toExcel(vms, ContinuationPlanEntryVM.class, "entries", "ContinuationPlanExport.xlsx");
     }
 
-    public Blob exportEntriesSample(final ContinuationPlan continuationPlan, final List<BigDecimal> percentages){
+    public Blob exportEntriesSample(final ContinuationPlan continuationPlan){
         final SortedSet<TenantAdministrationLeaseDetails> leaseDetails = continuationPlan
                 .getTenantAdministrationRecord().getLeaseDetails();
         final List<String> leaseRefs = Lists.newArrayList(leaseDetails).stream()
@@ -105,16 +105,16 @@ public class TenantAdministrationImportExportService {
         final List<BigDecimal> leaseAmounts = Lists.newArrayList(leaseDetails).stream()
                 .map(TenantAdministrationLeaseDetails::getAdmittedAmountOfClaim)
                 .collect(Collectors.toList());
+        final List<ContinuationPlanEntry> entries = Lists.newArrayList(continuationPlan.getEntries());
         List<ContinuationPlanEntryVM> vms = new ArrayList<>();
         for (int i = 0; i < leaseRefs.size() ; i++) {
-            LocalDate date = continuationPlan.getJudgmentDate();
-            for (BigDecimal percentage : percentages) {
+            for (ContinuationPlanEntry entry : entries) {
                 ContinuationPlanEntryVM vm = new ContinuationPlanEntryVM(
                         continuationPlan.getTenantAdministrationRecord().getTenant().getReference(),
-                        date.plusYears(1),
-                        percentage,
+                        entry.getDate(),
+                        entry.getPercentage(),
                         leaseRefs.get(i),
-                        entryValueForLeaseRepository.calculateAmount(leaseAmounts.get(i), percentage),
+                        entryValueForLeaseRepository.calculateAmount(leaseAmounts.get(i), entry.getPercentage()),
                         null
                 );
                 vms.add(vm);

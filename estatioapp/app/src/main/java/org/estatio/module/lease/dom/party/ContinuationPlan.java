@@ -10,11 +10,10 @@ import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.Unique;
 
+import net.sf.cglib.core.Local;
+import org.apache.isis.applib.annotation.*;
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.DomainObject;
-import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.value.Blob;
 
 import org.incode.module.base.dom.utils.TitleBuilder;
@@ -61,17 +60,27 @@ public class ContinuationPlan {
         return continuationPlanEntryRepository.upsert(this, date, percentage);
     }
 
+    @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
+    public ContinuationPlan createEntriesSample(){
+        LocalDate date = getJudgmentDate();
+        for (BigDecimal percentage : getSamplePercentages()) {
+            addEntry(date.plusYears(1), percentage);
+        }
+        return this;
+    }
+
     @Action(semantics = SemanticsOf.SAFE)
     public Blob exportEntries(){
         return tenantAdministrationImportExportService.exportEntries(this);
     }
 
     @Action(semantics = SemanticsOf.SAFE)
-    public Blob exportEntriesSample(final List<BigDecimal> percentages){
-        return tenantAdministrationImportExportService.exportEntriesSample(this, percentages);
+    public Blob exportEntriesSample(){
+        return tenantAdministrationImportExportService.exportEntriesSample(this);
     }
 
-    public List<BigDecimal> default0ExportEntriesSample() {
+    @PropertyLayout(hidden = Where.EVERYWHERE)
+    private List<BigDecimal> getSamplePercentages() {
         return new ArrayList<BigDecimal>(Arrays.asList(
                 new BigDecimal("3"),
                 new BigDecimal("7"),

@@ -44,7 +44,7 @@ public class TenantAdministrationRecordRepository {
             return null;
         }
         else {
-            return latestRecord.getStatus().equals(AdministrationStatus.LIQUIDATION) ? null : create(status, tenant, judicialRedressDate, latestRecord);
+            return latestRecord!=null && latestRecord.getStatus().equals(AdministrationStatus.LIQUIDATION) ? null : create(status, tenant, judicialRedressDate, latestRecord);
         }
     }
 

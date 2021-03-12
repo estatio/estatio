@@ -38,6 +38,7 @@ public class ContinuationPlanEntryRepository {
         }
     }
 
+
     private ContinuationPlanEntry create(final ContinuationPlan plan, final LocalDate date, final BigDecimal percentage){
         ContinuationPlanEntry entry = new ContinuationPlanEntry();
         entry.setContinuationPlan(plan);
