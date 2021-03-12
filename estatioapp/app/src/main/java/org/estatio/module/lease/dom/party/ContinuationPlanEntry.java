@@ -89,13 +89,7 @@ public class ContinuationPlanEntry implements Comparable{
         final TenantAdministrationLeaseDetails leaseDetailsIfAny = tenantAdministrationLeaseDetailsRepository
                 .findUnique(continuationPlan.getTenantAdministrationRecord(), lease);
         if (leaseDetailsIfAny==null || leaseDetailsIfAny.getAdmittedAmountOfClaim()==null) return null;
-        return percentageOf(leaseDetailsIfAny.getAdmittedAmountOfClaim(), getPercentage());
-    }
-
-    BigDecimal percentageOf(final BigDecimal value, final BigDecimal percentage) {
-        return value
-                .multiply(percentage)
-                .divide(new BigDecimal("100"), MathContext.DECIMAL64);
+        return entryValueForLeaseRepository.calculateAmount(leaseDetailsIfAny.getAdmittedAmountOfClaim(), getPercentage());
     }
 
     @Inject EntryValueForLeaseRepository entryValueForLeaseRepository;

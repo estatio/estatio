@@ -1,6 +1,7 @@
 package org.estatio.module.lease.dom.party;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -56,6 +57,10 @@ public class EntryValueForLeaseRepository {
         valueForLease.setAmount(amount);
         repositoryService.persistAndFlush(valueForLease);
         return valueForLease;
+    }
+
+    public BigDecimal calculateAmount(final BigDecimal value, final BigDecimal percentage) {
+        return value != null ? value.multiply(percentage).divide(new BigDecimal("100"), MathContext.DECIMAL64) : null;
     }
 
     public List<EntryValueForLease> listAll(){

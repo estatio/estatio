@@ -1,9 +1,7 @@
 package org.estatio.module.lease.dom.party;
 
 import java.math.BigDecimal;
-import java.util.List;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.*;
 
 import javax.inject.Inject;
 import javax.jdo.annotations.Column;
@@ -69,8 +67,22 @@ public class ContinuationPlan {
     }
 
     @Action(semantics = SemanticsOf.SAFE)
-    public Blob exportEntriesSample(final LocalDate sampleEntryDate){
-        return tenantAdministrationImportExportService.exportEntriesSample(this, sampleEntryDate);
+    public Blob exportEntriesSample(final List<BigDecimal> percentages){
+        return tenantAdministrationImportExportService.exportEntriesSample(this, percentages);
+    }
+
+    public List<BigDecimal> default0ExportEntriesSample() {
+        return new ArrayList<BigDecimal>(Arrays.asList(
+                new BigDecimal("3"),
+                new BigDecimal("7"),
+                new BigDecimal("11"),
+                new BigDecimal("11"),
+                new BigDecimal("11"),
+                new BigDecimal("11"),
+                new BigDecimal("11"),
+                new BigDecimal("11"),
+                new BigDecimal("12"),
+                new BigDecimal("12")));
     }
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)

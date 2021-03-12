@@ -2,6 +2,7 @@ package org.estatio.module.lease.dom.party;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.stream.Collectors;
@@ -96,25 +97,28 @@ public class TenantAdministrationImportExportService {
         return excelService.toExcel(vms, ContinuationPlanEntryVM.class, "entries", "ContinuationPlanExport.xlsx");
     }
 
-    public Blob exportEntriesSample(final ContinuationPlan continuationPlan, final LocalDate date){
+    public Blob exportEntriesSample(final ContinuationPlan continuationPlan, final List<BigDecimal> percentages){
         final SortedSet<TenantAdministrationLeaseDetails> leaseDetails = continuationPlan
                 .getTenantAdministrationRecord().getLeaseDetails();
         final List<String> leaseRefs = Lists.newArrayList(leaseDetails).stream()
                 .map(ld -> ld.getLease().getReference()).collect(Collectors.toList());
         final List<BigDecimal> leaseAmounts = Lists.newArrayList(leaseDetails).stream()
-                .map(ld->ld.getAdmittedAmountOfClaim())
+                .map(TenantAdministrationLeaseDetails::getAdmittedAmountOfClaim)
                 .collect(Collectors.toList());
         List<ContinuationPlanEntryVM> vms = new ArrayList<>();
         for (int i = 0; i < leaseRefs.size() ; i++) {
-            ContinuationPlanEntryVM vm = new ContinuationPlanEntryVM(
-                    continuationPlan.getTenantAdministrationRecord().getTenant().getReference(),
-                    date,
-                    new BigDecimal("100.00"),
-                    leaseRefs.get(i),
-                    leaseAmounts.get(i),
-                    null
-            );
-            vms.add(vm);
+            LocalDate date = continuationPlan.getJudgmentDate();
+            for (BigDecimal percentage : percentages) {
+                ContinuationPlanEntryVM vm = new ContinuationPlanEntryVM(
+                        continuationPlan.getTenantAdministrationRecord().getTenant().getReference(),
+                        date.plusYears(1),
+                        percentage,
+                        leaseRefs.get(i),
+                        entryValueForLeaseRepository.calculateAmount(leaseAmounts.get(i), percentage),
+                        null
+                );
+                vms.add(vm);
+            }
         }
         return excelService.toExcel(vms, ContinuationPlanEntryVM.class, "entries", "ContinuationPlanExport.xlsx");
     }
@@ -129,5 +133,7 @@ public class TenantAdministrationImportExportService {
     @Inject ExcelService excelService;
 
     @Inject TenantAdministrationRecordRepository tenantAdministrationRecordRepository;
+
+    @Inject EntryValueForLeaseRepository entryValueForLeaseRepository;
 
 }
