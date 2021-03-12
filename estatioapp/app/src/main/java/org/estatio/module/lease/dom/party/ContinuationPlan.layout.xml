@@ -65,7 +65,6 @@
         <bs3:col span="6">
             <cpt:collection id="entries">
                 <cpt:action id="addEntry"/>
-                <cpt:action id="createEntriesSample"/>
             </cpt:collection>
         </bs3:col>
     </bs3:row>

@@ -60,15 +60,6 @@ public class ContinuationPlan {
         return continuationPlanEntryRepository.upsert(this, date, percentage);
     }
 
-    @Action(semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
-    public ContinuationPlan createEntriesSample(){
-        LocalDate date = getJudgmentDate();
-        for (BigDecimal percentage : getSamplePercentages()) {
-            addEntry(date.plusYears(1), percentage);
-        }
-        return this;
-    }
-
     @Action(semantics = SemanticsOf.SAFE)
     public Blob exportEntries(){
         return tenantAdministrationImportExportService.exportEntries(this);
@@ -77,21 +68,6 @@ public class ContinuationPlan {
     @Action(semantics = SemanticsOf.SAFE)
     public Blob exportEntriesSample(){
         return tenantAdministrationImportExportService.exportEntriesSample(this);
-    }
-
-    @PropertyLayout(hidden = Where.EVERYWHERE)
-    private List<BigDecimal> getSamplePercentages() {
-        return new ArrayList<BigDecimal>(Arrays.asList(
-                new BigDecimal("3"),
-                new BigDecimal("7"),
-                new BigDecimal("11"),
-                new BigDecimal("11"),
-                new BigDecimal("11"),
-                new BigDecimal("11"),
-                new BigDecimal("11"),
-                new BigDecimal("11"),
-                new BigDecimal("12"),
-                new BigDecimal("12")));
     }
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)

@@ -105,22 +105,37 @@ public class TenantAdministrationImportExportService {
         final List<BigDecimal> leaseAmounts = Lists.newArrayList(leaseDetails).stream()
                 .map(TenantAdministrationLeaseDetails::getAdmittedAmountOfClaim)
                 .collect(Collectors.toList());
-        final List<ContinuationPlanEntry> entries = Lists.newArrayList(continuationPlan.getEntries());
+        final List<BigDecimal> percentages = getSamplePercentages();
         List<ContinuationPlanEntryVM> vms = new ArrayList<>();
         for (int i = 0; i < leaseRefs.size() ; i++) {
-            for (ContinuationPlanEntry entry : entries) {
+            LocalDate date = continuationPlan.getJudgmentDate().plusYears(1);
+            for (int j = 0; j < percentages.size(); j++) {
                 ContinuationPlanEntryVM vm = new ContinuationPlanEntryVM(
                         continuationPlan.getTenantAdministrationRecord().getTenant().getReference(),
-                        entry.getDate(),
-                        entry.getPercentage(),
+                        date.plusYears(j),
+                        percentages.get(j),
                         leaseRefs.get(i),
-                        entryValueForLeaseRepository.calculateAmount(leaseAmounts.get(i), entry.getPercentage()),
+                        entryValueForLeaseRepository.calculateAmount(leaseAmounts.get(i), percentages.get(j)),
                         null
                 );
                 vms.add(vm);
             }
         }
         return excelService.toExcel(vms, ContinuationPlanEntryVM.class, "entries", "ContinuationPlanExport.xlsx");
+    }
+
+    private List<BigDecimal> getSamplePercentages() {
+        return new ArrayList<BigDecimal>(Arrays.asList(
+                new BigDecimal("3"),
+                new BigDecimal("7"),
+                new BigDecimal("11"),
+                new BigDecimal("11"),
+                new BigDecimal("11"),
+                new BigDecimal("11"),
+                new BigDecimal("11"),
+                new BigDecimal("11"),
+                new BigDecimal("12"),
+                new BigDecimal("12")));
     }
 
     public List<ContinuationPlanEntryVM> importContinuationPlanEntries(final Blob sheet){
