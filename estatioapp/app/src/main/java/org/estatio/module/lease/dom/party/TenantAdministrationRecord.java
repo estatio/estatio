@@ -83,6 +83,10 @@ public class TenantAdministrationRecord {
         return getStatus()!=AdministrationStatus.LIQUIDATION;
     }
 
+    @Getter @Setter
+    @Column(allowsNull = "false")
+    private LocalDate statusChangedDate;
+
     @Action(semantics = SemanticsOf.IDEMPOTENT)
     public TenantAdministrationRecord changeJudicialRedressDate(final LocalDate date) {
         setJudicialRedressDate(date);

@@ -3,6 +3,7 @@ package org.estatio.module.lease.dom.party;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 
+import org.apache.isis.applib.services.clock.ClockService;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
@@ -23,9 +24,18 @@ public class Party_changeAdministrationRecord {
 
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ACTION)
-    public Party act(final AdministrationStatus status, @Nullable final LocalDate judicialRedressDate) {
+    public Party act(final AdministrationStatus status, @Nullable final LocalDate judicialRedressDate, @Nullable final LocalDate statusChangedDate) {
         tenantAdministrationRecordRepository.upsertOrCreateNext(status, party, judicialRedressDate);
         return party;
+    }
+
+    public LocalDate default2Act() { return clockService.now(); }
+
+    public String validateAct(AdministrationStatus status, LocalDate judicialRedressDate, LocalDate statusChangedDate) {
+        if (tenantAdministrationRecordRepository.findUnique(party, status) == null) {
+            return statusChangedDate == null ? "Status changed date is mandatory when changing record with new status" : null;
+        }
+        return null;
     }
 
     public boolean hideAct(){
@@ -35,4 +45,7 @@ public class Party_changeAdministrationRecord {
 
     @Inject
     TenantAdministrationRecordRepository tenantAdministrationRecordRepository;
+
+    @Inject
+    ClockService clockService;
 }

@@ -28,6 +28,7 @@
                                     <cpt:action id="changeJudicialRedressDate" position="PANEL"/>
                                 </cpt:property>
                                 <cpt:property id="liquidationDate"/>
+                                <cpt:property id="statusChangedDate"/>
                             </cpt:fieldSet>
                         </bs3:col>
                     </bs3:row>

@@ -33,11 +33,15 @@ public class TenantAdministrationRecordRepository {
             final Party tenant,
             final LocalDate judicialRedressDate) {
         TenantAdministrationRecord tenantAdministrationRecord = findUnique(tenant, status);
+        final TenantAdministrationRecord latestRecord = latestForParty(tenant);
         if (tenantAdministrationRecord != null) {
-            tenantAdministrationRecord.setJudicialRedressDate(judicialRedressDate);
-            return tenantAdministrationRecord;
+            if (tenantAdministrationRecord.equals(latestRecord)) {
+                tenantAdministrationRecord.setJudicialRedressDate(judicialRedressDate);
+                return tenantAdministrationRecord;
+            }
+            return latestRecord;
         } else {
-            return create(status, tenant, judicialRedressDate, latestForParty(tenant));
+            return create(status, tenant, judicialRedressDate, latestRecord);
         }
     }
 
