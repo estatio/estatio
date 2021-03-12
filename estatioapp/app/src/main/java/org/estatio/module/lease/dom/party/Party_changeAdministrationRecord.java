@@ -24,18 +24,9 @@ public class Party_changeAdministrationRecord {
 
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ACTION)
-    public Party act(final AdministrationStatus status, @Nullable final LocalDate judicialRedressDate, @Nullable final LocalDate statusChangedDate) {
+    public Party act(final AdministrationStatus status, @Nullable final LocalDate judicialRedressDate) {
         tenantAdministrationRecordRepository.upsertOrCreateNext(status, party, judicialRedressDate);
         return party;
-    }
-
-    public LocalDate default2Act() { return clockService.now(); }
-
-    public String validateAct(AdministrationStatus status, LocalDate judicialRedressDate, LocalDate statusChangedDate) {
-        if (tenantAdministrationRecordRepository.findUnique(party, status) == null) {
-            return statusChangedDate == null ? "Status changed date is mandatory when changing record with new status" : null;
-        }
-        return null;
     }
 
     public boolean hideAct(){

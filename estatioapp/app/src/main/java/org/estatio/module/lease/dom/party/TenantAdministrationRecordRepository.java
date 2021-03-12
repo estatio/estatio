@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.apache.isis.applib.services.clock.ClockService;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.DomainService;
@@ -39,9 +40,11 @@ public class TenantAdministrationRecordRepository {
                 tenantAdministrationRecord.setJudicialRedressDate(judicialRedressDate);
                 return tenantAdministrationRecord;
             }
-            return latestRecord;
-        } else {
-            return create(status, tenant, judicialRedressDate, latestRecord);
+            // status already visited; do nothing
+            return null;
+        }
+        else {
+            return latestRecord.getStatus().equals(AdministrationStatus.LIQUIDATION) ? null : create(status, tenant, judicialRedressDate, latestRecord);
         }
     }
 
@@ -57,12 +60,17 @@ public class TenantAdministrationRecordRepository {
                         "tenant", tenant));
     }
 
-    private TenantAdministrationRecord create(final AdministrationStatus status, final Party tenant, final LocalDate judicialRedressDate, final TenantAdministrationRecord previous) {
+    private TenantAdministrationRecord create(
+            final AdministrationStatus status,
+            final Party tenant,
+            final LocalDate judicialRedressDate,
+            final TenantAdministrationRecord previous) {
         TenantAdministrationRecord tenantAdministrationRecord = new TenantAdministrationRecord();
         serviceRegistry2.injectServicesInto(tenantAdministrationRecord);
         tenantAdministrationRecord.setTenant(tenant);
         tenantAdministrationRecord.setStatus(status);
         tenantAdministrationRecord.setJudicialRedressDate(judicialRedressDate);
+        tenantAdministrationRecord.setStatusChangedDate(clockService.now());
         tenantAdministrationRecord.setPrevious(previous);
         if (previous!=null){
             previous.setNext(tenantAdministrationRecord);
@@ -81,6 +89,9 @@ public class TenantAdministrationRecordRepository {
 
     @Inject
     RepositoryService repositoryService;
+
+    @Inject
+    ClockService clockService;
 
     @Inject ServiceRegistry2 serviceRegistry2;
 }

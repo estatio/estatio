@@ -99,7 +99,16 @@ public class TenantAdministrationRecordVM implements Importable {
     public List<Object> importData(final Object previousRow) {
         List<Object> result = new ArrayList<>();
 
-        TenantAdministrationRecord record = tenantAdministrationRecordRepository.upsertOrCreateNext(fetchStatus(getAdministrationStatus()), fetchTenant(getTenantReference()), getJudicialRedressDate());
+        final AdministrationStatus status = fetchStatus(getAdministrationStatus());
+        TenantAdministrationRecord record = tenantAdministrationRecordRepository.upsertOrCreateNext(status, fetchTenant(getTenantReference()), getJudicialRedressDate());
+        if (record == null) {
+            if (status.equals(AdministrationStatus.LIQUIDATION)) {
+                messageService2.raiseError(String.format("Status %s is final on tenant with reference %s; cannot be changed", getAdministrationStatus(), getTenantReference()));
+            } else {
+                messageService2.raiseError(String.format("Status %s has already been set once before on tenant with reference %s", getAdministrationStatus(), getTenantReference()));
+            }
+            return null;
+        }
         record.setLiquidationDate(getLiquidationDate());
         record.setComments(getComments());
 
