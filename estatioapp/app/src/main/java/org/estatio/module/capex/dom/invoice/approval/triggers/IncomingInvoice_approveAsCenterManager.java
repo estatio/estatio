@@ -69,10 +69,10 @@ public class IncomingInvoice_approveAsCenterManager extends IncomingInvoice_trig
         return nextRoles.isEmpty() ? null : nextRoles.get(0);
     }
 
-    public IPartyRoleType choices0Act(){
+    public List<IPartyRoleType> choices0Act(){
         final List<IPartyRoleType> nextRoles = stateTransitionService.peekTaskRoleAssignToAfter(incomingInvoice,
                 IncomingInvoiceApprovalStateTransitionType.APPROVE_AS_CENTER_MANAGER);
-        return nextRoles.isEmpty() ? null : nextRoles.get(0);
+        return nextRoles;
     }
 
     public Person default1Act(final IPartyRoleType roleType) {
