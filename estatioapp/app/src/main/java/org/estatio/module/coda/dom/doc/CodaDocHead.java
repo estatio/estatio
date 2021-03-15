@@ -3,6 +3,7 @@ package org.estatio.module.coda.dom.doc;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -33,6 +34,33 @@ import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
+import org.estatio.module.base.dom.apptenancy.ApplicationTenancyLevel;
+import org.estatio.module.capex.dom.invoice.IncomingInvoice;
+import org.estatio.module.capex.dom.invoice.IncomingInvoiceItem;
+import org.estatio.module.capex.dom.invoice.IncomingInvoiceRoleTypeEnum;
+import org.estatio.module.capex.dom.invoice.IncomingInvoiceType;
+import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
+import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
+import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionType;
+import org.estatio.module.capex.dom.invoice.approval.tasks.IncomingInvoice_checkApprovalState;
+import org.estatio.module.capex.dom.invoice.approval.triggers.IncomingInvoice_reject;
+import org.estatio.module.capex.dom.order.Order;
+import org.estatio.module.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
+import org.estatio.module.capex.dom.project.Project;
+import org.estatio.module.charge.dom.Charge;
+import org.estatio.module.coda.dom.LineType;
+import org.estatio.module.coda.dom.doc.appsettings.ApplicationSettingKey;
+import org.estatio.module.financial.dom.BankAccount;
+import org.estatio.module.invoice.dom.PaymentMethod;
+import org.estatio.module.party.dom.Organisation;
+import org.estatio.module.party.dom.Party;
+import org.estatio.module.party.dom.PartyRepository;
+import org.estatio.module.party.dom.role.PartyRoleType;
+import org.estatio.module.party.dom.role.PartyRoleTypeRepository;
+import org.estatio.module.settings.dom.ApplicationSetting;
+import org.estatio.module.settings.dom.ApplicationSettingsServiceRW;
+import org.estatio.module.task.dom.state.StateTransitionService;
+import org.estatio.module.task.dom.task.Task;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Action;
@@ -58,38 +86,9 @@ import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
 import org.isisaddons.module.security.dom.tenancy.HasAtPath;
 
-import org.estatio.module.base.dom.apptenancy.ApplicationTenancyLevel;
-import org.estatio.module.capex.dom.invoice.IncomingInvoice;
-import org.estatio.module.capex.dom.invoice.IncomingInvoiceItem;
-import org.estatio.module.capex.dom.invoice.IncomingInvoiceRoleTypeEnum;
-import org.estatio.module.capex.dom.invoice.IncomingInvoiceType;
-import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalState;
-import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransition;
-import org.estatio.module.capex.dom.invoice.approval.IncomingInvoiceApprovalStateTransitionType;
-import org.estatio.module.capex.dom.invoice.approval.tasks.IncomingInvoice_checkApprovalState;
-import org.estatio.module.capex.dom.invoice.approval.triggers.IncomingInvoice_reject;
-import org.estatio.module.capex.dom.order.Order;
-import org.estatio.module.capex.dom.orderinvoice.OrderItemInvoiceItemLinkRepository;
-import org.estatio.module.capex.dom.project.Project;
-import org.estatio.module.coda.dom.LineType;
-import org.estatio.module.task.dom.state.StateTransitionService;
-import org.estatio.module.task.dom.task.Task;
-import org.estatio.module.charge.dom.Charge;
-import org.estatio.module.coda.dom.doc.appsettings.ApplicationSettingKey;
-import org.estatio.module.financial.dom.BankAccount;
-import org.estatio.module.invoice.dom.PaymentMethod;
-import org.estatio.module.party.dom.Organisation;
-import org.estatio.module.party.dom.Party;
-import org.estatio.module.party.dom.PartyRepository;
-import org.estatio.module.party.dom.role.PartyRoleType;
-import org.estatio.module.party.dom.role.PartyRoleTypeRepository;
-import org.estatio.module.settings.dom.ApplicationSetting;
-import org.estatio.module.settings.dom.ApplicationSettingsServiceRW;
-
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.val;
 
 @PersistenceCapable(
         // TODO: REVIEW: EST-1862: an alternative design would be to use the cmpCode/docCode/docNum as the unique (application) key.
@@ -641,7 +640,7 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
     public Map<Integer, LineData> getAnalysisLineDataByLineNumber() {
 
         if(isLegacyAnalysisLineWithNullDocValue()) {
-            val analysisLineDataByLineNumber = Maps.<Integer, LineData>newHashMap();
+            final HashMap<Integer, LineData> analysisLineDataByLineNumber = Maps.newHashMap();
 
             // get hold of the summary line and extract its project and charge
             final CodaDocLine summaryDocLine = summaryDocLine(LineCache.DEFAULT);
@@ -665,7 +664,7 @@ public class CodaDocHead implements Comparable<CodaDocHead>, HasAtPath {
 
             return analysisLineDataByLineNumber;
         }
-        
+
         // create memento for existing analysis lines so can compare with their replacement.
         return getAnalysisLines().stream()
                 .collect(Collectors.toMap(CodaDocLine::getLineNum, LineData::new));

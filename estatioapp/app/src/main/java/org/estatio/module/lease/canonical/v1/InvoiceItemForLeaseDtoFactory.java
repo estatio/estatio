@@ -6,6 +6,7 @@ import java.util.SortedSet;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.services.dto.DtoMappingHelper;
 
 import org.estatio.canonical.invoice.v1.InvoiceItemDto;
 import org.estatio.module.asset.dom.FixedAsset;
@@ -28,6 +29,14 @@ public class InvoiceItemForLeaseDtoFactory extends DtoFactoryAbstract<InvoiceIte
 
     public InvoiceItemForLeaseDtoFactory() {
         super(InvoiceItem.class, InvoiceItemDto.class);
+    }
+
+    /**
+     * for testing.
+     */
+    public InvoiceItemForLeaseDtoFactory(DtoMappingHelper mappingHelper) {
+        this();
+        this.mappingHelper = mappingHelper;
     }
 
     @Programmatic

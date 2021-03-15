@@ -35,6 +35,7 @@ import org.apache.isis.applib.annotation.*;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.services.repository.RepositoryService;
+import org.apache.isis.applib.util.ObjectContracts2;
 
 import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 

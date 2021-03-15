@@ -6,6 +6,7 @@ import javax.inject.Inject;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.services.dto.DtoMappingHelper;
 
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannel;
 import org.incode.module.communications.dom.impl.commchannel.CommunicationChannelRepository;
@@ -24,8 +25,19 @@ public class PartyDtoFactory extends DtoFactoryAbstract<Party, PartyDto> {
         super(Party.class, PartyDto.class);
     }
 
+    /**
+     * For unit testing.
+     */
+    public PartyDtoFactory(
+            final DtoMappingHelper mappingHelper,
+            final CommunicationChannelRepository communicationChannelRepository) {
+        this();
+        this.mappingHelper = mappingHelper;
+        this.communicationChannelRepository = communicationChannelRepository;
+    }
+
     @Override
-    protected PartyDto newDto(final Party party) {
+    public PartyDto newDto(final Party party) {
         final PartyDto dto = new PartyDto();
 
         dto.setSelf(mappingHelper.oidDtoFor(party));

@@ -7,6 +7,7 @@ import javax.inject.Inject;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.services.dto.DtoMappingHelper;
 
 import org.estatio.canonical.invoice.v1.InvoiceDto;
 import org.estatio.module.asset.dom.FixedAsset;
@@ -25,7 +26,18 @@ public class InvoiceForLeaseDtoFactory extends DtoFactoryAbstract<InvoiceForLeas
         super(InvoiceForLease.class, InvoiceDto.class);
     }
 
-    protected InvoiceDto newDto(final InvoiceForLease invoiceForLease) {
+    /**
+     * for unit testing.
+     */
+    public InvoiceForLeaseDtoFactory(
+            final DtoMappingHelper dtoMappingHelper,
+            final InvoiceItemForLeaseDtoFactory invoiceItemForLeaseDtoFactory) {
+        this();
+        this.mappingHelper = dtoMappingHelper;
+        this.invoiceItemForLeaseDtoFactory = invoiceItemForLeaseDtoFactory;
+    }
+
+    public InvoiceDto newDto(final InvoiceForLease invoiceForLease) {
         final InvoiceDto dto = new InvoiceDto();
 
         dto.setSelf(mappingHelper.oidDtoFor(invoiceForLease));
