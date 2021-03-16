@@ -19,7 +19,7 @@ public class TurnoverImportXlsxFixtureForAggregatedMinute extends ExcelFixture2 
     @Override
     protected void execute(final ExecutionContext executionContext) {
 
-        setExcelResource(Resources.getResource(getClass(), "TurnoverImportForAggregated_minute.xlsx"));
+        setExcelResource(Resources.getResource(getClass(), "TurnoverImportForAggregated_min2018.xlsx"));
 
         setMatcher(sheetName -> {
             if(sheetName.startsWith("TurnoverImport")) {

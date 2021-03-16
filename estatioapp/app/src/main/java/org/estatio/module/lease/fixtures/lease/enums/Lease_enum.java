@@ -325,7 +325,17 @@ public enum Lease_enum implements PersonaWithFinder<Lease>, PersonaWithBuilderSc
             OrganisationAndComms_enum.AcmeNl, Organisation_enum.PoisonNl,
             ld(2014, 6, 1), ld(2024, 5, 31),
             new OccupancySpec[] {
-                    new OccupancySpec("001", "minute", INTERNATIONAL, NLD, "HEALT&BEAUTY", "PERFUMERIE", ld(2019, 8, 12), null, null, null, null),
+                    new OccupancySpec("001", "minute", INTERNATIONAL, NLD, "HEALT&BEAUTY", "PERFUMERIE", ld(2018, 8, 12), null, null, null, null),
+            },
+            new AmendmentSpec[]{
+            },
+            Person_enum.JohnDoeNl,
+            InvoiceAddressCreationPolicy.CREATE, AddressesCreationPolicy.DONT_CREATE),
+    OxfminAll2019("OXF-MIN-2018", null, "minute Lease all 2019", PropertyAndUnitsAndOwnerAndManager_enum.OxfGb,
+            OrganisationAndComms_enum.AcmeNl, Organisation_enum.PoisonNl,
+            ld(2014, 6, 1), ld(2024, 5, 31),
+            new OccupancySpec[] {
+                    new OccupancySpec("005", "minute", INTERNATIONAL, NLD, "HEALT&BEAUTY", "PERFUMERIE", ld(2014, 6, 1), null, null, null, null),
             },
             new AmendmentSpec[]{
             },

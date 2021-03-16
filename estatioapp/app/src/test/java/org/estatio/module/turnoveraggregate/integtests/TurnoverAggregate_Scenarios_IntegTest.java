@@ -19,6 +19,7 @@
 package org.estatio.module.turnoveraggregate.integtests;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Comparator;
 import java.util.List;
 
@@ -50,6 +51,7 @@ import org.estatio.module.turnoveraggregate.contributions.Lease_aggregateTurnove
 import org.estatio.module.turnoveraggregate.dom.TurnoverAggregation;
 import org.estatio.module.turnoveraggregate.dom.TurnoverAggregationRepository;
 import org.estatio.module.turnoveraggregate.fixtures.TurnoverImportXlsxFixtureForAggregated123;
+import org.estatio.module.turnoveraggregate.fixtures.TurnoverImportXlsxFixtureForAggregatedMinute;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -62,6 +64,7 @@ public class TurnoverAggregate_Scenarios_IntegTest extends TurnoverAggregateModu
             protected void execute(ExecutionContext executionContext) {
                 executionContext.executeChild(this, Currency_enum.EUR.builder());
                 executionContext.executeChild(this, Lease_enum.Oxf123.builder());
+                executionContext.executeChild(this, Lease_enum.OxfminAll2019.builder());
             }
         });
     }
@@ -194,6 +197,76 @@ public class TurnoverAggregate_Scenarios_IntegTest extends TurnoverAggregateModu
 //        assertThat(agg20100101.getPurchaseCountAggregate6Month().getCountPreviousYear()).isEqualTo(new BigInteger("0"));
         assertThat(agg20100101.getPurchaseCountAggregate12Month().getCount()).isEqualTo(null);
 //        assertThat(agg20100101.getPurchaseCountAggregate12Month().getCountPreviousYear()).isEqualTo(new BigInteger("0"));
+
+    }
+
+    Lease oxfMinLease;
+    Occupancy occ_min;
+    TurnoverReportingConfig occCfg_min;
+
+    void setupScenario_and_validate_import_min2018() {
+
+        oxf = Property_enum.OxfGb.findUsing(serviceRegistry2);
+        euro = Currency_enum.EUR.findUsing(serviceRegistry2);
+        oxfMinLease = Lease_enum.OxfminAll2019.findUsing(serviceRegistry2);
+        occ_min = oxfMinLease.getOccupancies().first();
+        occCfg_min = turnoverReportingConfigRepository.findOrCreate(occ_min, Type.PRELIMINARY,null, occ_min.getStartDate(), Frequency.MONTHLY, euro);
+
+        assertThat(occ_min.getUnit().getName()).isEqualTo("Unit 5");
+
+        runFixtureScript(new FixtureScript() {
+            @Override
+            protected void execute(ExecutionContext executionContext) {
+                executionContext.executeChild(this, new TurnoverImportXlsxFixtureForAggregatedMinute());
+            }
+        });
+
+        final List<Turnover> turnovers = turnoverRepository.listAll();
+        assertThat(turnovers).hasSize(49);
+        final List<Turnover> turnoversOnOcc = mixin(Occupancy_turnovers.class, occ_min).turnovers();
+        assertThat(turnoversOnOcc).hasSize(49);
+
+    }
+
+    /**
+     * This is the most simple scenario: lease starts before 2019 and continues to aggregation date (no renewals)
+     * @throws Exception
+     */
+    @Test
+    public void aggregate_values_2019_works_for_simple_scenario() throws Exception {
+
+        // given
+        setupScenario_and_validate_import_min2018();
+        setFixtureClockDate(new LocalDate(2022,1,1));
+
+        // when
+        final LocalDate aggregationFromDate = new LocalDate(2018, 1, 1);
+        final LocalDate aggregationToDate = new LocalDate(2021, 11, 1);
+        mixin(Lease_aggregateTurnovers.class, oxfMinLease).$$(aggregationFromDate, aggregationToDate,false);
+        transactionService.nextTransaction();
+
+        // then
+        final TurnoverAggregation agg2019_11 = turnoverAggregationRepository.findUnique(occCfg_min, new LocalDate(2019,11,1));
+        assertThat(agg2019_11.getAggregate1Month().getGrossAmount()).isEqualTo(new BigDecimal("10000.00"));
+        assertThat(agg2019_11.getAggregate1Month().getGrossAmountPreviousYear()).isEqualTo(new BigDecimal("9999.00"));
+        assertThat(agg2019_11.getAggregate12Month().getGrossAmount()).isEqualTo(new BigDecimal("119999.00"));
+        assertThat(agg2019_11.getAggregate12Month().getGrossAmountPreviousYear()).isEqualTo(new BigDecimal("119988.00"));
+        assertThat(agg2019_11.getAggregateToDate().getGrossAmount()).isEqualTo(new BigDecimal("110000.00"));
+        assertThat(agg2019_11.getAggregateToDate().getGrossAmountPreviousYear()).isEqualTo(new BigDecimal("109989.00"));
+        assertThat(agg2019_11.getPurchaseCountAggregate12Month().getCount()).isEqualTo(BigInteger.valueOf(11999));
+        assertThat(agg2019_11.getPurchaseCountAggregate12Month().getCountPreviousYear()).isEqualTo(BigInteger.valueOf(11988));
+
+        final TurnoverAggregation agg2020_11 = turnoverAggregationRepository.findUnique(occCfg_min, new LocalDate(2020,11,1));
+        assertThat(agg2020_11.getAggregate1Month().getGrossAmountPreviousYear()).isEqualTo(agg2019_11.getAggregate1Month().getGrossAmount());
+        assertThat(agg2020_11.getAggregate12Month().getGrossAmountPreviousYear()).isEqualTo(agg2019_11.getAggregate12Month().getGrossAmount());
+        assertThat(agg2020_11.getAggregateToDate().getGrossAmountPreviousYear()).isEqualTo(agg2019_11.getAggregateToDate().getGrossAmount());
+        assertThat(agg2020_11.getPurchaseCountAggregate12Month().getCountPreviousYear()).isEqualTo(agg2019_11.getPurchaseCountAggregate12Month().getCount());
+
+        final TurnoverAggregation agg2021_11 = turnoverAggregationRepository.findUnique(occCfg_min, new LocalDate(2021,11,1));
+        assertThat(agg2021_11.getAggregate1Month().getGrossAmount2019()).isEqualTo(agg2019_11.getAggregate1Month().getGrossAmount());
+        assertThat(agg2021_11.getAggregate12Month().getGrossAmount2019()).isEqualTo(agg2019_11.getAggregate12Month().getGrossAmount());
+        assertThat(agg2021_11.getAggregateToDate().getGrossAmount2019()).isEqualTo(agg2019_11.getAggregateToDate().getGrossAmount());
+        assertThat(agg2021_11.getPurchaseCountAggregate12Month().getCount2019()).isEqualTo(agg2019_11.getPurchaseCountAggregate12Month().getCount());
 
     }
 
