@@ -70,7 +70,7 @@ public class EntryValueForLease implements Comparable{
 
     @Action(semantics = SemanticsOf.SAFE)
     @ActionLayout(contributed = Contributed.AS_ASSOCIATION)
-    private boolean isPaid() { return getDatePaid()!= null; }
+    public boolean isPaid() { return getDatePaid()!= null; }
 
     @Getter @Setter
     @Column(allowsNull = "true")
