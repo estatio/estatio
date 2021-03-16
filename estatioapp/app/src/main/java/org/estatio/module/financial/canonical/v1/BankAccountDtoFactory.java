@@ -3,6 +3,7 @@ package org.estatio.module.financial.canonical.v1;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.services.dto.DtoMappingHelper;
 
 import org.estatio.canonical.financial.v1.BankAccountDto;
 import org.estatio.module.base.platform.applib.DtoFactoryAbstract;
@@ -15,6 +16,14 @@ public class BankAccountDtoFactory extends DtoFactoryAbstract<BankAccount, BankA
 
     public BankAccountDtoFactory(){
         super(BankAccount.class, BankAccountDto.class);
+    }
+
+    /**
+     * for testing.
+     */
+    public BankAccountDtoFactory(DtoMappingHelper mappingHelper) {
+        this();
+        this.mappingHelper = mappingHelper;
     }
 
     @Programmatic

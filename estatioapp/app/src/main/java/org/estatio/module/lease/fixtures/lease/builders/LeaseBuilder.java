@@ -82,23 +82,15 @@ import static org.incode.module.base.integtests.VT.ld;
 public final class LeaseBuilder
         extends BuilderScriptAbstract<Lease,LeaseBuilder> {
 
-    @Getter @Setter
-    String reference;
-    @Getter @Setter
-    String externalRef;
-    @Getter @Setter
-    String name;
-    @Getter @Setter
-    Property property;
+    @Getter @Setter String reference;
+    @Getter @Setter String externalRef;
+    @Getter @Setter String name;
+    @Getter @Setter Property property;
 
-    @Getter @Setter
-    Party landlord;
-    @Getter @Setter
-    Party tenant;
-    @Getter @Setter
-    LocalDate startDate;
-    @Getter @Setter
-    LocalDate endDate;
+    @Getter @Setter Party landlord;
+    @Getter @Setter Party tenant;
+    @Getter @Setter LocalDate startDate;
+    @Getter @Setter LocalDate endDate;
 
     @AllArgsConstructor
     @Data
@@ -282,34 +274,14 @@ public final class LeaseBuilder
         agreementRole.addCommunicationChannel(agreementRoleCommunicationChannelType, postalAddress, null);
     }
 
-    @Inject
-    LeaseRepository leaseRepository;
-
-    @Inject
-    OccupancyRepository occupancyRepository;
-
-    @Inject
-    AgreementRoleTypeRepository agreementRoleTypeRepository;
-
-    @Inject
-    LeaseTypeRepository leaseTypeRepository;
-
-    @Inject
-    AgreementRoleCommunicationChannelTypeRepository agreementRoleCommunicationChannelTypeRepository;
-
-    @Inject
-    CommunicationChannelOwnerLinkRepository communicationChannelOwnerLinkRepository;
-
-    @Inject
-    CommunicationChannelRepository communicationChannelRepository;
-
-    @Inject
-    LeaseAmendmentRepository leaseAmendmentRepository;
-
-    @Inject
-    LeaseAmendmentItemRepository leaseAmendmentItemRepository;
-
-
-
+    @Inject LeaseRepository leaseRepository;
+    @Inject OccupancyRepository occupancyRepository;
+    @Inject AgreementRoleTypeRepository agreementRoleTypeRepository;
+    @Inject LeaseTypeRepository leaseTypeRepository;
+    @Inject AgreementRoleCommunicationChannelTypeRepository agreementRoleCommunicationChannelTypeRepository;
+    @Inject CommunicationChannelOwnerLinkRepository communicationChannelOwnerLinkRepository;
+    @Inject CommunicationChannelRepository communicationChannelRepository;
+    @Inject LeaseAmendmentRepository leaseAmendmentRepository;
+    @Inject LeaseAmendmentItemRepository leaseAmendmentItemRepository;
 
 }

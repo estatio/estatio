@@ -259,6 +259,15 @@
                         </bs3:col>
                     </bs3:row>
                 </bs3:tab>
+                <bs3:tab name="Coda Orchestration">
+                    <bs3:row>
+                        <bs3:col span="12">
+                            <cpt:collection id="codaOrchestrations" defaultView="table">
+                                <cpt:action id="retry"/>
+                            </cpt:collection>
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
             </bs3:tabGroup>
         </bs3:col>
         <bs3:col span="12" unreferencedCollections="true">

@@ -2,6 +2,7 @@ package org.estatio.module.bankmandate.canonical.v1;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.services.dto.DtoMappingHelper;
 
 import org.estatio.canonical.bankmandate.v1.BankMandateDto;
 import org.estatio.canonical.bankmandate.v1.Status;
@@ -19,7 +20,15 @@ public class BankMandateDtoFactory extends DtoFactoryAbstract<BankMandate, BankM
         super(BankMandate.class, BankMandateDto.class);
     }
 
-    protected BankMandateDto newDto(final BankMandate bankMandate) {
+    /**
+     * for testing.
+     */
+    public BankMandateDtoFactory(final DtoMappingHelper mappingHelper) {
+        this();
+        this.mappingHelper = mappingHelper;
+    }
+
+    public BankMandateDto newDto(final BankMandate bankMandate) {
         final BankMandateDto dto = new BankMandateDto();
 
         dto.setSelf(mappingHelper.oidDtoFor(bankMandate));

@@ -51,7 +51,10 @@ import org.estatio.module.base.dom.apptenancy.WithApplicationTenancyPathPersiste
 import org.estatio.module.party.app.services.ChamberOfCommerceCodeLookUpService;
 import org.estatio.module.party.app.services.OrganisationNameNumberViewModel;
 
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancyRepository;
+
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @javax.jdo.annotations.PersistenceCapable(
@@ -75,13 +78,20 @@ import lombok.Setter;
 })
 @DomainObject(editing = Editing.DISABLED)
 @XmlJavaTypeAdapter(PersistentEntityAdapter.class)
+@NoArgsConstructor
 public class Organisation
         extends Party
         implements WithApplicationTenancyCountry, WithApplicationTenancyPathPersisted {
 
-    public Organisation() {}
     public Organisation(final String reference) {
         super(reference);
+    }
+
+    /**
+     * for testing.
+     */
+    public Organisation(final ApplicationTenancyRepository applicationTenancyRepository) {
+        super(applicationTenancyRepository);
     }
 
     // //////////////////////////////////////
@@ -118,6 +128,7 @@ public class Organisation
     @CollectionLayout(defaultView = "table")
     @Getter @Setter
     private SortedSet<OrganisationPreviousName> previousNames = new TreeSet<>();
+
 
     // //////////////////////////////////////
 

@@ -200,6 +200,14 @@ public class InvoiceForLease
         super("invoiceNumber, collectionNumber, buyer, dueDate, lease, uuid");
     }
 
+    /**
+     * For testing
+     */
+    public InvoiceForLease(FixedAssetFinancialAccountRepository fixedAssetFinancialAccountRepository) {
+        this();
+        this.fixedAssetFinancialAccountRepository = fixedAssetFinancialAccountRepository;
+    }
+
     @javax.jdo.annotations.Column(name = "leaseId", allowsNull = "true")
     @Property(optionality = Optionality.OPTIONAL)
     @Getter @Setter
