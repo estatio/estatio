@@ -1,3 +1,5 @@
+CAUTION: This repo has now been archived, and copied into a private repo for further development.
+
 = Estatio: an open source estate management system.
 :toc:
 
