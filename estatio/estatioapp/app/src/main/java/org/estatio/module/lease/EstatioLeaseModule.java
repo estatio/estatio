@@ -30,6 +30,9 @@ import org.apache.isis.applib.ModuleAbstract;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.fixturescripts.teardown.TeardownFixtureAbstract2;
 
+import org.estatio.module.lease.dom.party.ContinuationPlan;
+import org.estatio.module.lease.dom.party.ContinuationPlanEntry;
+import org.estatio.module.lease.dom.party.TenantAdministrationLeaseDetails;
 import org.incode.module.classification.dom.ClassificationModule;
 import org.incode.module.communications.CommunicationsModule;
 import org.incode.module.docfragment.DocFragmentModule;
@@ -73,6 +76,7 @@ import org.estatio.module.lease.dom.occupancy.tags.Activity;
 import org.estatio.module.lease.dom.occupancy.tags.Brand;
 import org.estatio.module.lease.dom.occupancy.tags.Sector;
 import org.estatio.module.lease.dom.occupancy.tags.UnitSize;
+import org.estatio.module.lease.dom.party.TenantAdministrationRecord;
 import org.estatio.module.settings.EstatioSettingsModule;
 
 @XmlRootElement(name = "module")
@@ -113,6 +117,10 @@ public final class EstatioLeaseModule extends ModuleAbstract {
                 String sql;
                 String table;
 
+                deleteFrom(ContinuationPlanEntry.class);
+                deleteFrom(ContinuationPlan.class);
+                deleteFrom(TenantAdministrationLeaseDetails.class);
+                deleteFrom(TenantAdministrationRecord.class);
                 deleteFrom(EventSourceLinkForBreakOption.class);
 
                 // InvoiceAttribute

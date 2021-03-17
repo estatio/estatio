@@ -113,6 +113,19 @@
                                 </bs3:col>
                             </bs3:row>
                         </bs3:tab>
+                        <bs3:tab name="Administration Record">
+                            <bs3:row>
+                                <bs3:col span="12">
+                                    <cpt:fieldSet name="Administration" id="administration">
+                                        <cpt:property id="administrationRecord">
+                                            <cpt:action id="changeAdministrationRecord">
+                                                <cpt:named>Change</cpt:named>
+                                            </cpt:action>
+                                        </cpt:property>
+                                    </cpt:fieldSet>
+                                </bs3:col>
+                            </bs3:row>
+                        </bs3:tab>
                     </bs3:tabGroup>
                 </bs3:col>
                 <bs3:col span="4">

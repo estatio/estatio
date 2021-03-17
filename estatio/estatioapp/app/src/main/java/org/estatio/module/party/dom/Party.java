@@ -234,7 +234,8 @@ public abstract class Party
         return replacementParty != this ? null : "Cannot replace a party with itself";
     }
 
-    private boolean isTenant(){
+    @Programmatic
+    public boolean isTenant(){
         return hasPartyRoleType(partyRoleTypeRepository.findByKey("TENANT")) ?  true : false;
     }
 
