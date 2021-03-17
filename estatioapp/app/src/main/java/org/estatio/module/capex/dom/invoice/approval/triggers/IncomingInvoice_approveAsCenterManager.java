@@ -1,5 +1,6 @@
 package org.estatio.module.capex.dom.invoice.approval.triggers;
 
+import java.util.Collections;
 import java.util.List;
 
 import javax.annotation.Nullable;
@@ -62,11 +63,25 @@ public class IncomingInvoice_approveAsCenterManager extends IncomingInvoice_trig
         return reasonGuardNotSatisified();
     }
 
+    public IPartyRoleType default0Act(){
+        final List<IPartyRoleType> nextRoles = stateTransitionService.peekTaskRoleAssignToAfter(incomingInvoice,
+                IncomingInvoiceApprovalStateTransitionType.APPROVE_AS_CENTER_MANAGER);
+        return nextRoles.isEmpty() ? null : nextRoles.get(0);
+    }
+
+    public List<IPartyRoleType> choices0Act(){
+        final List<IPartyRoleType> nextRoles = stateTransitionService.peekTaskRoleAssignToAfter(incomingInvoice,
+                IncomingInvoiceApprovalStateTransitionType.APPROVE_AS_CENTER_MANAGER);
+        return nextRoles;
+    }
+
     public Person default1Act(final IPartyRoleType roleType) {
+        if (roleType==null) return null;
         return defaultPersonToAssignNextTo(roleType);
     }
 
     public List<Person> choices1Act(final IPartyRoleType roleType) {
+        if (roleType==null) return Collections.EMPTY_LIST;
         return choicesPersonToAssignNextTo(roleType);
     }
 

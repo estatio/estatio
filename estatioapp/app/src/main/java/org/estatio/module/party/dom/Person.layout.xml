@@ -79,6 +79,7 @@
                                 <!-- these are hidden in object form -->
                                 <cpt:property id="phoneNumbers"/>
                                 <cpt:property id="emailAddresses"/>
+                                <cpt:property id="administrationRecord"/>
                             </cpt:fieldSet>
                         </bs3:col>
                     </bs3:row>
